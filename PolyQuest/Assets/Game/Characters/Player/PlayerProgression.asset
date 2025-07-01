@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bc042ab45c57d445898d27de294152b, type: 3}
+  m_Name: PlayerProgression
+  m_EditorClassIdentifier: 
+  m_healthIncreasePercentage: 10
+  m_experienceIncreasePercentage: 10
+  m_initialHealth: 100
+  m_initialExperience: 100
+  m_maxHealthAmounts: 640000006e000000790000008500000092000000
+  m_maxExperienceAmounts: 64000000d20000004b010000d001000062020000

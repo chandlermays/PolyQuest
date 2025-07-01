@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa1a21cc1330f1a4f80ee2cb794a9f14, type: 3}
+  m_Name: Clear the Bandit Camp
+  m_EditorClassIdentifier: 
+  m_objectives:
+  - m_identifier: Camp
+    m_description: Find the Bandit Camp
+  - m_identifier: Kill
+    m_description: Kill the Bandits
+  - m_identifier: Return
+    m_description: Return to the Captain
+  m_rewards:
+  - m_item: {fileID: 11400000, guid: e27cb8a0f1d6cc443ad2427d108bfd4e, type: 2}
+    m_amount: 2

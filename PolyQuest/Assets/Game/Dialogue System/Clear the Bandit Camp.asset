@@ -1,0 +1,243 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8286136582653668342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 26aba06e-8185-4670-88e5-8b2262b7fad9
+  m_EditorClassIdentifier: 
+  m_isPlayerSpeaking: 0
+  m_text: You kill those bandits yet?
+  m_children: []
+  m_rect:
+    serializedVersion: 2
+    x: 605
+    y: 318
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: 
+  m_condition:
+    m_predicate: 
+    m_parameters: []
+--- !u!114 &-6964223987575199658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: d7b01302-6874-445b-9be5-c3d6bb8c857e
+  m_EditorClassIdentifier: 
+  m_isPlayerSpeaking: 0
+  m_text: Welcome to Stonewick!
+  m_children:
+  - 0c761e41-9011-463f-865c-923d8bfebc24
+  - de876385-307d-4c16-91f4-a4aa3044521d
+  - ebefb847-14a9-40e5-88f9-cb05e4d71cdd
+  m_rect:
+    serializedVersion: 2
+    x: 124
+    y: 116
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: 
+  m_condition:
+    m_predicate: 
+    m_parameters: []
+--- !u!114 &-4430077980473154734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: ebefb847-14a9-40e5-88f9-cb05e4d71cdd
+  m_EditorClassIdentifier: 
+  m_isPlayerSpeaking: 0
+  m_text: Oh, it's you again.
+  m_children:
+  - 26aba06e-8185-4670-88e5-8b2262b7fad9
+  m_rect:
+    serializedVersion: 2
+    x: 366
+    y: 318
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: 
+  m_condition:
+    m_predicate: HasQuest
+    m_parameters:
+    - Clear the Bandit Camp
+--- !u!114 &-606129337982572048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 31ccec43-d1ae-43d9-bcd9-8fad4cb24d08
+  m_EditorClassIdentifier: 
+  m_isPlayerSpeaking: 0
+  m_text: Kill them all.
+  m_children: []
+  m_rect:
+    serializedVersion: 2
+    x: 861
+    y: 181
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: 'Quest Started: Clear the Bandit Camp'
+  m_condition:
+    m_predicate: 
+    m_parameters: []
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5c8d063cb8c3f4796d574b90d0cf64, type: 3}
+  m_Name: Clear the Bandit Camp
+  m_EditorClassIdentifier: 
+  m_nodes:
+  - {fileID: -6964223987575199658}
+  - {fileID: 1547641241715060196}
+  - {fileID: 9192878735317720245}
+  - {fileID: -606129337982572048}
+  - {fileID: 3710213524180428403}
+  - {fileID: 8710286783924125001}
+  - {fileID: -4430077980473154734}
+  - {fileID: -8286136582653668342}
+  m_newNodeOffset: {x: 300, y: 0}
+--- !u!114 &1547641241715060196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 0c761e41-9011-463f-865c-923d8bfebc24
+  m_EditorClassIdentifier: 
+  m_isPlayerSpeaking: 0
+  m_text: I don't really care who you are.
+  m_children:
+  - 746a8e37-9cc7-4204-b215-de4cc0838739
+  m_rect:
+    serializedVersion: 2
+    x: 367
+    y: 182
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: 
+  m_condition:
+    m_predicate: DoesNotHaveQuest
+    m_parameters:
+    - Clear the Bandit Camp
+--- !u!114 &3710213524180428403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: de876385-307d-4c16-91f4-a4aa3044521d
+  m_EditorClassIdentifier: 
+  m_isPlayerSpeaking: 0
+  m_text: Sources tell me you've cleaned out the Camp. Well done.
+  m_children:
+  - 1a59dda5-0b66-47be-afb7-e4554acd084d
+  m_rect:
+    serializedVersion: 2
+    x: 361
+    y: 447
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: 
+  m_condition:
+    m_predicate: HasCompletedObjective
+    m_parameters:
+    - Clear the Bandit Camp
+    - Kill
+--- !u!114 &8710286783924125001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 1a59dda5-0b66-47be-afb7-e4554acd084d
+  m_EditorClassIdentifier: 
+  m_isPlayerSpeaking: 0
+  m_text: I think you'll fit in just fine here.
+  m_children: []
+  m_rect:
+    serializedVersion: 2
+    x: 606
+    y: 446
+    width: 200
+    height: 100
+  m_onEnterAction: CompleteObjective
+  m_onExitAction: 
+  m_condition:
+    m_predicate: 
+    m_parameters: []
+--- !u!114 &9192878735317720245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 746a8e37-9cc7-4204-b215-de4cc0838739
+  m_EditorClassIdentifier: 
+  m_isPlayerSpeaking: 0
+  m_text: There's a bandit camp just outside to the East.
+  m_children:
+  - 31ccec43-d1ae-43d9-bcd9-8fad4cb24d08
+  m_rect:
+    serializedVersion: 2
+    x: 610
+    y: 181
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: 
+  m_condition:
+    m_predicate: 
+    m_parameters: []

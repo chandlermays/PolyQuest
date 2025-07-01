@@ -1,0 +1,7 @@
+Features I want to add next:
+
+* Expand the Leveling system with attributes and abilities (magic spells?)
+* Promote the NPC in front of the blue tent to be a Merchant
+* Implement random drops from killing enemies, and the ability to drop items in the world
+* More maps!
+* More enemy types? Boss encounters?
