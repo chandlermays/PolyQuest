@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Default Enemy Loot Table
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.EnemyLootTable
   m_possibleDrops:
-  - m_item: {fileID: 11400000, guid: 7820940b2925bbd45bf8060de472ca3c, type: 2}
+  - m_item: {fileID: 11400000, guid: ad99bf7cafdc1f841bc7753d73a5118b, type: 2}
     m_relativeChance:
     - 5
     m_minQuantity: 0100000002000000
     m_maxQuantity: 0100000002000000
-  - m_item: {fileID: 11400000, guid: de6c03604fa85b74a94ecedc4037a87d, type: 2}
+  - m_item: {fileID: 11400000, guid: 16745bb5b07e473409293d3799b80d73, type: 2}
     m_relativeChance:
     - 5
     m_minQuantity: 0100000002000000

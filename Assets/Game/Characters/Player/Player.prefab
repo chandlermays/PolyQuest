@@ -2582,7 +2582,7 @@ MonoBehaviour:
   m_defaultWeapon: {fileID: 11400000, guid: 91ebe5f2254f5ec4cb1f1fac5bc9ae1d, type: 2}
   m_leftHand: {fileID: 2484110344413389623}
   m_rightHand: {fileID: 6889686824066836522}
-  m_attackCooldown: 10
+  m_attackCooldown: 0.6
   m_autoAttackRange: 10
   m_targetLayers:
     serializedVersion: 2

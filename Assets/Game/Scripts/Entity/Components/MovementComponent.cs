@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 //---------------------------------
 using PolyQuest.Saving;
+using System;
 
 namespace PolyQuest.Components
 {
@@ -17,6 +18,9 @@ namespace PolyQuest.Components
      * ------------------------------------------------------------------------------------------- */
     public class MovementComponent : EntityComponent, ISaveable
     {
+        /* --- Navigation --- */
+        [SerializeField] private float m_maxPathLength = 20f;
+
         /* --- References --- */
         private CombatComponent m_combatComponent;
         private HealthComponent m_healthComponent;
@@ -24,8 +28,7 @@ namespace PolyQuest.Components
         /* --- Animation Parameters --- */
         private const string kSpeed = "Speed";
 
-        /* --- Navigation --- */
-        [SerializeField] private float m_maxPathLength = 20f;
+        public event Action OnMoveActionStarted;
 
         private bool IsAlive() => m_healthComponent == null || !m_healthComponent.IsDead;
 
@@ -65,6 +68,7 @@ namespace PolyQuest.Components
             if (!IsAlive())
                 return;
 
+            OnMoveActionStarted?.Invoke();
             m_combatComponent?.Cancel();    // Null the Target before Moving
             MoveTo(destination);
         }

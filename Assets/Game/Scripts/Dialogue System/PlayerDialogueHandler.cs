@@ -35,6 +35,29 @@ namespace PolyQuest.Dialogues
         private void Awake()
         {
             m_movementComponent = GetComponent<MovementComponent>();
+            Utilities.CheckForNull(m_movementComponent, nameof(MovementComponent));
+        }
+
+        /*--------------------------------------------------------------------- 
+        | --- OnEnable: Called when the object becomes enabled and active --- |
+        ---------------------------------------------------------------------*/
+        private void OnEnable()
+        {
+            if (m_movementComponent != null)
+            {
+                m_movementComponent.OnMoveActionStarted += CancelDialogueAction;
+            }
+        }
+
+        /*--------------------------------------------------------------------------- 
+        | --- OnDisable: Called when the behaviour becomes disabled or inactive --- |
+        ---------------------------------------------------------------------------*/
+        private void OnDisable()
+        {
+            if (m_movementComponent != null)
+            {
+                m_movementComponent.OnMoveActionStarted -= CancelDialogueAction;
+            }
         }
 
         /*----------------------------------------- 
@@ -51,7 +74,7 @@ namespace PolyQuest.Dialogues
             }
             else
             {
-                m_movementComponent.Cancel();
+                m_movementComponent.Stop();
                 BeginDialogue();
             }
         }
@@ -74,6 +97,21 @@ namespace PolyQuest.Dialogues
         {
             m_activeNPC = newNPC;
             m_activeDialogue = newDialogue;
+        }
+
+        /*-------------------------------------------------------------------
+        | --- CancelDialogueAction: Cancels the current Dialogue action --- |
+        -------------------------------------------------------------------*/
+        public void CancelDialogueAction()
+        {
+            if (m_inActiveDialogue)
+            {
+                EndDialogue();
+                return;
+            }    
+
+            m_activeNPC = null;
+            m_activeDialogue = null;
         }
 
         /*------------------------------------------------------- 
