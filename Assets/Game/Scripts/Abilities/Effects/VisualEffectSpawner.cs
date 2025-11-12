@@ -1,0 +1,36 @@
+using System;
+using System.Collections;
+using UnityEngine;
+//---------------------------------
+
+namespace PolyQuest.Abilities
+{
+    [CreateAssetMenu(fileName = "New Visual Effect Spawner", menuName = "PolyQuest/Abilities/Effects/New Visual Effect Spawner", order = 0)]
+    public class VisualEffectSpawner : EffectStrategy
+    {
+        [SerializeField] private GameObject m_spawnedPrefab;
+        [SerializeField] private float m_duration = -1;
+
+        /*------------------------------------------------------------------- 
+        | --- StartEffect: Spawns the visual effect at the target point --- |
+        -------------------------------------------------------------------*/
+        public override void StartEffect(AbilityConfig config, Action onComplete)
+        {
+            config.StartCoroutine(Effect(config, onComplete));
+        }
+
+        /*------------------------------------------------------------------------- 
+        | --- Effect: Coroutine that handles the effect spawning and duration --- |
+        -------------------------------------------------------------------------*/
+        private IEnumerator Effect(AbilityConfig config, Action onComplete)
+        {
+            GameObject instance = Instantiate(m_spawnedPrefab, config.TargetPoint, m_spawnedPrefab.transform.rotation);
+            if (m_duration > 0)
+            {
+                yield return new WaitForSeconds(m_duration);
+                Destroy(instance);
+            }
+            onComplete?.Invoke();
+        }
+    }
+}

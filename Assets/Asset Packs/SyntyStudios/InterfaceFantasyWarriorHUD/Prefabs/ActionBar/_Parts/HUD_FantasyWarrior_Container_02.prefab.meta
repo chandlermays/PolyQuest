@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 8b09e7df44efd3941a559c21a6c27445
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/ActionBar/_Parts/HUD_FantasyWarrior_Container_02.prefab
+  uploadId: 782056

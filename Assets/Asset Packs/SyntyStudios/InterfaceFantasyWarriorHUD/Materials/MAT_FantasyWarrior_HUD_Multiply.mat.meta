@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c3b466250523a294685dc111f7a77ec6
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Materials/MAT_FantasyWarrior_HUD_Multiply.mat
+  uploadId: 782056

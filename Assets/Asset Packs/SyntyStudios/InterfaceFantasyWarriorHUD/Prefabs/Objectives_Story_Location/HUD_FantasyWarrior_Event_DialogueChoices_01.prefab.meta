@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 87714cc9f52cd4a4eb9918f7d316f692
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Objectives_Story_Location/HUD_FantasyWarrior_Event_DialogueChoices_01.prefab
+  uploadId: 782056

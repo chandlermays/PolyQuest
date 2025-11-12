@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55e254b91efba54887f162a9c97558c, type: 3}
+  m_Name: Iron Sword
+  m_EditorClassIdentifier: 
+  m_itemID: f76b5145-5f05-449c-ab64-a5b40e4f01ab
+  m_itemName: Iron Sword
+  m_itemDescription: Shiny, sharp, and guaranteed to make you feel like the main
+    character.
+  m_itemIcon: {fileID: 21300000, guid: 5fd50594014b70e48bd6993443d46b32, type: 3}
+  m_pickup: {fileID: 4175141003067446149, guid: 2044f32775847d6498eceb7ff39662ba, type: 3}
+  m_isStackable: 0
+  m_category: 1
+  m_itemPrice: 20
+  m_targetEquipmentSlot: 6
+  m_equipCondition:
+    m_AND: []
+  m_equippedPrefab: {fileID: 1022342787989644781, guid: 230ddc781322dd14d8837669cea7d0fd, type: 3}
+  m_projectile: {fileID: 0}
+  m_weaponAOC: {fileID: 22100000, guid: 64123d956fdb14143bf0ebce358b1705, type: 2}
+  m_weaponDamage: 10
+  m_weaponRange: 2
+  m_percentageBonus: 0
+  m_isRightHanded: 1

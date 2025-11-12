@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a16255443f02f7640b519bddb4b872c8
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Reticles_Crosshairs/HUD_FantasyWarrior_Reticle_Crosshair_01.prefab
+  uploadId: 782056

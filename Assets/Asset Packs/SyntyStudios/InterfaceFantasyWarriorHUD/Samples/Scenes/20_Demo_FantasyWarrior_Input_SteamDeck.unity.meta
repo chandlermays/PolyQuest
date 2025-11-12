@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 25a4f6797decb0344bce4956f9a30daf
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Samples/Scenes/20_Demo_FantasyWarrior_Input_SteamDeck.unity
+  uploadId: 782056

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ad3709f72e577974bb1d306c523f6042
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/WeaponWheel_WeaponCross/_Parts/Button_FantasyWarrior_WeaponWheel_Item_01.prefab
+  uploadId: 782056

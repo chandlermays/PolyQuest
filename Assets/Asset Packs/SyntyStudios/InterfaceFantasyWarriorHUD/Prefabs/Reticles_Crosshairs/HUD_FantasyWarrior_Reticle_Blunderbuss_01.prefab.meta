@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b77d8c301354d56408f2dcb78f0e6c3a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Reticles_Crosshairs/HUD_FantasyWarrior_Reticle_Blunderbuss_01.prefab
+  uploadId: 782056

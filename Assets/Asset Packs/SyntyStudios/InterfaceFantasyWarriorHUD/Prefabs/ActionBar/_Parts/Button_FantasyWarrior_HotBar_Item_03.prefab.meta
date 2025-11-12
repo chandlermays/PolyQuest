@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 91b954ca2cabab84eaa3486675532d7e
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/ActionBar/_Parts/Button_FantasyWarrior_HotBar_Item_03.prefab
+  uploadId: 782056

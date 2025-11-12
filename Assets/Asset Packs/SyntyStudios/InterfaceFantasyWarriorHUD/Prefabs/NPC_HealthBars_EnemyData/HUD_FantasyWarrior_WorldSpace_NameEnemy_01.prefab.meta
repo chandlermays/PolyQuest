@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a94321ee762d61548a350be1e18e215a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/NPC_HealthBars_EnemyData/HUD_FantasyWarrior_WorldSpace_NameEnemy_01.prefab
+  uploadId: 782056

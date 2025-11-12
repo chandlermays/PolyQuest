@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2f01c700bb8682c4c8b6b548bb5aea60
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Animation/Clips/ANIM_HUD_FantasyWarrior_WorldSpace_DamageToaster_01_In.anim
+  uploadId: 782056

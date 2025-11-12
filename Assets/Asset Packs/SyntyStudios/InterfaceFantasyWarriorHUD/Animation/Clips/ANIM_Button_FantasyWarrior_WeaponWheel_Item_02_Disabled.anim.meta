@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 130ac1c3bba447a4c97bd12acf875c1f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Animation/Clips/ANIM_Button_FantasyWarrior_WeaponWheel_Item_02_Disabled.anim
+  uploadId: 782056

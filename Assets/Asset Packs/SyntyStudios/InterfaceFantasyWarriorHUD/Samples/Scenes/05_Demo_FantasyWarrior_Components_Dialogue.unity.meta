@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 46e849a55498b9645a1e886b8143bf27
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Samples/Scenes/05_Demo_FantasyWarrior_Components_Dialogue.unity
+  uploadId: 782056

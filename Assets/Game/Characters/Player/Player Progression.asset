@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bc042ab45c57d445898d27de294152b, type: 3}
+  m_Name: Player Progression
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Attributes.PlayerProgression
+  m_healthIncreasePercentage: 15
+  m_initialHealth: 100
+  m_maxHealthAmounts: 64000000730000008400000098000000af000000
+  m_damageIncreasePercentage: 0
+  m_initialDamage: 0
+  m_damageAmounts: 0000000000000000000000000000000000000000
+  m_defenseIncreasePercentage: 3
+  m_initialDefense: 100
+  m_defenseAmounts: 64000000670000006a0000006d00000070000000
+  m_manaIncreasePercentage: 15
+  m_initialMana: 100
+  m_manaAmounts: 64000000730000008400000098000000af000000
+  m_manaRegenIncreasePercentage: 10
+  m_initialManaRegenRate: 5
+  m_manaRegenRates: 0500000006000000070000000800000009000000
+  m_experienceIncreasePercentage: 20
+  m_initialExperience: 100
+  m_maxExperienceAmounts: 64000000dc0000006c01000019020000e8020000

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 5da39431d80d38f45b45794713e63164
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Popups_Notifications/HUD_FantasyWarrior_Tooltip_01.prefab
+  uploadId: 782056

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 0b5956f2555000840990bb841822fd0c
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/FullscreenFX/FX_FantasyWarrior_Heal_Vignette_02.prefab
+  uploadId: 782056

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2285d3c7de50ba64cb2042c73c7c4f38
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Player_Health_Equipment/_Parts/Toggle_Heart_01.prefab
+  uploadId: 782056

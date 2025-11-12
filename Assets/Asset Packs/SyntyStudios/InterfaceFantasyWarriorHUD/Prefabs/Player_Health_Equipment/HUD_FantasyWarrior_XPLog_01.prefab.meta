@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: cdc95edbf8147a94393de679dabb6ddd
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Player_Health_Equipment/HUD_FantasyWarrior_XPLog_01.prefab
+  uploadId: 782056

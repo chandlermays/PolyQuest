@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e76cf6edfa660264aabb3a5cbd1ea821
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Objectives_Story_Location/HUD_FantasyWarrior_Event_DialogueBox_01.prefab
+  uploadId: 782056

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: fb9101460a31f5542814cd15af8080d8
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/System/HUD_FantasyWarrior_Event_Saving_01.prefab
+  uploadId: 782056

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c9cfc64d32149f842900e900218c49ff
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/_PreMadeHUDs/Screen_FantasyWarrior_HUD_ARPG_01.prefab
+  uploadId: 782056

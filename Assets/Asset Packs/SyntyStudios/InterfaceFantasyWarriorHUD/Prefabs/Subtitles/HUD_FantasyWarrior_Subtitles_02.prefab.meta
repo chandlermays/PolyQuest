@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2892a0c6c8db1f34594223b235f02c2a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Subtitles/HUD_FantasyWarrior_Subtitles_02.prefab
+  uploadId: 782056

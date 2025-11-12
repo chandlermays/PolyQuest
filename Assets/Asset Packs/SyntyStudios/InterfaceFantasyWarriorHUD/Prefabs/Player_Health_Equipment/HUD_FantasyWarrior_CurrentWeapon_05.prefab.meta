@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b3613aacee732b74681b4c4ffa54ecce
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Player_Health_Equipment/HUD_FantasyWarrior_CurrentWeapon_05.prefab
+  uploadId: 782056

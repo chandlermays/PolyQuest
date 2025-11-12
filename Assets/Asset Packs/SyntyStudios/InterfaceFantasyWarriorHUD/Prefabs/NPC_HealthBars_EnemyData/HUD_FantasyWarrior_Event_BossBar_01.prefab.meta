@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2ef460c56885b414ca66d9fda9303248
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/NPC_HealthBars_EnemyData/HUD_FantasyWarrior_Event_BossBar_01.prefab
+  uploadId: 782056

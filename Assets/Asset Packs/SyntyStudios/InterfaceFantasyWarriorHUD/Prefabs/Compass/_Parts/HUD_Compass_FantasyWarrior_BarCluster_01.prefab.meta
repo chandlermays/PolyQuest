@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f17e274e019b5c64ba8833c286e15ed0
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Compass/_Parts/HUD_Compass_FantasyWarrior_BarCluster_01.prefab
+  uploadId: 782056

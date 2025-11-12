@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0e65fa078d932b44cb2ff45f996bafc4
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Animation/Clips/ANIM_Button_FantasyWarrior_WeaponWheel_Item_02_Highlighted.anim
+  uploadId: 782056

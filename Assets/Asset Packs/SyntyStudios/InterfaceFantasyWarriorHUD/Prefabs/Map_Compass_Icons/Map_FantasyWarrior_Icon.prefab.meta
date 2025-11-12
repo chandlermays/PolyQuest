@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: beeedd1b799a93b4d88de56d115e68d7
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Map_Compass_Icons/Map_FantasyWarrior_Icon.prefab
+  uploadId: 782056

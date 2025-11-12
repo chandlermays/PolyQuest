@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 31155998c50af734ea800aa55780a85b
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Log/_Parts/HUD_FantasyWarrior_EventLog_Item_01_Currency_01.prefab
+  uploadId: 782056

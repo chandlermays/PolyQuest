@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 27947be39f36f4446bf7deab7435d95f
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/FullscreenFX/FX_FantasyWarrior_Damage_Vignette_01.prefab
+  uploadId: 782056

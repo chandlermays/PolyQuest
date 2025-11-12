@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55e254b91efba54887f162a9c97558c, type: 3}
+  m_Name: Unarmed
+  m_EditorClassIdentifier: 
+  m_itemID: e60fdc0f-d2a6-4d26-b743-ab75c16eb1d5
+  m_itemName: 
+  m_itemDescription: No durability. No sharp edge. Just raw enthusiasm and a questionable
+    plan.
+  m_itemIcon: {fileID: 0}
+  m_pickup: {fileID: 0}
+  m_isStackable: 0
+  m_category: 1
+  m_itemPrice: 0
+  m_targetEquipmentSlot: 6
+  m_equipCondition:
+    m_AND: []
+  m_equippedPrefab: {fileID: 0}
+  m_projectile: {fileID: 0}
+  m_weaponAOC: {fileID: 0}
+  m_weaponDamage: 2
+  m_weaponRange: 2
+  m_percentageBonus: 0
+  m_isRightHanded: 1
