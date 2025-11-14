@@ -27,7 +27,9 @@ namespace PolyQuest.Dialogues
         private const float kProximityThreshold = 3.0f;
         private bool m_inActiveDialogue = false;
 
-        public event Action OnConversationUpdated;
+        public event Action OnDialogueStarted;
+        public event Action OnDialogueUpdated;
+        public event Action OnDialogueEnded;
 
         /*---------------------------------------------------------------- 
         | --- Awake: Called when the script instance is being loaded --- |
@@ -87,7 +89,9 @@ namespace PolyQuest.Dialogues
             m_inActiveDialogue = true;
             m_currentNode = m_activeDialogue.GetRootNode();
             TriggerEnterAction();
-            OnConversationUpdated?.Invoke();
+
+            OnDialogueStarted?.Invoke();
+            OnDialogueUpdated?.Invoke();
         }
 
         /*------------------------------------------------------------------------
@@ -124,7 +128,9 @@ namespace PolyQuest.Dialogues
             TriggerExitAction();
             m_currentNode = null;
             m_activeNPC = null;
-            OnConversationUpdated?.Invoke();
+
+            OnDialogueEnded?.Invoke();
+            OnDialogueUpdated?.Invoke();
         }
 
         /*-------------------------------------------------------- 
@@ -172,7 +178,7 @@ namespace PolyQuest.Dialogues
             TriggerExitAction();
             m_currentNode = validChildren[randomIndex];
             TriggerEnterAction();
-            OnConversationUpdated?.Invoke();
+            OnDialogueUpdated?.Invoke();
         }
 
         /*------------------------------------------------------------------------------------ 

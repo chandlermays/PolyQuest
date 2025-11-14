@@ -45,7 +45,7 @@ namespace PolyQuest.Dialogues
         ---------------------------------------------------------------------*/
         private void OnEnable()
         {
-            m_playerDialogueHandler.OnConversationUpdated += UpdateUI;
+            m_playerDialogueHandler.OnDialogueUpdated += UpdateUI;
             
         }
 
@@ -54,7 +54,7 @@ namespace PolyQuest.Dialogues
         --------------------------------------------------------------------*/
         private void OnDestroy()
         {
-            m_playerDialogueHandler.OnConversationUpdated -= UpdateUI;
+            m_playerDialogueHandler.OnDialogueUpdated -= UpdateUI;
         }
 
         /*-----------------------------------------------------
@@ -62,7 +62,7 @@ namespace PolyQuest.Dialogues
         -----------------------------------------------------*/
         void Start()
         {
-            UpdateUI();
+            gameObject.SetActive(m_playerDialogueHandler.IsActive());
         }
 
         /*-----------------------------------------------------------------
@@ -70,7 +70,6 @@ namespace PolyQuest.Dialogues
         -----------------------------------------------------------------*/
         private void UpdateUI()
         {
-            gameObject.SetActive(m_playerDialogueHandler.IsActive());
             if (!m_playerDialogueHandler.IsActive())
                 return;
 

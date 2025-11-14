@@ -66,7 +66,7 @@ namespace PolyQuest.SceneManagement
         --------------------------------------------------------------------*/
         public Coroutine FadeOut()
         {
-            return Fade(1, m_fadeDuration);
+            return Fade(1, m_fadeDuration);     // Fade to black
         }
 
         /*------------------------------------------------------------------
@@ -74,7 +74,7 @@ namespace PolyQuest.SceneManagement
         ------------------------------------------------------------------*/
         public Coroutine FadeIn()
         {
-            return Fade(0, m_fadeDuration);
+            return Fade(0, m_fadeDuration);     // Fade to clear
         }
 
         /*--------------------------------------------------------------------

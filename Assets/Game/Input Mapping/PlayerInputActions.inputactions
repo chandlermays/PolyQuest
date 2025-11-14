@@ -3,6 +3,34 @@
     "name": "PlayerInputActions",
     "maps": [
         {
+            "name": "Player",
+            "id": "dc5972e9-21e5-490c-a86f-9695375e03b6",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "81980340-5a22-42e8-871a-69fa82b74fe8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "1b781970-5367-49b8-a825-d83e47e2b937",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "Camera",
             "id": "38aabbf7-64fe-46b7-9256-a6e2068e84c9",
             "actions": [
