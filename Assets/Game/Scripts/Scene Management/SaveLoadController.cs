@@ -44,11 +44,9 @@ namespace PolyQuest.SceneManagement
         ---------------------------------------------------*/
         private IEnumerator LoadLastScene()
         {
-            TransitionFade transitionFade = FindFirstObjectByType<TransitionFade>();
-
-            yield return transitionFade.FadeOut();
+            yield return TransitionFade.Instance.FadeOut();
             yield return m_saveSystem.LoadLastScene(GetCurrentSave());
-            yield return transitionFade.FadeIn();
+            yield return TransitionFade.Instance.FadeIn();
         }
 
         /*----------------------------------------------------------
@@ -56,11 +54,9 @@ namespace PolyQuest.SceneManagement
         ----------------------------------------------------------*/
         private IEnumerator LoadFirstScene()
         {
-            TransitionFade transitionFade = FindFirstObjectByType<TransitionFade>();
-
-            yield return transitionFade.FadeOut();
+            yield return TransitionFade.Instance.FadeOut();
             yield return SceneManager.LoadSceneAsync(m_firstSceneIndex);
-            yield return transitionFade.FadeIn();
+            yield return TransitionFade.Instance.FadeIn();
         }
 
         /*-----------------------------------------------------
@@ -68,11 +64,9 @@ namespace PolyQuest.SceneManagement
         -----------------------------------------------------*/
         private IEnumerator LoadMainMenuScene()
         {
-            TransitionFade transitionFade = FindFirstObjectByType<TransitionFade>();
-
-            yield return transitionFade.FadeOut();
+            yield return TransitionFade.Instance.FadeOut();
             yield return SceneManager.LoadSceneAsync(m_menuSceneIndex);
-            yield return transitionFade.FadeIn();
+            yield return TransitionFade.Instance.FadeIn();
         }
 
         /*-----------------------------------------

@@ -12,9 +12,12 @@ namespace PolyQuest.SceneManagement
      *      - Provides coroutine-based fade routines for asynchronous operations.                  *
      *      - Allows resetting the fade state and waiting between transitions.                     *
      *      - Ensures only one fade operation runs at a time.                                      *
+     *      - Singleton access via TransitionFade.Instance.                                        *
      * ------------------------------------------------------------------------------------------- */
     public class TransitionFade : MonoBehaviour
     {
+        public static TransitionFade Instance { get; private set; }
+
         [Header("Fade Settings")]
         [SerializeField] private float m_fadeDuration = 2f;
         [SerializeField] private float m_waitDuration = 1f;
@@ -27,8 +30,27 @@ namespace PolyQuest.SceneManagement
         ----------------------------------------------------------------*/
         private void Awake()
         {
+            // Singleton enforcement
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+
             m_canvasGroup = GetComponent<CanvasGroup>();
             Utilities.CheckForNull(m_canvasGroup, nameof(m_canvasGroup));
+        }
+
+        /*--------------------------------------------------------------------
+        | --- OnDestroy: Called when the MonoBehaviour will be destroyed --- |
+        --------------------------------------------------------------------*/
+        private void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                Instance = null;
+            }
         }
 
         /*----------------------------------------------------

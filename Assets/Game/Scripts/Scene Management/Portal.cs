@@ -84,14 +84,12 @@ namespace PolyQuest.SceneManagement
         {
             DontDestroyOnLoad(gameObject);
 
-            // These are amongst the "PerservedObjects" in the game that get created upon loading scenes
-            TransitionFade fade = FindFirstObjectByType<TransitionFade>();
             SaveLoadController saveLoadController = FindFirstObjectByType<SaveLoadController>();
 
             PlayerController playerController = m_player.GetComponent<PlayerController>();
             playerController.enabled = false;
 
-            yield return fade.FadeOut();
+            yield return TransitionFade.Instance.FadeOut();
 
             // Checkpoint before scene transition
             saveLoadController.Save();
@@ -110,8 +108,8 @@ namespace PolyQuest.SceneManagement
             // Checkpoint after scene transition
             saveLoadController.Save();
 
-            yield return fade.Wait();
-            yield return fade.FadeIn();
+            yield return TransitionFade.Instance.Wait();
+            yield return TransitionFade.Instance.FadeIn();
 
             newPlayerController.enabled = true;
             Destroy(gameObject);
