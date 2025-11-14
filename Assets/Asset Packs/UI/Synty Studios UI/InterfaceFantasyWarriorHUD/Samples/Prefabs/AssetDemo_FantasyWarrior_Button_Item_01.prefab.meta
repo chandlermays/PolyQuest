@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 83e3de735e644f74090b34bfbea96f88
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Samples/Prefabs/AssetDemo_FantasyWarrior_Button_Item_01.prefab
+  uploadId: 782056

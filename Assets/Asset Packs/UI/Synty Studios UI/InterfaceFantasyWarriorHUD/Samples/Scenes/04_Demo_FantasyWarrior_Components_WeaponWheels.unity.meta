@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 09b5d1095073ad049a1611696c1ca3e7
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Samples/Scenes/04_Demo_FantasyWarrior_Components_WeaponWheels.unity
+  uploadId: 782056

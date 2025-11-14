@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3cb4e78a5648b8249a41562d4b6bf57c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Animation/Controllers/AC_HUD_FantasyWarrior_ActionBar_CooldownItem_01.controller
+  uploadId: 782056

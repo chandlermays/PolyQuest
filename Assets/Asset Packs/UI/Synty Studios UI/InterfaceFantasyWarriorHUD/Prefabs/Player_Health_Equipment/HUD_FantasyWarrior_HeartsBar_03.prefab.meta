@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 3c7cfe1d2d244c0418e78b010a654c8c
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Player_Health_Equipment/HUD_FantasyWarrior_HeartsBar_03.prefab
+  uploadId: 782056

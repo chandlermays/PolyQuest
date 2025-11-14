@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a3570155ac4d70542ba5f4954fd35192
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Animation/Clips/ANIM_HUD_FantasyWarrior_EventLog_Item_01_Idle.anim
+  uploadId: 782056

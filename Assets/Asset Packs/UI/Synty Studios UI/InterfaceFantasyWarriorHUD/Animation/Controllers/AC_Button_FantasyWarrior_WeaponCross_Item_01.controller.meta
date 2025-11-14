@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 399f8b07a8916f64f8bcebb7bb5e7cac
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Animation/Controllers/AC_Button_FantasyWarrior_WeaponCross_Item_01.controller
+  uploadId: 782056

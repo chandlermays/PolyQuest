@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: fc60602d380d6ae4f8bdb1d3c629076c
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Compass/_Parts/HUD_Compass_FantasyWarrior_Content_02.prefab
+  uploadId: 782056

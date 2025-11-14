@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e9a18b70702c4b74cae2bb0653babd55
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Samples/Scenes/03_Demo_FantasyWarrior_Components_Compass-Minimap-CharacterPortraits.unity
+  uploadId: 782056

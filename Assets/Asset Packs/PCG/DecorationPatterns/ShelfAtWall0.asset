@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd946f92371755745a92507bd1ff5abe, type: 3}
+  m_Name: ShelfAtWall0
+  m_EditorClassIdentifier: 
+  roomTypes: 65
+  prefab: {fileID: 9074271588866406604, guid: c6032046d41fb8241bf8f05a86937913, type: 3}
+  prefabRotation: 0
+  placement:
+    array: 02000000020000000400000004000000
+    width: 2
+    height: 2
+  fill:
+    array: 03000000030000000400000004000000
+    width: 2
+    height: 2
+  centerHorizontally: 0
+  centerVertically: 0

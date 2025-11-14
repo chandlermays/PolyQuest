@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 92b0e0ed8a1ec61499ad86501c6d44e2
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Animation/Controllers/AC_HUD_FantasyWarrior_Reticle_Bow_01.controller
+  uploadId: 782056

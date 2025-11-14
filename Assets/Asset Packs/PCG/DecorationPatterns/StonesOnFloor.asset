@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c50e789841fa5b3468664af19d485b82, type: 3}
+  m_Name: StonesOnFloor
+  m_EditorClassIdentifier: 
+  roomTypes: 171
+  childRules:
+  - {fileID: 11400000, guid: 1f32cb9f7ae76dd4196fd26ca9e2c778, type: 2}
+  - {fileID: 11400000, guid: b5fc2a43bfa33c5469029cb122f56eb7, type: 2}
+  - {fileID: 11400000, guid: 7ea3be9d32c25b94084743b7b46379cc, type: 2}
+  - {fileID: 11400000, guid: 9ed5f014e228cf747a8f69601746b00b, type: 2}

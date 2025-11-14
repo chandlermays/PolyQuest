@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ffb004131799bd34cbf529acff51e23e
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Reticles_Crosshairs/HUD_FantasyWarrior_Reticle_Ring_02.prefab
+  uploadId: 782056

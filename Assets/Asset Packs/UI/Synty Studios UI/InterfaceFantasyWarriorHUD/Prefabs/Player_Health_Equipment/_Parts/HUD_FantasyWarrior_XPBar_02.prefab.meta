@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: fd95924ec0f66dd4a946410b8592e0eb
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Player_Health_Equipment/_Parts/HUD_FantasyWarrior_XPBar_02.prefab
+  uploadId: 782056

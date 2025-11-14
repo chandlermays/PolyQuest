@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e0e7182e236fd3545afec407220926c6
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Animation/Clips/ANIM_Overlay_FantasyWarrior_FadeToBlack_01_In.anim
+  uploadId: 782056

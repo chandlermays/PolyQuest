@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1e33a244d43607f479739403f32b8afd
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Player_Health_Equipment/_Parts/HUD_FantasyWarrior_Stat_Dial_01.prefab
+  uploadId: 782056

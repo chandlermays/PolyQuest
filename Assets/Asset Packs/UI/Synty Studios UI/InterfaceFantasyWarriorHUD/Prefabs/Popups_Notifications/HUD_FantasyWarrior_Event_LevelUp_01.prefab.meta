@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 91f9c11a333bf814d97f772e1b29f240
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Popups_Notifications/HUD_FantasyWarrior_Event_LevelUp_01.prefab
+  uploadId: 782056

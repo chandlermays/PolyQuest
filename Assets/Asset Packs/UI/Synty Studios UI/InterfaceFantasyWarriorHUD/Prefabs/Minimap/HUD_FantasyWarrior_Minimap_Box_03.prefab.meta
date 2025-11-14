@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 83a229826dfe8024ca93df02bb0b0946
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Prefabs/Minimap/HUD_FantasyWarrior_Minimap_Box_03.prefab
+  uploadId: 782056

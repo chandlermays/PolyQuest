@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c50e789841fa5b3468664af19d485b82, type: 3}
+  m_Name: CornerItem
+  m_EditorClassIdentifier: 
+  roomTypes: 20
+  childRules:
+  - {fileID: 11400000, guid: 571c973a2efd1e24e8fb686a51441f47, type: 2}
+  - {fileID: 11400000, guid: cafcacad9b23f7f42a1e902e0749a370, type: 2}
+  - {fileID: 11400000, guid: eb7fa92cfb222334fadc98dbffd60179, type: 2}
+  - {fileID: 11400000, guid: 53f407fa0a831164bb6ecc332a693a51, type: 2}

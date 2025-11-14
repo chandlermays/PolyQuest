@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 669b06bf2f0a5a5488fad44e45666cae
+timeCreated: 1576555502
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Materials/MAT_FantasyWarrior_ParticleFX_Beams_Additive.mat
+  uploadId: 782056

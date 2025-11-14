@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c50e789841fa5b3468664af19d485b82, type: 3}
+  m_Name: BarrelInBossRoom
+  m_EditorClassIdentifier: 
+  roomTypes: 8
+  childRules:
+  - {fileID: 11400000, guid: efa2d07efbb04e348ab5ce0b180c405d, type: 2}
+  - {fileID: 11400000, guid: 33201c9cc67905f44b503c207c52c162, type: 2}
+  - {fileID: 11400000, guid: a53a01f5d625be946a97457fe26288f7, type: 2}
+  - {fileID: 11400000, guid: 99dc91f3c2f90b240a4830d3aafb34be, type: 2}

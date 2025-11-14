@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cb7102e1506002f4c88d21dbeb5e94b0
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292533
+  packageName: Fantasy Warrior HUD - Synty INTERFACE - GUI
+  packageVersion: 1.0.4
+  assetPath: Assets/Synty/InterfaceFantasyWarriorHUD/Animation/Controllers/AC_HUD_FantasyWarrior_Event_TimeUp_01.controller
+  uploadId: 782056

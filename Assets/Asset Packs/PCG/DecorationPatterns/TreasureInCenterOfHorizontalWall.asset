@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd946f92371755745a92507bd1ff5abe, type: 3}
+  m_Name: TreasureInCenterOfHorizontalWall
+  m_EditorClassIdentifier: 
+  roomTypes: 16
+  prefab: {fileID: 1275260121246722862, guid: c2e4ee891bae8154ca870c7490ac2544, type: 3}
+  prefabRotation: 0
+  placement:
+    array: 040000000400000004000000000000000200000000000000
+    width: 3
+    height: 2
+  fill:
+    array: 040000000400000004000000000000000600000000000000
+    width: 3
+    height: 2
+  centerHorizontally: 1
+  centerVertically: 0
