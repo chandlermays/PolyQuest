@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 //---------------------------------
 
 namespace PolyQuest.Core
@@ -17,9 +18,32 @@ namespace PolyQuest.Core
         [Header("Camera Settings")]
         [SerializeField] private Transform m_target;
         [SerializeField] private float m_rotationSpeed = 100.0f;
+        [SerializeField] private InputActionReference m_rotateAction;
 
-        private const KeyCode kRotateLeft = KeyCode.A;
-        private const KeyCode kRotateRight = KeyCode.D;
+        /*----------------------------------------------------------------
+        | --- Awake: Called when the script instance is being loaded --- |
+        ----------------------------------------------------------------*/
+        private void Awake()
+        {
+            Utilities.CheckForNull(m_target, nameof(m_target));
+            Utilities.CheckForNull(m_rotateAction, nameof(m_rotateAction));
+        }
+
+        /*---------------------------------------------------------------------
+        | --- OnEnable: Called when the object becomes enabled and active --- |
+        ---------------------------------------------------------------------*/
+        private void OnEnable()
+        {
+            m_rotateAction.action.Enable();
+        }
+
+        /*---------------------------------------------------------------------------
+        | --- OnDisable: Called when the behaviour becomes disabled or inactive --- |
+        ---------------------------------------------------------------------------*/
+        private void OnDisable()
+        {
+            m_rotateAction.action.Disable();
+        }
 
         /*------------------------------------------------------------------------------------------------------------
         | --- LateUpdate: Called upon every frame AFTER the internal animation update (Unity Order of Execution) --- |
@@ -42,15 +66,11 @@ namespace PolyQuest.Core
         ---------------------------------------------------*/
         private void HandleInput()
         {
-            // Rotating the Camera to the Left
-            if (Input.GetKey(kRotateLeft))
+            float rotationInput = m_rotateAction.action.ReadValue<float>();
+            if (Mathf.Abs(rotationInput) > 0.1f)
             {
-                transform.RotateAround(m_target.position, Vector3.up, -m_rotationSpeed * Time.deltaTime);
-            }
-            // Rotating the Camera to the Right
-            if (Input.GetKey(kRotateRight))
-            {
-                transform.RotateAround(m_target.position, Vector3.up, m_rotationSpeed * Time.deltaTime);
+                float rotationAmount = rotationInput * m_rotationSpeed * Time.deltaTime;
+                transform.RotateAround(m_target.position, Vector3.up, rotationAmount);
             }
         }
     }

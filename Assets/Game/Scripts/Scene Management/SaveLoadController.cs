@@ -23,8 +23,6 @@ namespace PolyQuest.SceneManagement
         private const string kCurrentSaveKey = "CurrentSaveName";
 
         /* --- kCurrentSaveKey Bindings --- */
-        [SerializeField] private KeyCode kSaveKey = KeyCode.F5;
-        [SerializeField] private KeyCode kLoadKey = KeyCode.F9;
         [SerializeField] private SceneField m_firstSceneIndex;
         [SerializeField] private SceneField m_menuSceneIndex;
 
@@ -67,21 +65,6 @@ namespace PolyQuest.SceneManagement
             yield return TransitionFade.Instance.FadeOut();
             yield return SceneManager.LoadSceneAsync(m_menuSceneIndex);
             yield return TransitionFade.Instance.FadeIn();
-        }
-
-        /*-----------------------------------------
-        | --- Update: Called upon every frame --- |
-        -----------------------------------------*/
-        private void Update()
-        {
-            if (Input.GetKeyDown(kSaveKey))
-            {
-                Save();
-            }
-            if (Input.GetKeyDown(kLoadKey))
-            {
-                Load();
-            }
         }
 
         /*--------------------------------------------------------

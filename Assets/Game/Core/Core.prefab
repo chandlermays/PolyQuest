@@ -341,7 +341,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1454670846679660244, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_Size
-      value: 0.49999997
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1454670846679660244, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_Value
@@ -377,11 +377,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2002567076533655180, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00002732873
+      value: -0.00006392598
       objectReference: {fileID: 0}
     - target: {fileID: 2124063913978228164, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_Size
-      value: 0.4999999
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2183691150617339102, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_playerEquipment
@@ -537,7 +537,7 @@ PrefabInstance:
       objectReference: {fileID: 2197901914608801720}
     - target: {fileID: 3622221598605016776, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -112.837234
+      value: -112.4003
       objectReference: {fileID: 0}
     - target: {fileID: 3692736932432080405, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_AnchorMax.y
@@ -845,7 +845,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6642747292782985579, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -124.27007
+      value: -125
       objectReference: {fileID: 0}
     - target: {fileID: 6659318329363704477, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_experienceComponent
@@ -1093,7 +1093,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8759936191257514658, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_Value
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8877019673715142479, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_playerActions

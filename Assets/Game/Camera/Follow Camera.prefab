@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Core.FollowCamera
   m_target: {fileID: 0}
   m_rotationSpeed: 100
+  m_rotateAction: {fileID: 0}
 --- !u!1 &6910047660609305607
 GameObject:
   m_ObjectHideFlags: 0
