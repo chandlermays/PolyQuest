@@ -13,6 +13,7 @@ namespace PolyQuest.Core
         [SerializeField] private CinemachineCamera m_dialogueCamera;
         [SerializeField] private PlayerDialogueHandler m_playerDialogueHandler;
         [SerializeField] private DialogueUI m_dialogueUI;
+        [SerializeField] private GameObject m_playerHUD;
 
         private bool m_isDialogueCameraActive = false;
         private bool m_isTransitioning = false;
@@ -26,6 +27,7 @@ namespace PolyQuest.Core
             Utilities.CheckForNull(m_dialogueCamera, nameof(m_dialogueCamera));
             Utilities.CheckForNull(m_playerDialogueHandler, nameof(m_playerDialogueHandler));
             Utilities.CheckForNull(m_dialogueUI, nameof(m_dialogueUI));
+            Utilities.CheckForNull(m_playerHUD, nameof(m_playerHUD));
         }
 
         /*--------------------------------------------------------------------- 
@@ -133,6 +135,7 @@ namespace PolyQuest.Core
         private void SetDialogueUIVisibility(bool visible)
         {
             m_dialogueUI.gameObject.SetActive(visible);
+            m_playerHUD.SetActive(!visible);
         }
     }
 }

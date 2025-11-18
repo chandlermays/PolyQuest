@@ -24,7 +24,7 @@ namespace PolyQuest.Dialogues
         private AIDialogueHandler m_activeNPC;
         private MovementComponent m_movementComponent;
 
-        private const float kProximityThreshold = 3.0f;
+        private const float kProximityThreshold = 4.0f;
         private bool m_inActiveDialogue = false;
 
         public event Action OnDialogueStarted;
