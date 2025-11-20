@@ -727,6 +727,10 @@ PrefabInstance:
       propertyPath: m_playerCooldowns
       value: 
       objectReference: {fileID: 288184277483996691}
+    - target: {fileID: 5537499371754828045, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
+      propertyPath: m_playerDialogueHandler
+      value: 
+      objectReference: {fileID: 81216155690147253}
     - target: {fileID: 5552913130068532036, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
