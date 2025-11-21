@@ -2396,6 +2396,7 @@ GameObject:
   - component: {fileID: 950747730879798681}
   - component: {fileID: 6115454564104503554}
   - component: {fileID: 1845836577138156258}
+  - component: {fileID: 7559417861468017874}
   - component: {fileID: 9177089752574762719}
   - component: {fileID: 2277701404306916200}
   - component: {fileID: 6041332017740411292}
@@ -2614,6 +2615,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Components.ManaComponent
   m_mana: 20
   m_manaRegenRate: 0
+--- !u!114 &7559417861468017874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8136770854238850487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3320a049ab481c43a96d8ea03606941, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Attributes.Attributes
 --- !u!114 &9177089752574762719
 MonoBehaviour:
   m_ObjectHideFlags: 0

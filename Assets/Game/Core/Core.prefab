@@ -255,6 +255,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 643933172658888278, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
+      propertyPath: m_attributes
+      value: 
+      objectReference: {fileID: 8067438752858759560}
     - target: {fileID: 727105026836596127, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_healthComponent
       value: 
@@ -435,10 +439,6 @@ PrefabInstance:
       propertyPath: m_healthComponent
       value: 
       objectReference: {fileID: 6035750617814348888}
-    - target: {fileID: 2706406719243219169, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2712204396972528145, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -631,6 +631,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4463821845345732772, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
+      propertyPath: m_attributes
+      value: 
+      objectReference: {fileID: 8067438752858759560}
     - target: {fileID: 4507537019262338065, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_playerEquipment
       value: 
@@ -819,6 +823,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6168701532272752294, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
+      propertyPath: m_attributes
+      value: 
+      objectReference: {fileID: 8067438752858759560}
     - target: {fileID: 6197936143163376973, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1091,6 +1099,10 @@ PrefabInstance:
       propertyPath: m_shopInteractor
       value: 
       objectReference: {fileID: 7958225314287560071}
+    - target: {fileID: 8729524768796457905, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
+      propertyPath: m_attributes
+      value: 
+      objectReference: {fileID: 8067438752858759560}
     - target: {fileID: 8759936191257514658, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_Size
       value: 1
@@ -1392,6 +1404,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8704dfed14ac9a44af7b728a7151b45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Shops.UnnamedComponent
+--- !u!114 &8067438752858759560 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7559417861468017874, guid: dd9f6460b44b30f4eb6a8524e7bce577, type: 3}
+  m_PrefabInstance: {fileID: 512634871694669146}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8644276066086435053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3320a049ab481c43a96d8ea03606941, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Attributes.Attributes
 --- !u!1 &8644276066086435053 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8136770854238850487, guid: dd9f6460b44b30f4eb6a8524e7bce577, type: 3}
