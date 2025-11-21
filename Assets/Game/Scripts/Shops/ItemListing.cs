@@ -17,7 +17,7 @@ namespace PolyQuest.Shops
         private ShopItem m_shopItem;
 
         /*------------------------------------------------------------------------
-        | --- Setup: Configures the m_item listing with the provided shop m_item --- |
+        | --- Setup: Configures the item listing with the provided shop item --- |
         ------------------------------------------------------------------------*/
         public void Setup(Shop shop, ShopItem shopItem)
         {
@@ -32,7 +32,7 @@ namespace PolyQuest.Shops
         }
 
         /*----------------------------------------------------------------
-        | --- Add: Adds one unit of the m_item to the current purchase --- |
+        | --- Add: Adds one unit of the item to the current purchase --- |
         ----------------------------------------------------------------*/
         public void Add()
         {
@@ -40,7 +40,7 @@ namespace PolyQuest.Shops
         }
 
         /*------------------------------------------------------------------------
-        | --- Remove: Removes one unit of the m_item from the current purchase --- |
+        | --- Remove: Removes one unit of the item from the current purchase --- |
         ------------------------------------------------------------------------*/
         public void Remove()
         {

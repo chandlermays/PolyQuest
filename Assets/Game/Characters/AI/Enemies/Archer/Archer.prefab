@@ -26,23 +26,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3169505572643624113, guid: d64d14365592f024aadb6fc251dcdc2b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -15
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3169505572643624113, guid: d64d14365592f024aadb6fc251dcdc2b, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9659258
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3169505572643624113, guid: d64d14365592f024aadb6fc251dcdc2b, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3169505572643624113, guid: d64d14365592f024aadb6fc251dcdc2b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.2588191
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3169505572643624113, guid: d64d14365592f024aadb6fc251dcdc2b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3169505572643624113, guid: d64d14365592f024aadb6fc251dcdc2b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3169505572643624113, guid: d64d14365592f024aadb6fc251dcdc2b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3169505572643624113, guid: d64d14365592f024aadb6fc251dcdc2b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -58,7 +58,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3224690789882670351, guid: d64d14365592f024aadb6fc251dcdc2b, type: 3}
       propertyPath: m_uniqueIdentifier
-      value: d4407a6c-0d51-4e31-b249-32c921760ee8
+      value: 6a486532-5664-4889-b93d-fbc30f855f80
       objectReference: {fileID: 0}
     - target: {fileID: 3272163512795474766, guid: d64d14365592f024aadb6fc251dcdc2b, type: 3}
       propertyPath: m_health

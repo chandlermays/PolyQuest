@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2412482830312430667}
   - component: {fileID: 8749831937690071226}
+  - component: {fileID: 2336226203001060670}
   m_Layer: 5
   m_Name: Attributes UI
   m_TagString: Untagged
@@ -51,6 +52,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.UI.Core.UIToggler
   m_uiPrefab: {fileID: 8863079065009796841}
   m_toggleKey: 99
+--- !u!114 &2336226203001060670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254402304942042600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fb260191d7cfde459588fef1f6402f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Attributes.AttributeUI
+  m_attributes: {fileID: 0}
+  m_availablePoints: {fileID: 3417171276931633772}
+  m_confirmButton: {fileID: 1892480832436956341}
 --- !u!1 &2437794162652889463
 GameObject:
   m_ObjectHideFlags: 0
@@ -85,9 +101,9 @@ RectTransform:
   - {fileID: 1587253527054356125}
   m_Father: {fileID: 104616867825244701}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 460, y: -355}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -140, y: 45}
   m_SizeDelta: {x: 100, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2058328229164819842
@@ -196,7 +212,7 @@ GameObject:
   - component: {fileID: 3408739024389417156}
   - component: {fileID: 3417171276931633772}
   m_Layer: 5
-  m_Name: Remaining Points
+  m_Name: Available Points
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -249,7 +265,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Remaining Points: 0'
+  m_text: 'Available Points: 0'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -982,10 +998,6 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 76925151e8509ef4bb1b431659cfa9f6, type: 3}
-    - target: {fileID: 7750405985932364307, guid: 939f734a623a87d43bfaf2ff5f187cc1, type: 3}
-      propertyPath: m_PreserveAspect
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1104,10 +1116,6 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: ae2a881ff27d7c443acbbc4692748aad, type: 3}
-    - target: {fileID: 7750405985932364307, guid: 939f734a623a87d43bfaf2ff5f187cc1, type: 3}
-      propertyPath: m_PreserveAspect
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1226,10 +1234,6 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 71597b0e2385e5c4097f3b21fd250cbb, type: 3}
-    - target: {fileID: 7750405985932364307, guid: 939f734a623a87d43bfaf2ff5f187cc1, type: 3}
-      propertyPath: m_PreserveAspect
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

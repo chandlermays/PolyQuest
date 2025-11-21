@@ -31,6 +31,7 @@ namespace PolyQuest.Attributes
         public float GetManaRegenRate()             =>      GetStat(Stat.kManaRegenRate);
         public float GetExperienceReward()          =>      GetStat(Stat.kExperienceReward);
         public float GetExperienceToLevelUp()       =>      GetStat(Stat.kExperienceToLevelUp);
+        public float GetTotalAttributePoints()      =>      GetStat(Stat.kTotalAttributePoints);
 
         /*-------------------------------------------------------------------------------
         | --- GetStat: Returns the Value of the Specified Stat at the current Level --- |
@@ -79,6 +80,11 @@ namespace PolyQuest.Attributes
                 case Stat.kExperienceToLevelUp:
                     if (m_baseProgression is PlayerProgression playerProgression)
                         return playerProgression.GetExperience(m_level);
+                    return 0;
+
+                case Stat.kTotalAttributePoints:
+                    if (m_baseProgression is PlayerProgression playerProg)
+                        return playerProg.GetTotalAttributePoints(m_level);
                     return 0;
 
                 default:

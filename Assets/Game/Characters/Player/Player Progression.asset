@@ -27,6 +27,9 @@ MonoBehaviour:
   m_manaRegenIncreasePercentage: 10
   m_initialManaRegenRate: 5
   m_manaRegenRates: 0500000006000000070000000800000009000000
-  m_experienceIncreasePercentage: 15
   m_initialExperience: 200
+  m_experienceIncreasePercentage: 15
   m_maxExperienceAmounts: c8000000ae010000b6020000e603000044050000
+  m_initialAttributePoints: 4
+  m_attributePointIncreasePercentage: 0
+  m_maxAttributePoints: 04000000080000000c0000001000000014000000

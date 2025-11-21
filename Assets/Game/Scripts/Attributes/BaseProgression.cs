@@ -25,9 +25,6 @@ namespace PolyQuest.Attributes
         [SerializeField] private int m_initialManaRegenRate;
         [SerializeField] private int[] m_manaRegenRates;
 
-        public float HealthIncreasePercentage => m_healthIncreasePercentage;
-        public int[] MaxHealthAmounts => m_maxHealthAmounts;
-
         /*------------------------------------------------------------------------ 
         | --- OnEnable: Called when the Object becomes Enabled and is Active --- |
         ------------------------------------------------------------------------*/
@@ -68,7 +65,7 @@ namespace PolyQuest.Attributes
                 return;
 
             m_maxHealthAmounts[0] = m_initialHealth;
-            for (int i = 1; i < m_maxHealthAmounts.Length; i++)
+            for (int i = 1; i < m_maxHealthAmounts.Length; ++i)
             {
                 m_maxHealthAmounts[i] = Mathf.RoundToInt(m_maxHealthAmounts[i - 1] * (1 + m_healthIncreasePercentage / 100f));
             }
@@ -83,7 +80,7 @@ namespace PolyQuest.Attributes
                 return;
 
             m_damageAmounts[0] = m_initialDamage;
-            for (int i = 1; i < m_damageAmounts.Length; i++)
+            for (int i = 1; i < m_damageAmounts.Length; ++i)
             {
                 m_damageAmounts[i] = Mathf.RoundToInt(m_damageAmounts[i - 1] * (1 + m_damageIncreasePercentage / 100f));
             }
@@ -98,7 +95,7 @@ namespace PolyQuest.Attributes
                 return;
 
             m_defenseAmounts[0] = m_initialDefense;
-            for (int i = 1; i < m_defenseAmounts.Length; i++)
+            for (int i = 1; i < m_defenseAmounts.Length; ++i)
             {
                 m_defenseAmounts[i] = Mathf.RoundToInt(m_defenseAmounts[i - 1] * (1 + m_defenseIncreasePercentage / 100f));
             }
@@ -113,7 +110,7 @@ namespace PolyQuest.Attributes
                 return;
 
             m_manaAmounts[0] = m_initialMana;
-            for (int i = 1; i < m_manaAmounts.Length; i++)
+            for (int i = 1; i < m_manaAmounts.Length; ++i)
             {
                 m_manaAmounts[i] = Mathf.RoundToInt(m_manaAmounts[i - 1] * (1 + m_manaIncreasePercentage / 100f));
             }
@@ -128,7 +125,7 @@ namespace PolyQuest.Attributes
                 return;
 
             m_manaRegenRates[0] = m_initialManaRegenRate;
-            for (int i = 1; i < m_manaRegenRates.Length; i++)
+            for (int i = 1; i < m_manaRegenRates.Length; ++i)
             {
                 m_manaRegenRates[i] = Mathf.RoundToInt(m_manaRegenRates[i - 1] * (1 + m_manaRegenIncreasePercentage / 100f));
             }

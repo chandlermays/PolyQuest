@@ -6,18 +6,34 @@ namespace PolyQuest.Attributes
 {
     public class Attributes : MonoBehaviour
     {
-        private Dictionary<Attribute, int> m_variable = new();
+        private readonly Dictionary<Attribute, int> m_assignedPoints = new();
+        private readonly Dictionary<Attribute, int> m_pendingPoints = new();
 
-        private int m_unspentPoints = 10;
-        public int PointsAvailable => m_unspentPoints;
+        private BaseStats m_baseStats;
 
-        public int GetPoints(Attribute attribute)
+        private void Awake()
         {
-            if (m_variable.TryGetValue(attribute, out int value))
-            {
-                return value;
-            }
-            return 0;
+            m_baseStats = GetComponent<BaseStats>();
+            Utilities.CheckForNull(m_baseStats, nameof(BaseStats));
+        }
+
+        public int GetAssignedPoints(Attribute attribute)       =>      m_assignedPoints.GetValueOrDefault(attribute);
+        public int GetPendingPoints(Attribute attribute)        =>      m_pendingPoints.GetValueOrDefault(attribute);
+        public int GetTotalAvailablePoints()                    =>      (int)m_baseStats.GetStat(Stat.kTotalAttributePoints);
+        public int GetRemainingPoints()                         =>      GetTotalAvailablePoints() - CalculateTotalAllocatedPoints();
+        public int GetTotalPoints(Attribute attribute)          =>      GetAssignedPoints(attribute) + GetPendingPoints(attribute);
+
+        private int CalculateTotalAllocatedPoints()
+        {
+            int total = 0;
+
+            foreach (int points in m_assignedPoints.Values)
+                total += points;
+
+            foreach (int points in m_pendingPoints.Values)
+                total += points;
+
+            return total;
         }
 
         public void AssignPoints(Attribute attribute, int points)
@@ -25,20 +41,28 @@ namespace PolyQuest.Attributes
             if (!CanAssignPoints(attribute, points))
                 return;
 
-            m_variable[attribute] = GetPoints(attribute) + points;
-            m_unspentPoints -= points;
-
+            m_pendingPoints[attribute] = GetPendingPoints(attribute) + points;
         }
 
         public bool CanAssignPoints(Attribute attribute, int points)
         {
-            if (GetPoints(attribute) + points < 0)
+            if (GetPendingPoints(attribute) + points < 0)
                 return false;
 
-            if (m_unspentPoints < points)
+            if (GetRemainingPoints() < points)
                 return false;
 
             return true;
+        }
+
+        public void Confirm()
+        {
+            foreach (Attribute attribute in m_pendingPoints.Keys)
+            {
+                m_assignedPoints[attribute] = GetTotalPoints(attribute);
+            }
+
+            m_pendingPoints.Clear();
         }
     }
 }

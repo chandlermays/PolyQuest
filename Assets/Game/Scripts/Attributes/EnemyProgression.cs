@@ -10,9 +10,6 @@ namespace PolyQuest.Attributes
         [SerializeField] private int m_initialExperienceReward;
         [SerializeField] private int[] m_experienceRewardAmounts;
 
-        public float ExperienceRewardIncreasePercentage => m_experienceRewardIncreasePercentage;
-        public int[] ExperienceRewardAmounts => m_experienceRewardAmounts;
-
         /*------------------------------------------------------------------------ 
         | --- OnEnable: Called when the Object becomes Enabled and is Active --- |
         ------------------------------------------------------------------------*/
@@ -34,7 +31,7 @@ namespace PolyQuest.Attributes
             if (m_experienceRewardAmounts.Length == 0) return;
 
             m_experienceRewardAmounts[0] = m_initialExperienceReward;
-            for (int i = 1; i < m_experienceRewardAmounts.Length; i++)
+            for (int i = 1; i < m_experienceRewardAmounts.Length; ++i)
             {
                 m_experienceRewardAmounts[i] = Mathf.RoundToInt(m_experienceRewardAmounts[i - 1] * (1 + m_experienceRewardIncreasePercentage / 100f));
             }

@@ -22,16 +22,29 @@ namespace PolyQuest.Edit
         private SerializedProperty m_experienceIncreasePercentage;
         private SerializedProperty m_maxExperienceAmounts;
 
+        private SerializedProperty m_initialAttributePoints;
+        private SerializedProperty m_attributePointIncreasePercentage;
+        private SerializedProperty m_maxAttributePoints;
+
         // Property names
         private const string kInitialExperience = "m_initialExperience";
         private const string kExperienceIncreasePercentage = "m_experienceIncreasePercentage";
         private const string kMaxExperienceAmounts = "m_maxExperienceAmounts";
+
+        private const string kInitialAttributePoints = "m_initialAttributePoints";
+        private const string kAttributePointIncreasePercentage = "m_attributePointIncreasePercentage";
+        private const string kMaxAttributePoints = "m_maxAttributePoints";
 
         // Labels
         private const string kInitialExperienceLabel = "Initial Experience";
         private const string kExperienceIncreasePercentageLabel = "Experience Increase %";
         private const string kRecalculateExperienceButton = "Recalculate Experience Amounts";
         private const string kMaxExperienceAmountsLabel = "Max Experience Amounts";
+
+        private const string kInitialAttributePointsLabel = "Initial Attribute Points";
+        private const string kAttributePointIncreasePercentageLabel = "Attribute Point Increase %";
+        private const string kRecalculateAttributePointsButton = "Recalculate Attribute Points";
+        private const string kMaxAttributePointsLabel = "Max Attribute Points";
 
         /*---------------------------------------------------------------------
         | --- OnEnable: Called when the object becomes enabled and active --- |
@@ -43,6 +56,10 @@ namespace PolyQuest.Edit
             m_initialExperience = serializedObject.FindProperty(kInitialExperience);
             m_experienceIncreasePercentage = serializedObject.FindProperty(kExperienceIncreasePercentage);
             m_maxExperienceAmounts = serializedObject.FindProperty(kMaxExperienceAmounts);
+
+            m_initialAttributePoints = serializedObject.FindProperty(kInitialAttributePoints);
+            m_attributePointIncreasePercentage = serializedObject.FindProperty(kAttributePointIncreasePercentage);
+            m_maxAttributePoints = serializedObject.FindProperty(kMaxAttributePoints);
         }
 
         /*--------------------------------------------------------------------------------------
@@ -55,6 +72,13 @@ namespace PolyQuest.Edit
 
             DisplayRecalculateButton(kRecalculateExperienceButton,
                 () => ((PlayerProgression)target).RecalculateMaxExperienceAmounts());
+
+            EditorGUILayout.Space();
+
+            DisplayPropertyField(m_initialAttributePoints, kInitialAttributePointsLabel);
+            DisplayPropertyField(m_attributePointIncreasePercentage, kAttributePointIncreasePercentageLabel);
+            DisplayRecalculateButton(kRecalculateAttributePointsButton,
+                () => ((PlayerProgression)target).RecalculateTotalAttributePoints());
         }
 
         /*--------------------------------------------------------------------------
@@ -63,6 +87,7 @@ namespace PolyQuest.Edit
         protected override void DisplaySubclassArrays()
         {
             DisplayArrayProperty(m_maxExperienceAmounts, kMaxExperienceAmountsLabel);
+            DisplayArrayProperty(m_maxAttributePoints, kMaxAttributePointsLabel);
         }
 
         /*---------------------------------------------------------------------------
@@ -83,6 +108,20 @@ namespace PolyQuest.Edit
                     Mathf.Pow(1 + m_experienceIncreasePercentage.floatValue / 100f, newIndex));
                 m_maxExperienceAmounts.GetArrayElementAtIndex(newIndex).intValue = previousGoal + newGoal;
             }
+
+            m_maxAttributePoints.InsertArrayElementAtIndex(newIndex);
+
+            if (newIndex == 0)
+            {
+                m_maxAttributePoints.GetArrayElementAtIndex(newIndex).intValue = 0;
+            }
+            else
+            {
+                int previousPoints = m_maxAttributePoints.GetArrayElementAtIndex(newIndex - 1).intValue;
+                int newPoints = Mathf.RoundToInt(m_initialAttributePoints.intValue *
+                    Mathf.Pow(1 + m_attributePointIncreasePercentage.floatValue / 100f, newIndex));
+                m_maxAttributePoints.GetArrayElementAtIndex(newIndex).intValue = previousPoints + newPoints;
+            }
         }
 
         /*-------------------------------------------------------------------------------------
@@ -93,6 +132,11 @@ namespace PolyQuest.Edit
             if (m_maxExperienceAmounts.arraySize > 0)
             {
                 m_maxExperienceAmounts.DeleteArrayElementAtIndex(m_maxExperienceAmounts.arraySize - 1);
+            }
+
+            if (m_maxAttributePoints.arraySize > 0)
+            {
+                m_maxAttributePoints.DeleteArrayElementAtIndex(m_maxAttributePoints.arraySize - 1);
             }
         }
     }

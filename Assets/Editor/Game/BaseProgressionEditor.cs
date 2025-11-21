@@ -202,7 +202,7 @@ namespace PolyQuest.Edit
         }
 
         /*------------------------------------------------------------------------------------------- 
-        | --- DisplayPropertyField: A Parameterized AdjustValue for Displaying Serialized Properties --- |
+        | --- DisplayPropertyField: A Parameterized Method for Displaying Serialized Properties --- |
         -------------------------------------------------------------------------------------------*/
         protected void DisplayPropertyField(SerializedProperty property, string label)
         {
@@ -223,7 +223,7 @@ namespace PolyQuest.Edit
         }
 
         /*------------------------------------------------------------------------------------------------- 
-        | --- DisplayArrayProperty: A Parameterized AdjustValue for Displaying Serialized Array Properties --- |
+        | --- DisplayArrayProperty: A Parameterized Method for Displaying Serialized Array Properties --- |
         -------------------------------------------------------------------------------------------------*/
         protected void DisplayArrayProperty(SerializedProperty arrayProperty, string label)
         {
@@ -253,7 +253,7 @@ namespace PolyQuest.Edit
         }
 
         /*---------------------------------------------------------------------------------- 
-        | --- AddLevel: A AdjustValue to Add a New Level to the Character Class Progression --- |
+        | --- AddLevel: A Method to Add a New Level to the Character Class Progression --- |
         ----------------------------------------------------------------------------------*/
         protected virtual void AddLevel()
         {
@@ -272,6 +272,7 @@ namespace PolyQuest.Edit
             m_damageAmounts.InsertArrayElementAtIndex(newIndex);
             m_defenseAmounts.InsertArrayElementAtIndex(newIndex);
             m_manaAmounts.InsertArrayElementAtIndex(newIndex);
+            m_manaRegenRates.InsertArrayElementAtIndex(newIndex);
 
             // Calculate Health
             if (newIndex == 0)
@@ -340,7 +341,7 @@ namespace PolyQuest.Edit
         }
 
         /*------------------------------------------------------------------------------------------------- 
-        | --- RemoveLastLevel: A AdjustValue to Remove the Last Level from the Character Class Progression --- |
+        | --- RemoveLastLevel: A Method to Remove the Last Level from the Character Class Progression --- |
         -------------------------------------------------------------------------------------------------*/
         protected virtual void RemoveLastLevel()
         {
