@@ -1,27 +1,58 @@
 using System.Collections.Generic;
 using UnityEngine;
 //---------------------------------
+using PolyQuest.Saving;
 
 namespace PolyQuest.Attributes
 {
-    public class Attributes : MonoBehaviour
+    public class Attributes : MonoBehaviour, IAttributeModifier, ISaveable
     {
-        private readonly Dictionary<Attribute, int> m_assignedPoints = new();
-        private readonly Dictionary<Attribute, int> m_pendingPoints = new();
+        [SerializeField] private AttributeStatConfig[] m_attributeModifiers;
+
+        [System.Serializable]
+        private class AttributeStatConfig
+        {
+            public Attribute m_attribute;
+            public Stat m_stat;
+            public float m_additiveBonus;
+            public float m_percentageBonus;
+        }
+
+        private Dictionary<Attribute, int> m_assignedPoints = new();
+        private Dictionary<Attribute, int> m_pendingPoints = new();
+        
+        private Dictionary<Stat, Dictionary<Attribute, float>> m_additiveModifiers = new();
+        private Dictionary<Stat, Dictionary<Attribute, float>> m_percentageModifiers = new();
 
         private BaseStats m_baseStats;
-
-        private void Awake()
-        {
-            m_baseStats = GetComponent<BaseStats>();
-            Utilities.CheckForNull(m_baseStats, nameof(BaseStats));
-        }
 
         public int GetAssignedPoints(Attribute attribute)       =>      m_assignedPoints.GetValueOrDefault(attribute);
         public int GetPendingPoints(Attribute attribute)        =>      m_pendingPoints.GetValueOrDefault(attribute);
         public int GetTotalAvailablePoints()                    =>      (int)m_baseStats.GetStat(Stat.kTotalAttributePoints);
         public int GetRemainingPoints()                         =>      GetTotalAvailablePoints() - CalculateTotalAllocatedPoints();
         public int GetTotalPoints(Attribute attribute)          =>      GetAssignedPoints(attribute) + GetPendingPoints(attribute);
+
+        private void Awake()
+        {
+            m_baseStats = GetComponent<BaseStats>();
+            Utilities.CheckForNull(m_baseStats, nameof(BaseStats));
+
+            foreach (var config in m_attributeModifiers)
+            {
+                if (!m_additiveModifiers.ContainsKey(config.m_stat))
+                {
+                    m_additiveModifiers[config.m_stat] = new();
+                }
+
+                if (!m_percentageModifiers.ContainsKey(config.m_stat))
+                {
+                    m_percentageModifiers[config.m_stat] = new();
+                }
+
+                m_additiveModifiers[config.m_stat][config.m_attribute] = config.m_additiveBonus;
+                m_percentageModifiers[config.m_stat][config.m_attribute] = config.m_percentageBonus;
+            }
+        }
 
         private int CalculateTotalAllocatedPoints()
         {
@@ -63,6 +94,40 @@ namespace PolyQuest.Attributes
             }
 
             m_pendingPoints.Clear();
+        }
+
+        public IEnumerable<float> GetAdditiveModifiers(Stat stat)
+        {
+            if (!m_additiveModifiers.ContainsKey(stat))
+                yield break;
+
+            foreach (Attribute attribute in m_additiveModifiers[stat].Keys)
+            {
+                float bonus = m_additiveModifiers[stat][attribute];
+                yield return bonus * GetTotalPoints(attribute);
+            }
+        }
+
+        public IEnumerable<float> GetPercentageModifiers(Stat stat)
+        {
+            if (!m_percentageModifiers.ContainsKey(stat))
+                yield break;
+
+            foreach (Attribute attribute in m_percentageModifiers[stat].Keys)
+            {
+                float bonus = m_percentageModifiers[stat][attribute];
+                yield return bonus * GetTotalPoints(attribute);
+            }
+        }
+
+        public object CaptureState()
+        {
+            return m_assignedPoints;
+        }
+
+        public void RestoreState(object state)
+        {
+            m_assignedPoints = new Dictionary<Attribute, int>((Dictionary<Attribute, int>)state);
         }
     }
 }

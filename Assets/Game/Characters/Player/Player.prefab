@@ -2614,7 +2614,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Components.ManaComponent
   m_mana: 20
-  m_manaRegenRate: 0
+  m_manaRegenRate: 5
 --- !u!114 &7559417861468017874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2627,6 +2627,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3320a049ab481c43a96d8ea03606941, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Attributes.Attributes
+  m_attributeModifiers:
+  - m_attribute: 0
+    m_stat: 1
+    m_additiveBonus: 0
+    m_percentageBonus: 5
+  - m_attribute: 1
+    m_stat: 1
+    m_additiveBonus: 0
+    m_percentageBonus: 5
+  - m_attribute: 2
+    m_stat: 0
+    m_additiveBonus: 0
+    m_percentageBonus: 5
+  - m_attribute: 3
+    m_stat: 3
+    m_additiveBonus: 0
+    m_percentageBonus: 5
+  - m_attribute: 3
+    m_stat: 4
+    m_additiveBonus: 0
+    m_percentageBonus: 5
 --- !u!114 &9177089752574762719
 MonoBehaviour:
   m_ObjectHideFlags: 0
