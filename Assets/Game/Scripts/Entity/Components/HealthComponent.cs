@@ -1,5 +1,5 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 //---------------------------------
 using PolyQuest.Attributes;
 using PolyQuest.Saving;
@@ -37,6 +37,7 @@ namespace PolyQuest.Components
         }
 
         private bool m_hasBeenInitialized = false;
+        private float m_lastKnownMaxHealth = 0f;
 
         /* --- Components --- */
         private BaseStats m_stats;
@@ -67,6 +68,8 @@ namespace PolyQuest.Components
             {
                 m_experienceComponent.OnLevelUp += FullyReplenishHealth;
             }
+
+            m_stats.OnStatModified += RecalculateMaxHealth;
         }
 
         /*---------------------------------------------------------------------------
@@ -78,6 +81,8 @@ namespace PolyQuest.Components
             {
                 m_experienceComponent.OnLevelUp -= FullyReplenishHealth;
             }
+
+            m_stats.OnStatModified -= RecalculateMaxHealth;
         }
 
         /*-----------------------------------------------------
@@ -89,9 +94,31 @@ namespace PolyQuest.Components
             if (!m_hasBeenInitialized)
             {
                 m_health = m_stats.GetHealth();
+                m_lastKnownMaxHealth = m_health;
                 m_hasBeenInitialized = true;
                 OnHealthChanged?.Invoke();
             }
+        }
+
+        /*------------------------------------------------------------------
+        | --- RecalculateMaxHealth: Recalculate Health on Stat Changes --- |
+        ------------------------------------------------------------------*/
+        public void RecalculateMaxHealth()
+        {
+            float newMaxHealth = m_stats.GetHealth();
+
+            if (m_lastKnownMaxHealth > 0f)
+            {
+                float percent = m_health / m_lastKnownMaxHealth;
+                m_health = Mathf.Clamp(newMaxHealth * percent, 0f, newMaxHealth);
+            }
+            else
+            {
+                m_health = Mathf.Clamp(m_health, 0f, newMaxHealth);
+            }
+
+            m_lastKnownMaxHealth = newMaxHealth;
+            OnHealthChanged?.Invoke();
         }
 
         /*---------------------------------------------------------------

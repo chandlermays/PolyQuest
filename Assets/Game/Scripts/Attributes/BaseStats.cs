@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 //---------------------------------
 
@@ -24,6 +25,8 @@ namespace PolyQuest.Attributes
         public int Level => m_level;
         public BaseProgression Progression => m_baseProgression;
 
+        public event Action OnStatModified;
+
         public float GetHealth()                    =>      GetStat(Stat.kHealth);
         public float GetDamage()                    =>      GetStat(Stat.kDamage);
         public float GetDefense()                   =>      GetStat(Stat.kDefense);
@@ -32,6 +35,14 @@ namespace PolyQuest.Attributes
         public float GetExperienceReward()          =>      GetStat(Stat.kExperienceReward);
         public float GetExperienceToLevelUp()       =>      GetStat(Stat.kExperienceToLevelUp);
         public float GetTotalAttributePoints()      =>      GetStat(Stat.kTotalAttributePoints);
+
+        /*--------------------------------------------------------------
+        | --- NotifyStatModified: Invokes the OnStatModified Event --- |
+        --------------------------------------------------------------*/
+        public void NotifyStatModified()
+        {
+            OnStatModified?.Invoke();
+        }
 
         /*-------------------------------------------------------------------------------
         | --- GetStat: Returns the Value of the Specified Stat at the current Level --- |
@@ -44,7 +55,8 @@ namespace PolyQuest.Attributes
             {
                 float additive = GetAdditiveModifier(stat);
                 float percentage = GetPercentageModifier(stat);
-                return baseStat + additive * (1.0f + percentage / 100.0f);
+
+                return (baseStat + additive) * (1.0f + percentage / 100.0f);
             }
 
             return baseStat;
@@ -99,6 +111,7 @@ namespace PolyQuest.Attributes
         public void LevelUp()
         {
             ++m_level;
+            OnStatModified?.Invoke();
         }
 
         /*----------------------------------------------------------------------------

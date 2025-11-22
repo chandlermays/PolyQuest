@@ -1,4 +1,4 @@
- using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 //---------------------------------
 using PolyQuest.Components;
@@ -22,6 +22,7 @@ namespace PolyQuest.UI.HUD
         [Header("Health Bar Settings")]
         [SerializeField] private HealthComponent m_healthComponent;
         private Image m_healthBarFill;
+        private BaseStats m_baseStats;
 
         private float m_maxHealth;
 
@@ -33,6 +34,9 @@ namespace PolyQuest.UI.HUD
             m_healthBarFill = GetComponent<Image>();
             Utilities.CheckForNull(m_healthBarFill, nameof(m_healthBarFill));
             Utilities.CheckForNull(m_healthComponent, nameof(m_healthComponent));
+
+            m_baseStats = m_healthComponent.GetComponent<BaseStats>();
+            Utilities.CheckForNull(m_baseStats, nameof(m_baseStats));
         }
 
         /*---------------------------------------------------------------------
@@ -56,7 +60,7 @@ namespace PolyQuest.UI.HUD
         -----------------------------------------------------*/
         private void Start()
         {
-            m_maxHealth = m_healthComponent.GetComponent<BaseStats>().GetHealth();
+            m_maxHealth = m_baseStats.GetHealth();
         }
 
         /*-------------------------------------------------------------------------------------
@@ -64,11 +68,7 @@ namespace PolyQuest.UI.HUD
         -------------------------------------------------------------------------------------*/
         private void UpdateHealthBar()
         {
-            if (m_maxHealth == 0)
-            {
-                m_maxHealth = m_healthComponent.GetComponent<BaseStats>().GetHealth();
-            }
-
+            m_maxHealth = m_baseStats.GetHealth();
             float healthPercentage = Mathf.Clamp(m_healthComponent.CurrentHealth / m_maxHealth, 0f, 1f);
             m_healthBarFill.fillAmount = healthPercentage;
 

@@ -44,16 +44,16 @@ namespace PolyQuest.Inventories
         }
 
         /*-----------------------------------------------------
-        | --- AddItems: Add an m_item to the equipment slot --- |
+        | --- AddItems: Add an item to the equipment slot --- |
         -----------------------------------------------------*/
         public void AddItems(InventoryItem item, int quantity)
         {
             m_playerEquipment.AddItem(m_equipmentSlot, (EquipableItem)item);
         }
 
-        /*---------------------------------------------------------------
-        | --- Item: Get the m_item currently in the equipment slot --- |
-        ---------------------------------------------------------------*/
+        /*------------------------------------------------------------
+        | --- Item: Get the item currently in the equipment slot --- |
+        ------------------------------------------------------------*/
         public InventoryItem GetItem()
         {
             return m_playerEquipment.GetItemInSlot(m_equipmentSlot);
@@ -78,9 +78,9 @@ namespace PolyQuest.Inventories
             return 1;
         }
 
-        /*-------------------------------------------------------------------------
-        | --- Quantity: Get the m_quantity of the m_item in the equipment slot --- |
-        -------------------------------------------------------------------------*/
+        /*----------------------------------------------------------------------
+        | --- Quantity: Get the quantity of the item in the equipment slot --- |
+        ----------------------------------------------------------------------*/
         public int GetQuantity()
         {
             if (GetItem() != null)
@@ -90,7 +90,7 @@ namespace PolyQuest.Inventories
         }
 
         /*--------------------------------------------------------------
-        | --- RemoveItems: Remove the m_item from the equipment slot --- |
+        | --- RemoveItems: Remove the item from the equipment slot --- |
         --------------------------------------------------------------*/
         public void RemoveItems(int quantity)
         {
@@ -98,7 +98,7 @@ namespace PolyQuest.Inventories
         }
 
         /*-------------------------------------------------------------
-        | --- RedrawUI: Update the UI to reflect the current m_item --- |
+        | --- RedrawUI: Update the UI to reflect the current item --- |
         -------------------------------------------------------------*/
         private void RedrawUI()
         {

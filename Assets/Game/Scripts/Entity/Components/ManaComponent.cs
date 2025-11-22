@@ -11,6 +11,7 @@ namespace PolyQuest.Components
         [Header("Mana Settings")]
         [SerializeField] private float m_mana;
         [SerializeField] private float m_manaRegenRate;
+
         private float m_maxMana;
         public event Action OnManaChanged;
 
@@ -32,8 +33,7 @@ namespace PolyQuest.Components
             m_stats = GetComponent<BaseStats>();
             Utilities.CheckForNull(m_stats, nameof(m_stats));
 
-            m_experienceComponent = GetComponent<Experience>();
-            Utilities.CheckForNull(m_experienceComponent, nameof(m_experienceComponent));
+            TryGetComponent(out m_experienceComponent);
         }
 
         /*---------------------------------------------------------------------
@@ -45,6 +45,8 @@ namespace PolyQuest.Components
             {
                 m_experienceComponent.OnLevelUp += FullyReplenishMana;
             }
+
+            m_stats.OnStatModified += RecalculateMana;
         }
 
         /*---------------------------------------------------------------------------
@@ -56,6 +58,8 @@ namespace PolyQuest.Components
             {
                 m_experienceComponent.OnLevelUp -= FullyReplenishMana;
             }
+
+            m_stats.OnStatModified -= RecalculateMana;
         }
 
         /*-----------------------------------------------------
@@ -85,7 +89,30 @@ namespace PolyQuest.Components
                 {
                     m_mana = m_maxMana;
                 }
+                OnManaChanged?.Invoke();
             }
+        }
+
+        public void RecalculateMana()
+        {
+            float prevMaxMana = m_maxMana;
+            float newMaxMana = m_stats.GetMana();
+            float newRegenRate = m_stats.GetManaRegenRate();
+
+            if (m_maxMana > 0f)
+            {
+                float percent = m_mana / prevMaxMana;
+                m_mana = Mathf.Clamp(newMaxMana * percent, 0f, newMaxMana);
+            }
+            else
+            {
+                m_mana = Mathf.Clamp(m_mana, 0f, newMaxMana);
+            }
+
+            m_maxMana = newMaxMana;
+            m_manaRegenRate = newRegenRate;
+
+            OnManaChanged?.Invoke();
         }
 
         /*--------------------------------------------------------------
@@ -106,9 +133,6 @@ namespace PolyQuest.Components
         --------------------------------------------------------------*/
         public void ReplenishMana(float amount)
         {
-            if (amount > m_mana)
-                return;
-
             m_mana = Mathf.Min(m_mana + amount, m_stats.GetMana());
             OnManaChanged?.Invoke();
         }

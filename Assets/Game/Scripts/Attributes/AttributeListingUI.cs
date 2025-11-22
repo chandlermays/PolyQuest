@@ -13,8 +13,6 @@ namespace PolyQuest.Attributes
         [SerializeField] private Button m_minusButton;
         [SerializeField] private Button m_plusButton;
 
-        private int m_value;
-
         private void Start()
         {
             m_minusButton.onClick.AddListener(() => AdjustValue(-1));

@@ -19,10 +19,10 @@ namespace PolyQuest.Attributes
         }
 
         private Dictionary<Attribute, int> m_assignedPoints = new();
-        private Dictionary<Attribute, int> m_pendingPoints = new();
+        private readonly Dictionary<Attribute, int> m_pendingPoints = new();
         
-        private Dictionary<Stat, Dictionary<Attribute, float>> m_additiveModifiers = new();
-        private Dictionary<Stat, Dictionary<Attribute, float>> m_percentageModifiers = new();
+        private readonly Dictionary<Stat, Dictionary<Attribute, float>> m_additiveModifiers = new();
+        private readonly Dictionary<Stat, Dictionary<Attribute, float>> m_percentageModifiers = new();
 
         private BaseStats m_baseStats;
 
@@ -32,6 +32,9 @@ namespace PolyQuest.Attributes
         public int GetRemainingPoints()                         =>      GetTotalAvailablePoints() - CalculateTotalAllocatedPoints();
         public int GetTotalPoints(Attribute attribute)          =>      GetAssignedPoints(attribute) + GetPendingPoints(attribute);
 
+        /*----------------------------------------------------------------
+        | --- Awake: Called when the script instance is being loaded --- |
+        ----------------------------------------------------------------*/
         private void Awake()
         {
             m_baseStats = GetComponent<BaseStats>();
@@ -54,6 +57,9 @@ namespace PolyQuest.Attributes
             }
         }
 
+        /*------------------------------------------------------------------------------------
+        | --- CalculateTotalAllocatedPoints: Calculates total allocated attribute points --- |
+        ------------------------------------------------------------------------------------*/
         private int CalculateTotalAllocatedPoints()
         {
             int total = 0;
@@ -67,6 +73,9 @@ namespace PolyQuest.Attributes
             return total;
         }
 
+        /*--------------------------------------------------------------
+        | --- AssignPoints: Assigns points to a specific attribute --- |
+        --------------------------------------------------------------*/
         public void AssignPoints(Attribute attribute, int points)
         {
             if (!CanAssignPoints(attribute, points))
@@ -75,6 +84,9 @@ namespace PolyQuest.Attributes
             m_pendingPoints[attribute] = GetPendingPoints(attribute) + points;
         }
 
+        /*---------------------------------------------------------------------------
+        | --- CanAssignPoints: Checks if points can be assigned to an attribute --- |
+        ---------------------------------------------------------------------------*/
         public bool CanAssignPoints(Attribute attribute, int points)
         {
             if (GetPendingPoints(attribute) + points < 0)
@@ -86,6 +98,9 @@ namespace PolyQuest.Attributes
             return true;
         }
 
+        /*-------------------------------------------------------------------
+        | --- Confirm: Confirms the pending attribute point assignments --- |
+        -------------------------------------------------------------------*/
         public void Confirm()
         {
             foreach (Attribute attribute in m_pendingPoints.Keys)
@@ -94,8 +109,12 @@ namespace PolyQuest.Attributes
             }
 
             m_pendingPoints.Clear();
+            m_baseStats.NotifyStatModified();
         }
 
+        /*---------------------------------------------------------------------------
+        | --- GetAdditiveModifiers: Gets additive modifiers for a specific stat --- |
+        ---------------------------------------------------------------------------*/
         public IEnumerable<float> GetAdditiveModifiers(Stat stat)
         {
             if (!m_additiveModifiers.ContainsKey(stat))
@@ -108,6 +127,9 @@ namespace PolyQuest.Attributes
             }
         }
 
+        /*-------------------------------------------------------------------------------
+        | --- GetPercentageModifiers: Gets percentage modifiers for a specific stat --- |
+        -------------------------------------------------------------------------------*/
         public IEnumerable<float> GetPercentageModifiers(Stat stat)
         {
             if (!m_percentageModifiers.ContainsKey(stat))
@@ -120,14 +142,21 @@ namespace PolyQuest.Attributes
             }
         }
 
+        /*-------------------------------------------------------------------------------
+        | --- CaptureState: Captures the current state of assigned attribute points --- |
+        -------------------------------------------------------------------------------*/
         public object CaptureState()
         {
             return m_assignedPoints;
         }
 
+        /*-------------------------------------------------------------------------------
+        | --- RestoreState: Restores the assigned attribute points from saved state --- |
+        -------------------------------------------------------------------------------*/
         public void RestoreState(object state)
         {
             m_assignedPoints = new Dictionary<Attribute, int>((Dictionary<Attribute, int>)state);
+            m_baseStats.NotifyStatModified();
         }
     }
 }
