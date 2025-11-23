@@ -6,7 +6,7 @@ using PolyQuest.Attributes;
 
 namespace PolyQuest.Combat
 {
-    /* --------------------------------------------------------------------------------------------
+    /* ---------------------------------------------------------------------------------------------
      * Role: Represents a weapon data asset, defining weapon properties and behavior.              *
      *                                                                                             *
      * Responsibilities:                                                                           *
@@ -15,7 +15,7 @@ namespace PolyQuest.Combat
      *      - Launches projectiles and sets their targets and damage.                              *
      * ------------------------------------------------------------------------------------------- */
     [CreateAssetMenu(menuName = "PolyQuest/Items/Weapon", fileName = "New Weapon", order = 0)]
-    public class Weapon : EquipableItem, IAttributeModifier
+    public class Weapon : EquipableItem, IStatModifier
     {
         [Header("Weapon Settings")]
         [SerializeField] private GameObject m_equippedPrefab;

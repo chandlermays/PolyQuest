@@ -4,6 +4,7 @@ using UnityEngine;
 //---------------------------------
 using PolyQuest.Saving;
 using PolyQuest.Tools;
+using PolyQuest.Attributes;
 
 namespace PolyQuest.Inventories
 {
@@ -24,9 +25,20 @@ namespace PolyQuest.Inventories
     {
         private Dictionary<EquipmentSlot, EquipableItem> m_equippedItems = new();
 
+        private BaseStats m_baseStats;
+
         public event Action OnEquipmentChanged;
 
         public IEnumerable<EquipmentSlot> OccupiedSlots => m_equippedItems.Keys;
+
+        /*----------------------------------------------------------------
+        | --- Awake: Called when the script instance is being loaded --- |
+        ----------------------------------------------------------------*/
+        private void Awake()
+        {
+            m_baseStats = GetComponent<BaseStats>();
+            Utilities.CheckForNull(m_baseStats, nameof(m_baseStats));
+        }
 
         /*------------------------------------------------------------------------------
         | --- GetItemInSlot: Get the item currently equipped in the specified slot --- |
@@ -44,6 +56,7 @@ namespace PolyQuest.Inventories
         {
             m_equippedItems[slot] = item;
             OnEquipmentChanged?.Invoke();
+            m_baseStats.NotifyStatModified();
         }
 
         /*------------------------------------------------------------------------
@@ -55,6 +68,7 @@ namespace PolyQuest.Inventories
             {
                 m_equippedItems.Remove(slot);
                 OnEquipmentChanged?.Invoke();
+                m_baseStats.NotifyStatModified();
             }
         }
 
@@ -92,6 +106,7 @@ namespace PolyQuest.Inventories
             }
 
             OnEquipmentChanged?.Invoke();
+            m_baseStats.NotifyStatModified();
         }
 
         /*----------------------------------------------------------------

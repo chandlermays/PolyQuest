@@ -124,7 +124,7 @@ namespace PolyQuest.Attributes
 
             float total = 0;
 
-            foreach (IAttributeModifier modifier in GetComponents<IAttributeModifier>())
+            foreach (IStatModifier modifier in GetComponents<IStatModifier>())
             {
                 foreach (float additive in modifier.GetAdditiveModifiers(stat))
                 {
@@ -145,7 +145,7 @@ namespace PolyQuest.Attributes
 
             float total = 0;
 
-            foreach (IAttributeModifier modifier in GetComponents<IAttributeModifier>())
+            foreach (IStatModifier modifier in GetComponents<IStatModifier>())
             {
                 foreach (float percentage in modifier.GetPercentageModifiers(stat))
                 {

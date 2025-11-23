@@ -107,14 +107,18 @@ namespace PolyQuest.Components
         {
             float newMaxHealth = m_stats.GetHealth();
 
-            if (m_lastKnownMaxHealth > 0f)
+            // First-time initialization safeguard
+            if (m_lastKnownMaxHealth <= 0f)
             {
-                float percent = m_health / m_lastKnownMaxHealth;
-                m_health = Mathf.Clamp(newMaxHealth * percent, 0f, newMaxHealth);
-            }
-            else
-            {
+                m_lastKnownMaxHealth = newMaxHealth;
                 m_health = Mathf.Clamp(m_health, 0f, newMaxHealth);
+                OnHealthChanged?.Invoke();
+                return;
+            }
+
+            if (m_health > newMaxHealth)
+            {
+                m_health = newMaxHealth; // Clamp down if necessary
             }
 
             m_lastKnownMaxHealth = newMaxHealth;

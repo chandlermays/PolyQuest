@@ -5,7 +5,7 @@ using PolyQuest.Saving;
 
 namespace PolyQuest.Attributes
 {
-    public class Attributes : MonoBehaviour, IAttributeModifier, ISaveable
+    public class Attributes : MonoBehaviour, IStatModifier, ISaveable
     {
         [SerializeField] private AttributeStatConfig[] m_attributeModifiers;
 

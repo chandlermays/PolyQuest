@@ -93,20 +93,27 @@ namespace PolyQuest.Components
             }
         }
 
+        /*------------------------------------------------------------------------------
+        | --- RecalculateMaxMana: Recalculate the Entity's Max Mana and Regen Rate --- |
+        ------------------------------------------------------------------------------*/
         public void RecalculateMana()
         {
-            float prevMaxMana = m_maxMana;
             float newMaxMana = m_stats.GetMana();
             float newRegenRate = m_stats.GetManaRegenRate();
 
-            if (m_maxMana > 0f)
+            // First-time initialization safeguard
+            if (m_maxMana <= 0f)
             {
-                float percent = m_mana / prevMaxMana;
-                m_mana = Mathf.Clamp(newMaxMana * percent, 0f, newMaxMana);
-            }
-            else
-            {
+                m_maxMana = newMaxMana;
+                m_manaRegenRate = newRegenRate;
                 m_mana = Mathf.Clamp(m_mana, 0f, newMaxMana);
+                OnManaChanged?.Invoke();
+                return;
+            }
+
+            if (m_mana > newMaxMana)
+            {
+                m_mana = newMaxMana; // Clamp down if necessary
             }
 
             m_maxMana = newMaxMana;

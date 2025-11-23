@@ -19,7 +19,7 @@ namespace PolyQuest.Components
      *      - Implements IRaycastable for player interaction and targeting via raycast.              *
      *      - Controls attack animations and cooldowns.                                              *
      * --------------------------------------------------------------------------------------------- */
-    public class CombatComponent : EntityComponent, IRaycastable, IAttributeModifier
+    public class CombatComponent : EntityComponent, IRaycastable, IStatModifier
     {
         [Header("Weapon Settings")]
         [SerializeField] private Weapon m_defaultWeapon;

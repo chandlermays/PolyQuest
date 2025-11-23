@@ -4,7 +4,7 @@ using PolyQuest.Attributes;
 
 namespace PolyQuest.Inventories
 {
-    public class StatsEquipment : Equipment, IAttributeModifier
+    public class StatsEquipment : Equipment, IStatModifier
     {
         /*------------------------------------------------------------------------------
         | --- GetAdditiveModifiers: Get all additive modifiers from equipped items --- |
@@ -13,7 +13,7 @@ namespace PolyQuest.Inventories
         {
             foreach (var slot in OccupiedSlots)
             {
-                if (GetItemInSlot(slot) is not IAttributeModifier item)
+                if (GetItemInSlot(slot) is not IStatModifier item)
                     continue;
 
                 foreach (float modifier in item.GetAdditiveModifiers(stat))
@@ -30,7 +30,7 @@ namespace PolyQuest.Inventories
         {
             foreach (var slot in OccupiedSlots)
             {
-                if (GetItemInSlot(slot) is not IAttributeModifier item)
+                if (GetItemInSlot(slot) is not IStatModifier item)
                     continue;
 
                 foreach (float modifier in item.GetPercentageModifiers(stat))

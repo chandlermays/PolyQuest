@@ -18,7 +18,7 @@ namespace PolyQuest.Attributes
 
         private void Update()
         {
-            m_availablePoints.text = $"Available Points: {m_attributes.GetRemainingPoints()}";
+     //       m_availablePoints.text = $"Available Points: {m_attributes.GetRemainingPoints()}";
         }
     }
 }

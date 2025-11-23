@@ -27,7 +27,7 @@ MonoBehaviour:
   m_equippedPrefab: {fileID: 0}
   m_projectile: {fileID: 0}
   m_weaponAOC: {fileID: 0}
-  m_weaponDamage: 2
+  m_weaponDamage: 0
   m_weaponRange: 2
   m_percentageBonus: 0
   m_isRightHanded: 1

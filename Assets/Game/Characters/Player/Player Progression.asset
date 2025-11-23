@@ -15,18 +15,18 @@ MonoBehaviour:
   m_healthIncreasePercentage: 15
   m_initialHealth: 100
   m_maxHealthAmounts: 64000000730000008400000098000000af000000
-  m_damageIncreasePercentage: 0
-  m_initialDamage: 0
-  m_damageAmounts: 0000000000000000000000000000000000000000
+  m_damageIncreasePercentage: 5
+  m_initialDamage: 2
+  m_damageAmounts: 0200000002000000020000000200000002000000
   m_defenseIncreasePercentage: 3
   m_initialDefense: 100
   m_defenseAmounts: 64000000670000006a0000006d00000070000000
   m_manaIncreasePercentage: 15
   m_initialMana: 100
   m_manaAmounts: 64000000730000008400000098000000af000000
-  m_manaRegenIncreasePercentage: 10
-  m_initialManaRegenRate: 5
-  m_manaRegenRates: 0500000006000000070000000800000009000000
+  m_manaRegenIncreasePercentage: 5
+  m_initialManaRegenRate: 4
+  m_manaRegenRates: 0400000004000000040000000400000004000000
   m_initialExperience: 200
   m_experienceIncreasePercentage: 15
   m_maxExperienceAmounts: c8000000ae010000b6020000e603000044050000

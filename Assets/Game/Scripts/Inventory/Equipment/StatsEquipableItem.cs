@@ -6,7 +6,7 @@ using PolyQuest.Attributes;
 namespace PolyQuest.Inventories
 {
     [CreateAssetMenu(menuName = "PolyQuest/Items/Stats Equipable Item", fileName = "New Stats Equipable Item")]
-    public class StatsEquipableItem : EquipableItem, IAttributeModifier
+    public class StatsEquipableItem : EquipableItem, IStatModifier
     {
         [System.Serializable]
         private struct Modifier
@@ -18,8 +18,8 @@ namespace PolyQuest.Inventories
             public readonly float Value => m_value;
         }
 
-        [SerializeField] Modifier[] m_additiveModifiers;
-        [SerializeField] Modifier[] m_percentageModifiers;
+        [SerializeField] private Modifier[] m_additiveModifiers;
+        [SerializeField] private Modifier[] m_percentageModifiers;
 
         /*-----------------------------------------------------------------------------------
         | --- GetAdditiveModifiers: Get all additive modifiers from this equipable item --- |
