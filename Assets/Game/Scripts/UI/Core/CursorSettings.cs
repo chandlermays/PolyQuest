@@ -52,7 +52,7 @@ namespace PolyQuest.UI.Core
         ---------------------------------------------------------------------*/
         private void OnEnable()
         {
-            // Initialize the dictionary when the ScriptableObject is loaded
+            // InitializeDecorationArray the dictionary when the ScriptableObject is loaded
             m_cursorMappingDictionary = new Dictionary<CursorType, CursorMapping>();
             foreach (var mapping in m_cursorMappings)
             {

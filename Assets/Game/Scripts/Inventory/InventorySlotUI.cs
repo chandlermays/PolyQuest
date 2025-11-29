@@ -24,7 +24,7 @@ namespace PolyQuest.Inventories
         public int GetQuantity() => m_inventory.GetQuantityAtSlot(m_index);
 
         /*---------------------------------------------------------------------------
-        | --- Setup: Initialize the InventorySlotUI with an Inventory and index --- |
+        | --- Setup: InitializeDecorationArray the InventorySlotUI with an Inventory and index --- |
         ---------------------------------------------------------------------------*/
         public void Setup(Inventory inventory, int index)
         {

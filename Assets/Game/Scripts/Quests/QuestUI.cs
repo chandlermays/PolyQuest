@@ -32,7 +32,7 @@ namespace PolyQuest.Quests
         }
 
         /*------------------------------------------------
-        | --- Setup: Initialize the quest UI element --- |
+        | --- Setup: InitializeDecorationArray the quest UI element --- |
         ------------------------------------------------*/
         public void Setup(QuestStatus status)
         {

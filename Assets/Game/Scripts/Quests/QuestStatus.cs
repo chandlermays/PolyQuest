@@ -38,7 +38,7 @@ namespace PolyQuest.Quests
         public bool IsObjectiveComplete(string objective) => m_completedObjectives.Contains(objective);
 
         /*---------------------------------------------------------------------
-        | --- Constructor: Initialize the QuestStatus from a Quest object --- |
+        | --- Constructor: InitializeDecorationArray the QuestStatus from a Quest object --- |
         ---------------------------------------------------------------------*/
         public QuestStatus(Quest quest)
         {
@@ -46,7 +46,7 @@ namespace PolyQuest.Quests
         }
 
         /*--------------------------------------------------------------------
-        | --- Constructor: Initialize the QuestStatus from a saved state --- |
+        | --- Constructor: InitializeDecorationArray the QuestStatus from a saved state --- |
         --------------------------------------------------------------------*/
         public QuestStatus(object objectState)
         {

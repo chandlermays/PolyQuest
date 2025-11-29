@@ -27,7 +27,7 @@ namespace PolyQuest.UI.Tooltip
         }
 
         /*------------------------------------------------------
-        | --- Setup: Initialize the tooltip with m_item data --- |
+        | --- Setup: InitializeDecorationArray the tooltip with m_item data --- |
         ------------------------------------------------------*/
         public void Setup(InventoryItem item)
         {

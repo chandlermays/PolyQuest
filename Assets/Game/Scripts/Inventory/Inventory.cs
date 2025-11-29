@@ -60,7 +60,7 @@ namespace PolyQuest.Inventories
         }
 
         /*---------------------------------------------------------------------------
-        | --- InitializeEmptySlots: Initialize the empty slots in the inventory --- |
+        | --- InitializeEmptySlots: InitializeDecorationArray the empty slots in the inventory --- |
         ---------------------------------------------------------------------------*/
         private void InitializeEmptySlots()
         {

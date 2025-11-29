@@ -6,13 +6,13 @@ using PolyQuest.Pickups;
 namespace PolyQuest.Inventories
 {
     /* --------------------------------------------------------------------------------------------
-     * Role: Represents a data asset for an m_item that can be stored in the player's inventory.     *
+     * Role: Represents a data asset for an item that can be stored in the player's inventory.     *
      *                                                                                             *
      * Responsibilities:                                                                           *
-     *      - Stores m_item data such as ID, name, description, icon, stackability, and category.    *
-     *      - Provides access to m_item data for inventory and UI systems.                           *
-     *      - Supports m_item lookup by ID and m_item instantiation as pickups in the world.           *
-     *      - Ensures each m_item has a unique identifier for saving/loading and referencing.        *
+     *      - Stores item data such as ID, name, description, icon, stackability, and category.    *
+     *      - Provides access to item data for inventory and UI systems.                           *
+     *      - Supports item lookup by ID and item instantiation as pickups in the world.           *
+     *      - Ensures each item has a unique identifier for saving/loading and referencing.        *
      * ------------------------------------------------------------------------------------------- */
     public abstract class InventoryItem : ScriptableObject, ISerializationCallbackReceiver
     {

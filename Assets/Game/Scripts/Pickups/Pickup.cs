@@ -38,7 +38,7 @@ namespace PolyQuest.Pickups
         }
 
         /*----------------------------------------------------------------
-        | --- Setup: Initialize the Pickup with an item and quantity --- |
+        | --- Setup: InitializeDecorationArray the Pickup with an item and quantity --- |
         ----------------------------------------------------------------*/
         public void Setup(InventoryItem item, int quantity)
         {
