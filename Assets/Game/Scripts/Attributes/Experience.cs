@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using System;
 //---------------------------------
@@ -15,7 +16,7 @@ namespace PolyQuest.Attributes
      *      - Integrates with BaseStats to determine experience required for next level.            *
      *      - Supports saving and restoring experience state.                                       *
      * -------------------------------------------------------------------------------------------- */
-    public class Experience : MonoBehaviour, ISaveable
+    public class Experience : MonoBehaviour, ISaveable, IJsonSaveable
     {
         [SerializeField] private float m_experiencePoints = 0;
         [SerializeField] private ParticleSystem m_levelUpVFX;
@@ -123,6 +124,18 @@ namespace PolyQuest.Attributes
         public void RestoreState(object state)
         {
             m_experiencePoints = (float)state;
+            OnExperienceChanged?.Invoke();
+            CheckForLevelUp();
+        }
+
+        public JToken CaptureJToken()
+        {
+            return JToken.FromObject(m_experiencePoints);
+        }
+
+        public void RestoreJToken(JToken state)
+        {
+            m_experiencePoints = state.ToObject<float>();
             OnExperienceChanged?.Invoke();
             CheckForLevelUp();
         }

@@ -1,11 +1,13 @@
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Saving;
+using System;
 
 namespace PolyQuest.Attributes
 {
-    public class Attributes : MonoBehaviour, IStatModifier, ISaveable
+    public class Attributes : MonoBehaviour, IStatModifier, ISaveable, IJsonSaveable
     {
         [SerializeField] private AttributeStatConfig[] m_attributeModifiers;
 
@@ -157,6 +159,36 @@ namespace PolyQuest.Attributes
         {
             m_assignedPoints = new Dictionary<Attribute, int>((Dictionary<Attribute, int>)state);
             m_baseStats.NotifyStatModified();
+        }
+
+        public JToken CaptureJToken()
+        {
+            JObject state = new();
+            IDictionary<string, JToken> stateDict = state;
+
+            foreach (var pair in m_assignedPoints)
+            {
+                stateDict[pair.Key.ToString()] = JToken.FromObject(pair.Value);
+            }
+            return state;
+        }
+
+        public void RestoreJToken(JToken state)
+        {
+            if (state is JObject stateObject)
+            {
+                m_assignedPoints.Clear();
+                IDictionary<string, JToken> stateDict = stateObject;
+
+                foreach (var pair in stateDict)
+                {
+                    if (Enum.TryParse(pair.Key, true, out Attribute attribute))
+                    {
+                        m_assignedPoints[attribute] = pair.Value.ToObject<int>();
+                    }
+                }
+                m_baseStats.NotifyStatModified();
+            }
         }
     }
 }

@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,7 @@ using PolyQuest.Saving;
 
 namespace PolyQuest.Inventories
 {
-    public class Actions : MonoBehaviour, ISaveable
+    public class Actions : MonoBehaviour, ISaveable, IJsonSaveable
     {
         private class ActionSlot
         {
@@ -175,6 +176,42 @@ namespace PolyQuest.Inventories
             {
                 var item = InventoryItem.FindByID(pair.Value.ItemID);
                 AddActionItem(item, pair.Key, pair.Value.Quantity);
+            }
+        }
+
+        public JToken CaptureJToken()
+        {
+            JObject state = new();
+            IDictionary<string, JToken> stateDict = state;
+
+            foreach (var pair in m_actionSlots)
+            {
+                JObject slotState = new();
+                IDictionary<string, JToken> slotStateDict = slotState;
+                slotStateDict["item"] = JToken.FromObject(pair.Value.Item.ID);
+                slotStateDict["quantity"] = JToken.FromObject(pair.Value.Quantity);
+                stateDict[pair.Key.ToString()] = slotState;
+            }
+            return state;
+        }
+
+        public void RestoreJToken(JToken state)
+        {
+            if (state is JObject stateObject)
+            {
+                IDictionary<string, JToken> stateDict = stateObject;
+
+                foreach (var pair in stateDict)
+                {
+                    if (pair.Value is JObject slotState)
+                    {
+                        int key = Int32.Parse(pair.Key);
+                        IDictionary<string, JToken> slotStateDict = slotState;
+                        InventoryItem item = InventoryItem.FindByID(slotStateDict["item"].ToObject<string>());
+                        int quantity = slotStateDict["quantity"].ToObject<int>();
+                        AddActionItem(item, key, quantity);
+                    }
+                }
             }
         }
     }

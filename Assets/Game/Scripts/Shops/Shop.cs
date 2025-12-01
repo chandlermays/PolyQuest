@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,7 @@ using PolyQuest.Saving;
 
 namespace PolyQuest.Shops
 {
-    public class Shop : MonoBehaviour, IRaycastable, ISaveable
+    public class Shop : MonoBehaviour, IRaycastable, ISaveable, IJsonSaveable
     {
         [SerializeField] private string m_shopName;
         [Range(0.0f, 100.0f)]
@@ -299,6 +300,36 @@ namespace PolyQuest.Shops
             foreach (var pair in savedStock)
             {
                 m_currentStock[InventoryItem.FindByID(pair.Key)] = pair.Value;
+            }
+        }
+
+        public JToken CaptureJToken()
+        {
+            JObject state = new();
+            IDictionary<string, JToken> stateDict = state;
+
+            foreach (var pair in m_currentStock)
+            {
+                stateDict[pair.Key.ID] = JToken.FromObject(pair.Value);
+            }
+            return state;
+        }
+
+        public void RestoreJToken(JToken state)
+        {
+            if (state is JObject stateObject)
+            {
+                IDictionary<string, JToken> stateDict = stateObject;
+                m_currentStock.Clear();
+
+                foreach (var pair in stateDict)
+                {
+                    InventoryItem item = InventoryItem.FindByID(pair.Key);
+                    if (item)
+                    {
+                        m_currentStock[item] = pair.Value.ToObject<int>();
+                    }
+                }
             }
         }
     }

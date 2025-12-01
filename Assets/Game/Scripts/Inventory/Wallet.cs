@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System;
 using UnityEngine;
 //---------------------------------
@@ -5,7 +6,7 @@ using PolyQuest.Saving;
 
 namespace PolyQuest.Inventories
 {
-    public class Wallet : MonoBehaviour, ISaveable
+    public class Wallet : MonoBehaviour, ISaveable, IJsonSaveable
     {
         private int m_currentSilver = 0;
 
@@ -36,6 +37,17 @@ namespace PolyQuest.Inventories
         public void RestoreState(object state)
         {
             m_currentSilver = (int)state;
+            OnWalletUpdated?.Invoke();
+        }
+        
+        public JToken CaptureJToken()
+        {
+            return JToken.FromObject(m_currentSilver);
+        }
+
+        public void RestoreJToken(JToken state)
+        {
+            m_currentSilver = state.ToObject<int>();
             OnWalletUpdated?.Invoke();
         }
     }

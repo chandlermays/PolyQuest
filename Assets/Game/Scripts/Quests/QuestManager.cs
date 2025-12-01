@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace PolyQuest.Quests
      *      - Implements condition checking for quest-related predicates (e.g., for dialogue).     *
      *      - Raises update events to notify UI or other systems of quest changes.                 *
      * ------------------------------------------------------------------------------------------- */
-    public class QuestManager : MonoBehaviour, ISaveable, IConditionChecker
+    public class QuestManager : MonoBehaviour, ISaveable, IConditionChecker, IJsonSaveable
     {
         private readonly Dictionary<Quest, QuestStatus> m_activeQuests = new();
         private readonly HashSet<string> m_completedQuests = new();
@@ -200,6 +201,34 @@ namespace PolyQuest.Quests
                 {
                     GetComponent<ItemDropper>().DropItem(reward.Item, reward.Amount);
                 }
+            }
+        }
+
+        public JToken CaptureJToken()
+        {
+            JArray state = new();
+            IList<JToken> stateList = state;
+
+            foreach (QuestStatus status in m_activeQuests.Values)
+            {
+                stateList.Add(status.CaptureAsJToken());
+            }
+            // also capture completed quests
+            return state;
+        }
+
+        public void RestoreJToken(JToken state)
+        {
+            if (state is JArray stateArray)
+            {
+                m_activeQuests.Clear();
+                IList<JToken> stateList = stateArray;
+
+                foreach (JToken token in stateList)
+                {
+                    m_activeQuests.Add(new QuestStatus(token));
+                }
+                // also restore completed quests
             }
         }
     }

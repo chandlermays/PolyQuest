@@ -2399,6 +2399,7 @@ GameObject:
   - component: {fileID: 7559417861468017874}
   - component: {fileID: 9177089752574762719}
   - component: {fileID: 2277701404306916200}
+  - component: {fileID: 5965966269675272996}
   - component: {fileID: 6041332017740411292}
   - component: {fileID: 1323104572251572160}
   - component: {fileID: 352099503163044681}
@@ -2677,6 +2678,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_experiencePoints: 0
   m_levelUpVFX: {fileID: 7675459321527447735}
+--- !u!114 &5965966269675272996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8136770854238850487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f671a2a862343ed43aac8c45284228a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Saving.JsonSaveableEntity
+  m_uniqueIdentifier: Player
+  m_lockIdentifier: 1
 --- !u!114 &6041332017740411292
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,7 +17,7 @@ namespace PolyQuest.Inventories
      *      - Supports saving and restoring the state of dropped items across scenes.              *
      *      - Cleans up references to destroyed or collected pickups.                              *
      * ------------------------------------------------------------------------------------------- */
-    public class ItemDropper : MonoBehaviour, ISaveable
+    public class ItemDropper : MonoBehaviour, ISaveable, IJsonSaveable
     {
         [System.Serializable]
         private struct DroppedItemData
@@ -131,6 +132,16 @@ namespace PolyQuest.Inventories
         private void CleanUpDroppedItems()
         {
             m_droppedItems.RemoveAll(item => item == null);
+        }
+
+        public JToken CaptureJToken()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void RestoreJToken(JToken state)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

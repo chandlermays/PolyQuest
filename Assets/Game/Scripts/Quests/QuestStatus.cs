@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 //---------------------------------
@@ -38,7 +39,7 @@ namespace PolyQuest.Quests
         public bool IsObjectiveComplete(string objective) => m_completedObjectives.Contains(objective);
 
         /*---------------------------------------------------------------------
-        | --- Constructor: InitializeDecorationArray the QuestStatus from a Quest object --- |
+        | --- Constructor: Initialize the QuestStatus from a Quest object --- |
         ---------------------------------------------------------------------*/
         public QuestStatus(Quest quest)
         {
@@ -46,7 +47,7 @@ namespace PolyQuest.Quests
         }
 
         /*--------------------------------------------------------------------
-        | --- Constructor: InitializeDecorationArray the QuestStatus from a saved state --- |
+        | --- Constructor: Initialize the QuestStatus from a saved state --- |
         --------------------------------------------------------------------*/
         public QuestStatus(object objectState)
         {
@@ -56,6 +57,25 @@ namespace PolyQuest.Quests
             m_completedObjectives = state.CompletedObjectives != null
                 ? new HashSet<string>(state.CompletedObjectives)
                 : new HashSet<string>();
+        }
+
+        public QuestStatus(JToken objectState)
+        {
+            if (objectState is JObject state)
+            {
+                IDictionary<string, JToken> stateDict = state;
+                m_quest = Quest.GetByName(stateDict["questName"].ToObject<string>());
+                m_completedObjectives.Clear();
+
+                if (stateDict["completedObjectives"] is JArray completedState)
+                {
+                    IList<JToken> completedStateArray = completedState;
+                    foreach (JToken objective in completedStateArray)
+                    {
+                        m_completedObjectives.Add(objective.ToObject<string>());
+                    }
+                }
+            }
         }
 
         /*--------------------------------------------------------------------
@@ -82,6 +102,21 @@ namespace PolyQuest.Quests
             return state;
         }
 
+        public JToken CaptureAsJToken()
+        {
+            JObject state = new();
+            IDictionary<string, JToken> stateDict = state;
+            stateDict["questName"] = m_quest.name;
+            JArray completedState = new();
+            IList<JToken> completedStateArray = completedState;
+
+            foreach (string objective in m_completedObjectives)
+            {
+                completedStateArray.Add(JToken.FromObject(objective));
+            }
+            stateDict["completedObjectves"] = completedState;
+            return state;
+        }
 
         /*----------------------------------------------------------------
         | --- IsQuestComplete: Check if all objectives are completed --- |

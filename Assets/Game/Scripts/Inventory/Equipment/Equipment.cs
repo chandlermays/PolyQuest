@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace PolyQuest.Inventories
         kNone
     }
 
-    public class Equipment : MonoBehaviour, ISaveable, IConditionChecker
+    public class Equipment : MonoBehaviour, ISaveable, IConditionChecker, IJsonSaveable
     {
         private Dictionary<EquipmentSlot, EquipableItem> m_equippedItems = new();
 
@@ -128,6 +129,40 @@ namespace PolyQuest.Inventories
                     return false;
             }
             return null;
+        }
+
+        public JToken CaptureJToken()
+        {
+            JObject state = new();
+            IDictionary<string, JToken> stateDict = state;
+            
+            foreach (var pair in m_equippedItems)
+            {
+                stateDict[pair.Key.ToString()] = JToken.FromObject(pair.Value.ID);
+            }
+            return state;
+        }
+
+        public void RestoreJToken(JToken state)
+        {
+            if (state is JObject stateObject)
+            {
+                m_equippedItems.Clear();
+
+                IDictionary<string, JToken> stateDict = stateObject;
+
+                foreach (var pair in stateObject)
+                {
+                    if (Enum.TryParse(pair.Key, true, out EquipmentSlot key))
+                    {
+                        if (InventoryItem.FindByID(pair.Value.ToObject<string>()) is EquipableItem item)
+                        {
+                            m_equippedItems[key] = item;
+                        }
+                    }
+                }
+            }
+            OnEquipmentChanged?.Invoke();
         }
     }
 }

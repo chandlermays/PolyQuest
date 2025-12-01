@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System;
 using UnityEngine;
 //---------------------------------
@@ -16,7 +17,7 @@ namespace PolyQuest.Components
      *      - Grants experience to the instigator on death.                                        *
      *      - Supports saving and restoring health state.                                          *
      * ------------------------------------------------------------------------------------------- */
-    public class HealthComponent : EntityComponent, ISaveable
+    public class HealthComponent : EntityComponent, ISaveable, IJsonSaveable
     {
         [Header("Health Settings")]
         [SerializeField] private float m_health;
@@ -244,6 +245,17 @@ namespace PolyQuest.Components
             if (!instigator.TryGetComponent<Experience>(out var experience)) return;
 
             experience.GainExperience(m_stats.GetExperienceReward());
+        }
+
+        public JToken CaptureJToken()
+        {
+            return JToken.FromObject(m_health);
+        }
+
+        public void RestoreJToken(JToken state)
+        {
+            m_health = state.ToObject<float>();
+            OnHealthChanged?.Invoke();
         }
     }
 }

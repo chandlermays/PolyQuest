@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System;
 using UnityEngine;
 //---------------------------------
@@ -6,7 +7,7 @@ using PolyQuest.Saving;
 
 namespace PolyQuest.Components
 {
-    public class ManaComponent : EntityComponent, ISaveable
+    public class ManaComponent : EntityComponent, ISaveable, IJsonSaveable
     {
         [Header("Mana Settings")]
         [SerializeField] private float m_mana;
@@ -169,6 +170,18 @@ namespace PolyQuest.Components
         public void RestoreState(object state)
         {
             m_mana = (float)state;
+            m_hasBeenInitialized = true;
+            OnManaChanged?.Invoke();
+        }
+
+        public JToken CaptureJToken()
+        {
+            return JToken.FromObject(m_mana);
+        }
+
+        public void RestoreJToken(JToken state)
+        {
+            m_mana = state.ToObject<float>();
             m_hasBeenInitialized = true;
             OnManaChanged?.Invoke();
         }

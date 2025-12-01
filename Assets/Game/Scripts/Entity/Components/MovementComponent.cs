@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 //---------------------------------
@@ -16,7 +17,7 @@ namespace PolyQuest.Components
      *      - Updates animation parameters based on movement state.                                 *
      *      - Supports saving and restoring the entity's position for persistence.                  *
      * ------------------------------------------------------------------------------------------- */
-    public class MovementComponent : EntityComponent, ISaveable
+    public class MovementComponent : EntityComponent, ISaveable, IJsonSaveable
     {
         /* --- Navigation --- */
         [SerializeField] private float m_maxPathLength = 20f;
@@ -180,6 +181,19 @@ namespace PolyQuest.Components
             }
 
             return total;
+        }
+
+        public JToken CaptureJToken()
+        {
+            return Transform.position.ToToken();
+        }
+
+        public void RestoreJToken(JToken state)
+        {
+            NavMeshAgent.enabled = false;
+            Transform.position = state.ToVector3();
+            NavMeshAgent.enabled = true;
+            m_combatComponent?.Cancel();
         }
     }
 }

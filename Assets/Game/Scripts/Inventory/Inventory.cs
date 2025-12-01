@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace PolyQuest.Inventories
      *      - Provides save/load functionality for inventory slots.                                *
      *      - Notifies listeners when the inventory changes.                                       *
      * ------------------------------------------------------------------------------------------- */
-    public class Inventory : MonoBehaviour, ISaveable, IConditionChecker
+    public class Inventory : MonoBehaviour, ISaveable, IConditionChecker, IJsonSaveable
     {
         private struct InventorySlot
         {
@@ -380,6 +381,45 @@ namespace PolyQuest.Inventories
             }
 
             return -1;
+        }
+
+        public JToken CaptureJToken()
+        {
+            JObject state = new();
+            IDictionary<string, JToken> stateDict = state;
+
+            for (int i = 0; i < m_inventorySize; ++i)
+            {
+                if (m_inventorySlots[i].m_item != null)
+                {
+                    JObject itemState = new();
+                    IDictionary<string, JToken> itemStateDict = itemState;
+                    itemState["item"] = JToken.FromObject(m_inventorySlots[i].m_item.ID);
+                    itemState["quantity"] = JToken.FromObject(m_inventorySlots[i].m_quantity);
+                    stateDict[i.ToString()] = itemState;
+                }
+            }
+            return state;
+        }
+
+        public void RestoreJToken(JToken state)
+        {
+            if (state is JObject stateObject)
+            {
+                m_inventorySlots = new InventorySlot[m_inventorySize];
+                IDictionary<string, JToken> stateDict = stateObject;
+
+                for (int i = 0; i < m_inventorySize; ++i)
+                {
+                    if (stateDict.ContainsKey(i.ToString()) && stateDict[i.ToString()] is JObject itemState)
+                    {
+                        IDictionary<string, JToken> itemStateDict = itemState;
+                        m_inventorySlots[i].m_item = InventoryItem.FindByID(itemStateDict["item"].ToObject<string>());
+                        m_inventorySlots[i].m_quantity = itemStateDict["quantity"].ToObject<int>();
+                    }
+                }
+                OnInventoryChanged?.Invoke();
+            }
         }
     }
 }

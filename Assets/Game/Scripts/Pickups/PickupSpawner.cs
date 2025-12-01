@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Inventories;
@@ -13,7 +14,7 @@ namespace PolyQuest.Pickups
      *      - Handles saving and restoring whether the pickup is present (ISaveable).              *
      *      - Destroys or respawns the pickup based on the game state (i.e. when loading a save).  *
      * ------------------------------------------------------------------------------------------- */
-    public class PickupSpawner : MonoBehaviour, ISaveable
+    public class PickupSpawner : MonoBehaviour, ISaveable, IJsonSaveable
     {
         [SerializeField] private InventoryItem m_item;
         [SerializeField] private int m_quantity;
@@ -86,6 +87,26 @@ namespace PolyQuest.Pickups
             if (GetPickup())
             {
                 Destroy(GetPickup().gameObject);
+            }
+        }
+
+        public JToken CaptureJToken()
+        {
+            return JToken.FromObject(IsPickedUp());
+        }
+
+        public void RestoreJToken(JToken state)
+        {
+            bool shouldBePickedUp = state.ToObject<bool>();
+
+            if (shouldBePickedUp && !IsPickedUp())
+            {
+                DestroyPickup();
+            }
+
+            if (!shouldBePickedUp && IsPickedUp())
+            {
+                SpawnPickup();
             }
         }
     }
