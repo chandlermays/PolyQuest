@@ -23,17 +23,13 @@ namespace PolyQuest.Quests
      *      - Implements condition checking for quest-related predicates (e.g., for dialogue).     *
      *      - Raises update events to notify UI or other systems of quest changes.                 *
      * ------------------------------------------------------------------------------------------- */
-    public class QuestManager : MonoBehaviour, ISaveable, IConditionChecker, IJsonSaveable
+    public class QuestManager : MonoBehaviour, ISaveable, IConditionChecker
     {
         private readonly Dictionary<Quest, QuestStatus> m_activeQuests = new();
         private readonly HashSet<string> m_completedQuests = new();
 
-        [System.Serializable]
-        private class QuestManagerSaveData
-        {
-            public List<object> activeQuests;
-            public List<string> completedQuests;
-        }
+        private const string kActiveQuestsKey = "ActiveQuests";
+        private const string kCompletedQuestsKey = "CompletedQuests";
 
         public IEnumerable<QuestStatus> ActiveQuests => m_activeQuests.Values;
 
@@ -99,56 +95,68 @@ namespace PolyQuest.Quests
             OnUpdate?.Invoke();
         }
 
-        /*-------------------------------------------------------------------
+        /*--------------------------------------------------------------------
         | --- CaptureState: Save the Current State of the Quest Manager --- |
-        -------------------------------------------------------------------*/
-        public object CaptureState()
+        --------------------------------------------------------------------*/
+        public JToken CaptureState()
         {
-            QuestManagerSaveData saveData = new()
-            {
-                activeQuests = new List<object>(),
-                completedQuests = new List<string>(m_completedQuests)
-            };
+            JObject state = new JObject();
 
-            foreach (var pair in m_activeQuests)
+            // Capture active quests
+            JArray activeQuestsArray = new JArray();
+            foreach (QuestStatus status in m_activeQuests.Values)
             {
-                saveData.activeQuests.Add(pair.Value.CaptureState());
+                activeQuestsArray.Add(status.CaptureAsJToken());
             }
+            state[kActiveQuestsKey] = activeQuestsArray;
 
-            return saveData;
+            // Capture completed quests
+            JArray completedQuestsArray = new JArray();
+            foreach (string questName in m_completedQuests)
+            {
+                completedQuestsArray.Add(questName);
+            }
+            state[kCompletedQuestsKey] = completedQuestsArray;
+
+            return state;
         }
 
-        /*-------------------------------------------------------------------
+        /*--------------------------------------------------------------------
         | --- RestoreState: Load the Current State of the Quest Manager --- |
-        -------------------------------------------------------------------*/
-        public void RestoreState(object state)
+        --------------------------------------------------------------------*/
+        public void RestoreState(JToken state)
         {
-            QuestManagerSaveData saveData = (QuestManagerSaveData)state;
-
-            m_activeQuests.Clear();
-            m_completedQuests.Clear();
-
-            // Restore active quests
-            foreach (object objectState in saveData.activeQuests)
+            if (state is JObject stateObject)
             {
-                QuestStatus status = new(objectState);
-                Quest quest = status.Quest;
-                if (quest != null)
-                {
-                    m_activeQuests[quest] = status;
-                }
-            }
+                m_activeQuests.Clear();
+                m_completedQuests.Clear();
 
-            // Restore completed quests
-            if (saveData.completedQuests != null)
-            {
-                foreach (string questName in saveData.completedQuests)
+                // Restore active quests
+                if (stateObject[kActiveQuestsKey] is JArray activeQuestsArray)
                 {
-                    m_completedQuests.Add(questName);
+                    foreach (JToken token in activeQuestsArray)
+                    {
+                        QuestStatus status = new QuestStatus(token);
+                        Quest quest = status.Quest;
+                        if (quest != null)
+                        {
+                            m_activeQuests[quest] = status;
+                        }
+                    }
                 }
-            }
 
-            OnUpdate?.Invoke();
+                // Restore completed quests
+                if (stateObject[kCompletedQuestsKey] is JArray completedQuestsArray)
+                {
+                    foreach (JToken token in completedQuestsArray)
+                    {
+                        string questName = token.ToString();
+                        m_completedQuests.Add(questName);
+                    }
+                }
+
+                OnUpdate?.Invoke();
+            }
         }
 
         /*-------------------------------------------------------------------
@@ -201,34 +209,6 @@ namespace PolyQuest.Quests
                 {
                     GetComponent<ItemDropper>().DropItem(reward.Item, reward.Amount);
                 }
-            }
-        }
-
-        public JToken CaptureJToken()
-        {
-            JArray state = new();
-            IList<JToken> stateList = state;
-
-            foreach (QuestStatus status in m_activeQuests.Values)
-            {
-                stateList.Add(status.CaptureAsJToken());
-            }
-            // also capture completed quests
-            return state;
-        }
-
-        public void RestoreJToken(JToken state)
-        {
-            if (state is JArray stateArray)
-            {
-                m_activeQuests.Clear();
-                IList<JToken> stateList = stateArray;
-
-                foreach (JToken token in stateList)
-                {
-                    m_activeQuests.Add(new QuestStatus(token));
-                }
-                // also restore completed quests
             }
         }
     }

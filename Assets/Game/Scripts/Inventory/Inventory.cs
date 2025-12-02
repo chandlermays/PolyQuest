@@ -8,7 +8,7 @@ using PolyQuest.Tools;
 
 namespace PolyQuest.Inventories
 {
-    /* --------------------------------------------------------------------------------------------
+    /* ---------------------------------------------------------------------------------------------
      * Role: Manages the player's collection of items in the game.                                 *
      *                                                                                             *
      * Responsibilities:                                                                           *
@@ -18,7 +18,7 @@ namespace PolyQuest.Inventories
      *      - Provides save/load functionality for inventory slots.                                *
      *      - Notifies listeners when the inventory changes.                                       *
      * ------------------------------------------------------------------------------------------- */
-    public class Inventory : MonoBehaviour, ISaveable, IConditionChecker, IJsonSaveable
+    public class Inventory : MonoBehaviour, ISaveable, IConditionChecker
     {
         private struct InventorySlot
         {
@@ -26,25 +26,9 @@ namespace PolyQuest.Inventories
             public int m_quantity;
         }
 
-        [System.Serializable]
-        private struct InventorySlotData
-        {
-            [SerializeField] private string m_itemID;
-            [SerializeField] private int m_quantity;
-
-            public string ItemID
-            { readonly get => m_itemID; set => m_itemID = value; }
-
-            public int Quantity
-            { readonly get => m_quantity; set => m_quantity = value; }
-        }
-
         [SerializeField] private int m_inventorySize = 20;
         public int Size => m_inventorySlots.Length;
-        private InventorySlot[] m_inventorySlots;       
-                                                        
-        // NOTE: I'm still uncertain whether it's necessary to have an array AND a dictionary for the inventory.
-        // I'm concerned that a complication may arise at some point which causes a disconnect between the two containers.
+        private InventorySlot[] m_inventorySlots;
 
         private readonly Dictionary<InventoryItem, List<int>> m_itemSlotMapping = new();
         private readonly SortedSet<int> m_emptySlots = new();
@@ -61,7 +45,7 @@ namespace PolyQuest.Inventories
         }
 
         /*---------------------------------------------------------------------------
-        | --- InitializeEmptySlots: InitializeDecorationArray the empty slots in the inventory --- |
+        | --- InitializeEmptySlots: Initialize the empty slots in the inventory --- |
         ---------------------------------------------------------------------------*/
         private void InitializeEmptySlots()
         {
@@ -195,55 +179,43 @@ namespace PolyQuest.Inventories
             return m_emptySlots.Count;
         }
 
-        /*--------------------------------------------------------------------
-        | --- CaptureState: Capture the current inventory state (Saving) --- |
-        --------------------------------------------------------------------*/
-        public object CaptureState()
+        public JToken CaptureState()
         {
-            var slotRecords = new InventorySlotData[m_inventorySize];
+            JObject state = new();
+            IDictionary<string, JToken> stateDict = state;
 
             for (int i = 0; i < m_inventorySize; ++i)
             {
                 if (m_inventorySlots[i].m_item != null)
                 {
-                    slotRecords[i].ItemID = m_inventorySlots[i].m_item.ID;
-                    slotRecords[i].Quantity = m_inventorySlots[i].m_quantity;
+                    JObject itemState = new();
+                    IDictionary<string, JToken> itemStateDict = itemState;
+                    itemState["item"] = JToken.FromObject(m_inventorySlots[i].m_item.ID);
+                    itemState["quantity"] = JToken.FromObject(m_inventorySlots[i].m_quantity);
+                    stateDict[i.ToString()] = itemState;
                 }
             }
-
-            return slotRecords;
+            return state;
         }
 
-        /*------------------------------------------------------------------------
-        | --- RestoreState: Restore the inventory from saved state (Loading) --- |
-        ------------------------------------------------------------------------*/
-        public void RestoreState(object state)
+        public void RestoreState(JToken state)
         {
-            // Clear existing mappings
-            m_itemSlotMapping.Clear();
-            m_emptySlots.Clear();
-
-            var slotRecords = (InventorySlotData[])state;
-
-            for (int i = 0; i < m_inventorySize; ++i)
+            if (state is JObject stateObject)
             {
-                var item = InventoryItem.FindByID(slotRecords[i].ItemID);
-                var quantity = slotRecords[i].Quantity;
+                m_inventorySlots = new InventorySlot[m_inventorySize];
+                IDictionary<string, JToken> stateDict = stateObject;
 
-                m_inventorySlots[i].m_item = item;
-                m_inventorySlots[i].m_quantity = quantity;
-
-                if (item != null && quantity > 0)
+                for (int i = 0; i < m_inventorySize; ++i)
                 {
-                    AddItemToMapping(item, i);
+                    if (stateDict.ContainsKey(i.ToString()) && stateDict[i.ToString()] is JObject itemState)
+                    {
+                        IDictionary<string, JToken> itemStateDict = itemState;
+                        m_inventorySlots[i].m_item = InventoryItem.FindByID(itemStateDict["item"].ToObject<string>());
+                        m_inventorySlots[i].m_quantity = itemStateDict["quantity"].ToObject<int>();
+                    }
                 }
-                else
-                {
-                    m_emptySlots.Add(i);
-                }
+                OnInventoryChanged?.Invoke();
             }
-
-            OnInventoryChanged?.Invoke();
         }
 
         /*---------------------------------------------------------------------
@@ -381,45 +353,6 @@ namespace PolyQuest.Inventories
             }
 
             return -1;
-        }
-
-        public JToken CaptureJToken()
-        {
-            JObject state = new();
-            IDictionary<string, JToken> stateDict = state;
-
-            for (int i = 0; i < m_inventorySize; ++i)
-            {
-                if (m_inventorySlots[i].m_item != null)
-                {
-                    JObject itemState = new();
-                    IDictionary<string, JToken> itemStateDict = itemState;
-                    itemState["item"] = JToken.FromObject(m_inventorySlots[i].m_item.ID);
-                    itemState["quantity"] = JToken.FromObject(m_inventorySlots[i].m_quantity);
-                    stateDict[i.ToString()] = itemState;
-                }
-            }
-            return state;
-        }
-
-        public void RestoreJToken(JToken state)
-        {
-            if (state is JObject stateObject)
-            {
-                m_inventorySlots = new InventorySlot[m_inventorySize];
-                IDictionary<string, JToken> stateDict = stateObject;
-
-                for (int i = 0; i < m_inventorySize; ++i)
-                {
-                    if (stateDict.ContainsKey(i.ToString()) && stateDict[i.ToString()] is JObject itemState)
-                    {
-                        IDictionary<string, JToken> itemStateDict = itemState;
-                        m_inventorySlots[i].m_item = InventoryItem.FindByID(itemStateDict["item"].ToObject<string>());
-                        m_inventorySlots[i].m_quantity = itemStateDict["quantity"].ToObject<int>();
-                    }
-                }
-                OnInventoryChanged?.Invoke();
-            }
         }
     }
 }

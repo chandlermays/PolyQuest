@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 688595563574844588}
-  - component: {fileID: 3321902507257794267}
   - component: {fileID: 1860036658866455487}
   - component: {fileID: 4671232570272331944}
   m_Layer: 0
@@ -34,18 +33,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3321902507257794267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8740319212697008446}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 423036a26f66cc44f9f5b9b82155739e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1860036658866455487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55,7 +42,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8740319212697008446}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76e3b0b27eaf59f4b8d440ca761ba7f5, type: 3}
+  m_Script: {fileID: 11500000, guid: c334db706855f564aa8a26abb3168d3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Saving.JsonSavingSystem
 --- !u!114 &4671232570272331944

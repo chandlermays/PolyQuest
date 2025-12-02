@@ -6,7 +6,7 @@ using PolyQuest.Saving;
 
 namespace PolyQuest.Inventories
 {
-    public class Wallet : MonoBehaviour, ISaveable, IJsonSaveable
+    public class Wallet : MonoBehaviour, ISaveable
     {
         private int m_currentSilver = 0;
 
@@ -26,26 +26,15 @@ namespace PolyQuest.Inventories
         /*----------------------------------------------------------------
         | --- CaptureState: Captures the current state of the wallet --- |
         ----------------------------------------------------------------*/
-        public object CaptureState()
+        public JToken CaptureState()
         {
-            return m_currentSilver;
+            return JToken.FromObject(m_currentSilver);
         }
 
         /*---------------------------------------------------------------------
         | --- RestoreState: Restores the wallet state from the saved data --- |
         ---------------------------------------------------------------------*/
-        public void RestoreState(object state)
-        {
-            m_currentSilver = (int)state;
-            OnWalletUpdated?.Invoke();
-        }
-        
-        public JToken CaptureJToken()
-        {
-            return JToken.FromObject(m_currentSilver);
-        }
-
-        public void RestoreJToken(JToken state)
+        public void RestoreState(JToken state)
         {
             m_currentSilver = state.ToObject<int>();
             OnWalletUpdated?.Invoke();

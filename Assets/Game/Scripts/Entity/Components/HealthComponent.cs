@@ -17,7 +17,7 @@ namespace PolyQuest.Components
      *      - Grants experience to the instigator on death.                                        *
      *      - Supports saving and restoring health state.                                          *
      * ------------------------------------------------------------------------------------------- */
-    public class HealthComponent : EntityComponent, ISaveable, IJsonSaveable
+    public class HealthComponent : EntityComponent, ISaveable
     {
         [Header("Health Settings")]
         [SerializeField] private float m_health;
@@ -179,41 +179,6 @@ namespace PolyQuest.Components
             OnHealthChanged?.Invoke();
         }
 
-        /*----------------------------------------------------------------------
-        | --- CaptureState: Save the Current State of the Health Component --- |
-        ----------------------------------------------------------------------*/
-        public object CaptureState()
-        {
-            return new HealthSaveData
-            {
-                health = m_health,
-                isDead = m_isDead,
-            };
-        }
-
-        /*----------------------------------------------------------------------
-        | --- RestoreState: Load the Current State of the Health Component --- |
-        ----------------------------------------------------------------------*/
-        public void RestoreState(object state)
-        {
-            HealthSaveData data = (HealthSaveData)state;
-            m_health = data.health;
-            m_isDead = data.isDead;
-            m_hasBeenInitialized = true;
-
-            OnHealthChanged?.Invoke();  // Update the Health Bar
-
-            if (m_isDead)
-            {
-                ApplyDeathState();
-            }
-            else
-            {
-                // Restore the "alive" state
-                Animator.Rebind();
-            }
-        }
-
         /*------------------------------------------------------------- 
         | --- HandleDeath: The Behavior when this Entity has Died --- |
         -------------------------------------------------------------*/
@@ -247,15 +212,38 @@ namespace PolyQuest.Components
             experience.GainExperience(m_stats.GetExperienceReward());
         }
 
-        public JToken CaptureJToken()
+        /*--------------------------------------------------------------------------
+        | --- CaptureState: Captures the current state of the Entity's Health --- |
+        --------------------------------------------------------------------------*/
+        public JToken CaptureState()
         {
-            return JToken.FromObject(m_health);
+            HealthSaveData data = new()
+            {
+                health = m_health,
+                isDead = m_isDead
+            };
+            return JToken.FromObject(data);
         }
 
-        public void RestoreJToken(JToken state)
+        /*---------------------------------------------------------------------------
+        | --- RestoreState: Restores the Entity's Health state from saved data --- |
+        ---------------------------------------------------------------------------*/
+        public void RestoreState(JToken state)
         {
-            m_health = state.ToObject<float>();
+            HealthSaveData data = state.ToObject<HealthSaveData>();
+            m_health = data.health;
+            m_isDead = data.isDead;
             OnHealthChanged?.Invoke();
+
+            if (m_isDead)
+            {
+                ApplyDeathState();
+            }
+            else
+            {
+                // Restore the "alive" state
+                Animator.Rebind();
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ using PolyQuest.Saving;
 
 namespace PolyQuest.Inventories
 {
-    public class Actions : MonoBehaviour, ISaveable, IJsonSaveable
+    public class Actions : MonoBehaviour, ISaveable
     {
         private class ActionSlot
         {
@@ -150,67 +150,38 @@ namespace PolyQuest.Inventories
             return false;
         }
 
-        /*--------------------------------------------------------------------------------
-        | --- CaptureState: Capture the current state of the action slots for saving --- |
-        --------------------------------------------------------------------------------*/
-        public object CaptureState()
+        /*------------------------------------------------------------------
+        | --- CaptureState: Capture the current state of action slots --- |
+        ------------------------------------------------------------------*/
+        public JToken CaptureState()
         {
-            var state = new Dictionary<int, ActionSlotData>();
+            JObject state = new();
 
             foreach (var pair in m_actionSlots)
             {
-                state[pair.Key] = new ActionSlotData(pair.Value.Item.ID, pair.Value.Quantity);
+                ActionSlotData slotData = new(pair.Value.Item.ID, pair.Value.Quantity);
+                state[pair.Key.ToString()] = JToken.FromObject(slotData);
             }
 
             return state;
         }
 
         /*----------------------------------------------------------------------
-        | --- RestoreState: Restore the action slots state from saved data --- |
+        | --- RestoreState: Restore the action slots from the given state --- |
         ----------------------------------------------------------------------*/
-        public void RestoreState(object state)
-        {
-            var stateDict = (Dictionary<int, ActionSlotData>)state;
-
-            foreach (var pair in stateDict)
-            {
-                var item = InventoryItem.FindByID(pair.Value.ItemID);
-                AddActionItem(item, pair.Key, pair.Value.Quantity);
-            }
-        }
-
-        public JToken CaptureJToken()
-        {
-            JObject state = new();
-            IDictionary<string, JToken> stateDict = state;
-
-            foreach (var pair in m_actionSlots)
-            {
-                JObject slotState = new();
-                IDictionary<string, JToken> slotStateDict = slotState;
-                slotStateDict["item"] = JToken.FromObject(pair.Value.Item.ID);
-                slotStateDict["quantity"] = JToken.FromObject(pair.Value.Quantity);
-                stateDict[pair.Key.ToString()] = slotState;
-            }
-            return state;
-        }
-
-        public void RestoreJToken(JToken state)
+        public void RestoreState(JToken state)
         {
             if (state is JObject stateObject)
             {
-                IDictionary<string, JToken> stateDict = stateObject;
+                m_actionSlots.Clear();
 
-                foreach (var pair in stateDict)
+                foreach (var pair in stateObject)
                 {
-                    if (pair.Value is JObject slotState)
-                    {
-                        int key = Int32.Parse(pair.Key);
-                        IDictionary<string, JToken> slotStateDict = slotState;
-                        InventoryItem item = InventoryItem.FindByID(slotStateDict["item"].ToObject<string>());
-                        int quantity = slotStateDict["quantity"].ToObject<int>();
-                        AddActionItem(item, key, quantity);
-                    }
+                    int key = int.Parse(pair.Key);
+                    ActionSlotData slotData = pair.Value.ToObject<ActionSlotData>();
+
+                    InventoryItem item = InventoryItem.FindByID(slotData.ItemID);
+                    AddActionItem(item, key, slotData.Quantity);
                 }
             }
         }

@@ -1775,7 +1775,7 @@ GameObject:
   - component: {fileID: 2790322073465285918}
   - component: {fileID: 1238266012735242243}
   - component: {fileID: 3272163512795474766}
-  - component: {fileID: 3224690789882670351}
+  - component: {fileID: 1865444336509654807}
   - component: {fileID: 5008227000221217880}
   - component: {fileID: 6928696131343925156}
   m_Layer: 9
@@ -1963,7 +1963,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_health: 30
---- !u!114 &3224690789882670351
+--- !u!114 &1865444336509654807
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1972,10 +1972,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6051408657710484760}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 269d79a68e2033b4cbac1b86b162831b, type: 3}
+  m_Script: {fileID: 11500000, guid: 369f73196dbc7a94c8c62b30be4b0fbf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  m_uniqueIdentifier: 36660172-b5f2-4437-8709-95839005c12f
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Saving.JsonSaveableEntity
+  m_uniqueIdentifier: 883e2bf7-fbdf-4463-9378-3758c924147c
   m_lockIdentifier: 0
 --- !u!114 &5008227000221217880
 MonoBehaviour:

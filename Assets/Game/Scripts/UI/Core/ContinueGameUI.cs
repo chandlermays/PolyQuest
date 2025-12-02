@@ -69,7 +69,7 @@ namespace PolyQuest.UI.Core
             if (saveLoadController == null)
                 return;
 
-            SaveSystem saveSystem = saveLoadController.GetComponent<SaveSystem>();
+            SavingSystem saveSystem = saveLoadController.GetComponent<SavingSystem>();
             if (saveSystem == null)
                 return;
 

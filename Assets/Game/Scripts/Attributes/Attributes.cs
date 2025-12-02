@@ -1,13 +1,13 @@
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Saving;
-using System;
 
 namespace PolyQuest.Attributes
 {
-    public class Attributes : MonoBehaviour, IStatModifier, ISaveable, IJsonSaveable
+    public class Attributes : MonoBehaviour, IStatModifier, ISaveable
     {
         [SerializeField] private AttributeStatConfig[] m_attributeModifiers;
 
@@ -144,24 +144,10 @@ namespace PolyQuest.Attributes
             }
         }
 
-        /*-------------------------------------------------------------------------------
+        /*--------------------------------------------------------------------------------
         | --- CaptureState: Captures the current state of assigned attribute points --- |
-        -------------------------------------------------------------------------------*/
-        public object CaptureState()
-        {
-            return m_assignedPoints;
-        }
-
-        /*-------------------------------------------------------------------------------
-        | --- RestoreState: Restores the assigned attribute points from saved state --- |
-        -------------------------------------------------------------------------------*/
-        public void RestoreState(object state)
-        {
-            m_assignedPoints = new Dictionary<Attribute, int>((Dictionary<Attribute, int>)state);
-            m_baseStats.NotifyStatModified();
-        }
-
-        public JToken CaptureJToken()
+        --------------------------------------------------------------------------------*/
+        public JToken CaptureState()
         {
             JObject state = new();
             IDictionary<string, JToken> stateDict = state;
@@ -173,7 +159,10 @@ namespace PolyQuest.Attributes
             return state;
         }
 
-        public void RestoreJToken(JToken state)
+        /*------------------------------------------------------------------------
+        | --- RestoreState: Restores the state of assigned attribute points --- |
+        ------------------------------------------------------------------------*/
+        public void RestoreState(JToken state)
         {
             if (state is JObject stateObject)
             {

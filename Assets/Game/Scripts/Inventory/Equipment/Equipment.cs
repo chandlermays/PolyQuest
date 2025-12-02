@@ -22,15 +22,14 @@ namespace PolyQuest.Inventories
         kNone
     }
 
-    public class Equipment : MonoBehaviour, ISaveable, IConditionChecker, IJsonSaveable
+    public class Equipment : MonoBehaviour, ISaveable, IConditionChecker
     {
         private Dictionary<EquipmentSlot, EquipableItem> m_equippedItems = new();
-
         private BaseStats m_baseStats;
 
-        public event Action OnEquipmentChanged;
-
         public IEnumerable<EquipmentSlot> OccupiedSlots => m_equippedItems.Keys;
+
+        public event Action OnEquipmentChanged;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -73,39 +72,43 @@ namespace PolyQuest.Inventories
             }
         }
 
-        /*------------------------------------------------------------------------------
+        /*-------------------------------------------------------------------------------
         | --- CaptureState: Capture the current state of equipped items for saving --- |
-        ------------------------------------------------------------------------------*/
-        public object CaptureState()
+        -------------------------------------------------------------------------------*/
+        public JToken CaptureState()
         {
-            var equippedItemsState = new Dictionary<EquipmentSlot, string>();
+            JObject state = new();
+            IDictionary<string, JToken> stateDict = state;
 
             foreach (var pair in m_equippedItems)
             {
-                equippedItemsState[pair.Key] = pair.Value.ID;
+                stateDict[pair.Key.ToString()] = JToken.FromObject(pair.Value.ID);
             }
-
-            return equippedItemsState;
+            return state;
         }
 
-        /*---------------------------------------------------------------------------
+        /*----------------------------------------------------------------------------
         | --- RestoreState: Restore the state of equipped items from saved data --- |
-        ---------------------------------------------------------------------------*/
-        public void RestoreState(object state)
+        ----------------------------------------------------------------------------*/
+        public void RestoreState(JToken state)
         {
-            m_equippedItems = new();
-
-            var equippedItemsState = (Dictionary<EquipmentSlot, string>)state;
-
-            foreach (var pair in equippedItemsState)
+            if (state is JObject stateObject)
             {
-                var item = (EquipableItem)InventoryItem.FindByID(pair.Value);
-                if (item != null)
+                m_equippedItems.Clear();
+
+                IDictionary<string, JToken> stateDict = stateObject;
+
+                foreach (var pair in stateObject)
                 {
-                    m_equippedItems[pair.Key] = item;
+                    if (Enum.TryParse(pair.Key, true, out EquipmentSlot key))
+                    {
+                        if (InventoryItem.FindByID(pair.Value.ToObject<string>()) is EquipableItem item)
+                        {
+                            m_equippedItems[key] = item;
+                        }
+                    }
                 }
             }
-
             OnEquipmentChanged?.Invoke();
             m_baseStats.NotifyStatModified();
         }
@@ -129,40 +132,6 @@ namespace PolyQuest.Inventories
                     return false;
             }
             return null;
-        }
-
-        public JToken CaptureJToken()
-        {
-            JObject state = new();
-            IDictionary<string, JToken> stateDict = state;
-            
-            foreach (var pair in m_equippedItems)
-            {
-                stateDict[pair.Key.ToString()] = JToken.FromObject(pair.Value.ID);
-            }
-            return state;
-        }
-
-        public void RestoreJToken(JToken state)
-        {
-            if (state is JObject stateObject)
-            {
-                m_equippedItems.Clear();
-
-                IDictionary<string, JToken> stateDict = stateObject;
-
-                foreach (var pair in stateObject)
-                {
-                    if (Enum.TryParse(pair.Key, true, out EquipmentSlot key))
-                    {
-                        if (InventoryItem.FindByID(pair.Value.ToObject<string>()) is EquipableItem item)
-                        {
-                            m_equippedItems[key] = item;
-                        }
-                    }
-                }
-            }
-            OnEquipmentChanged?.Invoke();
         }
     }
 }

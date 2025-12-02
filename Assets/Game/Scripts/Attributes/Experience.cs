@@ -16,7 +16,7 @@ namespace PolyQuest.Attributes
      *      - Integrates with BaseStats to determine experience required for next level.            *
      *      - Supports saving and restoring experience state.                                       *
      * -------------------------------------------------------------------------------------------- */
-    public class Experience : MonoBehaviour, ISaveable, IJsonSaveable
+    public class Experience : MonoBehaviour, ISaveable
     {
         [SerializeField] private float m_experiencePoints = 0;
         [SerializeField] private ParticleSystem m_levelUpVFX;
@@ -84,6 +84,24 @@ namespace PolyQuest.Attributes
             CheckForLevelUp();
         }
 
+        /*---------------------------------------------------------------------------
+        | --- CaptureState: Save the Current State of the Experience Component --- |
+        ---------------------------------------------------------------------------*/
+        public JToken CaptureState()
+        {
+            return JToken.FromObject(m_experiencePoints);
+        }
+
+        /*---------------------------------------------------------------------------
+        | --- RestoreState: Load the Current State of the Experience Component --- |
+        ---------------------------------------------------------------------------*/
+        public void RestoreState(JToken state)
+        {
+            m_experiencePoints = state.ToObject<float>();
+            OnExperienceChanged?.Invoke();
+            CheckForLevelUp();
+        }
+
         /*--------------------------------------------------------------
         | --- CheckForLevelUp: Check if the Player should Level Up --- |
         --------------------------------------------------------------*/
@@ -107,37 +125,7 @@ namespace PolyQuest.Attributes
         {
             m_stats.LevelUp();
             OnLevelUp?.Invoke();
-            m_levelUpVFX?.Play();
-        }
-
-        /*--------------------------------------------------------------------------
-        | --- CaptureState: Save the Current State of the Experience Component --- |
-        --------------------------------------------------------------------------*/
-        public object CaptureState()
-        {
-            return m_experiencePoints;
-        }
-
-        /*--------------------------------------------------------------------------
-        | --- RestoreState: Load the Current State of the Experience Component --- |
-        --------------------------------------------------------------------------*/
-        public void RestoreState(object state)
-        {
-            m_experiencePoints = (float)state;
-            OnExperienceChanged?.Invoke();
-            CheckForLevelUp();
-        }
-
-        public JToken CaptureJToken()
-        {
-            return JToken.FromObject(m_experiencePoints);
-        }
-
-        public void RestoreJToken(JToken state)
-        {
-            m_experiencePoints = state.ToObject<float>();
-            OnExperienceChanged?.Invoke();
-            CheckForLevelUp();
+            m_levelUpVFX.Play();
         }
     }
 }

@@ -1,6 +1,5 @@
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using UnityEngine;
 //---------------------------------
 
 namespace PolyQuest.Quests
@@ -21,18 +20,8 @@ namespace PolyQuest.Quests
         private Quest m_quest;
         private HashSet<string> m_completedObjectives = new();
 
-        [System.Serializable]
-        private class QuestStatusRecord
-        {
-            [SerializeField] private string m_questName;
-            [SerializeField] private List<string> m_completedObjectives = new();
-
-            public string QuestName
-            { get => m_questName; set => m_questName = value; }
-
-            public List<string> CompletedObjectives
-            { get => m_completedObjectives; set => m_completedObjectives = value; }
-        }
+        private const string kQuestNameKey = "QuestName";
+        private const string kCompletedObjectivesKey = "CompletedObjectives";
 
         public Quest Quest => m_quest;
         public int CompletedObjectiveCount => m_completedObjectives.Count;
@@ -49,25 +38,15 @@ namespace PolyQuest.Quests
         /*--------------------------------------------------------------------
         | --- Constructor: Initialize the QuestStatus from a saved state --- |
         --------------------------------------------------------------------*/
-        public QuestStatus(object objectState)
-        {
-            QuestStatusRecord state = objectState as QuestStatusRecord;
-            m_quest = Quest.GetByName(state.QuestName);
-
-            m_completedObjectives = state.CompletedObjectives != null
-                ? new HashSet<string>(state.CompletedObjectives)
-                : new HashSet<string>();
-        }
-
         public QuestStatus(JToken objectState)
         {
             if (objectState is JObject state)
             {
                 IDictionary<string, JToken> stateDict = state;
-                m_quest = Quest.GetByName(stateDict["questName"].ToObject<string>());
+                m_quest = Quest.GetByName(stateDict[kQuestNameKey].ToObject<string>());
                 m_completedObjectives.Clear();
 
-                if (stateDict["completedObjectives"] is JArray completedState)
+                if (stateDict[kCompletedObjectivesKey] is JArray completedState)
                 {
                     IList<JToken> completedStateArray = completedState;
                     foreach (JToken objective in completedStateArray)
@@ -89,32 +68,23 @@ namespace PolyQuest.Quests
             }
         }
 
-        /*--------------------------------------------------------------------
-        | --- CaptureState: Save the Current State of the Quest's Status --- |
-        --------------------------------------------------------------------*/
-        public object CaptureState()
-        {
-            QuestStatusRecord state = new()
-            {
-                QuestName = m_quest.name,
-                CompletedObjectives = new List<string>(m_completedObjectives)
-            };
-            return state;
-        }
-
+        /*-----------------------------------------------------------------------
+        | --- CaptureAsJToken: Save the Current State of the Quest's Status --- |
+        -----------------------------------------------------------------------*/
         public JToken CaptureAsJToken()
         {
-            JObject state = new();
-            IDictionary<string, JToken> stateDict = state;
-            stateDict["questName"] = m_quest.name;
-            JArray completedState = new();
-            IList<JToken> completedStateArray = completedState;
+            JObject state = new()
+            {
+                [kQuestNameKey] = m_quest.name
+            };
 
+            JArray completedState = new();
             foreach (string objective in m_completedObjectives)
             {
-                completedStateArray.Add(JToken.FromObject(objective));
+                completedState.Add(objective);
             }
-            stateDict["completedObjectves"] = completedState;
+            state[kCompletedObjectivesKey] = completedState;
+
             return state;
         }
 

@@ -1,22 +1,12 @@
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using System.Collections.Generic;
 //---------------------------------
 
 namespace PolyQuest.Saving
 {
-    /* --------------------------------------------------------------------------------------------
-     * Role: Assigns a unique identifier to a GameObject and manages the saving/restoring of       *
-     *       all ISaveable components attached to it.                                              *
-     *                                                                                             *
-     * Responsibilities:                                                                           *
-     *      - Generates and maintains a unique identifier for each entity in the scene.            *
-     *      - Registers and unregisters itself with the save system for persistence.               *
-     *      - Aggregates the state of all ISaveable components for saving.                         *
-     *      - Restores the state of all ISaveable components from saved data.                      *
-     *      - Ensures identifier uniqueness and supports editor-time ID assignment.                *
-     * ------------------------------------------------------------------------------------------- */
-    using SaveState = Dictionary<string, object>;
+    using SaveState = IDictionary<string, JToken>;
 
     [ExecuteAlways]
     public class SaveableEntity : MonoBehaviour
@@ -42,7 +32,7 @@ namespace PolyQuest.Saving
         ---------------------------------------------------------------------*/
         private void OnEnable()
         {
-            SaveSystem.RegisterSaveableEntity(this);
+            SavingSystem.RegisterSaveableEntity(this);
         }
 
         /*------------------------------------------------------------------------
@@ -50,45 +40,43 @@ namespace PolyQuest.Saving
         ------------------------------------------------------------------------*/
         private void OnDisable()
         {
-            SaveSystem.UnregisterSaveableEntity(this);
+            SavingSystem.UnregisterSaveableEntity(this);
         }
 
         /*----------------------------------------------------------------
         | --- CaptureState: Captures the current State of the Entity --- |
         ----------------------------------------------------------------*/
-        public object CaptureState()
+        public JToken CaptureAsJToken()
         {
             // early exit if there are no saveables
             if (m_saveables == null || m_saveables.Length == 0)
                 return null;
 
-            SaveState state = new(m_saveables.Length);
+            JObject state = new();
+            SaveState stateDict = state;
 
             foreach (ISaveable saveable in m_saveables)
             {
-                state[saveable.GetType().ToString()] = saveable.CaptureState();
+                JToken token = saveable.CaptureState();
+                stateDict[saveable.GetType().ToString()] = token;
             }
-
             return state;
         }
 
         /*---------------------------------------------------------------
         | --- RestoreState: Restores the Entity to a previous State --- |
         ---------------------------------------------------------------*/
-        public void RestoreState(object state)
+        public void RestoreFromJToken(JToken s)
         {
-            // early exit if there are no saveables
-            if (m_saveables == null || m_saveables.Length == 0)
-                return;
-
-            SaveState stateDict = (SaveState)state;
+            JObject state = s.ToObject<JObject>();
+            SaveState stateDict = state;
 
             foreach (ISaveable saveable in m_saveables)
             {
-                string typeString = saveable.GetType().ToString();
-                if (stateDict.TryGetValue(typeString, out object saveableState))
+                string component = saveable.GetType().ToString();
+                if (stateDict.ContainsKey(component))
                 {
-                    saveable.RestoreState(saveableState);
+                    saveable.RestoreState(stateDict[component]);
                 }
             }
         }

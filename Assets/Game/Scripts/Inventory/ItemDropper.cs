@@ -17,28 +17,21 @@ namespace PolyQuest.Inventories
      *      - Supports saving and restoring the state of dropped items across scenes.              *
      *      - Cleans up references to destroyed or collected pickups.                              *
      * ------------------------------------------------------------------------------------------- */
-    public class ItemDropper : MonoBehaviour, ISaveable, IJsonSaveable
+    public class ItemDropper : MonoBehaviour, ISaveable
     {
         [System.Serializable]
         private struct DroppedItemData
         {
-            [SerializeField] private string m_itemID;
-            [SerializeField] private MySerializableVector3 m_worldPosition;
-            [SerializeField] private int m_quantity;
-            [SerializeField] private int m_sceneBuildIndex;
-
-            public string ItemID
-            { get => m_itemID; set => m_itemID = value; }
-
-            public MySerializableVector3 WorldPosition
-            { get => m_worldPosition; set => m_worldPosition = value; }
-
-            public int Quantity
-            { get => m_quantity; set => m_quantity = value; }
-
-            public int SceneBuildIndex
-            { get => m_sceneBuildIndex; set => m_sceneBuildIndex = value; }
+            public string ItemID { get; set; }
+            public int Quantity { get; set; }
+            public Vector3 WorldPosition { get; set; }
+            public int SceneBuildIndex { get; set; }
         }
+
+        private const string kItemIDKey = "ItemID";
+        private const string kQuantityKey = "Quantity";
+        private const string kWorldPositionKey = "WorldPosition";
+        private const string kSceneBuildIndexKey = "SceneBuildIndex";
 
         private readonly List<Pickup> m_droppedItems = new();
         private readonly List<DroppedItemData> m_otherSceneDroppedItems = new();
@@ -76,54 +69,29 @@ namespace PolyQuest.Inventories
             m_droppedItems.Add(pickup);
         }
 
-        /*---------------------------------------------------------------------
-        | --- CaptureState: Capture the state of dropped items for saving --- |
-        ---------------------------------------------------------------------*/
-        public object CaptureState()
+        /*-----------------------------------------------------------------------------
+        | --- MergeAllDroppedItems: Combine current and other scene dropped items --- |
+        -----------------------------------------------------------------------------*/
+        private List<DroppedItemData> MergeAllDroppedItems()
         {
-            CleanUpDroppedItems();
+            List<DroppedItemData> result = new();
+            result.AddRange(m_otherSceneDroppedItems);
 
-            var droppedItemsList = new List<DroppedItemData>();
-            int buildIndex = SceneManager.GetActiveScene().buildIndex;
-
-            foreach (Pickup pickup in m_droppedItems)
+            foreach (var droppedItem in m_droppedItems)
             {
-                if (pickup == null) continue;
-                DroppedItemData droppedItem = new()
-                {
-                    ItemID = pickup.Item.ID,
-                    WorldPosition = new MySerializableVector3(pickup.transform.position),
-                    Quantity = pickup.Quantity,
-                    SceneBuildIndex = buildIndex
-                };
-                droppedItemsList.Add(droppedItem);
-            }
-
-            droppedItemsList.AddRange(m_otherSceneDroppedItems);
-            return droppedItemsList;
-        }
-
-        /*--------------------------------------------------------------------------
-        | --- RestoreState: Restore the state of dropped items from saved data --- |
-        --------------------------------------------------------------------------*/
-        public void RestoreState(object state)
-        {
-            var droppedItemsList = (List<DroppedItemData>)state;
-            int buildIndex = SceneManager.GetActiveScene().buildIndex;
-            m_otherSceneDroppedItems.Clear();
-
-            foreach(var item in droppedItemsList)
-            {
-                if (item.SceneBuildIndex != buildIndex)
-                {
-                    m_otherSceneDroppedItems.Add(item);
+                if (droppedItem == null)
                     continue;
-                }
-                var pickupItem = InventoryItem.FindByID(item.ItemID);
-                Vector3 position = item.WorldPosition.ToVector3();
-                int quantity = item.Quantity;
-                CreatePickupAtLocation(pickupItem, position, quantity);
+
+                DroppedItemData data = new()
+                {
+                    ItemID = droppedItem.Item.ID,
+                    Quantity = droppedItem.Quantity,
+                    WorldPosition = droppedItem.transform.position,
+                    SceneBuildIndex = SceneManager.GetActiveScene().buildIndex
+                };
+                result.Add(data);
             }
+            return result;
         }
 
         /*---------------------------------------------------------------------------------
@@ -134,14 +102,85 @@ namespace PolyQuest.Inventories
             m_droppedItems.RemoveAll(item => item == null);
         }
 
-        public JToken CaptureJToken()
+        /*------------------------------------------------------------------
+        | --- ClearExistingDrops: Destroy all existing dropped pickups --- |
+        ------------------------------------------------------------------*/
+        private void ClearExistingDrops()
         {
-            throw new System.NotImplementedException();
+            foreach (var oldDrop in m_droppedItems)
+            {
+                if (oldDrop != null)
+                {
+                    Destroy(oldDrop.gameObject);
+                }
+            }
+
+            m_otherSceneDroppedItems.Clear();
         }
 
-        public void RestoreJToken(JToken state)
+        /*----------------------------------------------------------------------
+        | --- CaptureState: Capture the state of dropped items for saving --- |
+        ----------------------------------------------------------------------*/
+        public JToken CaptureState()
         {
-            throw new System.NotImplementedException();
+            CleanUpDroppedItems();
+            var drops = MergeAllDroppedItems();
+            JArray state = new();
+
+            foreach (var drop in drops)
+            {
+                JObject dropState = new()
+                {
+                    [kItemIDKey] = drop.ItemID,
+                    [kQuantityKey] = drop.Quantity,
+                    [kWorldPositionKey] = JToken.FromObject(drop.WorldPosition),
+                    [kSceneBuildIndexKey] = drop.SceneBuildIndex
+                };
+                state.Add(dropState);
+            }
+
+            return state;
+        }
+
+        /*---------------------------------------------------------------------------
+        | --- RestoreState: Restore the state of dropped items from saved data --- |
+        ---------------------------------------------------------------------------*/
+        public void RestoreState(JToken state)
+        {
+            if (state is JArray stateArray)
+            {
+                int currentScene = SceneManager.GetActiveScene().buildIndex;
+                ClearExistingDrops();
+
+                foreach (var entry in stateArray)
+                {
+                    if (entry is JObject dropState)
+                    {
+                        string itemID = dropState[kItemIDKey].ToObject<string>();
+                        int quantity = dropState[kQuantityKey].ToObject<int>();
+                        Vector3 worldPosition = dropState[kWorldPositionKey].ToObject<Vector3>();
+                        int sceneBuildIndex = dropState[kSceneBuildIndexKey].ToObject<int>();
+
+                        InventoryItem item = InventoryItem.FindByID(itemID);
+
+                        if (sceneBuildIndex == currentScene)
+                        {
+                            CreatePickupAtLocation(item, worldPosition, quantity);
+                        }
+                        else
+                        {
+                            DroppedItemData data = new()
+                            {
+                                ItemID = itemID,
+                                Quantity = quantity,
+                                WorldPosition = worldPosition,
+                                SceneBuildIndex = sceneBuildIndex
+                            };
+                            m_otherSceneDroppedItems.Add(data);
+                        }
+                    }
+                }
+            }
         }
     }
 }

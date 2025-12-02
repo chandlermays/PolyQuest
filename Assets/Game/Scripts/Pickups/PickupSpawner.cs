@@ -14,7 +14,7 @@ namespace PolyQuest.Pickups
      *      - Handles saving and restoring whether the pickup is present (ISaveable).              *
      *      - Destroys or respawns the pickup based on the game state (i.e. when loading a save).  *
      * ------------------------------------------------------------------------------------------- */
-    public class PickupSpawner : MonoBehaviour, ISaveable, IJsonSaveable
+    public class PickupSpawner : MonoBehaviour, ISaveable
     {
         [SerializeField] private InventoryItem m_item;
         [SerializeField] private int m_quantity;
@@ -44,27 +44,21 @@ namespace PolyQuest.Pickups
             return GetPickup() == null;
         }
 
-        /*---------------------------------------------------------------
-        | --- CaptureState: Capture the state of the spawned Pickup --- |
-        ---------------------------------------------------------------*/
-        public object CaptureState()
+        public JToken CaptureState()
         {
-            return IsPickedUp();
+            return JToken.FromObject(IsPickedUp());
         }
 
-        /*--------------------------------------------------------------------
-        | --- RestoreState: Restore the Pickup based on its availability --- |
-        --------------------------------------------------------------------*/
-        public void RestoreState(object state)
+        public void RestoreState(JToken state)
         {
-            bool isAvailable = (bool)state;
+            bool shouldBePickedUp = state.ToObject<bool>();
 
-            if (isAvailable && !IsPickedUp())
+            if (shouldBePickedUp && !IsPickedUp())
             {
                 DestroyPickup();
             }
 
-            if (!isAvailable && IsPickedUp())
+            if (!shouldBePickedUp && IsPickedUp())
             {
                 SpawnPickup();
             }
@@ -87,26 +81,6 @@ namespace PolyQuest.Pickups
             if (GetPickup())
             {
                 Destroy(GetPickup().gameObject);
-            }
-        }
-
-        public JToken CaptureJToken()
-        {
-            return JToken.FromObject(IsPickedUp());
-        }
-
-        public void RestoreJToken(JToken state)
-        {
-            bool shouldBePickedUp = state.ToObject<bool>();
-
-            if (shouldBePickedUp && !IsPickedUp())
-            {
-                DestroyPickup();
-            }
-
-            if (!shouldBePickedUp && IsPickedUp())
-            {
-                SpawnPickup();
             }
         }
     }

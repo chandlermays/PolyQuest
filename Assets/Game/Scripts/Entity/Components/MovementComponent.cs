@@ -17,7 +17,7 @@ namespace PolyQuest.Components
      *      - Updates animation parameters based on movement state.                                 *
      *      - Supports saving and restoring the entity's position for persistence.                  *
      * ------------------------------------------------------------------------------------------- */
-    public class MovementComponent : EntityComponent, ISaveable, IJsonSaveable
+    public class MovementComponent : EntityComponent, ISaveable
     {
         /* --- Navigation --- */
         [SerializeField] private float m_maxPathLength = 20f;
@@ -100,6 +100,12 @@ namespace PolyQuest.Components
             if (!IsAlive())
                 return;
 
+            if (!NavMeshAgent.isOnNavMesh)
+            {
+                Debug.LogWarning($"Agent {gameObject.name} is not on NavMesh");
+                return;
+            }
+
             NavMeshAgent.destination = destination;
             NavMeshAgent.isStopped = false;
         }
@@ -132,28 +138,21 @@ namespace PolyQuest.Components
             }
         }
 
-        /*----------------------------------------------------------------
-        | --- CaptureState: Captures the current State of the Entity --- |
-        ----------------------------------------------------------------*/
-        public object CaptureState()
+        public JToken CaptureState()
         {
-            return new MySerializableVector3(Transform.position);
+            return Transform.position.ToToken();
         }
 
-        /*---------------------------------------------------------------
-        | --- RestoreState: Restores the Entity to a previous State --- |
-        ---------------------------------------------------------------*/
-        public void RestoreState(object state)
+        public void RestoreState(JToken state)
         {
-            MySerializableVector3 position = (MySerializableVector3)state;
             NavMeshAgent.enabled = false;
-            Transform.position = position.ToVector3();
+            Transform.position = state.ToVector3();
             NavMeshAgent.enabled = true;
             m_combatComponent?.Cancel();
         }
 
         /*------------------------------------------------------------------------------ 
-        | --- UpdateAnimator: Updates the Animator with the Player's current kSpeed --- |
+        | --- UpdateAnimator: Updates the Animator with the Player's current speed --- |
         ------------------------------------------------------------------------------*/
         private void UpdateAnimator()
         {
@@ -181,19 +180,6 @@ namespace PolyQuest.Components
             }
 
             return total;
-        }
-
-        public JToken CaptureJToken()
-        {
-            return Transform.position.ToToken();
-        }
-
-        public void RestoreJToken(JToken state)
-        {
-            NavMeshAgent.enabled = false;
-            Transform.position = state.ToVector3();
-            NavMeshAgent.enabled = true;
-            m_combatComponent?.Cancel();
         }
     }
 }

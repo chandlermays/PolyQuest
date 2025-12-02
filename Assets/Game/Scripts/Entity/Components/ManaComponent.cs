@@ -7,7 +7,7 @@ using PolyQuest.Saving;
 
 namespace PolyQuest.Components
 {
-    public class ManaComponent : EntityComponent, ISaveable, IJsonSaveable
+    public class ManaComponent : EntityComponent, ISaveable
     {
         [Header("Mana Settings")]
         [SerializeField] private float m_mana;
@@ -156,30 +156,18 @@ namespace PolyQuest.Components
             OnManaChanged?.Invoke();
         }
 
-        /*--------------------------------------------------------------------
-        | --- CaptureState: Save the Current State of the Mana Component --- |
-        --------------------------------------------------------------------*/
-        public object CaptureState()
-        {
-            return m_mana;
-        }
-
-        /*-------------------------------------------------------------------
-        | --- RestoreState: Restore the Mana Component to a Saved State --- |
-        -------------------------------------------------------------------*/
-        public void RestoreState(object state)
-        {
-            m_mana = (float)state;
-            m_hasBeenInitialized = true;
-            OnManaChanged?.Invoke();
-        }
-
-        public JToken CaptureJToken()
+        /*------------------------------------------------------------------------
+        | --- CaptureState: Captures the current state of the Entity's Mana --- |
+        ------------------------------------------------------------------------*/
+        public JToken CaptureState()
         {
             return JToken.FromObject(m_mana);
         }
 
-        public void RestoreJToken(JToken state)
+        /*---------------------------------------------------------------
+        | --- RestoreState: Restores the state from the saved data --- |
+        ---------------------------------------------------------------*/
+        public void RestoreState(JToken state)
         {
             m_mana = state.ToObject<float>();
             m_hasBeenInitialized = true;

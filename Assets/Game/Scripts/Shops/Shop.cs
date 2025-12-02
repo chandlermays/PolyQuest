@@ -11,7 +11,7 @@ using PolyQuest.Saving;
 
 namespace PolyQuest.Shops
 {
-    public class Shop : MonoBehaviour, IRaycastable, ISaveable, IJsonSaveable
+    public class Shop : MonoBehaviour, IRaycastable, ISaveable
     {
         [SerializeField] private string m_shopName;
         [Range(0.0f, 100.0f)]
@@ -274,36 +274,10 @@ namespace PolyQuest.Shops
             }
         }
 
-        /*-----------------------------------------------------------------
-        | --- CaptureState: Saves the current stock state of the shop --- |
-        -----------------------------------------------------------------*/
-        public object CaptureState()
-        {
-            var savedStock = new Dictionary<string, int>();
-
-            foreach (var pair in m_currentStock)
-            {
-                savedStock[pair.Key.ID] = pair.Value;
-            }
-
-            return savedStock;
-        }
-
-        /*-----------------------------------------------------------------------
-        | --- RestoreState: Restores the shop's stock state from saved data --- |
-        -----------------------------------------------------------------------*/
-        public void RestoreState(object state)
-        {
-            var savedStock = (Dictionary<string, int>)state;
-            m_currentStock.Clear();
-
-            foreach (var pair in savedStock)
-            {
-                m_currentStock[InventoryItem.FindByID(pair.Key)] = pair.Value;
-            }
-        }
-
-        public JToken CaptureJToken()
+        /*---------------------------------------------------------------------
+        | --- CaptureState: Captures the current state of the shop stock --- |
+        ---------------------------------------------------------------------*/
+        public JToken CaptureState()
         {
             JObject state = new();
             IDictionary<string, JToken> stateDict = state;
@@ -315,7 +289,10 @@ namespace PolyQuest.Shops
             return state;
         }
 
-        public void RestoreJToken(JToken state)
+        /*-----------------------------------------------------------------
+        | --- RestoreState: Restores the shop stock from saved state --- |
+        -----------------------------------------------------------------*/
+        public void RestoreState(JToken state)
         {
             if (state is JObject stateObject)
             {

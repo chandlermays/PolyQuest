@@ -26,14 +26,14 @@ namespace PolyQuest.SceneManagement
         [SerializeField] private SceneField m_firstSceneIndex;
         [SerializeField] private SceneField m_menuSceneIndex;
 
-        private JsonSavingSystem m_saveSystem;
+        private SavingSystem m_saveSystem;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
         private void Awake()
         {
-            m_saveSystem = GetComponent<JsonSavingSystem>();
+            m_saveSystem = GetComponent<SavingSystem>();
             Utilities.CheckForNull(m_saveSystem, nameof(m_saveSystem));
         }
 
