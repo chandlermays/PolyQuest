@@ -11,7 +11,7 @@ namespace PolyQuest.Core
      *                                                                                              *
      * Responsibilities:                                                                            *
      *      - Registers and unregisters enemies to monitor their alive/dead state.                  *
-     *      - Listens for health changes on tracked enemies.                                        *
+     *      - Listens for enemy death events.                                                       *
      *      - Updates the count of alive enemies in real time.                                      *
      *      - Notifies the ObjectiveCompletion component when all enemies are defeated.             *
      * -------------------------------------------------------------------------------------------- */
@@ -19,7 +19,7 @@ namespace PolyQuest.Core
     {
         private ObjectiveCompletion m_objectiveCompletion;
 
-        private readonly HashSet<HealthComponent> m_enemies = new();        // TODO: do I really need a hashset? what can a hashset do?
+        private readonly HashSet<HealthComponent> m_enemies = new();
         private int m_aliveEnemyCount = 0;
 
         /*----------------------------------------------------------------
@@ -36,12 +36,17 @@ namespace PolyQuest.Core
         -----------------------------------------------------------------------*/
         public void RegisterEnemy(HealthComponent enemy)
         {
+            if (enemy == null)
+                return;
+
             if (m_enemies.Add(enemy))
             {
                 if (!enemy.IsDead)
+                {
                     ++m_aliveEnemyCount;
+                }
 
-                enemy.OnHealthChanged += OnEnemyHealthChanged;
+                enemy.OnDeath += OnEnemyDeath;
             }
         }
 
@@ -50,32 +55,46 @@ namespace PolyQuest.Core
         --------------------------------------------------------------------------------*/
         public void UnregisterEnemy(HealthComponent enemy)
         {
+            if (enemy == null)
+                return;
+
             if (m_enemies.Remove(enemy))
             {
                 if (!enemy.IsDead)
+                {
                     --m_aliveEnemyCount;
+                }
 
-                enemy.OnHealthChanged -= OnEnemyHealthChanged;
+                enemy.OnDeath -= OnEnemyDeath;
             }
         }
 
-        /*---------------------------------------------------------------------
-        | --- OnEnemyHealthChanged: Called when an enemy's health changes --- |         // TODO: This is a hefty method, we don't need to be checking
-        ---------------------------------------------------------------------*/         // every time the health changes. We just need to know when they die.
-        private void OnEnemyHealthChanged()
+        /*-----------------------------------------------------------
+        | --- OnEnemyDeath: Called when a registered enemy dies --- |
+        -----------------------------------------------------------*/
+        private void OnEnemyDeath()
         {
-            int alive = 0;
-            foreach (var enemy in m_enemies)
-            {
-                if (!enemy.IsDead)
-                    ++alive;
-            }
-            m_aliveEnemyCount = alive;
+            --m_aliveEnemyCount;
 
-            if (m_aliveEnemyCount == 0)
+            if (m_aliveEnemyCount <= 0)
             {
                 m_objectiveCompletion.CompleteObjective();
             }
+        }
+
+        /*--------------------------------------------------------------------
+        | --- OnDestroy: Called when the MonoBehaviour will be destroyed --- |
+        --------------------------------------------------------------------*/
+        private void OnDestroy()
+        {
+            foreach (var enemy in m_enemies)
+            {
+                if (enemy != null)
+                {
+                    enemy.OnDeath -= OnEnemyDeath;
+                }
+            }
+            m_enemies.Clear();
         }
     }
 }

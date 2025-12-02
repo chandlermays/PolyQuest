@@ -38,16 +38,12 @@ namespace PolyQuest.Pickups
         }
 
         /*----------------------------------------------------------------
-        | --- Setup: InitializeDecorationArray the Pickup with an item and quantity --- |
+        | --- Setup: Initialize the Pickup with an item and quantity --- |
         ----------------------------------------------------------------*/
         public void Setup(InventoryItem item, int quantity)
         {
             m_item = item;
-            if (!item.IsStackable)
-            {
-                m_quantity = 1;
-            }
-            m_quantity = quantity;
+            m_quantity = item.IsStackable ? quantity : 1;
         }
 
         /*--------------------------------------------------------------------------
@@ -70,8 +66,12 @@ namespace PolyQuest.Pickups
             if (m_inventory == null)
             {
                 Debug.Log("Pickup: Inventory is not assigned.");
+                return false;
             }
-            return m_inventory.HasSpaceFor(m_item);
+            else
+            {
+                return m_inventory.HasSpaceFor(m_item);
+            }
         }
     }
 }

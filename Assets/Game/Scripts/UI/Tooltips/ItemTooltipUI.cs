@@ -5,12 +5,12 @@ using PolyQuest.Inventories;
 
 namespace PolyQuest.UI.Tooltip
 {
-    /* --------------------------------------------------------------------------------------------
-     * Role: Displays the name and description of an inventory m_item in a tooltip UI element.       *
+    /* ---------------------------------------------------------------------------------------------
+     * Role: Displays the name and description of an inventory item in a tooltip UI element.       *
      *                                                                                             *
      * Responsibilities:                                                                           *
-     *      - Shows the m_item's name and description in the tooltip.                                *
-     *      - Provides a setup method to initialize the tooltip with m_item data.                    *
+     *      - Shows the item's name and description in the tooltip.                                *
+     *      - Provides a setup method to initialize the tooltip with item data.                    *
      * ------------------------------------------------------------------------------------------- */
     public class ItemTooltipUI : MonoBehaviour
     {
@@ -27,7 +27,7 @@ namespace PolyQuest.UI.Tooltip
         }
 
         /*------------------------------------------------------
-        | --- Setup: InitializeDecorationArray the tooltip with m_item data --- |
+        | --- Setup: Initialize the tooltip with item data --- |
         ------------------------------------------------------*/
         public void Setup(InventoryItem item)
         {

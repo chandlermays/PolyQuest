@@ -66,9 +66,9 @@ namespace PolyQuest.Quests
             return GetQuestStatus(quest) != null;
         }
 
-        /*---------------------------------------------------------------
+        /*-----------------------------------------------------------------
         | --- IsQuestCompleted: Check if the quest has been completed --- |
-        ---------------------------------------------------------------*/
+        -----------------------------------------------------------------*/
         public bool IsQuestCompleted(Quest quest)
         {
             return quest != null && m_completedQuests.Contains(quest.name);
@@ -95,9 +95,9 @@ namespace PolyQuest.Quests
             OnUpdate?.Invoke();
         }
 
-        /*--------------------------------------------------------------------
+        /*-------------------------------------------------------------------
         | --- CaptureState: Save the Current State of the Quest Manager --- |
-        --------------------------------------------------------------------*/
+        -------------------------------------------------------------------*/
         public JToken CaptureState()
         {
             JObject state = new JObject();
@@ -121,9 +121,9 @@ namespace PolyQuest.Quests
             return state;
         }
 
-        /*--------------------------------------------------------------------
+        /*-------------------------------------------------------------------
         | --- RestoreState: Load the Current State of the Quest Manager --- |
-        --------------------------------------------------------------------*/
+        -------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
             if (state is JObject stateObject)

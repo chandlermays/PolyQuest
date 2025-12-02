@@ -34,7 +34,7 @@ namespace PolyQuest.UI.Tooltip
         }
 
         /*--------------------------------------------------------
-        | --- Setup: InitializeDecorationArray the quest tooltip UI element --- |
+        | --- Setup: Initialize the quest tooltip UI element --- |
         --------------------------------------------------------*/
         public void Setup(QuestStatus status)
         {
