@@ -22,6 +22,7 @@ namespace PolyQuest.Abilities
         {
             ManaComponent mana = user.GetComponent<ManaComponent>();
             Utilities.CheckForNull(mana, nameof(mana));
+
             if (mana.CurrentMana < m_manaCost)
                 return false;
 
@@ -31,7 +32,7 @@ namespace PolyQuest.Abilities
             if (cooldowns.GetRemainingCooldown(this) > 0f)
                 return false;
 
-            AbilityConfig config = new AbilityConfig(user);
+            AbilityConfig config = new(user);
             m_targetingStrategy.StartTargeting(config, () => TargetAcquired(config));
             return true;
         }
@@ -41,10 +42,7 @@ namespace PolyQuest.Abilities
         ------------------------------------------------------------------------------------------------*/
         private void TargetAcquired(AbilityConfig config)
         {
-            HealthComponent healthComponent = config.User.GetComponent<HealthComponent>();
-            Utilities.CheckForNull(healthComponent, nameof(healthComponent));
-
-            if (healthComponent.IsDead)
+            if (config.IsCancelled)
                 return;
 
             ManaComponent mana = config.User.GetComponent<ManaComponent>();
@@ -70,7 +68,7 @@ namespace PolyQuest.Abilities
         -------------------------------------------------------------------*/
         private void EffectCompleted()
         {
-
+            //...
         }
     }
 }

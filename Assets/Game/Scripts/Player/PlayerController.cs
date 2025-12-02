@@ -6,6 +6,7 @@ using PolyQuest.Core;
 using PolyQuest.Components;
 using PolyQuest.Inventories;
 using PolyQuest.UI.Core;
+using PolyQuest.Dialogues;
 
 namespace PolyQuest.Player
 {
@@ -22,23 +23,22 @@ namespace PolyQuest.Player
 
     public class PlayerController : MonoBehaviour
     {
-        /* --- Cursor Settings --- */
         [SerializeField] private CursorSettings m_cursorSettings;
         private CursorSettings.CursorType m_currentCursorType;
         private bool m_isDraggingUI = false;
 
-        /* --- References --- */
         private Camera m_mainCamera;
-        private MovementComponent m_playerMovement;
+        private MovementComponent m_movement;
         private HealthComponent m_healthComponent;
         private Actions m_actions;
+        private PlayerDialogueHandler m_dialogueHandler;
 
-        /* --- Navigation --- */
         [SerializeField] private float m_maxNavMeshDistance = 1f;
         private readonly RaycastHit[] m_raycasts = new RaycastHit[16];
 
-        /* --- m_action Slots ---*/
         [SerializeField] private int m_numberOfActionSlots = 6;
+
+        private bool m_isInDialogue = false;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -50,14 +50,29 @@ namespace PolyQuest.Player
             m_mainCamera = Camera.main;
             Utilities.CheckForNull(m_mainCamera, nameof(m_mainCamera));
 
-            m_playerMovement = GetComponent<MovementComponent>();
-            Utilities.CheckForNull(m_playerMovement, nameof(m_playerMovement));
+            m_movement = GetComponent<MovementComponent>();
+            Utilities.CheckForNull(m_movement, nameof(m_movement));
 
             m_healthComponent = GetComponent<HealthComponent>();
             Utilities.CheckForNull(m_healthComponent, nameof(m_healthComponent));
 
             m_actions = GetComponent<Actions>();
             Utilities.CheckForNull(m_actions, nameof(m_actions));
+
+            m_dialogueHandler = GetComponent<PlayerDialogueHandler>();
+            Utilities.CheckForNull(m_dialogueHandler, nameof(m_dialogueHandler));
+        }
+
+        private void OnEnable()
+        {
+            m_dialogueHandler.OnDialogueStarted += HandleDialogueStarted;
+            m_dialogueHandler.OnDialogueEnded += HandleDialogueEnded;
+        }
+
+        private void OnDisable()
+        {
+            m_dialogueHandler.OnDialogueStarted -= HandleDialogueStarted;
+            m_dialogueHandler.OnDialogueEnded -= HandleDialogueEnded;
         }
 
         /*----------------------------------------- 
@@ -80,17 +95,20 @@ namespace PolyQuest.Player
         ----------------------------------------------------*/
         private void ProcessEvents()
         {
-            if (HandleAbilities())
-                return;
-
             if (HandleUI())
                 return;
 
-            if (HandleInteractable())
-                return;
+            if (!m_isInDialogue)
+            {
+                if (HandleAbilities())
+                    return;
 
-            if (HandleMovement())
-                return;
+                if (HandleInteractable())
+                    return;
+
+                if (HandleMovement())
+                    return;
+            }
 
             // If no action was taken, set the Cursor to normal
             SetCursor(CursorSettings.CursorType.kNone);
@@ -180,9 +198,9 @@ namespace PolyQuest.Player
 
             if (RaycastNavMesh(out Vector3 target))
             {
-                if (!m_playerMovement.CanMoveTo(target)) return false;
+                if (!m_movement.CanMoveTo(target)) return false;
 
-                m_playerMovement.StartMoveAction(target);
+                m_movement.StartMoveAction(target);
                 SetCursor(CursorSettings.CursorType.kMovement);
                 return true;
             }
@@ -208,6 +226,16 @@ namespace PolyQuest.Player
             target = navMeshHit.position;
 
             return true;
+        }
+
+        private void HandleDialogueStarted()
+        {
+            m_isInDialogue = true;
+        }
+
+        private void HandleDialogueEnded()
+        {
+            m_isInDialogue = false;
         }
 
         /*---------------------------------------------------------------------- 

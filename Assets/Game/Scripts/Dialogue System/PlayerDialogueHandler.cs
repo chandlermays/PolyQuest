@@ -4,6 +4,7 @@ using UnityEngine;
 //---------------------------------
 using PolyQuest.Tools;
 using PolyQuest.Components;
+using PolyQuest.Player;
 
 namespace PolyQuest.Dialogues
 {
@@ -22,6 +23,7 @@ namespace PolyQuest.Dialogues
         private Dialogue m_activeDialogue;
         private DialogueNode m_currentNode;
         private AIDialogueHandler m_activeNPC;
+        private PlayerController m_playerController;
         private MovementComponent m_movementComponent;
 
         private const float kProximityThreshold = 4.0f;
@@ -36,30 +38,11 @@ namespace PolyQuest.Dialogues
         ----------------------------------------------------------------*/
         private void Awake()
         {
+            m_playerController = GetComponent<PlayerController>();
+            Utilities.CheckForNull(m_playerController, nameof(PlayerController));
+
             m_movementComponent = GetComponent<MovementComponent>();
             Utilities.CheckForNull(m_movementComponent, nameof(MovementComponent));
-        }
-
-        /*--------------------------------------------------------------------- 
-        | --- OnEnable: Called when the object becomes enabled and active --- |
-        ---------------------------------------------------------------------*/
-        private void OnEnable()
-        {
-            if (m_movementComponent != null)
-            {
-                m_movementComponent.OnMoveActionStarted += CancelDialogueAction;
-            }
-        }
-
-        /*--------------------------------------------------------------------------- 
-        | --- OnDisable: Called when the behaviour becomes disabled or inactive --- |
-        ---------------------------------------------------------------------------*/
-        private void OnDisable()
-        {
-            if (m_movementComponent != null)
-            {
-                m_movementComponent.OnMoveActionStarted -= CancelDialogueAction;
-            }
         }
 
         /*----------------------------------------- 

@@ -5,7 +5,6 @@ using UnityEngine;
 //---------------------------------
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
-using PolyQuest.Components;
 
 namespace PolyQuest.Abilities
 {
@@ -48,11 +47,14 @@ namespace PolyQuest.Abilities
 
             playerController.SetCursor(CursorSettings.CursorType.kTargeting);
 
-            HealthComponent healthComponent = config.User.GetComponent<HealthComponent>();
-            Utilities.CheckForNull(healthComponent, nameof(healthComponent));
-
-            while (!healthComponent.IsDead)
+            while (!config.IsCancelled)
             {
+                if (Input.GetMouseButtonDown(1))
+                {
+                    config.Cancel();
+                    break;
+                }
+
                 if (Physics.Raycast(playerController.GetCursorRay(), out RaycastHit raycastHit, kMaxDistance, m_targetLayer))
                 {
                     m_areaRadiusInstance.transform.position = raycastHit.point;
@@ -62,8 +64,16 @@ namespace PolyQuest.Abilities
                         // Wait until the mouse button is released
                         while (Input.GetMouseButton(0))
                         {
+                            if (Input.GetMouseButtonDown(1))
+                            {
+                                config.Cancel();
+                                break;
+                            }
                             yield return null;
                         }
+                        if (config.IsCancelled)
+                            break;
+
                         config.TargetPoint = raycastHit.point;
                         config.Targets = CollectTargetsInRadius(playerController, raycastHit.point);
                         break;
