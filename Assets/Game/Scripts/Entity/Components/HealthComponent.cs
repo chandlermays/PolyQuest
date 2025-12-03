@@ -212,9 +212,9 @@ namespace PolyQuest.Components
             experience.GainExperience(m_stats.GetExperienceReward());
         }
 
-        /*--------------------------------------------------------------------------
+        /*-------------------------------------------------------------------------
         | --- CaptureState: Captures the current state of the Entity's Health --- |
-        --------------------------------------------------------------------------*/
+        -------------------------------------------------------------------------*/
         public JToken CaptureState()
         {
             HealthSaveData data = new()
@@ -225,14 +225,16 @@ namespace PolyQuest.Components
             return JToken.FromObject(data);
         }
 
-        /*---------------------------------------------------------------------------
+        /*--------------------------------------------------------------------------
         | --- RestoreState: Restores the Entity's Health state from saved data --- |
-        ---------------------------------------------------------------------------*/
+        --------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
             HealthSaveData data = state.ToObject<HealthSaveData>();
             m_health = data.health;
             m_isDead = data.isDead;
+            m_hasBeenInitialized = true;
+            m_lastKnownMaxHealth = m_stats.GetHealth();
             OnHealthChanged?.Invoke();
 
             if (m_isDead)

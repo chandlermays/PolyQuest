@@ -38,7 +38,8 @@ namespace PolyQuest.Player
 
         [SerializeField] private int m_numberOfActionSlots = 6;
 
-        private bool m_isInDialogue = false;
+        private Renderer[] m_renderers;
+        private bool m_isVisible = true;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -63,16 +64,12 @@ namespace PolyQuest.Player
             Utilities.CheckForNull(m_dialogueHandler, nameof(m_dialogueHandler));
         }
 
-        private void OnEnable()
+        /*-----------------------------------------------------
+        | --- Start: Called before the first frame update --- |
+        -----------------------------------------------------*/
+        private void Start()
         {
-            m_dialogueHandler.OnDialogueStarted += HandleDialogueStarted;
-            m_dialogueHandler.OnDialogueEnded += HandleDialogueEnded;
-        }
-
-        private void OnDisable()
-        {
-            m_dialogueHandler.OnDialogueStarted -= HandleDialogueStarted;
-            m_dialogueHandler.OnDialogueEnded -= HandleDialogueEnded;
+            m_renderers = GetComponentsInChildren<Renderer>();
         }
 
         /*----------------------------------------- 
@@ -98,7 +95,7 @@ namespace PolyQuest.Player
             if (HandleUI())
                 return;
 
-            if (!m_isInDialogue)
+            if (m_isVisible)
             {
                 if (HandleAbilities())
                     return;
@@ -228,14 +225,19 @@ namespace PolyQuest.Player
             return true;
         }
 
-        private void HandleDialogueStarted()
+        /*--------------------------------------------------------------------- 
+        | --- SetPlayerVisibility: Set the visibility of the Player Model --- |
+        ---------------------------------------------------------------------*/
+        public void SetPlayerVisibility(bool visible)
         {
-            m_isInDialogue = true;
-        }
+            if (m_isVisible == visible)
+                return;
 
-        private void HandleDialogueEnded()
-        {
-            m_isInDialogue = false;
+            m_isVisible = visible;
+            foreach (Renderer renderer in m_renderers)
+            {
+                renderer.enabled = m_isVisible;
+            }
         }
 
         /*---------------------------------------------------------------------- 

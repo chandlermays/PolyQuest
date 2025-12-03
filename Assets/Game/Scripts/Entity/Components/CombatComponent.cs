@@ -29,11 +29,12 @@ namespace PolyQuest.Components
         [SerializeField] private float m_autoAttackRange = 5.0f;
         [SerializeField] private LayerMask m_targetLayers;
 
-        private float m_lastAttackTime = Mathf.Infinity;
+        private float m_timeSinceLastAttack = Mathf.Infinity;
 
         /* --- References --- */
         private GameObject m_target;
         private Transform m_targetTransform;
+        private HealthComponent m_targetHealth;
         private MovementComponent m_movementComponent;
         private HealthComponent m_healthComponent;
         private Weapon m_currentWeapon;
@@ -41,8 +42,8 @@ namespace PolyQuest.Components
         private Equipment m_equipment;
 
         /* --- Animation Parameters --- */
-        private const string kAttack = "Attack";
-        private const string kStopAttacking = "StopAttacking";
+        private static readonly int kAttack = Animator.StringToHash("Attack");
+        private static readonly int kStopAttacking = Animator.StringToHash("StopAttacking");
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -102,26 +103,29 @@ namespace PolyQuest.Components
         -----------------------------------------*/
         private void Update()
         {
-            m_lastAttackTime += Time.deltaTime;
+            m_timeSinceLastAttack += Time.deltaTime;
 
-            if (m_healthComponent.IsDead)
+            if (m_healthComponent.IsDead || m_target == null)
                 return;
 
-            if (m_target == null)
-                return;
-
-            // If the target is dead, check your surroundings for a new one
-            if (m_target.GetComponent<HealthComponent>().IsDead)
+            if (!IsTargetValid())
             {
-                m_target = FindNewTargetInRange();
+                AcquireNewTarget();
                 if (m_target == null)
                     return;
-
-                SetTarget(m_target);
             }
 
-            // If the Player is not in Range, Move to the Target
-            if (Vector3.Distance(Transform.position, m_targetTransform.position) >= m_currentWeapon.GetRange())
+            HandleCombatMovement();
+        }
+
+        /*----------------------------------------------------------------
+        | --- HandleCombatMovement: Manage Movement and Attack Logic --- |
+        ----------------------------------------------------------------*/
+        private void HandleCombatMovement()
+        {
+            float distanceToTarget = Vector3.Distance(Transform.position, m_targetTransform.position);
+
+            if (distanceToTarget >= m_currentWeapon.GetRange())
             {
                 StopAttack();
                 m_movementComponent.MoveTo(m_targetTransform.position);
@@ -133,6 +137,26 @@ namespace PolyQuest.Components
             }
         }
 
+        /*---------------------------------------------------------------
+        | --- IsTargetValid: Check if Current Target is Still Valid --- |
+        ---------------------------------------------------------------*/
+        private bool IsTargetValid()
+        {
+            return m_targetHealth != null && !m_targetHealth.IsDead;
+        }
+
+        /*--------------------------------------------------------------
+        | --- AcquireNewTarget: Find and Set a New Target in Range --- |
+        --------------------------------------------------------------*/
+        private void AcquireNewTarget()
+        {
+            m_target = FindNearestTargetInRange();
+            if (m_target != null)
+            {
+                SetTarget(m_target);
+            }
+        }
+
         /*---------------------------------------------
         | --- SetTarget: Set the Target to Attack --- |
         ---------------------------------------------*/
@@ -140,6 +164,7 @@ namespace PolyQuest.Components
         {
             m_target = target;
             m_targetTransform = target.transform;
+            m_targetHealth = target.GetComponent<HealthComponent>();
         }
 
         /*-----------------------------------------------
@@ -159,6 +184,7 @@ namespace PolyQuest.Components
             StopAttack();
             m_target = null;
             m_targetTransform = null;
+            m_targetHealth = null;
         }
 
         /*---------------------------------------------------------
@@ -174,8 +200,8 @@ namespace PolyQuest.Components
             if (m_movementComponent.CanMoveTo(target.transform.position) == false)
                 return false;
 
-            var targetHealth = target.GetComponent<HealthComponent>();
-            return targetHealth != null && !targetHealth.IsDead;
+            m_targetHealth = target.GetComponent<HealthComponent>();
+            return m_targetHealth != null && !m_targetHealth.IsDead;
         }
 
         /*--------------------------------------------------------------------
@@ -185,12 +211,12 @@ namespace PolyQuest.Components
         {
             Transform.LookAt(m_targetTransform);
 
-            if (m_lastAttackTime > m_attackCooldown)
+            if (m_timeSinceLastAttack > m_attackCooldown)
             {
                 m_movementComponent.Cancel();
                 Animator.ResetTrigger(kStopAttacking);
                 Animator.SetTrigger(kAttack);
-                m_lastAttackTime = 0;
+                m_timeSinceLastAttack = 0;
             }
         }
 
@@ -199,10 +225,7 @@ namespace PolyQuest.Components
         --------------------------------------------------------------------------*/
         public void EquipWeapon(Weapon weapon)
         {
-            if (m_currentWeapon != null)
-            {
-                m_currentWeapon.Remove();
-            }
+            m_currentWeapon?.Remove();
             m_currentWeapon = weapon;
             weapon.Spawn(m_leftHand, m_rightHand, Animator);
         }
@@ -213,14 +236,7 @@ namespace PolyQuest.Components
         private void UpdateWeapon()
         {
             Weapon weapon = m_equipment.GetItemInSlot(EquipmentSlot.kWeapon) as Weapon;
-            if (weapon != null)
-            {
-                EquipWeapon(weapon);
-            }
-            else
-            {
-                EquipWeapon(m_defaultWeapon);
-            }
+            EquipWeapon(weapon ?? m_defaultWeapon);
         }
 
         /*-----------------------------------------------------------
@@ -285,52 +301,38 @@ namespace PolyQuest.Components
             }
             else
             {
-                var health = m_target.GetComponent<HealthComponent>();
-                health.TakeDamage(gameObject, damage);
+                m_targetHealth.TakeDamage(gameObject, damage);
             }
         }
 
         /*----------------------------------------------------------------------------
-        | --- FindNewTargetInRange: Locate a New Target within Auto-Attack Range --- |
+        | --- FindNearestTargetInRange: Locate Nearest Target within Auto-Attack --- |
         ----------------------------------------------------------------------------*/
-        private GameObject FindNewTargetInRange()
+        private GameObject FindNearestTargetInRange()
         {
-            GameObject best = null;
-            float bestDistance = Mathf.Infinity;
-            foreach (var candidate in FindAllTargetsInRange())
-            {
-                float candidateDistance = Vector3.Distance(transform.position, candidate.transform.position);
+            GameObject nearest = null;
+            float nearestDistance = Mathf.Infinity;
+            Vector3 position = transform.position;
 
-                if (candidateDistance < bestDistance)
-                {
-                    best = candidate;
-                    bestDistance = candidateDistance;
-                }
-            }
-
-            return best;
-        }
-
-        /*-------------------------------------------------------------------------------
-        | --- FindAllTargetsInRange: Get All Valid Targets within Auto-Attack Range --- |
-        -------------------------------------------------------------------------------*/
-        private IEnumerable<GameObject> FindAllTargetsInRange()
-        {
-            Collider[] colliders = Physics.OverlapSphere(transform.position, m_autoAttackRange, m_targetLayers);
+            Collider[] colliders = Physics.OverlapSphere(position, m_autoAttackRange, m_targetLayers);
 
             foreach (var collider in colliders)
             {
-                if (!collider.TryGetComponent<HealthComponent>(out var health))
-                    continue;
-
-                if (health.IsDead)
-                    continue;
-
                 if (collider.gameObject == gameObject)
                     continue;
 
-                yield return health.gameObject;
+                if (!collider.TryGetComponent<HealthComponent>(out var health) || health.IsDead)
+                    continue;
+
+                float distance = Vector3.Distance(position, collider.transform.position);
+                if (distance < nearestDistance)
+                {
+                    nearest = collider.gameObject;
+                    nearestDistance = distance;
+                }
             }
+
+            return nearest;
         }
 
         /*--------------------------------------------------------------

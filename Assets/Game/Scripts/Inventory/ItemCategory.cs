@@ -14,6 +14,9 @@ namespace PolyQuest.Inventories
         kWeapon,
         kArmor,
         kConsumables,
-        kAbilities
+        kAbilities,
+        kQuestItem,
+        kCraftingMaterial,
+        kJunk
     }
 }

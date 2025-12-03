@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e865b2bec087afb4d9afb473541887b3, type: 3}
+  m_Name: A Family's Sword
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.GenericItem
+  m_itemID: 03bea15d-3acc-4f77-afda-ed14ab0807ad
+  m_itemName: A Family's Sword
+  m_itemDescription: "An old iron sword, worn but well-kept. It clearly belongs to
+    someone\u2014and they'd surely be grateful to see it again."
+  m_itemIcon: {fileID: 21300000, guid: 216c83c731d1a1044bb355e74c44c004, type: 3}
+  m_pickup: {fileID: 3714728132098454972, guid: ce734acb24202304793d0fc60816bfdf, type: 3}
+  m_isStackable: 0
+  m_category: 5
+  m_itemPrice: 0

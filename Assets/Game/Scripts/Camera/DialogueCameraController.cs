@@ -4,6 +4,7 @@ using UnityEngine;
 //---------------------------------
 using PolyQuest.SceneManagement;
 using PolyQuest.Dialogues;
+using PolyQuest.Player;
 
 namespace PolyQuest.Core
 {
@@ -11,6 +12,7 @@ namespace PolyQuest.Core
     {
         [SerializeField] private Camera m_mainCamera;
         [SerializeField] private CinemachineCamera m_dialogueCamera;
+        [SerializeField] private PlayerController m_playerController;
         [SerializeField] private PlayerDialogueHandler m_playerDialogueHandler;
         [SerializeField] private DialogueUI m_dialogueUI;
         [SerializeField] private GameObject m_playerHUD;
@@ -25,6 +27,7 @@ namespace PolyQuest.Core
         {
             Utilities.CheckForNull(m_mainCamera, nameof(m_mainCamera));
             Utilities.CheckForNull(m_dialogueCamera, nameof(m_dialogueCamera));
+            Utilities.CheckForNull(m_playerController, nameof(m_playerController));
             Utilities.CheckForNull(m_playerDialogueHandler, nameof(m_playerDialogueHandler));
             Utilities.CheckForNull(m_dialogueUI, nameof(m_dialogueUI));
             Utilities.CheckForNull(m_playerHUD, nameof(m_playerHUD));
@@ -81,6 +84,12 @@ namespace PolyQuest.Core
                 yield return fade.FadeOut();
             }
 
+            // Hide player after fade completes (when screen is black)
+            if (toDialogue)
+            {
+                m_playerController.SetPlayerVisibility(false);
+            }
+
             if (!toDialogue)
             {
                 SetDialogueUIVisibility(false);
@@ -99,6 +108,13 @@ namespace PolyQuest.Core
                     yield return fade.Wait();
                     SetDialogueUIVisibility(true);
                 }
+
+                // Show player as fade begins coming back in
+                if (!toDialogue)
+                {
+                    m_playerController.SetPlayerVisibility(true);
+                }
+
                 yield return fade.FadeIn();
             }
             else
@@ -106,6 +122,10 @@ namespace PolyQuest.Core
                 if (toDialogue)
                 {
                     SetDialogueUIVisibility(true);
+                }
+                else
+                {
+                    m_playerController.SetPlayerVisibility(true);
                 }
             }
 

@@ -27,7 +27,7 @@ namespace PolyQuest.Components
         private HealthComponent m_healthComponent;
 
         /* --- Animation Parameters --- */
-        private const string kSpeed = "Speed";
+        private static readonly int kSpeed = Animator.StringToHash("Speed");
 
         public event Action OnMoveActionStarted;
 

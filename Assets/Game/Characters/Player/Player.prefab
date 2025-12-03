@@ -2580,7 +2580,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76d3bec88d6a83244b58819eae8aeb4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_defaultWeapon: {fileID: 11400000, guid: 91ebe5f2254f5ec4cb1f1fac5bc9ae1d, type: 2}
+  m_defaultWeapon: {fileID: 11400000, guid: ac79242d2cfe2d54f8479c16bf337229, type: 2}
   m_leftHand: {fileID: 2484110344413389623}
   m_rightHand: {fileID: 6889686824066836522}
   m_attackCooldown: 0.6

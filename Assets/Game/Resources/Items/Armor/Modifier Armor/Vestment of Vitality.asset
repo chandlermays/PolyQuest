@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.StatsEquipableItem
   m_itemID: af60f28e-9ffa-4f07-806a-a6bd7ed90991
   m_itemName: Vestment of Vitality
-  m_itemDescription: 
+  m_itemDescription: Increases your maximum health, allowing you to endure disappointment
+    for just a bit longer.
   m_itemIcon: {fileID: 21300000, guid: 7bcee3dac4c974d43b329ee45aef4c99, type: 3}
   m_pickup: {fileID: 3714728132098454972, guid: ce734acb24202304793d0fc60816bfdf, type: 3}
   m_isStackable: 0
