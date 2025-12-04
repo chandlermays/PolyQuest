@@ -553,7 +553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_uiPrefab: {fileID: 8915791096481581188}
-  m_toggleKey: 113
+  m_toggleAction: {fileID: 5831395063557504120, guid: b72a72ec29b84e74c920c1c2c45f34cf, type: 3}
 --- !u!1 &7822164047339436100
 GameObject:
   m_ObjectHideFlags: 0

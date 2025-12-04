@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace PolyQuest.UI.Core
 {
@@ -12,7 +13,7 @@ namespace PolyQuest.UI.Core
     public class UIToggler : MonoBehaviour
     {
         [SerializeField] private GameObject m_uiPrefab;
-        [SerializeField] private KeyCode m_toggleKey;
+        [SerializeField] private InputActionReference m_toggleAction;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -20,6 +21,23 @@ namespace PolyQuest.UI.Core
         private void Awake()
         {
             Utilities.CheckForNull(m_uiPrefab, nameof(m_uiPrefab));
+            Utilities.CheckForNull(m_toggleAction, nameof(m_toggleAction));
+        }
+
+        /*---------------------------------------------------------------------
+        | --- OnEnable: Called when the object becomes enabled and active --- |
+        ---------------------------------------------------------------------*/
+        private void OnEnable()
+        {
+            m_toggleAction.action.Enable();
+        }
+
+        /*---------------------------------------------------------------------------
+        | --- OnDisable: Called when the behaviour becomes disabled or inactive --- |
+        ---------------------------------------------------------------------------*/
+        private void OnDisable()
+        {
+            m_toggleAction.action.Disable();
         }
 
         /*-----------------------------------------------------
@@ -35,7 +53,7 @@ namespace PolyQuest.UI.Core
         ---------------------------------------*/
         private void Update()
         {
-            if (Input.GetKeyDown(m_toggleKey))
+            if (m_toggleAction.action.WasPressedThisFrame())
             {
                 ToggleUI();
             }

@@ -7,6 +7,7 @@ using PolyQuest.Components;
 using PolyQuest.Inventories;
 using PolyQuest.UI.Core;
 using PolyQuest.Dialogues;
+using PolyQuest.Input;
 
 namespace PolyQuest.Player
 {
@@ -36,10 +37,10 @@ namespace PolyQuest.Player
         [SerializeField] private float m_maxNavMeshDistance = 1f;
         private readonly RaycastHit[] m_raycasts = new RaycastHit[16];
 
-        [SerializeField] private int m_numberOfActionSlots = 6;
-
         private Renderer[] m_renderers;
         private bool m_isVisible = true;
+
+        private PolyQuestInputActions m_inputActions;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -62,6 +63,8 @@ namespace PolyQuest.Player
 
             m_dialogueHandler = GetComponent<PlayerDialogueHandler>();
             Utilities.CheckForNull(m_dialogueHandler, nameof(m_dialogueHandler));
+
+            m_inputActions = InputManager.Instance.InputActions;
         }
 
         /*-----------------------------------------------------
@@ -116,16 +119,24 @@ namespace PolyQuest.Player
         -----------------------------------------------------------------------*/
         private bool HandleAbilities()
         {
-            for (int i = 0; i < m_numberOfActionSlots; ++i)
-            {
-                if (Input.GetKeyDown(KeyCode.Alpha1 + i))
-                {
-                    if (m_actions.Use(gameObject, i))
-                    {
-                        return true;
-                    }
-                }
-            }
+            if (m_inputActions.Gameplay.ActionSlot1.WasPressedThisFrame() && m_actions.Use(gameObject, 0))
+                return true;
+
+            if (m_inputActions.Gameplay.ActionSlot2.WasPressedThisFrame() && m_actions.Use(gameObject, 1))
+                return true;
+
+            if (m_inputActions.Gameplay.ActionSlot3.WasPressedThisFrame() && m_actions.Use(gameObject, 2))
+                return true;
+
+            if (m_inputActions.Gameplay.ActionSlot4.WasPressedThisFrame() && m_actions.Use(gameObject, 3))
+                return true;
+
+            if (m_inputActions.Gameplay.ActionSlot5.WasPressedThisFrame() && m_actions.Use(gameObject, 4))
+                return true;
+
+            if (m_inputActions.Gameplay.ActionSlot6.WasPressedThisFrame() && m_actions.Use(gameObject, 5))
+                return true;
+
             return false;
         }
 
@@ -134,14 +145,14 @@ namespace PolyQuest.Player
         ---------------------------------------------------------*/
         private bool HandleUI()
         {
-            if (Input.GetMouseButtonUp(0))
+            if (m_inputActions.Gameplay.Interact.WasReleasedThisFrame())
             {
                 m_isDraggingUI = false;
             }
 
             if (EventSystem.current.IsPointerOverGameObject())
             {
-                if (Input.GetMouseButtonDown(0))
+                if (m_inputActions.Gameplay.Interact.WasPressedThisFrame())
                 {
                     m_isDraggingUI = true;
                 }
@@ -191,7 +202,8 @@ namespace PolyQuest.Player
         ---------------------------------------------------------------------*/
         private bool HandleMovement()
         {
-            if (!Input.GetMouseButton(0)) return false;
+            if (!m_inputActions.Gameplay.Interact.WasPressedThisFrame())
+                return false;
 
             if (RaycastNavMesh(out Vector3 target))
             {
@@ -245,7 +257,7 @@ namespace PolyQuest.Player
         ----------------------------------------------------------------------*/
         public Ray GetCursorRay()
         {
-            return m_mainCamera.ScreenPointToRay(Input.mousePosition);
+            return m_mainCamera.ScreenPointToRay(m_inputActions.Gameplay.MousePosition.ReadValue<Vector2>());
         }
 
         /*-------------------------------------------------------------------

@@ -8,6 +8,7 @@ using PolyQuest.Inventories;
 using PolyQuest.UI.Core;
 using PolyQuest.Player;
 using PolyQuest.Saving;
+using PolyQuest.Input;
 
 namespace PolyQuest.Shops
 {
@@ -237,7 +238,7 @@ namespace PolyQuest.Shops
         -------------------------------------------------------------------*/
         public bool HandleRaycast(PlayerController playerController)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
             {
                 playerController.GetComponent<ShopInteractor>().SetActiveShop(this);
             }
@@ -252,8 +253,7 @@ namespace PolyQuest.Shops
             foreach (ShopItemEntry entry in m_shopInventory)
             {
                 int price = GetPrice(entry);
-                int quantityInPurchase = 0;
-                m_purchase.TryGetValue(entry.Item, out quantityInPurchase);
+                m_purchase.TryGetValue(entry.Item, out int quantityInPurchase);
                 yield return new ShopItem(entry.Item, m_currentStock[entry.Item], entry.Item.Price, quantityInPurchase);
             }
         }

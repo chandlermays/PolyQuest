@@ -5,6 +5,7 @@ using UnityEngine;
 //---------------------------------
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
+using PolyQuest.Input;
 
 namespace PolyQuest.Abilities
 {
@@ -47,9 +48,11 @@ namespace PolyQuest.Abilities
 
             playerController.SetCursor(CursorSettings.CursorType.kTargeting);
 
+            PolyQuestInputActions inputActions = InputManager.Instance.InputActions;
+
             while (!config.IsCancelled)
             {
-                if (Input.GetMouseButtonDown(1))
+                if (inputActions.Gameplay.Cancel.WasPressedThisFrame())
                 {
                     config.Cancel();
                     break;
@@ -59,12 +62,12 @@ namespace PolyQuest.Abilities
                 {
                     m_areaRadiusInstance.transform.position = raycastHit.point;
 
-                    if (Input.GetMouseButtonDown(0))
+                    if (inputActions.Gameplay.Interact.WasPressedThisFrame())
                     {
                         // Wait until the mouse button is released
-                        while (Input.GetMouseButton(0))
+                        while (inputActions.Gameplay.Interact.IsPressed())
                         {
-                            if (Input.GetMouseButtonDown(1))
+                            if (inputActions.Gameplay.Cancel.WasPressedThisFrame())
                             {
                                 config.Cancel();
                                 break;
@@ -75,7 +78,7 @@ namespace PolyQuest.Abilities
                             break;
 
                         config.TargetPoint = raycastHit.point;
-                        config.Targets = CollectTargetsInRadius(playerController, raycastHit.point);
+                        config.Targets = CollectTargetsInRadius(raycastHit.point);
                         break;
                     }
                 }
@@ -90,7 +93,7 @@ namespace PolyQuest.Abilities
         /*-------------------------------------------------------------------------------------- 
         | --- CollectTargetsInRadius: Gathers all targets within the area of effect radius --- |
         --------------------------------------------------------------------------------------*/
-        private IEnumerable<GameObject> CollectTargetsInRadius(PlayerController playerController, Vector3 point)
+        private IEnumerable<GameObject> CollectTargetsInRadius(Vector3 point)
         {
             RaycastHit[] hits = Physics.SphereCastAll(point, m_areaOfEffectRadius, Vector3.up, 0);
             foreach (var hit in hits)

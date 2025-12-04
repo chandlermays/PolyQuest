@@ -7,6 +7,7 @@ using PolyQuest.Player;
 using PolyQuest.UI.Core;
 using PolyQuest.Inventories;
 using PolyQuest.Attributes;
+using PolyQuest.Input;
 
 namespace PolyQuest.Components
 {
@@ -255,7 +256,7 @@ namespace PolyQuest.Components
             if (!playerController.GetComponent<CombatComponent>().CanAttack(gameObject))
                 return false;
 
-            if (Input.GetMouseButton(0))
+            if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
             {
                 playerController.GetComponent<CombatComponent>().SetTarget(gameObject);
             }

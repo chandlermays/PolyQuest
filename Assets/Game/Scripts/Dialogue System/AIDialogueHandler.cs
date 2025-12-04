@@ -1,8 +1,9 @@
-using UnityEngine;
 //---------------------------------
 using PolyQuest.Core;
+using PolyQuest.Input;
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
+using UnityEngine;
 
 namespace PolyQuest.Dialogues
 {
@@ -42,7 +43,7 @@ namespace PolyQuest.Dialogues
         ----------------------------------------------------------------------------*/
         public bool HandleRaycast(PlayerController playerController)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
             {
                 playerController.GetComponent<PlayerDialogueHandler>().BeginDialogueAction(this, m_dialogue);
             }

@@ -1,8 +1,9 @@
-using UnityEngine;
+using PolyQuest.Core;
+using PolyQuest.Input;
 //---------------------------------
 using PolyQuest.Player;
-using PolyQuest.Core;
 using PolyQuest.UI.Core;
+using UnityEngine;
 
 namespace PolyQuest.Pickups
 {
@@ -41,7 +42,7 @@ namespace PolyQuest.Pickups
         ------------------------------------------------------------------------*/
         public bool HandleRaycast(PlayerController playerController)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
             {
                 m_pickup.PickupItem();
             }

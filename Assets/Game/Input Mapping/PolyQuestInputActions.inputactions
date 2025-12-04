@@ -1,0 +1,353 @@
+{
+    "version": 1,
+    "name": "PolyQuestInputActions",
+    "maps": [
+        {
+            "name": "Camera",
+            "id": "417b8064-5ce2-4df3-a0d7-e80b175b4fa6",
+            "actions": [
+                {
+                    "name": "Rotate",
+                    "type": "Value",
+                    "id": "dbffa2f8-2fa0-4dd7-afd3-87538c8b22f7",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "1D Axis",
+                    "id": "bfe4141f-16a0-4863-bc2d-b354c9d0f240",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "579ff259-2f8a-4272-8052-0480831cd2d2",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "f74815fc-e811-4177-b765-1a962e3ba210",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                }
+            ]
+        },
+        {
+            "name": "Gameplay",
+            "id": "b9ba124b-6099-4110-beaa-9e8d6facc5ca",
+            "actions": [
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "21241beb-cf72-4189-843c-6c26a47be89a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ActionSlot1",
+                    "type": "Button",
+                    "id": "502a6485-b98d-47c3-9dd0-65910ecf4cbb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ActionSlot2",
+                    "type": "Button",
+                    "id": "a3e3d36f-9ba3-4495-9d81-358e1103df1f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ActionSlot3",
+                    "type": "Button",
+                    "id": "b0ff86ca-eee2-46f2-acd8-0a17aaf1be3c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ActionSlot4",
+                    "type": "Button",
+                    "id": "28fff538-21ec-43b1-ad85-f3cd2c30b1ea",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ActionSlot5",
+                    "type": "Button",
+                    "id": "61dccb5b-7f9b-44f2-a9dd-ea969e567a41",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ActionSlot6",
+                    "type": "Button",
+                    "id": "63103e57-1e9b-4d70-8c58-9cb32f32da50",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Mouse Position",
+                    "type": "Value",
+                    "id": "5f89c5c5-56f2-4514-b364-f8c36f9940c3",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Open Inventory Tab",
+                    "type": "Button",
+                    "id": "052e7620-b15f-4458-9a71-172bfee494fd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Open Quest Tab",
+                    "type": "Button",
+                    "id": "a28326ac-63db-4640-bc99-680b72cb2c72",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Open Pause Menu",
+                    "type": "Button",
+                    "id": "053978b4-2071-4078-8b29-c02b832ea66a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Open Attributes Tab",
+                    "type": "Button",
+                    "id": "2a51b0dd-0143-4a8e-a647-14977e66a88f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Cancel",
+                    "type": "Button",
+                    "id": "d32d099b-ee9f-42b0-8403-3b0e6897d98c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f3bba7c0-0aff-4a8f-9b21-0486e81f4e0e",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "acc3bb60-4ae5-4538-876b-ecad86eb6413",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActionSlot1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ae023d47-d624-4c73-a19a-4fd579ff0e0e",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActionSlot2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8a1d2a8c-fafc-41b6-af32-44d44c064e5c",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActionSlot3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "947543ea-e03a-4858-8e73-b897b434e35f",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActionSlot4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "17f807b7-9cf1-4818-bcff-f5f049e57cf8",
+                    "path": "<Keyboard>/5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActionSlot5",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6f64ca4e-8b4b-4ce3-a79f-85bd070aa5f8",
+                    "path": "<Keyboard>/6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActionSlot6",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ec03b3c5-a462-4491-afb3-6dc3a631e392",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse Position",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a8f57b74-1033-43bd-a8ac-fe800b8aae03",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Open Inventory Tab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0730d014-e07c-47b7-af9d-f6648d5e3545",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Open Quest Tab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c0337c58-1377-4184-906c-99fbb26dcd13",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Open Pause Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c2ad9132-ea40-4b14-896a-944eaed75da7",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0d4ad6b4-ce22-48c3-a932-3b2644275a06",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Open Attributes Tab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "790f0c5c-e4f9-447a-a553-a360fe181650",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "c2142b63-0618-4757-9092-8b7368f71c4a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "5e891b3a-df2b-4cac-912a-b3b0ef343a1b",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

@@ -1,6 +1,6 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 //---------------------------------
+using PolyQuest.Input;
 
 namespace PolyQuest.Core
 {
@@ -18,7 +18,8 @@ namespace PolyQuest.Core
         [Header("Camera Settings")]
         [SerializeField] private Transform m_target;
         [SerializeField] private float m_rotationSpeed = 100.0f;
-        [SerializeField] private InputActionReference m_rotateAction;
+
+        private PolyQuestInputActions m_inputActions;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -26,23 +27,7 @@ namespace PolyQuest.Core
         private void Awake()
         {
             Utilities.CheckForNull(m_target, nameof(m_target));
-            Utilities.CheckForNull(m_rotateAction, nameof(m_rotateAction));
-        }
-
-        /*---------------------------------------------------------------------
-        | --- OnEnable: Called when the object becomes enabled and active --- |
-        ---------------------------------------------------------------------*/
-        private void OnEnable()
-        {
-            m_rotateAction.action.Enable();
-        }
-
-        /*---------------------------------------------------------------------------
-        | --- OnDisable: Called when the behaviour becomes disabled or inactive --- |
-        ---------------------------------------------------------------------------*/
-        private void OnDisable()
-        {
-            m_rotateAction.action.Disable();
+            m_inputActions = InputManager.Instance.InputActions;
         }
 
         /*------------------------------------------------------------------------------------------------------------
@@ -66,7 +51,7 @@ namespace PolyQuest.Core
         ---------------------------------------------------*/
         private void HandleInput()
         {
-            float rotationInput = m_rotateAction.action.ReadValue<float>();
+            float rotationInput = m_inputActions.Camera.Rotate.ReadValue<float>();
             if (Mathf.Abs(rotationInput) > 0.1f)
             {
                 float rotationAmount = rotationInput * m_rotationSpeed * Time.deltaTime;
