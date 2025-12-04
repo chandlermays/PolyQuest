@@ -63,8 +63,6 @@ namespace PolyQuest.Player
 
             m_dialogueHandler = GetComponent<PlayerDialogueHandler>();
             Utilities.CheckForNull(m_dialogueHandler, nameof(m_dialogueHandler));
-
-            m_inputActions = InputManager.Instance.InputActions;
         }
 
         /*-----------------------------------------------------
@@ -73,6 +71,7 @@ namespace PolyQuest.Player
         private void Start()
         {
             m_renderers = GetComponentsInChildren<Renderer>();
+            m_inputActions = InputManager.Instance.InputActions;
         }
 
         /*----------------------------------------- 
@@ -202,7 +201,7 @@ namespace PolyQuest.Player
         ---------------------------------------------------------------------*/
         private bool HandleMovement()
         {
-            if (!m_inputActions.Gameplay.Interact.WasPressedThisFrame())
+            if (!m_inputActions.Gameplay.Interact.IsPressed())
                 return false;
 
             if (RaycastNavMesh(out Vector3 target))

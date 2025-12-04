@@ -27,6 +27,13 @@ namespace PolyQuest.Core
         private void Awake()
         {
             Utilities.CheckForNull(m_target, nameof(m_target));
+        }
+
+        /*-----------------------------------------------------
+        | --- Start: Called before the first frame update --- |
+        -----------------------------------------------------*/
+        private void Start()
+        {
             m_inputActions = InputManager.Instance.InputActions;
         }
 

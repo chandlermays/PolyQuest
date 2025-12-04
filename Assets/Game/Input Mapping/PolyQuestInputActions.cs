@@ -387,7 +387,7 @@ namespace PolyQuest.Input
                 {
                     ""name"": """",
                     ""id"": ""c2ad9132-ea40-4b14-896a-944eaed75da7"",
-                    ""path"": ""<Keyboard>/escape"",
+                    ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

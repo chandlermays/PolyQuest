@@ -17,11 +17,10 @@ namespace PolyQuest.Input
                 Destroy(gameObject);
                 return;
             }
-
             Instance = this;
-            DontDestroyOnLoad(gameObject);
 
             InputActions = new PolyQuestInputActions();
+            Utilities.CheckForNull(InputActions, nameof(InputActions));
         }
 
         /*---------------------------------------------------------------------

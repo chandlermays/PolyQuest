@@ -30,7 +30,6 @@ namespace PolyQuest.SceneManagement
         ----------------------------------------------------------------*/
         private void Awake()
         {
-            // Singleton enforcement
             if (Instance != null && Instance != this)
             {
                 Destroy(gameObject);
