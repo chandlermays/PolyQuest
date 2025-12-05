@@ -325,9 +325,18 @@
             "id": "790f0c5c-e4f9-447a-a553-a360fe181650",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Double Click",
                     "type": "Button",
                     "id": "c2142b63-0618-4757-9092-8b7368f71c4a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Split Modifier",
+                    "type": "Button",
+                    "id": "b8d2ff67-00c4-46c3-bfa5-a741e39daf8d",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -338,11 +347,33 @@
                 {
                     "name": "",
                     "id": "5e891b3a-df2b-4cac-912a-b3b0ef343a1b",
-                    "path": "",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "MultiTap(tapTime=0.3,tapDelay=0.3)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Double Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b7df5a89-838d-4501-81b8-0bed0f08767c",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Split Modifier",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c0ba0eba-b132-43a1-8829-0c13031dd094",
+                    "path": "<Keyboard>/rightShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Split Modifier",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

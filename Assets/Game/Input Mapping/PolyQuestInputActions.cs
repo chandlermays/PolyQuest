@@ -413,9 +413,18 @@ namespace PolyQuest.Input
             ""id"": ""790f0c5c-e4f9-447a-a553-a360fe181650"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
+                    ""name"": ""Double Click"",
                     ""type"": ""Button"",
                     ""id"": ""c2142b63-0618-4757-9092-8b7368f71c4a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Split Modifier"",
+                    ""type"": ""Button"",
+                    ""id"": ""b8d2ff67-00c4-46c3-bfa5-a741e39daf8d"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -426,11 +435,33 @@ namespace PolyQuest.Input
                 {
                     ""name"": """",
                     ""id"": ""5e891b3a-df2b-4cac-912a-b3b0ef343a1b"",
-                    ""path"": """",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": ""MultiTap(tapTime=0.3,tapDelay=0.3)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Double Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b7df5a89-838d-4501-81b8-0bed0f08767c"",
+                    ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action"",
+                    ""action"": ""Split Modifier"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c0ba0eba-b132-43a1-8829-0c13031dd094"",
+                    ""path"": ""<Keyboard>/rightShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Split Modifier"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -459,7 +490,8 @@ namespace PolyQuest.Input
             m_Gameplay_Cancel = m_Gameplay.FindAction("Cancel", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
-            m_UI_Newaction = m_UI.FindAction("New action", throwIfNotFound: true);
+            m_UI_DoubleClick = m_UI.FindAction("Double Click", throwIfNotFound: true);
+            m_UI_SplitModifier = m_UI.FindAction("Split Modifier", throwIfNotFound: true);
         }
 
         ~@PolyQuestInputActions()
@@ -866,7 +898,8 @@ namespace PolyQuest.Input
         // UI
         private readonly InputActionMap m_UI;
         private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
-        private readonly InputAction m_UI_Newaction;
+        private readonly InputAction m_UI_DoubleClick;
+        private readonly InputAction m_UI_SplitModifier;
         /// <summary>
         /// Provides access to input actions defined in input action map "UI".
         /// </summary>
@@ -879,9 +912,13 @@ namespace PolyQuest.Input
             /// </summary>
             public UIActions(@PolyQuestInputActions wrapper) { m_Wrapper = wrapper; }
             /// <summary>
-            /// Provides access to the underlying input action "UI/Newaction".
+            /// Provides access to the underlying input action "UI/DoubleClick".
             /// </summary>
-            public InputAction @Newaction => m_Wrapper.m_UI_Newaction;
+            public InputAction @DoubleClick => m_Wrapper.m_UI_DoubleClick;
+            /// <summary>
+            /// Provides access to the underlying input action "UI/SplitModifier".
+            /// </summary>
+            public InputAction @SplitModifier => m_Wrapper.m_UI_SplitModifier;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -908,9 +945,12 @@ namespace PolyQuest.Input
             {
                 if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
                 m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
-                @Newaction.started += instance.OnNewaction;
-                @Newaction.performed += instance.OnNewaction;
-                @Newaction.canceled += instance.OnNewaction;
+                @DoubleClick.started += instance.OnDoubleClick;
+                @DoubleClick.performed += instance.OnDoubleClick;
+                @DoubleClick.canceled += instance.OnDoubleClick;
+                @SplitModifier.started += instance.OnSplitModifier;
+                @SplitModifier.performed += instance.OnSplitModifier;
+                @SplitModifier.canceled += instance.OnSplitModifier;
             }
 
             /// <summary>
@@ -922,9 +962,12 @@ namespace PolyQuest.Input
             /// <seealso cref="UIActions" />
             private void UnregisterCallbacks(IUIActions instance)
             {
-                @Newaction.started -= instance.OnNewaction;
-                @Newaction.performed -= instance.OnNewaction;
-                @Newaction.canceled -= instance.OnNewaction;
+                @DoubleClick.started -= instance.OnDoubleClick;
+                @DoubleClick.performed -= instance.OnDoubleClick;
+                @DoubleClick.canceled -= instance.OnDoubleClick;
+                @SplitModifier.started -= instance.OnSplitModifier;
+                @SplitModifier.performed -= instance.OnSplitModifier;
+                @SplitModifier.canceled -= instance.OnSplitModifier;
             }
 
             /// <summary>
@@ -1080,12 +1123,19 @@ namespace PolyQuest.Input
         public interface IUIActions
         {
             /// <summary>
-            /// Method invoked when associated input action "New action" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// Method invoked when associated input action "Double Click" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
             /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnNewaction(InputAction.CallbackContext context);
+            void OnDoubleClick(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Split Modifier" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnSplitModifier(InputAction.CallbackContext context);
         }
     }
 }
