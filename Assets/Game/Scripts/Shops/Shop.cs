@@ -184,7 +184,7 @@ namespace PolyQuest.Shops
         }
 
         /*--------------------------------------------------------------------------
-        | --- AddToPurchase: Adds an m_item and m_quantity to the current purchase --- |
+        | --- AddToPurchase: Adds an item and quantity to the current purchase --- |
         --------------------------------------------------------------------------*/
         public void AddToPurchase(InventoryItem item, int quantity)
         {

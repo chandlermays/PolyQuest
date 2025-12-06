@@ -179,6 +179,9 @@ namespace PolyQuest.Inventories
             return m_emptySlots.Count;
         }
 
+        /*------------------------------------------------------------------
+        | --- CaptureState: Capture the current state of the inventory --- |
+        ------------------------------------------------------------------*/
         public JToken CaptureState()
         {
             JObject state = new();
@@ -198,6 +201,9 @@ namespace PolyQuest.Inventories
             return state;
         }
 
+        /*-------------------------------------------------------------------
+        | --- RestoreState: Restore the inventory state from saved data --- |
+        -------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
             if (state is JObject stateObject)

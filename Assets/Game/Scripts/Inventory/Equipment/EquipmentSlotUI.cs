@@ -1,14 +1,21 @@
-using UnityEngine;
+using PolyQuest.Input;
 //---------------------------------
 using PolyQuest.UI.Dragging;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace PolyQuest.Inventories
 {
-    public class EquipmentSlotUI : MonoBehaviour, IItemHolder, IDragContainer<InventoryItem>
+    public class EquipmentSlotUI : MonoBehaviour, IItemHolder, IDragContainer<InventoryItem>, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] Equipment m_playerEquipment;
         [SerializeField] InventoryItemIcon m_itemIcon;
         [SerializeField] EquipmentSlot m_equipmentSlot = EquipmentSlot.kNone;
+        [SerializeField] Inventory m_playerInventory;
+
+        private bool m_isCursorOver = false;
+        private InputAction m_doubleClickAction;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -17,6 +24,7 @@ namespace PolyQuest.Inventories
         {
             Utilities.CheckForNull(m_playerEquipment, nameof(m_playerEquipment));
             Utilities.CheckForNull(m_itemIcon, nameof(m_itemIcon));
+            Utilities.CheckForNull(m_playerInventory, nameof(m_playerInventory));
         }
 
         /*---------------------------------------------------------------------
@@ -25,6 +33,23 @@ namespace PolyQuest.Inventories
         private void OnEnable()
         {
             m_playerEquipment.OnEquipmentChanged += RedrawUI;
+
+            if (InputManager.Instance != null)
+            {
+                m_doubleClickAction = InputManager.Instance.InputActions.UI.DoubleClick;
+                m_doubleClickAction.performed += OnDoubleClick;
+            }
+        }
+
+        /*---------------------------------------------------------------------------
+        | --- OnDisable: Called when the behaviour becomes disabled or inactive --- |
+        ---------------------------------------------------------------------------*/
+        private void OnDisable()
+        {
+            if (m_doubleClickAction != null)
+            {
+                m_doubleClickAction.performed -= OnDoubleClick;
+            }
         }
 
         /*--------------------------------------------------------------------
@@ -41,6 +66,17 @@ namespace PolyQuest.Inventories
         private void Start()
         {
             RedrawUI();
+        }
+
+        /*-------------------------------------------------------------
+        | --- OnDoubleClick: Handle the double-click input action --- |
+        -------------------------------------------------------------*/
+        private void OnDoubleClick(InputAction.CallbackContext context)
+        {
+            if (m_isCursorOver)
+            {
+                HandleDoubleClick();
+            }
         }
 
         /*-----------------------------------------------------
@@ -103,6 +139,37 @@ namespace PolyQuest.Inventories
         private void RedrawUI()
         {
             m_itemIcon.SetItem(m_playerEquipment.GetItemInSlot(m_equipmentSlot));
+        }
+
+        /*--------------------------------------------------------------------
+        | --- OnPointerEnter: Called when the pointer enters this object --- |
+        --------------------------------------------------------------------*/
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            m_isCursorOver = true;
+        }
+
+        /*-------------------------------------------------------------------
+        | --- OnPointerEnter: Called when the pointer exits this object --- |
+        -------------------------------------------------------------------*/
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            m_isCursorOver = false;
+        }
+
+        /*----------------------------------------------------------------------
+        | --- HandleDoubleClick: Equip or unequip the item on double-click --- |
+        ----------------------------------------------------------------------*/
+        private void HandleDoubleClick()
+        {
+            EquipableItem equippedItem = GetItem() as EquipableItem;
+            if (equippedItem == null)
+                return;
+
+            if (m_playerInventory.TryAddToAvailableSlot(equippedItem, 1))
+            {
+                m_playerEquipment.RemoveItem(m_equipmentSlot);
+            }
         }
     }
 }
