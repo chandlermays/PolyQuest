@@ -5,7 +5,11 @@ namespace PolyQuest.AI
 {
     /*----------------------------------------------------------- 
     | --- Responsible for Controlling an AI's Actions (NPC) --- |
+    | --- DEPRECATED: Use NewAIController with AIType.NPC --- |
+    | --- This class is maintained for backward compatibility --- |
+    | --- TODO: Migrate prefabs to NewAIController system --- |
     -----------------------------------------------------------*/
+    [System.Obsolete("NPCController is deprecated. Use NewAIController with AIType.NPC instead.")]
     public class NPCController : AIController
     {
         /*-----------------------------------------
