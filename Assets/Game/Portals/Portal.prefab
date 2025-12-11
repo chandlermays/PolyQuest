@@ -67,8 +67,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50cc9056edcc23d41ae54a79c668507c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_sceneAsset: {fileID: 0}
+  m_sceneField:
+    m_sceneAsset: {fileID: 0}
+    m_sceneName: 
   m_spawnPoint: {fileID: 8717890684372055844}
+  m_portalID: 0
 --- !u!1 &8091421662828198333
 GameObject:
   m_ObjectHideFlags: 0

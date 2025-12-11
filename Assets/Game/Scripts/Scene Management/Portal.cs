@@ -151,3 +151,13 @@ namespace PolyQuest.SceneManagement
         }
     }
 }
+
+/*
+
+Alright, so I added a portal component to the Stairs GameObject that gets generated upon loading the Dungeon scene.
+However, I'm having an issue with the order of events. Upon entering the portal in 'Route 1' that begins loading 'Dungeon',
+we calculate GetDestination() that returns the portal associated with entering the Dungeon to update the player's position.
+In LevelBuilder, we have not generated the layout yet so there's no portal at this moment.
+It hasn't been generated yet. What should I do?
+
+*/

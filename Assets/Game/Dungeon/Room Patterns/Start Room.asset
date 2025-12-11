@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.PCG.RoomPattern
   m_patterns:
   - {fileID: 11400000, guid: 5f3e18707badd0c4a89fb26734860412, type: 2}
-  - {fileID: 11400000, guid: 6a6e7f9c7e3b8a74c90c0981135331a4, type: 2}
   - {fileID: 11400000, guid: 16e023a8b5095f34da61245e62a61e57, type: 2}
+  - {fileID: 11400000, guid: 6a6e7f9c7e3b8a74c90c0981135331a4, type: 2}
   - {fileID: 11400000, guid: 66451739d93bb2041a3b22a465b595ff, type: 2}
   - {fileID: 11400000, guid: 491e9c015f972614dbef428985668a73, type: 2}
   - {fileID: 11400000, guid: d58633e54744f9041af8443fa1a07a63, type: 2}

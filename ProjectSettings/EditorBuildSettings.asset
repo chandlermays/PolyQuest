@@ -14,5 +14,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Game/Scenes/Route 2/Route 2.unity
     guid: 4103cf08c26472e4aa74e26f83f0f7f7
+  - enabled: 1
+    path: Assets/Game/Scenes/Dungeon/Dungeon.unity
+    guid: 5bc95ab016a12f548b0e15076b03b19f
+  - enabled: 1
+    path: Assets/Game/Scenes/New Scene.unity
+    guid: 1b47e80efe48f604ea826cc84066e22b
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
