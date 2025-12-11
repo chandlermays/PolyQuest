@@ -103,7 +103,7 @@ namespace PolyQuest.AI
             m_movementComponent = GetComponent<MovementComponent>();
             if (m_movementComponent == null)
             {
-                Debug.LogError($"[AIControllerNew] MovementComponent is required on {gameObject.name}. AI will not function properly.");
+                Debug.LogError($"[AIController] MovementComponent is required on {gameObject.name}. AI will not function properly.");
             }
 
             // Query for optional components
@@ -116,18 +116,18 @@ namespace PolyQuest.AI
             {
                 if (m_combatComponent == null)
                 {
-                    Debug.LogWarning($"[AIControllerNew] CombatComponent not found on Enemy AI '{gameObject.name}'. Attack behavior will be disabled.");
+                    Debug.LogWarning($"[AIController] CombatComponent not found on Enemy AI '{gameObject.name}'. Attack behavior will be disabled.");
                 }
                 if (m_detectionComponent == null)
                 {
-                    Debug.LogWarning($"[AIControllerNew] DetectionComponent not found on Enemy AI '{gameObject.name}'. Detection will be disabled.");
+                    Debug.LogWarning($"[AIController] DetectionComponent not found on Enemy AI '{gameObject.name}'. Detection will be disabled.");
                 }
             }
 
             // Validate AI data
             if (m_aiData == null)
             {
-                Debug.LogWarning($"[AIControllerNew] AIData not assigned on {gameObject.name}. Using default values may cause unexpected behavior.");
+                Debug.LogWarning($"[AIController] AIData not assigned on {gameObject.name}. Using default values may cause unexpected behavior.");
             }
 
             // Initialize state machine
@@ -171,7 +171,7 @@ namespace PolyQuest.AI
                 m_playerTarget = GameObject.FindGameObjectWithTag("Player");
                 if (m_playerTarget == null)
                 {
-                    Debug.LogWarning($"[AIControllerNew] No Player target found for Enemy AI '{gameObject.name}'.");
+                    Debug.LogWarning($"[AIController] No Player target found for Enemy AI '{gameObject.name}'.");
                 }
             }
 

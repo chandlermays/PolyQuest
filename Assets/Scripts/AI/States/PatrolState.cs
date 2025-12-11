@@ -153,11 +153,10 @@ namespace PolyQuest.AI
             m_controller.MovementComponent.MoveTo(targetWaypoint);
 
             // Set patrol speed if configured
-            // TODO: MovementComponent doesn't expose SetSpeed() - it uses NavMeshAgent.speed directly.
-            // If patrol speed needs to be set, access NavMeshAgent directly or add MovementComponent.SetSpeed().
+            // MovementComponent.Agent property provides access to NavMeshAgent for speed configuration
             if (m_controller.Data != null && m_controller.Data.PatrolSpeed > 0)
             {
-                var navAgent = m_controller.MovementComponent.NavMeshAgent;
+                var navAgent = m_controller.MovementComponent.Agent;
                 if (navAgent != null)
                 {
                     navAgent.speed = m_controller.Data.PatrolSpeed;
@@ -165,7 +164,7 @@ namespace PolyQuest.AI
             }
             else if (m_controller.PatrolComponent.PatrolSpeed > 0)
             {
-                var navAgent = m_controller.MovementComponent.NavMeshAgent;
+                var navAgent = m_controller.MovementComponent.Agent;
                 if (navAgent != null)
                 {
                     navAgent.speed = m_controller.PatrolComponent.PatrolSpeed;

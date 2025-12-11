@@ -50,10 +50,10 @@ namespace PolyQuest.AI
             }
 
             // Set chase speed if configured
-            // TODO: MovementComponent doesn't expose SetSpeed() method - access NavMeshAgent directly
+            // MovementComponent.Agent property provides access to NavMeshAgent for speed configuration
             if (m_controller.Data != null && m_controller.Data.ChaseSpeed > 0)
             {
-                var navAgent = m_controller.MovementComponent?.NavMeshAgent;
+                var navAgent = m_controller.MovementComponent?.Agent;
                 if (navAgent != null)
                 {
                     navAgent.speed = m_controller.Data.ChaseSpeed;

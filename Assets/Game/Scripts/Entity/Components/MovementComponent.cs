@@ -31,6 +31,11 @@ namespace PolyQuest.Components
 
         public event Action OnMoveActionStarted;
 
+        /// <summary>
+        /// Public accessor for NavMeshAgent to allow AI and other systems to configure navigation parameters.
+        /// </summary>
+        public NavMeshAgent Agent => NavMeshAgent;
+
         private bool IsAlive() => m_healthComponent == null || !m_healthComponent.IsDead;
 
         /*----------------------------------------------------------------
