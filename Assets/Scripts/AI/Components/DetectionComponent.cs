@@ -198,7 +198,8 @@ namespace PolyQuest.AI
         -----------------------------------------------------------------*/
         public void ForceDetectionCheck()
         {
-            m_timeSinceLastCheck = m_checkInterval;
+            PerformDetectionCheck();
+            m_timeSinceLastCheck = 0f;
         }
 
         /*-----------------------------------------------------------------

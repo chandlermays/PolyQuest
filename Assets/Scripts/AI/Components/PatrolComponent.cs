@@ -98,9 +98,9 @@ namespace PolyQuest.AI
         {
             m_waypoints.Clear();
 
-            // TODO: If a NavigationPath already exists in the repo with similar API,
-            // harmonize this implementation and prefer the existing component.
-            // Current NavigationPath uses child transforms and has GetWaypoint(index) and GetNextIndex(index).
+            // Note: PatrolComponent is compatible with existing NavigationPath component.
+            // NavigationPath stores waypoints as child transforms and provides GetWaypoint(index) and GetNextIndex(index).
+            // This component caches the waypoint positions for consistency with manual waypoint configuration.
 
             // Use NavigationPath if assigned
             if (m_navigationPath != null)

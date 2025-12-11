@@ -60,12 +60,11 @@ namespace PolyQuest.AI
 
             // Add/Configure AIController
             AIController aiController = npcObject.AddComponent<AIController>();
-            // Set to NPC type via reflection or Inspector (AIType is serialized field)
-            // In runtime code, you'd typically configure this in prefab or via custom editor
             
-            // NOTE: Since AIType is a serialized field, it's best set in Inspector/prefab.
-            // For runtime configuration, you'd need to expose a SetType() method on AIController.
-            // TODO: Add AIController.SetAIType(AIType type) method for runtime configuration.
+            // NOTE: AIType is a serialized field and should be configured in Inspector/prefab.
+            // Runtime type changes after initialization are not recommended as the state machine
+            // and components are initialized in Awake() based on the AIType.
+            // Best practice: Create prefabs with AIController pre-configured to desired type.
 
             // Assign AIData
             if (m_aiData != null)
@@ -80,9 +79,11 @@ namespace PolyQuest.AI
             PatrolComponent patrolComponent = npcObject.AddComponent<PatrolComponent>();
             if (m_npcWaypoints != null && m_npcWaypoints.Length > 0)
             {
-                // TODO: PatrolComponent needs API to set waypoints at runtime
-                // Currently uses NavigationPath or serialized waypoint list
-                Debug.LogWarning("[ExampleAISetup] Waypoint assignment requires PatrolComponent API extension or NavigationPath setup.");
+                // NOTE: PatrolComponent uses serialized waypoint list or NavigationPath.
+                // For runtime waypoint configuration, assign to m_waypointTransforms via reflection,
+                // or create a NavigationPath GameObject with waypoint children and assign it.
+                // Best practice: Configure waypoints in Inspector or use prefabs with NavigationPath.
+                Debug.LogWarning("[ExampleAISetup] Waypoint assignment requires Inspector configuration or NavigationPath setup.");
             }
 
             Debug.Log($"[ExampleAISetup] Created NPC: {npcObject.name}");
@@ -117,8 +118,8 @@ namespace PolyQuest.AI
             PatrolComponent patrolComponent = enemyObject.AddComponent<PatrolComponent>();
             if (m_enemyWaypoints != null && m_enemyWaypoints.Length > 0)
             {
-                // TODO: Set waypoints programmatically
-                Debug.LogWarning("[ExampleAISetup] Waypoint assignment requires PatrolComponent API extension.");
+                // NOTE: See NPC example above for waypoint configuration notes
+                Debug.LogWarning("[ExampleAISetup] Waypoint assignment requires Inspector configuration or NavigationPath setup.");
             }
 
             // CombatComponent should already exist if using m_aiPrefab with combat setup

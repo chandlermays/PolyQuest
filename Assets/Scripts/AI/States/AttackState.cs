@@ -193,7 +193,7 @@ namespace PolyQuest.AI
                 // Also look for legacy EnemyController instances for backwards compatibility
                 // TODO: Remove this once all enemies are migrated to new AIController
                 var legacyEnemy = hit.collider.GetComponent<EnemyController>();
-                if (legacyEnemy != null && legacyEnemy != m_controller as EnemyController)
+                if (legacyEnemy != null)
                 {
                     legacyEnemy.Aggravate();
                 }
