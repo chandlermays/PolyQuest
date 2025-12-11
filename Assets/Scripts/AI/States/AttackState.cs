@@ -8,14 +8,14 @@ namespace PolyQuest.AI
     /// </summary>
     public class AttackState : IAIState
     {
-        private readonly AIControllerNew m_controller;
+        private readonly AIController m_controller;
         private bool m_hasAlertedAllies;
 
         /// <summary>
         /// Constructor for AttackState.
         /// </summary>
         /// <param name="controller">Reference to the AI controller</param>
-        public AttackState(AIControllerNew controller)
+        public AttackState(AIController controller)
         {
             m_controller = controller;
         }
@@ -177,10 +177,10 @@ namespace PolyQuest.AI
 
             foreach (RaycastHit hit in hits)
             {
-                // Look for other AIControllerNew instances
-                AIControllerNew otherAI = hit.collider.GetComponent<AIControllerNew>();
+                // Look for other AIController instances
+                AIController otherAI = hit.collider.GetComponent<AIController>();
                 
-                if (otherAI != null && otherAI != m_controller && otherAI.Type == AIControllerNew.AIType.Enemy)
+                if (otherAI != null && otherAI != m_controller && otherAI.Type == AIController.AIType.Enemy)
                 {
                     // Alert the other AI
                     otherAI.Aggravate();

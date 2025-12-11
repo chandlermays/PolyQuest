@@ -8,8 +8,22 @@ namespace PolyQuest.AI
 {
     /*------------------------------------------------------------- 
     | --- Responsible for Controlling an AI's Actions (Enemy) --- |
+    | 
+    | DEPRECATED: This class is maintained for backwards compatibility.
+    | 
+    | Please migrate to the new AI system:
+    | - Replace this component with AIController (Assets/Scripts/AI/AIController.cs)
+    | - Set AIType to Enemy
+    | - Configure behavior using AIData ScriptableObject
+    | - Add DetectionComponent for target detection
+    | - CombatComponent is already compatible
+    | 
+    | See Assets/Docs/AI_Migration.md for step-by-step migration instructions.
+    | 
+    | TODO: Migrate all EnemyController instances to new AIController system.
     -------------------------------------------------------------*/
-    public class EnemyController : AIController
+    [System.Obsolete("Use new AIController (Assets/Scripts/AI/AIController.cs) with AIType.Enemy. See AI_Migration.md for migration guide.")]
+    public class EnemyController : AIControllerLegacy
     {
         [SerializeField] private EnemyTracker m_enemyTracker;
 

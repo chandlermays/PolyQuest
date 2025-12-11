@@ -4,7 +4,21 @@ using PolyQuest.Components;
 
 namespace PolyQuest.AI
 {
-    public abstract class AIController : MonoBehaviour
+    /*-----------------------------------------------------------------
+     * DEPRECATED: This class is maintained for backwards compatibility.
+     * 
+     * Please migrate to the new AI system:
+     * - Use Assets/Scripts/AI/AIController.cs instead of this base class
+     * - Configure AI behavior using AIData ScriptableObjects
+     * - Add modular components: PatrolComponent, DetectionComponent, etc.
+     * 
+     * See Assets/Docs/AI_Migration.md for migration instructions.
+     * 
+     * TODO: Remove this file once all subclasses (EnemyController, NPCController)
+     * have been migrated to the new AIController system.
+     *----------------------------------------------------------------*/
+    [System.Obsolete("Use new AIController (Assets/Scripts/AI/AIController.cs) with state machine and components. See AI_Migration.md for migration guide.")]
+    public abstract class AIControllerLegacy : MonoBehaviour
     {
         [Header("AI Settings")]
         [SerializeField] protected NavigationPath m_navigationPath;

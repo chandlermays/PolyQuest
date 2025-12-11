@@ -8,7 +8,7 @@ namespace PolyQuest.AI
     /// Uses a state machine and component-based composition for flexible AI behavior.
     /// Configure behavior via AIType enum and AIData ScriptableObject.
     /// </summary>
-    public class AIControllerNew : MonoBehaviour
+    public class AIController : MonoBehaviour
     {
         /// <summary>
         /// Type of AI behavior this controller should exhibit.

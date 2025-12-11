@@ -8,14 +8,14 @@ namespace PolyQuest.AI
     /// </summary>
     public class SuspicionState : IAIState
     {
-        private readonly AIControllerNew m_controller;
+        private readonly AIController m_controller;
         private float m_suspicionTimer;
 
         /// <summary>
         /// Constructor for SuspicionState.
         /// </summary>
         /// <param name="controller">Reference to the AI controller</param>
-        public SuspicionState(AIControllerNew controller)
+        public SuspicionState(AIController controller)
         {
             m_controller = controller;
         }

@@ -9,7 +9,7 @@ namespace PolyQuest.AI
     /// </summary>
     public class PatrolState : IAIState
     {
-        private readonly AIControllerNew m_controller;
+        private readonly AIController m_controller;
         private float m_dwellTimer;
         private bool m_isDwelling;
 
@@ -17,7 +17,7 @@ namespace PolyQuest.AI
         /// Constructor for PatrolState.
         /// </summary>
         /// <param name="controller">Reference to the AI controller</param>
-        public PatrolState(AIControllerNew controller)
+        public PatrolState(AIController controller)
         {
             m_controller = controller;
         }
@@ -75,7 +75,7 @@ namespace PolyQuest.AI
             }
 
             // For enemies, check for targets and interrupt patrol
-            if (m_controller.Type == AIControllerNew.AIType.Enemy)
+            if (m_controller.Type == AIController.AIType.Enemy)
             {
                 if (m_controller.CurrentTarget != null && 
                     m_controller.CombatComponent != null &&
@@ -121,7 +121,7 @@ namespace PolyQuest.AI
             switch (eventName)
             {
                 case "TargetDetected":
-                    if (m_controller.Type == AIControllerNew.AIType.Enemy && data is GameObject target)
+                    if (m_controller.Type == AIController.AIType.Enemy && data is GameObject target)
                     {
                         m_controller.SetTarget(target);
                         m_controller.StateMachine.ChangeState("Attack");
@@ -129,7 +129,7 @@ namespace PolyQuest.AI
                     break;
 
                 case "Aggravate":
-                    if (m_controller.Type == AIControllerNew.AIType.Enemy)
+                    if (m_controller.Type == AIController.AIType.Enemy)
                     {
                         m_controller.Aggravate();
                     }
