@@ -4,7 +4,12 @@ using PolyQuest.Components;
 
 namespace PolyQuest.AI
 {
-    public abstract class AIController : MonoBehaviour
+    /// <summary>
+    /// DEPRECATED: This class is deprecated. Use the new AIController with state machine instead.
+    /// Legacy base class for AI controllers. Kept for backward compatibility.
+    /// </summary>
+    [System.Obsolete("Use the new AIController with state machine and component-based architecture instead")]
+    public abstract class AIControllerBase : MonoBehaviour
     {
         [Header("AI Settings")]
         [SerializeField] protected NavigationPath m_navigationPath;

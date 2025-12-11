@@ -9,7 +9,21 @@ namespace PolyQuest.AI
     /*------------------------------------------------------------- 
     | --- Responsible for Controlling an AI's Actions (Enemy) --- |
     -------------------------------------------------------------*/
-    public class EnemyController : AIController
+    /// <summary>
+    /// DEPRECATED: This class is deprecated. Use the new AIController with AIType.Enemy instead.
+    /// 
+    /// Migration guide:
+    /// 1. Replace EnemyController with the new AIController component
+    /// 2. Set AIType to Enemy
+    /// 3. Create an AIData ScriptableObject and assign it
+    /// 4. Add DetectionComponent and AICombatComponent for combat behavior
+    /// 5. Add PatrolComponent if using waypoint patrolling
+    /// 6. Keep the existing MovementComponent, CombatComponent, and HealthComponent
+    /// 
+    /// See Assets/Docs/AI_Migration.md for detailed instructions.
+    /// </summary>
+    [System.Obsolete("Use the new AIController with state machine instead. See Assets/Docs/AI_Migration.md")]
+    public class EnemyController : AIControllerBase
     {
         [SerializeField] private EnemyTracker m_enemyTracker;
 
