@@ -2,13 +2,13 @@
 
 ## Overview
 
-This guide explains how to migrate from the legacy `EnemyController` and `NPCController` classes to the new unified AI system using `NewAIController` with state machine and component-based architecture.
+This guide explains how to migrate from the legacy `EnemyController` and `NPCController` classes to the new unified AI system using `AIController` with state machine and component-based architecture.
 
 ## Why Migrate?
 
 The new AI system offers several advantages:
 
-- **Unified Architecture**: One controller (`NewAIController`) handles both NPCs and Enemies
+- **Unified Architecture**: One controller (`AIController`) handles both NPCs and Enemies
 - **State Machine Pattern**: Clear separation of behaviors (Idle, Patrol, Suspicion, Attack)
 - **Component-Based**: Modular design with pluggable components (Detection, Combat, Patrol, Movement)
 - **Data-Driven**: Configuration via `AIData` ScriptableObjects for easy tuning
@@ -21,7 +21,7 @@ The new AI system offers several advantages:
 
 The new AI system consists of:
 
-1. **NewAIController**: Main controller that manages state machine
+1. **AIController**: Main controller that manages state machine
 2. **AIType Enum**: Defines behavior type (NPC or Enemy)
 3. **AIData ScriptableObject**: Stores configuration values
 4. **States**: IdleState, PatrolState, SuspicionState, AttackState
@@ -58,7 +58,7 @@ GameObject
 #### New Setup:
 ```
 GameObject
-├── NewAIController (script) [AIType = Enemy]
+├── AIController (script) [AIType = Enemy]
 ├── AIData (reference to ScriptableObject)
 ├── PatrolComponent (if patrol behavior needed)
 ├── DetectionComponent
@@ -72,8 +72,8 @@ GameObject
 
 #### Migration Process:
 
-1. **Add NewAIController**:
-   - Add `NewAIController` component to the GameObject
+1. **Add AIController**:
+   - Add `AIController` component to the GameObject
    - Set `AI Type` to `Enemy`
    - Assign appropriate `AIData` asset
 
@@ -125,7 +125,7 @@ GameObject
 #### New Setup:
 ```
 GameObject
-├── NewAIController (script) [AIType = NPC]
+├── AIController (script) [AIType = NPC]
 ├── AIData (reference to ScriptableObject)
 ├── PatrolComponent
 ├── AIMovementComponent
@@ -136,8 +136,8 @@ GameObject
 
 #### Migration Process:
 
-1. **Add NewAIController**:
-   - Add `NewAIController` component
+1. **Add AIController**:
+   - Add `AIController` component
    - Set `AI Type` to `NPC`
    - Assign appropriate `AIData` asset
 
@@ -188,10 +188,10 @@ Example:
 ```csharp
 public class CustomFleeState : IAIState
 {
-    public void Enter(NewAIController controller) { /* ... */ }
-    public void Tick(NewAIController controller) { /* ... */ }
-    public void Exit(NewAIController controller) { /* ... */ }
-    public void OnEvent(NewAIController controller, string eventName, object eventData = null) { /* ... */ }
+    public void Enter(AIController controller) { /* ... */ }
+    public void Tick(AIController controller) { /* ... */ }
+    public void Exit(AIController controller) { /* ... */ }
+    public void OnEvent(AIController controller, string eventName, object eventData = null) { /* ... */ }
 }
 ```
 

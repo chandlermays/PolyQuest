@@ -4,7 +4,13 @@ using PolyQuest.Components;
 
 namespace PolyQuest.AI
 {
-    public abstract class AIController : MonoBehaviour
+    /// <summary>
+    /// DEPRECATED: Legacy base class for old AI controllers.
+    /// Use the new AIController (formerly NewAIController) with state machine instead.
+    /// This class is maintained only for backward compatibility with EnemyController and NPCController.
+    /// </summary>
+    [System.Obsolete("LegacyAIController is deprecated. Use the new AIController with state machine instead.")]
+    public abstract class LegacyAIController : MonoBehaviour
     {
         [Header("AI Settings")]
         [SerializeField] protected NavigationPath m_navigationPath;

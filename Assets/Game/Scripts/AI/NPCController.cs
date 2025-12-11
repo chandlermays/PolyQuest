@@ -9,8 +9,8 @@ namespace PolyQuest.AI
     | --- This class is maintained for backward compatibility --- |
     | --- TODO: Migrate prefabs to NewAIController system --- |
     -----------------------------------------------------------*/
-    [System.Obsolete("NPCController is deprecated. Use NewAIController with AIType.NPC instead.")]
-    public class NPCController : AIController
+    [System.Obsolete("NPCController is deprecated. Use AIController (new state machine version) with AIType.NPC instead.")]
+    public class NPCController : LegacyAIController
     {
         /*-----------------------------------------
         | --- Update: Called upon every frame --- |

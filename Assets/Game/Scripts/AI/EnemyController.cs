@@ -12,8 +12,8 @@ namespace PolyQuest.AI
     | --- This class is maintained for backward compatibility --- |
     | --- TODO: Migrate prefabs to NewAIController system --- |
     -------------------------------------------------------------*/
-    [System.Obsolete("EnemyController is deprecated. Use NewAIController with AIType.Enemy instead.")]
-    public class EnemyController : AIController
+    [System.Obsolete("EnemyController is deprecated. Use AIController (new state machine version) with AIType.Enemy instead.")]
+    public class EnemyController : LegacyAIController
     {
         [SerializeField] private EnemyTracker m_enemyTracker;
 

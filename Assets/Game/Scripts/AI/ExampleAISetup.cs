@@ -4,7 +4,7 @@ using UnityEngine;
 namespace PolyQuest.AI
 {
     /// <summary>
-    /// Example script demonstrating how to configure NewAIController for different AI types.
+    /// Example script demonstrating how to configure AIController for different AI types.
     /// This is a reference implementation showing proper component setup and configuration.
     /// Attach this to an empty GameObject to see example AI setup in action.
     /// </summary>
@@ -14,7 +14,7 @@ namespace PolyQuest.AI
         [Tooltip("AI Data asset to use for configuration")]
         [SerializeField] private AIData m_exampleAIData;
         
-        [Tooltip("Prefab with NewAIController to spawn")]
+        [Tooltip("Prefab with AIController to spawn")]
         [SerializeField] private GameObject m_aiPrefab;
         
         [Tooltip("Type of AI to configure")]
@@ -64,14 +64,14 @@ namespace PolyQuest.AI
             }
 
             // Ensure required components exist
-            NewAIController aiController = aiObject.GetComponent<NewAIController>();
+            AIController aiController = aiObject.GetComponent<AIController>();
             if (aiController == null)
             {
-                aiController = aiObject.AddComponent<NewAIController>();
+                aiController = aiObject.AddComponent<AIController>();
             }
 
             // Configure AI type and data
-            // Note: These fields are private in NewAIController, so this example shows
+            // Note: These fields are private in AIController, so this example shows
             // how to configure via inspector or programmatically before instantiation
             Debug.Log($"Created {m_aiType} AI at {aiObject.transform.position}");
 
