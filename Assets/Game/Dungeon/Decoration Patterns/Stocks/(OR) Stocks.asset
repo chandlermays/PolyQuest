@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56d80e2008b338e46bafbe7a7fcc023b, type: 3}
+  m_Name: (OR) Stocks
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.PCG.OrPattern
+  m_patterns:
+  - {fileID: 11400000, guid: 5721580a02eed724284a58117b96fd0a, type: 2}
+  - {fileID: 11400000, guid: 10de6f8e4c984a744b65b57966b3683c, type: 2}
+  - {fileID: 11400000, guid: e8d022dff51bc1c4493b07c00d17d1b3, type: 2}
+  - {fileID: 11400000, guid: bbd39f142d7af1548b99d7401d17103b, type: 2}

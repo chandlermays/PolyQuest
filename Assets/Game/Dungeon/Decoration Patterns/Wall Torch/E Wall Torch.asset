@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4b14229c92106c4ea73a5e66e0bf4e3, type: 3}
+  m_Name: E Wall Torch
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.PCG.PatternMatching
+  m_prefab: {fileID: 3667540604691155827, guid: 112282799c83815498db10a2d6e24d45, type: 3}
+  m_prefabRotation: -90
+  m_targetPattern:
+    m_array: 01000000000000000100000000000000
+    m_width: 2
+    m_height: 2
+  m_resultPattern:
+    m_array: 01000000030000000100000003000000
+    m_width: 2
+    m_height: 2

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f36afaa948b2473489c58de588c2bd76, type: 3}
+  m_Name: (AND) Post
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.PCG.AndPattern
+  m_patterns:
+  - {fileID: 11400000, guid: dfddaebf24ee6d74f8d8f2803e795e0d, type: 2}
+  - {fileID: 11400000, guid: 108ff94122615e742be7824a7eef2426, type: 2}
+  - {fileID: 11400000, guid: cc7d0c07c8d93004ea2ee7a389e8711f, type: 2}
+  - {fileID: 11400000, guid: 653900a17fa7e4448a4a608c4ac29664, type: 2}

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f36afaa948b2473489c58de588c2bd76, type: 3}
+  m_Name: (AND) Broken Barrel
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.PCG.AndPattern
+  m_patterns:
+  - {fileID: 11400000, guid: af4618d76651d2d4db6e3de1fefa5587, type: 2}
+  - {fileID: 11400000, guid: c2e8c87d9e67e3745852f127dfa719f8, type: 2}
+  - {fileID: 11400000, guid: d6285b5baf6d1c14da32dafc6cf6a3cc, type: 2}
+  - {fileID: 11400000, guid: 4f778e5cb713e46499bd8aef0e8fe2bc, type: 2}

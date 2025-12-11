@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f36afaa948b2473489c58de588c2bd76, type: 3}
+  m_Name: (AND) Pillar
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.PCG.AndPattern
+  m_patterns:
+  - {fileID: 11400000, guid: d123c9e33946dc949a87b2b56bce35eb, type: 2}
+  - {fileID: 11400000, guid: c39ff6c7473c40249b72e7b902ddb219, type: 2}
+  - {fileID: 11400000, guid: 3cb48726e88cfb24a8f67ccb9954a7f2, type: 2}
+  - {fileID: 11400000, guid: 190a3c5bd6bd8c74b85a81a44eb11ca8, type: 2}

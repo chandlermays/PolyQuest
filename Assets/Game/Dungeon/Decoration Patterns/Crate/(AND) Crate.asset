@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f36afaa948b2473489c58de588c2bd76, type: 3}
+  m_Name: (AND) Crate
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.PCG.AndPattern
+  m_patterns:
+  - {fileID: 11400000, guid: b0da44d5b2d239345bc52b6ec23a1b75, type: 2}
+  - {fileID: 11400000, guid: 111fe5988608c0541aedc6ae6e2adf9d, type: 2}
+  - {fileID: 11400000, guid: 523874858db8c3844bacd1c129ad4ed3, type: 2}
+  - {fileID: 11400000, guid: 1079f87fedc342a4bb4fd82606a652cd, type: 2}

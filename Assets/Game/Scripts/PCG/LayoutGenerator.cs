@@ -1,488 +1,537 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 //---------------------------------
-
 namespace PolyQuest.PCG
 {
     public class LayoutGenerator : MonoBehaviour
     {
-        private enum TileType
-        {
-            kWall,
-            kTunnel,
-            kRoom,
-            kDoor
-        }
-
-        private readonly Vector2Int[] m_directions = new Vector2Int[]
-        {
-            Vector2Int.up,
-            Vector2Int.down,
-            Vector2Int.left,
-            Vector2Int.right
-        };
-
-        [SerializeField] private GameObject m_levelDisplay;
-
-        [SerializeField] private int m_width = 64;
-        [SerializeField] private int m_length = 64;
-        [SerializeField] private int m_desiredRoomCount = 10;
-        [SerializeField] private int m_minRoomSize = 3;
-        [SerializeField] private int m_maxRoomSize = 7;
-
-        [SerializeField] private int m_minTunnelBetweenRooms = 8;
-        [SerializeField] private int m_roomSeparationMargin = 2;
+        // Fields
+        [SerializeField] private GameObject m_layoutDisplay;
+        [SerializeField] private long m_seed = 0;
+        [SerializeField] private LevelLayoutConfig m_levelLayoutConfig;
+        [SerializeField] private List<Corridor> m_openCorridors;
 
         private XorShift128Plus m_rng;
-        private TileType[,] m_tiles;
-        private RoomGraph m_roomGraph;
+        private Level m_level;
+        private Dictionary<RoomTemplate, int> m_availableRooms;
 
-        /*--------------------------------------------------------------------------------------------
-        | --- GenerateLevelLayout: Generates a new level layout using the blind digger algorithm --- |
-        --------------------------------------------------------------------------------------------*/
-        [ContextMenu("Generate Level Layout")]
-        public void GenerateLevelLayout()
+        // Properties
+        public XorShift128Plus RNG => m_rng;
+
+        /*--------------------------------------------------------------------------------------
+        | --- GenerateLayout: Generates a level layout based on the provided configuration --- |
+        --------------------------------------------------------------------------------------*/
+        [ContextMenu("Generate Layout")]
+        public Level GenerateLayout()
         {
-            m_rng = new XorShift128Plus((ulong)System.DateTime.Now.Ticks);
-            m_tiles = new TileType[m_width, m_length];
-            m_roomGraph = new RoomGraph();
+            m_rng = new XorShift128Plus(unchecked((ulong)m_seed));
+            m_level = new Level();
+            m_availableRooms = m_levelLayoutConfig.GetAvailableRooms();
+            m_openCorridors = new();
 
-            for (int x = 0; x < m_width; ++x)
-            {
-                for (int y = 0; y < m_length; ++y)
-                {
-                    m_tiles[x, y] = TileType.kWall;
-                }
-            }
+            RectInt startRoomRect = CreateStartRoom();
+            GenerateRooms();
+            GenerateCorridors();
+            AssignStartAndEndRooms();
+            PopulateLevelGrid();
 
-            BlindDigger();
-            PlaceDoors();
-            GenerateRoomGraph();
-            DisplayLayout();
+#if UNITY_EDITOR
+            DrawLayout(startRoomRect);
+#endif
+
+            return m_level;
         }
 
-        /*----------------------------------------------------------------------------------------
-        | --- BlindDigger: Implements the blind digger algorithm to create tunnels and rooms --- |
-        ----------------------------------------------------------------------------------------*/
-        private void BlindDigger()
+        /*--------------------------------------------------------------------------------
+        | --- GenerateNewSeed: Generates a new random seed based on the current time --- |
+        --------------------------------------------------------------------------------*/
+        [ContextMenu("Generate New Seed")]
+        public void GenerateNewSeed()
         {
-            Vector2Int diggerPos = new Vector2Int(m_width / 2, m_length / 2);
-            Vector2Int currentDir = m_directions[m_rng.RandomRange(0, m_directions.Length)];
-
-            int turnChance = 5;
-            int roomChance = 5;
-            int roomCount = 0;
-
-            int stepsSinceLastRoom = 0;
-
-            m_tiles[diggerPos.x, diggerPos.y] = TileType.kTunnel;
-
-            while (!IsDone(roomCount))
-            {
-                diggerPos += currentDir;
-
-                diggerPos.x = Mathf.Clamp(diggerPos.x, 1, m_width - 2);
-                diggerPos.y = Mathf.Clamp(diggerPos.y, 1, m_length - 2);
-
-                SetTile(diggerPos, TileType.kTunnel);
-                ++stepsSinceLastRoom;
-
-                int choice = m_rng.RandomRange(0, 100);
-                if (choice < turnChance)
-                {
-                    Vector2Int newDir;
-                    do
-                    {
-                        newDir = m_directions[m_rng.RandomRange(0, m_directions.Length)];
-                    } while (newDir + currentDir == Vector2Int.zero);
-
-                    currentDir = newDir;
-
-                    turnChance = 0;
-                }
-                else
-                {
-                    turnChance += 5;
-                }
-
-                if (stepsSinceLastRoom >= m_minTunnelBetweenRooms)
-                {
-                    choice = m_rng.RandomRange(0, 100);
-                    if (choice < roomChance)
-                    {
-                        int width = m_rng.RandomRange(m_minRoomSize, m_maxRoomSize + 1);
-                        int height = m_rng.RandomRange(m_minRoomSize, m_maxRoomSize + 1);
-
-                        if (PlaceRoomWithMargin(diggerPos, width, height, m_roomSeparationMargin))
-                        {
-                            ++roomCount;
-                            stepsSinceLastRoom = 0;
-                        }
-
-                        roomChance = 0;
-                    }
-                    else
-                    {
-                        roomChance += 5;
-                    }
-                }
-            }
+            m_seed = DateTime.Now.Ticks;
         }
 
-        /*--------------------------------------------------------------------------
-        | --- PlaceDoors: Places doors between the rooms of the dungeon layout --- |
-        --------------------------------------------------------------------------*/
-        private void PlaceDoors()
+        /*-------------------------------------------------------------------
+        | --- GenerateNewSeedAndLayout: Generates a new seed and layout --- |
+        -------------------------------------------------------------------*/
+        [ContextMenu("Generate New Seed and Layout")]
+        public void GenerateNewSeedAndLayout()
         {
-            for (int x = 1; x < m_width - 1; ++x)
-            {
-                for (int y = 1; y < m_length - 1; ++y)
-                {
-                    Vector2Int position = new Vector2Int(x, y);
-
-                    // Skip if current tile is not a tunnel
-                    if (m_tiles[x, y] != TileType.kTunnel)
-                        continue;
-
-                    if (ShouldPlaceDoor(position))
-                    {
-                        SetTile(position, TileType.kDoor);
-                    }
-                }
-            }
+            GenerateNewSeed();
+            GenerateLayout();
         }
 
-        /*--------------------------------------------------------------------------------------------
-        | --- GenerateRoomGraph: Generates a graph representation of rooms and their connections --- |
-        --------------------------------------------------------------------------------------------*/
-        private void GenerateRoomGraph()
+        /*-------------------------------------------------------------------------
+        | --- CreateStartRoom: Creates the starting room for the level layout --- |
+        -------------------------------------------------------------------------*/
+        private RectInt CreateStartRoom()
         {
-            Vector2Int startTile = new Vector2Int(m_width / 2, m_length / 2);
-
-            HashSet<Vector2Int> discovered = new HashSet<Vector2Int>();
-            Queue<Vector2Int> roomOpenSet = new Queue<Vector2Int>();
-            Queue<Vector2Int> tileOpenSet = new Queue<Vector2Int>();
-
-            int prevRoomIndex = -1;
-            roomOpenSet.Enqueue(startTile);
-
-            while (roomOpenSet.Count > 0)
+            RoomTemplate startRoomTemplate = GetRandomRoomTemplate();
+            RectInt startRoomRect = GetStartRoomRect(startRoomTemplate);
+            Room startRoom = CreateNewRoom(startRoomRect, startRoomTemplate);
+            List<Corridor> corridors = startRoom.GenerateCorridorCandidates(startRoom.Area.width, startRoom.Area.height, m_levelLayoutConfig.DoorDistanceFromEdge);
+            foreach (Corridor corridor in corridors)
             {
-                Vector2Int startTilePos = roomOpenSet.Dequeue();
+                corridor.StartRoom = startRoom;
+                m_openCorridors.Add(corridor);
+            }
+            m_level.AddRoom(startRoom);
+            return startRoomRect;
+        }
 
-                // If the tile has already been discovered, link the rooms
-                if (discovered.Contains(startTilePos))
+        /*-----------------------------------------------------------------------------------------
+        | --- GenerateRooms: Generates rooms connected by corridors until constraints are met --- |
+        -----------------------------------------------------------------------------------------*/
+        private void GenerateRooms()
+        {
+            while (m_openCorridors.Count > 0 && m_level.Rooms.Count < m_levelLayoutConfig.MaxRoomCount && m_availableRooms.Count > 0)
+            {
+                Corridor entry = m_openCorridors[m_rng.RandomRange(0, m_openCorridors.Count)];
+                Room newRoom = CreateAdjacentRoom(entry);
+                if (newRoom == null)
                 {
-                    int roomIndex = m_roomGraph.FindRoomIndexByTile(startTilePos);
-
-                    if (roomIndex != -1 && roomIndex != prevRoomIndex)
-                    {
-                        m_roomGraph.LinkNode(prevRoomIndex, roomIndex);
-                    }
+                    m_openCorridors.Remove(entry);
                     continue;
                 }
-
-                // Generate an empty graph node
-                int currentRoomIndex = m_roomGraph.AddEmptyNode();
-                m_roomGraph.AddTileToRoom(startTilePos, currentRoomIndex);
-
-                if (prevRoomIndex != -1 && currentRoomIndex != -1)
+                m_level.AddRoom(newRoom);
+                m_level.AddCorridor(entry);
+                entry.EndRoom = newRoom;
+                List<Corridor> newCorridors = newRoom.GenerateCorridorCandidates(newRoom.Area.width, newRoom.Area.height, m_levelLayoutConfig.DoorDistanceFromEdge);
+                foreach (Corridor corridor in newCorridors)
                 {
-                    m_roomGraph.LinkNode(prevRoomIndex, currentRoomIndex);
+                    corridor.StartRoom = newRoom;
                 }
-
-                // Update BFS data with current tile
-                tileOpenSet.Enqueue(startTilePos);
-                discovered.Add(startTilePos);
-
-                // Tile BFS - floodfill
-                while (tileOpenSet.Count > 0)
-                {
-                    Vector2Int tilePos = tileOpenSet.Dequeue();
-
-                    // If this is a door, find the undiscovered adjacent tile
-                    if (GetTile(tilePos) == TileType.kDoor)
-                    {
-                        foreach (var direction in m_directions)
-                        {
-                            Vector2Int adjacentPos = tilePos + direction;
-
-                            if (IsInBounds(adjacentPos))
-                            {
-                                TileType adjacentTile = GetTile(adjacentPos);
-                                if (!discovered.Contains(adjacentPos) &&
-                                    (adjacentTile == TileType.kTunnel || adjacentTile == TileType.kRoom || adjacentTile == TileType.kDoor))
-                                {
-                                    roomOpenSet.Enqueue(adjacentPos);
-                                    break;
-                                }
-                            }
-                        }
-                        continue; // Done processing this door tile
-                    }
-
-                    // Not a door, so add this tile to the room
-                    m_roomGraph.AddTileToRoom(tilePos, currentRoomIndex);
-
-                    // Check neighbors
-                    foreach (var direction in m_directions)
-                    {
-                        Vector2Int neighborPos = tilePos + direction;
-
-                        if (IsInBounds(neighborPos) && !discovered.Contains(neighborPos))
-                        {
-                            TileType neighborTile = GetTile(neighborPos);
-
-                            // Include doors in the tileOpenSet so we can access its adjacency for roomOpenSet
-                            if (neighborTile == TileType.kTunnel || neighborTile == TileType.kRoom || neighborTile == TileType.kDoor)
-                            {
-                                discovered.Add(neighborPos);
-                                tileOpenSet.Enqueue(neighborPos);
-                            }
-                        }
-                    }
-                }
-
-                // Set the previous room index so we can link rooms
-                prevRoomIndex = currentRoomIndex;
+                m_openCorridors.Remove(entry);
+                m_openCorridors.AddRange(newCorridors);
             }
         }
 
-        /*----------------------------------------------------------------------------------
-        | --- DisplayLayout: Renders the current layout onto the level display texture --- |
-        ----------------------------------------------------------------------------------*/
-        private void DisplayLayout()
+        /*-----------------------------------------------------------------------------
+        | --- GenerateCorridors: Associates corridors with their respective rooms --- |
+        -----------------------------------------------------------------------------*/
+        private void GenerateCorridors()
         {
-            if (!m_levelDisplay.TryGetComponent<Renderer>(out var renderer))
-                return;
-
-            var layoutTexture = (Texture2D)renderer.sharedMaterial.mainTexture;
-            if (layoutTexture == null)
-                return;
-
-            layoutTexture.Reinitialize(m_width, m_length);
-            m_levelDisplay.transform.localScale = new Vector3(m_width, m_length, 1);
-
-            for (int x = 0; x < m_width; ++x)
+            foreach (Room room in m_level.Rooms)
             {
-                for (int y = 0; y < m_length; ++y)
+                foreach (Corridor incomingCorridor in m_level.Corridors)
                 {
-                    Color color = m_tiles[x, y] switch
-                    {
-                        TileType.kWall => Color.black,
-                        TileType.kTunnel => Color.white,
-                        TileType.kRoom => Color.white,
-                        TileType.kDoor => Color.brown,
-                        _ => Color.black
-                    };
-
-                    layoutTexture.SetPixel(x, y, color);
+                    if (incomingCorridor.StartRoom == room)
+                        room.AddCorridor(incomingCorridor);
+                }
+                foreach (Corridor outgoingCorridor in m_level.Corridors)
+                {
+                    if (outgoingCorridor.EndRoom == room)
+                        room.AddCorridor(outgoingCorridor);
                 }
             }
-
-            layoutTexture.Apply();
-            layoutTexture.SaveAsset();
         }
 
-        /*---------------------------------------------------------------------------------------
-        | --- RenderRoomVisualization: Renders color-coded room visualization for debugging --- |
-        ---------------------------------------------------------------------------------------*/
-        [ContextMenu("Visualize Room Graph")]
-        public void RenderRoomVisualization()
+        /*-------------------------------------------------------------------------------------
+        | --- AssignStartAndEndRooms: Assigns the start and end rooms in the level layout --- |
+        -------------------------------------------------------------------------------------*/
+        private void AssignStartAndEndRooms()
         {
-            if (m_roomGraph == null || m_roomGraph.GetRoomCount() == 0)
+            List<Room> rooms = new();
+            foreach (Room room in m_level.Rooms)
             {
-                Debug.LogWarning("No room graph available. Generate a layout first.");
+                if (room.NumCorridors == 1)
+                {
+                    rooms.Add(room);
+                }
+            }
+            if (rooms.Count < 2)
                 return;
+
+            // Assign Start Room
+            int startRoomIndex = m_rng.RandomRange(0, rooms.Count);
+            Room startRoom = rooms[startRoomIndex];
+            m_level.StartRoom = startRoom;
+            startRoom.Type = RoomType.kStart;
+            rooms.Remove(startRoom);
+
+            // Assign End Room (farthest from start)
+            Room endRoom = null;
+            float maxDistance = float.MinValue;
+            foreach (Room room in rooms)
+            {
+                float distance = Vector2.Distance(startRoom.Area.center, room.Area.center);
+                if (distance > maxDistance)
+                {
+                    maxDistance = distance;
+                    endRoom = room;
+                }
+            }
+            if (endRoom != null)
+            {
+                endRoom.Type = RoomType.kEnd;
+                rooms.Remove(endRoom);
             }
 
-            if (!m_levelDisplay.TryGetComponent<Renderer>(out var renderer))
+            // Assign Boss and Treasure rooms
+            AssignBossAndTreasureRooms(startRoom, endRoom);
+        }
+
+        /*-----------------------------------------------------------------------------------------
+        | --- AssignBossAndTreasureRooms: Assigns Boss and Treasure rooms using scoring model --- |
+        -----------------------------------------------------------------------------------------*/
+        private void AssignBossAndTreasureRooms(Room startRoom, Room endRoom)
+        {
+            if (startRoom == null || endRoom == null)
                 return;
 
-            var layoutTexture = (Texture2D)renderer.sharedMaterial.mainTexture;
-            if (layoutTexture == null)
-                return;
-
-            // Predefined colors for room visualization (up to 16 rooms)
-            Color[] roomColors = new Color[]
+            List<Room> availableRooms = new();
+            foreach (Room room in m_level.Rooms)
             {
-                new Color(1f, 0f, 0f),          // Red
-                new Color(0f, 1f, 0f),          // Green
-                new Color(0f, 0f, 1f),          // Blue
-                new Color(1f, 1f, 0f),          // Yellow
-                new Color(1f, 0f, 1f),          // Magenta
-                new Color(0f, 1f, 1f),          // Cyan
-                new Color(1f, 0.5f, 0f),        // Orange
-                new Color(0.5f, 0f, 1f),        // Purple
-                new Color(1f, 0.5f, 0.5f),      // Light Red
-                new Color(0.5f, 1f, 0.5f),      // Light Green
-                new Color(0.5f, 0.5f, 1f),      // Light Blue
-                new Color(1f, 1f, 0.5f),        // Light Yellow
-                new Color(1f, 0.5f, 1f),        // Light Magenta
-                new Color(0.5f, 1f, 1f),        // Light Cyan
-                new Color(0.75f, 0.75f, 0.75f), // Silver
-                new Color(0.5f, 0.5f, 0.5f)     // Gray
-            };
-
-            // Start with the base layout
-            for (int x = 0; x < m_width; ++x)
-            {
-                for (int y = 0; y < m_length; ++y)
+                if (room.Type == RoomType.kNormal)
                 {
-                    Color color = m_tiles[x, y] switch
-                    {
-                        TileType.kWall => Color.black,
-                        TileType.kTunnel => Color.gray,
-                        TileType.kRoom => Color.white,
-                        TileType.kDoor => Color.brown,
-                        _ => Color.black
-                    };
-
-                    layoutTexture.SetPixel(x, y, color);
+                    availableRooms.Add(room);
                 }
             }
 
-            // Overlay room colors
-            int roomCount = m_roomGraph.GetRoomCount();
-            for (int roomIndex = 0; roomIndex < roomCount; ++roomIndex)
-            {
-                var roomTiles = m_roomGraph.GetRoomTiles(roomIndex);
-                Color roomColor = roomColors[roomIndex % roomColors.Length];
+            if (availableRooms.Count < 2)
+                return;
 
-                foreach (var tilePos in roomTiles)
+            // Calculate distances for scoring
+            Vector2 startPos = startRoom.Area.center;
+            Vector2 endPos = endRoom.Area.center;
+            float totalDistance = Vector2.Distance(startPos, endPos);
+
+            // Score and assign Boss Room
+            Room bossRoom = SelectBossRoom(availableRooms, startPos, endPos, totalDistance);
+            if (bossRoom != null)
+            {
+                bossRoom.Type = RoomType.kBoss;
+                availableRooms.Remove(bossRoom);
+
+                // Score and assign Treasure Room (prefer rooms near Boss)
+                Room treasureRoom = SelectTreasureRoom(availableRooms, bossRoom.Area.center, endPos);
+                if (treasureRoom != null)
                 {
-                    // Only colorize if it's a walkable tile
-                    if (m_tiles[tilePos.x, tilePos.y] == TileType.kTunnel || m_tiles[tilePos.x, tilePos.y] == TileType.kRoom)
-                    {
-                        layoutTexture.SetPixel(tilePos.x, tilePos.y, roomColor);
-                    }
+                    treasureRoom.Type = RoomType.kTreasure;
+                }
+            }
+        }
+
+        /*-------------------------------------------------------------------------------------
+        | --- SelectBossRoom: Selects the Boss room based on midpoint positioning scoring --- |
+        -------------------------------------------------------------------------------------*/
+        private Room SelectBossRoom(List<Room> availableRooms, Vector2 startPos, Vector2 endPos, float totalDistance)
+        {
+            Room bestRoom = null;
+            float bestScore = float.MinValue;
+
+            Vector2 idealMidpoint = (startPos + endPos) / 2f;
+            BossRoomScoringWeights weights = m_levelLayoutConfig.BossRoomScoring;
+
+            foreach (Room room in availableRooms)
+            {
+                Vector2 roomPos = room.Area.center;
+
+                // Score based on proximity to midpoint
+                float distanceToMidpoint = Vector2.Distance(roomPos, idealMidpoint);
+                float midpointScore = 1f - Mathf.Clamp01(distanceToMidpoint / (totalDistance * weights.MidpointTolerance));
+
+                // Score based on distance from start (prefer not too close to start)
+                float distanceFromStart = Vector2.Distance(roomPos, startPos);
+                float startDistanceScore = Mathf.Clamp01(distanceFromStart / (totalDistance * weights.MinStartDistance));
+
+                // Score based on distance from end (prefer not too close to end)
+                float distanceFromEnd = Vector2.Distance(roomPos, endPos);
+                float endDistanceScore = Mathf.Clamp01(distanceFromEnd / (totalDistance * weights.MinEndDistance));
+
+                // Prefer rooms with more connections (more "central" to the layout)
+                float connectivityScore = Mathf.Clamp01(room.NumCorridors / 4f);
+
+                // Weighted total score
+                float totalScore = (midpointScore * weights.MidpointWeight) +
+                                  (startDistanceScore * weights.StartDistanceWeight) +
+                                  (endDistanceScore * weights.EndDistanceWeight) +
+                                  (connectivityScore * weights.ConnectivityWeight);
+
+                // Add random factor for variety
+                totalScore += m_rng.RandomFloat() * weights.RandomVariance;
+
+                if (totalScore > bestScore)
+                {
+                    bestScore = totalScore;
+                    bestRoom = room;
                 }
             }
 
-            layoutTexture.Apply();
-            layoutTexture.SaveAsset();
-
-            Debug.Log($"Room visualization complete. Found {roomCount} rooms in the graph.");
+            return bestRoom;
         }
 
         /*--------------------------------------------------------------------------------------
-        | --- ShouldPlaceDoor: Determines if a door should be placed at the given position --- |
+        | --- SelectTreasureRoom: Selects the Treasure room based on proximity to Boss/End --- |
         --------------------------------------------------------------------------------------*/
-        private bool ShouldPlaceDoor(Vector2Int position)
+        private Room SelectTreasureRoom(List<Room> availableRooms, Vector2 bossPos, Vector2 endPos)
         {
-            TileType north = GetTile(position + Vector2Int.up);
-            TileType south = GetTile(position + Vector2Int.down);
-            TileType east = GetTile(position + Vector2Int.right);
-            TileType west = GetTile(position + Vector2Int.left);
-            TileType northeast = GetTile(position + new Vector2Int(1, 1));
-            TileType northwest = GetTile(position + new Vector2Int(-1, 1));
-            TileType southeast = GetTile(position + new Vector2Int(1, -1));
-            TileType southwest = GetTile(position + new Vector2Int(-1, -1));
+            Room bestRoom = null;
+            float bestScore = float.MinValue;
 
-            bool IsTunnel(TileType tile) => tile == TileType.kTunnel || tile == TileType.kRoom;
-            bool IsWall(TileType tile) => tile == TileType.kWall;
+            TreasureRoomScoringWeights weights = m_levelLayoutConfig.TreasureRoomScoring;
 
-            // Pattern 1: Horizontal door (north side)
-            if (IsTunnel(north) && IsWall(east) && IsWall(west) && IsTunnel(northwest) && IsTunnel(northeast))
-                return true;
+            foreach (Room room in availableRooms)
+            {
+                Vector2 roomPos = room.Area.center;
 
-            // Pattern 2: Horizontal door (south side)
-            if (IsTunnel(south) && IsWall(east) && IsWall(west) && IsTunnel(southwest) && IsTunnel(southeast))
-                return true;
+                // Score based on proximity to Boss (prefer nearby)
+                float distanceToBoss = Vector2.Distance(roomPos, bossPos);
+                float bossProximityScore = 1f / (1f + distanceToBoss * weights.BossProximityFalloff);
 
-            // Pattern 3: Vertical door (east side)
-            if (IsTunnel(east) && IsWall(north) && IsWall(south) && IsTunnel(northeast) && IsTunnel(southeast))
-                return true;
+                // Score based on position relative to end (prefer between Boss and End, or near End)
+                float distanceToEnd = Vector2.Distance(roomPos, endPos);
+                float endProximityScore = 1f / (1f + distanceToEnd * weights.EndProximityFalloff);
 
-            // Pattern 4: Vertical door (west side)
-            if (IsTunnel(west) && IsWall(north) && IsWall(south) && IsTunnel(northwest) && IsTunnel(southwest))
-                return true;
+                // Prefer rooms with fewer connections (more "side room" feel)
+                float connectivityScore;
+                if (room.NumCorridors == 1)
+                    connectivityScore = weights.DeadEndBonus;
+                else if (room.NumCorridors == 2)
+                    connectivityScore = weights.TwoCorridorScore;
+                else
+                    connectivityScore = weights.MultiCorridorScore;
+
+                // Weighted total score
+                float totalScore = (bossProximityScore * weights.BossProximityWeight) +
+                                  (endProximityScore * weights.EndProximityWeight) +
+                                  (connectivityScore * weights.ConnectivityWeight);
+
+                // Add random factor for variety
+                totalScore += m_rng.RandomFloat() * weights.RandomVariance;
+
+                if (totalScore > bestScore)
+                {
+                    bestScore = totalScore;
+                    bestRoom = room;
+                }
+            }
+
+            return bestRoom;
+        }
+
+        /*------------------------------------------------------------------------------------------
+        | --- PopulateLevelGrid: Fills the level grid with floor tiles for rooms and corridors --- |
+        ------------------------------------------------------------------------------------------*/
+        private void PopulateLevelGrid()
+        {
+            foreach (Room room in m_level.Rooms)
+            {
+                m_level.DrawRect(room.Area, TileType.kFloor);
+            }
+
+            foreach (Corridor corridor in m_level.Corridors)
+            {
+                m_level.DrawLine(corridor.StartPositionAbs, corridor.EndPositionAbs, TileType.kFloor);
+            }
+        }
+
+        /*---------------------------------------------------------------------------------
+        | --- GetStartRoomRect: Determines the position and size of the starting room --- |
+        ---------------------------------------------------------------------------------*/
+        private RectInt GetStartRoomRect(RoomTemplate roomTemplate)
+        {
+            RectInt roomSize = roomTemplate.GenerateRoomCandidate(m_rng);
+
+            int roomWidth = roomSize.width;
+            int availableWidth = (m_level.Width / 2) - roomWidth;
+            int randomX = m_rng.RandomRange(0, availableWidth);
+            int roomX = randomX + (m_level.Width / 4);
+
+            int roomLength = roomSize.height;
+            int availableLength = (m_level.Length / 2) - roomLength;
+            int randomY = m_rng.RandomRange(0, availableLength);
+            int roomY = randomY + (m_level.Length / 4);
+            return new RectInt(roomX, roomY, roomWidth, roomLength);
+        }
+
+        /*-------------------------------------------------------------------------------------
+        | --- CreateAdjacentRoom: Creates a new room adjacent to the given corridor entry --- |
+        -------------------------------------------------------------------------------------*/
+        private Room CreateAdjacentRoom(Corridor entry)
+        {
+            RoomTemplate roomTemplate = GetRandomRoomTemplate();
+            RectInt roomCandidate = roomTemplate.GenerateRoomCandidate(m_rng);
+            Corridor exit = SelectCorridorCandidate(roomCandidate, roomTemplate, entry);
+            if (exit == null)
+                return null;
+
+            int distance = m_rng.RandomRange(m_levelLayoutConfig.MinCorridorLength, m_levelLayoutConfig.MaxCorridorLength);
+            Vector2Int roomCandidatePosition = CalculateRoomPosition(entry, roomCandidate.width, roomCandidate.height, distance, exit.StartPosition);
+            roomCandidate.position = roomCandidatePosition;
+            if (!IsRoomPositionValid(roomCandidate))
+                return null;
+
+            Room newRoom = CreateNewRoom(roomCandidate, roomTemplate);
+            entry.EndRoom = newRoom;
+            entry.EndPosition = exit.StartPosition;
+            return newRoom;
+        }
+
+        /*---------------------------------------------------------------------------------
+        | --- SelectCorridorCandidate: Selects a corridor candidate from the new room --- |
+        ---------------------------------------------------------------------------------*/
+        private Corridor SelectCorridorCandidate(RectInt roomRect, RoomTemplate roomTemplate, Corridor entry)
+        {
+            Room room = CreateNewRoom(roomRect, roomTemplate, false);
+            List<Corridor> candidates = room.GenerateCorridorCandidates(room.Area.width, room.Area.height, m_levelLayoutConfig.DoorDistanceFromEdge);
+            Direction oppositeDirection = entry.GetOppositeDirection(entry.StartDirection);
+            List<Corridor> filteredCandidates = new();
+
+            foreach (Corridor candidate in candidates)
+            {
+                if (candidate.StartDirection == oppositeDirection)
+                {
+                    filteredCandidates.Add(candidate);
+                }
+            }
+            return filteredCandidates.Count > 0 ? filteredCandidates[m_rng.RandomRange(0, filteredCandidates.Count)] : null;
+        }
+
+        /*--------------------------------------------------------------------------------------------------
+        | --- CalculateRoomPosition: Calculates the position of a new room based on the entry corridor --- |
+        --------------------------------------------------------------------------------------------------*/
+        private Vector2Int CalculateRoomPosition(Corridor entry, int roomWidth, int roomLength, int distance, Vector2Int endPosition)
+        {
+            Vector2Int roomPosition = entry.StartPositionAbs;
+            switch (entry.StartDirection)
+            {
+                case Direction.kNorth:
+                    roomPosition.x -= endPosition.x;
+                    roomPosition.y += distance + 1;
+                    break;
+                case Direction.kSouth:
+                    roomPosition.x -= endPosition.x;
+                    roomPosition.y -= distance + roomLength;
+                    break;
+                case Direction.kWest:
+                    roomPosition.x -= distance + roomWidth;
+                    roomPosition.y -= endPosition.y;
+                    break;
+                case Direction.kEast:
+                    roomPosition.x += distance + roomWidth;
+                    roomPosition.y -= endPosition.y;
+                    break;
+            }
+            return roomPosition;
+        }
+
+        /*----------------------------------------------------------------------------
+        | --- IsRoomPositionValid: Checks if the proposed room position is valid --- |
+        ----------------------------------------------------------------------------*/
+        private bool IsRoomPositionValid(RectInt roomRect)
+        {
+            RectInt levelRect = new(1, 1, m_level.Width - 2, m_level.Length - 2);
+            bool valid = roomRect.xMin >= levelRect.xMin && roomRect.yMin >= levelRect.yMin && roomRect.xMax <= levelRect.xMax && roomRect.yMax <= levelRect.yMax
+                && !DoesRoomOverlap(roomRect, m_level.Rooms, m_level.Corridors, m_levelLayoutConfig.MinDistanceBetweenRooms);
+
+            return valid;
+        }
+
+        /*------------------------------------------------------------------------------------------------
+        | --- DoesRoomOverlap: Checks if the proposed room overlaps with existing rooms or corridors --- |
+        ------------------------------------------------------------------------------------------------*/
+        private bool DoesRoomOverlap(RectInt roomRect, IReadOnlyList<Room> rooms, IReadOnlyList<Corridor> corridors, int minRoomDistance)
+        {
+            RectInt paddedRoomRect = new()
+            {
+                x = roomRect.x - minRoomDistance,
+                y = roomRect.y - minRoomDistance,
+                width = roomRect.width + (2 * minRoomDistance),
+                height = roomRect.height + (2 * minRoomDistance)
+            };
+
+            foreach (Room room in rooms)
+            {
+                if (paddedRoomRect.Overlaps(room.Area))
+                    return true;
+            }
+            foreach (Corridor corridor in corridors)
+            {
+                if (paddedRoomRect.Overlaps(corridor.Area))
+                    return true;
+            }
 
             return false;
         }
 
-        /*------------------------------------------------------------------------
-        | --- IsDone: Checks if the desired number of rooms has been created --- |
-        ------------------------------------------------------------------------*/
-        private bool IsDone(int roomCount)
+        /*-------------------------------------------------------------------------------------------
+        | --- CreateNewRoom: Creates a new room based on the candidate, rectangle, and template --- |
+        -------------------------------------------------------------------------------------------*/
+        private Room CreateNewRoom(RectInt roomCandidate, RoomTemplate roomTemplate, bool apply = true)
         {
-            return roomCount >= m_desiredRoomCount;
+            if (apply)
+            {
+                ApplyRoomTemplate(roomTemplate);
+            }
+            return new Room(roomCandidate);
         }
 
-        /*--------------------------------------------------------------------------------
-        | --- SetTile: Sets the tile type at the specified position if within bounds --- |
-        --------------------------------------------------------------------------------*/
-        private void SetTile(Vector2Int pos, TileType type)
+        /*-----------------------------------------------------------------------------------
+        | --- ApplyRoomTemplate: Updates the available rooms based on the used template --- |
+        -----------------------------------------------------------------------------------*/
+        private void ApplyRoomTemplate(RoomTemplate roomTemplate)
         {
-            if (IsInBounds(pos))
+            --m_availableRooms[roomTemplate];
+            if (m_availableRooms[roomTemplate] == 0)
             {
-                m_tiles[pos.x, pos.y] = type;
+                m_availableRooms.Remove(roomTemplate);
             }
         }
 
-        /*----------------------------------------------------------------------------------------------------------------
-        | --- PlaceRoomWithMargin: Attempts to place a room at the specified center with given dimensions and margin --- |
-        ----------------------------------------------------------------------------------------------------------------*/
-        private bool PlaceRoomWithMargin(Vector2Int center, int width, int height, int margin)
+        /*----------------------------------------------------------------------------------------
+        | --- GetRandomRoomTemplate: Selects a random room template from the available rooms --- |
+        ----------------------------------------------------------------------------------------*/
+        private RoomTemplate GetRandomRoomTemplate()
         {
-            int startX = center.x - width / 2;
-            int startY = center.y - height / 2;
-            int endX = startX + width - 1;
-            int endY = startY + height - 1;
-
-            if (startX < 1 || startY < 1 || endX >= m_width - 1 || endY >= m_length - 1)
+            int index = m_rng.RandomRange(0, m_availableRooms.Count);
+            int currentIndex = 0;
+            foreach (RoomTemplate template in m_availableRooms.Keys)
             {
-                return false;
-            }
-
-            int checkStartX = Mathf.Max(1, startX - margin);
-            int checkStartY = Mathf.Max(1, startY - margin);
-            int checkEndX = Mathf.Min(m_width - 2, endX + margin);
-            int checkEndY = Mathf.Min(m_length - 2, endY + margin);
-
-            for (int x = checkStartX; x <= checkEndX; ++x)
-            {
-                for (int y = checkStartY; y <= checkEndY; ++y)
+                if (currentIndex == index)
                 {
-                    TileType t = m_tiles[x, y];
-                    if (t == TileType.kRoom)
-                    {
-                        return false;
-                    }
+                    return template;
                 }
+                ++currentIndex;
             }
-
-            for (int x = startX; x <= endX; ++x)
-            {
-                for (int y = startY; y <= endY; ++y)
-                {
-                    m_tiles[x, y] = TileType.kRoom;
-                }
-            }
-
-            return true;
+            return null;
         }
 
-        /*------------------------------------------------------------------------------
-        | --- IsInBounds: Checks if the given position is within the layout bounds --- |
-        ------------------------------------------------------------------------------*/
-        private bool IsInBounds(Vector2Int pos)
+#if UNITY_EDITOR
+        /*----------------------------------------------------------------------
+        | --- DrawLayout: Visualizes the generated layout onto a Texture2D --- |
+        ----------------------------------------------------------------------*/
+        private void DrawLayout(RectInt roomRect)
         {
-            return pos.x >= 0 && pos.x < m_width && pos.y >= 0 && pos.y < m_length;
-        }
+            if (!m_layoutDisplay.TryGetComponent<Renderer>(out var renderer))
+                return;
 
-        /*-------------------------------------------------------------
-        | --- GetTile: Returns the TileType at the given position --- |
-        -------------------------------------------------------------*/
-        private TileType GetTile(Vector2Int position)
-        {
-            if (IsInBounds(position))
+            Texture2D layoutTexture = (Texture2D)renderer.sharedMaterial.mainTexture;
+            if (layoutTexture == null)
+                return;
+
+            layoutTexture.Reinitialize(m_level.Width, m_level.Length);
+            m_layoutDisplay.transform.localScale = new Vector3(m_level.Width * 2, m_level.Length * 2, 1);
+            float xPos = (m_level.Width * 2 / 2.0f) - 2;
+            float zPos = (m_level.Length * 2 / 2.0f) - 2;
+            m_layoutDisplay.transform.position = new Vector3(xPos, 0.01f, zPos);
+            layoutTexture.FillWithColor(Color.black);
+            layoutTexture.ConvertToBlackAndWhite();
+
+            foreach (Room room in m_level.Rooms)
             {
-                return m_tiles[position.x, position.y];
+                layoutTexture.DrawRectangle(room.Area, Color.white);
             }
-            return TileType.kWall; // Out of bounds, treat as wall
-        }
+            foreach (Corridor corridor in m_level.Corridors)
+            {
+                layoutTexture.DrawLine(corridor.StartPositionAbs, corridor.EndPositionAbs, Color.white);
+            }
 
-        
+            layoutTexture.DrawRectangle(roomRect, Color.white);
+
+            layoutTexture.SaveAsset();
+        }
+#endif
     }
 }
