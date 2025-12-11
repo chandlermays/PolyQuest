@@ -101,8 +101,10 @@ namespace PolyQuest.AI.Components
             }
             else
             {
-                // TODO: Implement fallback attack behavior if no CombatComponent exists
-                Debug.LogWarning($"[AICombatComponent] Cannot attack - no CombatComponent on {gameObject.name}");
+                // No fallback needed - AICombatComponent requires CombatComponent
+                // for actual combat execution. Log error and return false.
+                Debug.LogError($"[AICombatComponent] Cannot attack - no CombatComponent on {gameObject.name}. " +
+                               "Add a CombatComponent for combat functionality.");
                 return false;
             }
         }

@@ -36,12 +36,10 @@ namespace PolyQuest.AI.States
                 return;
             }
 
-            // Set patrol speed from PatrolComponent or AIData
-            if (controller.AIData != null)
-            {
-                // TODO: Set NavMeshAgent speed directly or via MovementComponent API
-                // m_movementComponent.SetSpeed(controller.AIData.PatrolSpeed);
-            }
+            // Set patrol speed from AIData
+            // Note: MovementComponent doesn't expose SetSpeed method currently.
+            // Speed should be set on NavMeshAgent directly if different speeds are needed.
+            // For now, relying on prefab NavMeshAgent configuration.
 
             m_timeSinceArrivedAtWaypoint = Mathf.Infinity;
             m_hasReachedWaypoint = false;

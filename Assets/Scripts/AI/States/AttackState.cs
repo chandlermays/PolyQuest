@@ -90,8 +90,8 @@ namespace PolyQuest.AI.States
                 // Move toward target if out of attack range
                 if (m_movementComponent != null)
                 {
-                    // TODO: Set chase speed on NavMeshAgent
-                    // m_movementComponent.SetSpeed(m_chaseSpeed);
+                    // Note: Chase speed should be configured on NavMeshAgent.
+                    // MovementComponent doesn't expose SetSpeed currently.
                     m_movementComponent.MoveTo(m_target.transform.position);
                 }
             }
@@ -166,13 +166,6 @@ namespace PolyQuest.AI.States
                     // Alert the ally by sending an event
                     allyController.StateMachine.TriggerEvent("TargetDetected", m_target);
                 }
-
-                // TODO: Also support legacy EnemyController for backward compatibility
-                // EnemyController legacyEnemy = hit.collider.GetComponent<EnemyController>();
-                // if (legacyEnemy != null && legacyEnemy != controller)
-                // {
-                //     legacyEnemy.Aggrevate();
-                // }
             }
 
             Debug.Log($"[AttackState] {controller.gameObject.name} alerted nearby allies within {m_alertRange}m");

@@ -68,10 +68,9 @@ namespace PolyQuest.Examples
             if (npcObject == null)
                 return;
 
-            // Add AIController
+            // Add AIController and configure as NPC
             AIController aiController = npcObject.AddComponent<AIController>();
-            // Note: aiController.AIType is already set to Enemy by default, we need to expose a way to set it
-            // For now, we'll need to use reflection or just document this limitation
+            aiController.SetAIType(AIType.NPC);
             
             // Add PatrolComponent for waypoint navigation
             PatrolComponent patrolComponent = npcObject.AddComponent<PatrolComponent>();
@@ -79,8 +78,7 @@ namespace PolyQuest.Examples
             // Create some simple waypoints for demonstration
             CreatePatrolWaypoints(npcObject, patrolComponent, position, 3, 5f);
 
-            Debug.Log($"[ExampleAISetup] Created NPC at {position}. " +
-                      "Note: Set AIType to NPC in the inspector after creation.");
+            Debug.Log($"[ExampleAISetup] Created NPC at {position} with patrol behavior.");
         }
 
         /// <summary>

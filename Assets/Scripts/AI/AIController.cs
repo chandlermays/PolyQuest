@@ -63,6 +63,15 @@ namespace PolyQuest.AI
         public AIType AIType => m_aiType;
 
         /// <summary>
+        /// Sets the AI type. Useful for runtime configuration.
+        /// </summary>
+        /// <param name="aiType">The AI type to set</param>
+        public void SetAIType(AIType aiType)
+        {
+            m_aiType = aiType;
+        }
+
+        /// <summary>
         /// Gets the AI configuration data.
         /// </summary>
         public AIData AIData => m_aiData;
