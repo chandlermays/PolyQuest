@@ -58,7 +58,10 @@ namespace PolyQuest.AI.Components
             get
             {
                 if (m_navigationPath != null)
-                    return m_navigationPath.GetWaypointCount();
+                {
+                    // NavigationPath uses child transforms
+                    return m_navigationPath.transform.childCount;
+                }
                 return m_waypoints.Count;
             }
         }
