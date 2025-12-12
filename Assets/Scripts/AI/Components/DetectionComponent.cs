@@ -195,6 +195,8 @@ namespace PolyQuest.AI
 
         /*-----------------------------------------------------------------
         | --- ForceDetectionCheck: Immediately perform a detection check --- |
+        | Performs detection check immediately and resets the timer, so the
+        | next scheduled check will occur after a full CheckInterval.
         -----------------------------------------------------------------*/
         public void ForceDetectionCheck()
         {

@@ -4,13 +4,19 @@ using PolyQuest.Components;
 namespace PolyQuest.AI
 {
     /// <summary>
-    /// Example script demonstrating how to configure AIController for NPC vs Enemy at runtime.
-    /// This shows the component-based composition approach of the new AI system.
+    /// Example script demonstrating AI system architecture and component composition.
     /// 
-    /// Usage:
-    /// 1. Attach this script to an empty GameObject or call methods from your own code
-    /// 2. Call CreateNPC() or CreateEnemy() to spawn configured AI
-    /// 3. Review the code to understand how to set up AI manually or via prefabs
+    /// IMPORTANT: This is a REFERENCE IMPLEMENTATION showing how components fit together.
+    /// Runtime setup has limitations because AIType and AIData are serialized fields.
+    /// 
+    /// RECOMMENDED APPROACH: Create prefabs with AIController + components configured in Inspector.
+    /// 
+    /// This example is useful for:
+    /// - Understanding the component architecture
+    /// - Learning what components are needed for NPC vs Enemy
+    /// - Reference when creating prefabs manually
+    /// 
+    /// For production use: Configure AI in prefabs, not at runtime.
     /// </summary>
     public class ExampleAISetup : MonoBehaviour
     {

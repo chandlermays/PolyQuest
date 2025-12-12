@@ -147,9 +147,7 @@ namespace PolyQuest.AI
 
             Vector3 targetWaypoint = m_controller.PatrolComponent.CurrentWaypoint;
 
-            // TODO: MovementComponent API uses StartMoveAction(destination) which cancels combat.
-            // For patrol, we may want to use MoveTo(destination) directly or set speed.
-            // Current implementation: Use MoveTo for simpler patrol behavior.
+            // Use MoveTo for patrol navigation (doesn't cancel combat like StartMoveAction would)
             m_controller.MovementComponent.MoveTo(targetWaypoint);
 
             // Set patrol speed if configured
