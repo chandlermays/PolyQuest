@@ -1,3 +1,4 @@
+using PolyQuest.Tools;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -50,7 +51,7 @@ namespace PolyQuest.Dialogues
         }
 
         /*---------------------------------------------------------------------------------------------
-        | --- OnValidate: Called when the script is loaded or a m_value is changed in the Inspector --- |
+        | --- OnValidate: Called when the script is loaded or a value is changed in the Inspector --- |
         ---------------------------------------------------------------------------------------------*/
         private void OnValidate()
         {
@@ -67,13 +68,31 @@ namespace PolyQuest.Dialogues
         /*-----------------------------------------------------
         | --- GetRootNode: Returns the Root Dialogue Node --- |
         -----------------------------------------------------*/
-        public DialogueNode GetRootNode()
+        public DialogueNode GetRootNode(IEnumerable<IConditionChecker> evaluators)
         {
-            if (m_nodes == null || m_nodes.Count == 0)
+            // Check all potential root nodes for valid conditions
+            foreach (DialogueNode node in m_nodes)
             {
-                return null;
+                if (IsRootNode(node) && node.CheckCondition(evaluators))
+                {
+                    return node;
+                }
             }
-            return m_nodes[0];
+            return m_nodes[0]; // Fallback to default root
+        }
+
+        /*-------------------------------------------------------
+        | --- IsRootNode: Checks if a Dialogue Node is Root --- |
+        -------------------------------------------------------*/
+        private bool IsRootNode(DialogueNode node)
+        {
+            // A root node is one that no other node references as a child
+            foreach (DialogueNode otherNode in m_nodes)
+            {
+                if (otherNode.Children.Contains(node.name))
+                    return false;
+            }
+            return true;
         }
 
         /*-----------------------------------------------------------------

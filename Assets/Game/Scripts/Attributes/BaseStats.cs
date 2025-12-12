@@ -85,8 +85,8 @@ namespace PolyQuest.Attributes
                     return m_baseProgression.GetManaRegenRate(m_level);
 
                 case Stat.kExperienceReward:
-                    if (m_baseProgression is EnemyProgression enemyProgression)
-                        return enemyProgression.GetExperienceReward(m_level);
+                    if (m_baseProgression is AIProgression aiProgression)
+                        return aiProgression.GetExperienceReward(m_level);
                     return 0;
 
                 case Stat.kExperienceToLevelUp:

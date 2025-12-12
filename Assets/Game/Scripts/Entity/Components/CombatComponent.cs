@@ -46,6 +46,9 @@ namespace PolyQuest.Components
         private static readonly int kAttack = Animator.StringToHash("Attack");
         private static readonly int kStopAttacking = Animator.StringToHash("StopAttacking");
 
+        public GameObject Target => m_target;
+        public LayerMask TargetLayers => m_targetLayers;
+
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
@@ -197,6 +200,15 @@ namespace PolyQuest.Components
             if (target == null)
                 return false;
 
+            // Check faction compatibility
+            FactionComponent thisFaction = GetComponent<FactionComponent>();
+            FactionComponent targetFaction = target.GetComponent<FactionComponent>();
+            if (thisFaction != null && targetFaction != null)
+            {
+                if (!thisFaction.IsHostileTo(targetFaction))
+                    return false;
+            }
+
             // Check if the target is within range/navigatable
             if (m_movementComponent.CanMoveTo(target.transform.position) == false)
                 return false;
@@ -316,6 +328,7 @@ namespace PolyQuest.Components
             Vector3 position = transform.position;
 
             Collider[] colliders = Physics.OverlapSphere(position, m_autoAttackRange, m_targetLayers);
+            FactionComponent myFaction = GetComponent<FactionComponent>();
 
             foreach (var collider in colliders)
             {
@@ -324,6 +337,13 @@ namespace PolyQuest.Components
 
                 if (!collider.TryGetComponent<HealthComponent>(out var health) || health.IsDead)
                     continue;
+
+                // Check faction compatibility
+                if (myFaction != null && collider.TryGetComponent<FactionComponent>(out var targetFaction))
+                {
+                    if (!myFaction.IsHostileTo(targetFaction))
+                        continue;
+                }
 
                 float distance = Vector3.Distance(position, collider.transform.position);
                 if (distance < nearestDistance)
@@ -337,7 +357,7 @@ namespace PolyQuest.Components
         }
 
         /*--------------------------------------------------------------
-        | --- Hit: Animation Event upon Attacking an Enemy (Sword) --- |
+        | --- Hit: Animation Event upon Attacking an kEnemy (Sword) --- |
         --------------------------------------------------------------*/
         private void Hit()
         {
@@ -345,7 +365,7 @@ namespace PolyQuest.Components
         }
 
         /*--------------------------------------------------------------
-        | --- Shoot: Animation Event upon Attacking an Enemy (Bow) --- |
+        | --- Shoot: Animation Event upon Attacking an kEnemy (Bow) --- |
         --------------------------------------------------------------*/
         private void Shoot()
         {

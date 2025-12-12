@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f406115108f1866448810157bb6a1776, type: 3}
+  m_Name: NPC Progression
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Attributes.AIProgression
+  m_healthIncreasePercentage: 5
+  m_initialHealth: 30
+  m_maxHealthAmounts: 1e00000020000000220000002400000026000000
+  m_damageIncreasePercentage: 0
+  m_initialDamage: 0
+  m_damageAmounts: 0000000000000000000000000000000000000000
+  m_defenseIncreasePercentage: 0
+  m_initialDefense: 0
+  m_defenseAmounts: 0000000000000000000000000000000000000000
+  m_manaIncreasePercentage: 0
+  m_initialMana: 0
+  m_manaAmounts: 0000000000000000000000000000000000000000
+  m_manaRegenIncreasePercentage: 0
+  m_initialManaRegenRate: 0
+  m_manaRegenRates: 0000000000000000000000000000000000000000
+  m_experienceRewardIncreasePercentage: 0
+  m_initialExperienceReward: 0
+  m_experienceRewardAmounts: 0000000000000000000000000000000000000000

@@ -20,7 +20,7 @@ namespace PolyQuest.Components
     public class MovementComponent : EntityComponent, ISaveable
     {
         /* --- Navigation --- */
-        [SerializeField] private float m_maxPathLength = 20f;
+        private float m_maxPathLength = 20f;
 
         /* --- References --- */
         private CombatComponent m_combatComponent;

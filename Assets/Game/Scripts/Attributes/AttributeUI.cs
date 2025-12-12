@@ -15,10 +15,5 @@ namespace PolyQuest.Attributes
         {
             m_confirmButton.onClick.AddListener(m_attributes.Confirm);
         }
-
-        private void Update()
-        {
-     //       m_availablePoints.text = $"Available Points: {m_attributes.GetRemainingPoints()}";
-        }
     }
 }

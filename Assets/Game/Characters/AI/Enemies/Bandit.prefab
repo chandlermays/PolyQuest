@@ -1975,7 +1975,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 369f73196dbc7a94c8c62b30be4b0fbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Saving.JsonSaveableEntity
-  m_uniqueIdentifier: 883e2bf7-fbdf-4463-9378-3758c924147c
+  m_uniqueIdentifier: 4ba85c3a-87bd-4599-b7b6-cd21e1bd978b
   m_lockIdentifier: 0
 --- !u!114 &5008227000221217880
 MonoBehaviour:

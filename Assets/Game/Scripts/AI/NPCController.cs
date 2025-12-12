@@ -1,5 +1,6 @@
 using UnityEngine;
 //---------------------------------
+using PolyQuest.Components;
 
 namespace PolyQuest.AI
 {
@@ -8,14 +9,166 @@ namespace PolyQuest.AI
     -----------------------------------------------------------*/
     public class NPCController : AIController
     {
+        [Header("Combat Settings")]
+        [SerializeField] private float m_detectionRange = 5f;
+        [SerializeField] private float m_suspicionTime = 3f;
+
+        /* --- References --- */
+        private CombatComponent m_combatComponent;
+        private HealthComponent m_healthComponent;
+
+        private float m_timeSinceEnemyLastDetected = Mathf.Infinity;
+        private GameObject m_currentTarget;
+
+        /*----------------------------------------------------------------
+        | --- Awake: Called when the script instance is being loaded --- |
+        ----------------------------------------------------------------*/
+        protected override void Awake()
+        {
+            base.Awake();
+
+            m_combatComponent = GetComponent<CombatComponent>();
+            m_healthComponent = GetComponent<HealthComponent>();
+        }
+
+        /*---------------------------------------------------------------------
+        | --- OnEnable: Called when the object becomes enabled and active --- |
+        ---------------------------------------------------------------------*/
+        private void OnEnable()
+        {
+            if (m_healthComponent != null && !m_healthComponent.IsDead)
+            {
+                m_healthComponent.OnHit += Aggrevate;
+            }
+        }
+
+        /*---------------------------------------------------------------------------
+        | --- OnDisable: Called when the behaviour becomes disabled or inactive --- |
+        ---------------------------------------------------------------------------*/
+        private void OnDisable()
+        {
+            if (m_healthComponent != null)
+            {
+                m_healthComponent.OnHit -= Aggrevate;
+            }
+        }
+
         /*-----------------------------------------
         | --- Update: Called upon every frame --- |
         -----------------------------------------*/
         private void Update()
         {
-            PatrolState();
+            if (m_healthComponent != null && m_healthComponent.IsDead)
+                return;
+
+            if (m_combatComponent != null)
+            {
+                m_currentTarget = FindNearestEnemy();
+
+                if (m_currentTarget != null && m_combatComponent.CanAttack(m_currentTarget))
+                {
+                    DefendState();
+                }
+                else if (m_timeSinceEnemyLastDetected < m_suspicionTime)
+                {
+                    SuspicionState();
+                }
+                else
+                {
+                    PatrolState();
+                }
+
+                m_timeSinceEnemyLastDetected += Time.deltaTime;
+            }
+            else
+            {
+                PatrolState();
+            }
 
             m_timeSinceArrivedAtWaypoint += Time.deltaTime;
+        }
+
+        /*----------------------------------------------------------------------
+        | --- FindNearestEnemy: Find the Nearest kEnemy within Detection Range --- |
+        ----------------------------------------------------------------------*/
+        private GameObject FindNearestEnemy()
+        {
+            GameObject nearestEnemy = null;
+            float closestDistance = Mathf.Infinity;
+
+            Collider[] colliders = Physics.OverlapSphere(m_transform.position, m_detectionRange, m_combatComponent.TargetLayers);
+
+            foreach (var collider in colliders)
+            {
+                // Skip self
+                if (collider.gameObject == gameObject)
+                    continue;
+
+                // Check if it's an enemy
+                EnemyController enemy = collider.GetComponent<EnemyController>();
+                if (enemy == null)
+                    continue;
+
+                // Check if enemy is alive
+                HealthComponent health = collider.GetComponent<HealthComponent>();
+                if (health == null || health.IsDead)
+                    continue;
+
+                float distance = Vector3.Distance(m_transform.position, collider.transform.position);
+                if (distance < closestDistance)
+                {
+                    nearestEnemy = collider.gameObject;
+                    closestDistance = distance;
+                }
+            }
+
+            return nearestEnemy;
+        }
+
+        /*-------------------------------------------------------------- 
+        | --- DefendState: The State of Defending Against an kEnemy --- |
+        --------------------------------------------------------------*/
+        private void DefendState()
+        {
+            m_timeSinceEnemyLastDetected = 0;
+            m_combatComponent.SetTarget(m_currentTarget);
+        }
+
+        /*--------------------------------------------------------------------------
+        | --- SuspicionState: The State of "Suspicion" when kEnemy Leaves Range --- |
+        --------------------------------------------------------------------------*/
+        private void SuspicionState()
+        {
+            m_movementComponent.Stop();
+        }
+
+        /*-----------------------------------------------
+        | --- Aggrevate: Called when the NPC is Hit --- |
+        -----------------------------------------------*/
+        private void Aggrevate()
+        {
+            // Reset the timer to make NPC aggressive
+            m_timeSinceEnemyLastDetected = 0;
+
+            // If we have a combat component and the attacker was an enemy, retaliate
+            if (m_combatComponent != null && m_currentTarget == null)
+            {
+                m_currentTarget = FindNearestEnemy();
+            }
+        }
+
+        /*------------------------------------------------------------------------------------ 
+        | --- OnDrawGizmosSelected: Draw a Gizmo to Represent the NPC's Detection Radius --- |
+        ------------------------------------------------------------------------------------*/
+        private void OnDrawGizmosSelected()
+        {
+            if (m_transform == null)
+            {
+                m_transform = transform;
+            }
+
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(m_transform.position, m_detectionRange);
         }
     }
 }

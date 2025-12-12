@@ -7,7 +7,7 @@ using PolyQuest.Inventories;
 namespace PolyQuest.AI
 {
     /*------------------------------------------------------------- 
-    | --- Responsible for Controlling an AI's Actions (Enemy) --- |
+    | --- Responsible for Controlling an AI's Actions (kEnemy) --- |
     -------------------------------------------------------------*/
     public class EnemyController : AIController
     {
@@ -21,6 +21,7 @@ namespace PolyQuest.AI
 
         /* --- References --- */
         [SerializeField] private GameObject m_player;
+        private GameObject m_currentTarget;
         private Transform m_playerTransform;
         private CombatComponent m_combatComponent;
         private HealthComponent m_healthComponent;
@@ -103,7 +104,9 @@ namespace PolyQuest.AI
             if (m_healthComponent.IsDead)
                 return;
 
-            if (IsPlayerDetected() && m_combatComponent.CanAttack(m_player))
+            m_currentTarget = FindBestTarget();
+
+            if (m_currentTarget != null && m_combatComponent.CanAttack(m_currentTarget))
             {
                 AttackState();
             }
@@ -128,6 +131,57 @@ namespace PolyQuest.AI
         {
             // Reset the timer to push the AI into AttackState
             m_timeSinceAggrevated = 0;
+        }
+
+        /*---------------------------------------------------------------------
+        | --- FindBestTarget: Find the Best Target within Detection Range --- |
+        ---------------------------------------------------------------------*/
+        private GameObject FindBestTarget()
+        {
+            GameObject bestTarget = null;
+            float closestDistance = Mathf.Infinity;
+
+            // Check player first (priority target)
+            float playerDistance = Vector3.Distance(m_playerTransform.position, m_transform.position);
+            if (playerDistance < m_detectionRange || m_timeSinceAggrevated < m_aggroCooldown)
+            {
+                HealthComponent playerHealth = m_player.GetComponent<HealthComponent>();
+                if (playerHealth != null && !playerHealth.IsDead)
+                {
+                    bestTarget = m_player;
+                    closestDistance = playerDistance;
+                }
+            }
+
+            // Check for NPCs in range
+            Collider[] colliders = Physics.OverlapSphere(m_transform.position, m_detectionRange, m_combatComponent.TargetLayers);
+            foreach (var collider in colliders)
+            {
+                // Skip self
+                if (collider.gameObject == gameObject)
+                    continue;
+
+                // Check if it's an NPC
+                NPCController npc = collider.GetComponent<NPCController>();
+                if (npc == null)
+                    continue;
+
+                // Check if NPC is alive
+                HealthComponent health = collider.GetComponent<HealthComponent>();
+                if (health == null || health.IsDead)
+                    continue;
+
+                float distance = Vector3.Distance(m_transform.position, collider.transform.position);
+
+                // If no player target yet, or NPC is closer, target the NPC
+                if (bestTarget == null || distance < closestDistance)
+                {
+                    bestTarget = collider.gameObject;
+                    closestDistance = distance;
+                }
+            }
+
+            return bestTarget;
         }
 
         /*------------------------------------------------------ 
@@ -165,16 +219,6 @@ namespace PolyQuest.AI
         private void SuspicionState()
         {
             m_movementComponent.Stop();
-        }
-
-        /*------------------------------------------------------------------------------------------------------- 
-        | --- IsPlayerDetected: Checks if the Player is within the Detection Range or has aggrovated the AI --- |
-        -------------------------------------------------------------------------------------------------------*/
-        private bool IsPlayerDetected()
-        {
-            float distance = Vector3.Distance(m_playerTransform.position, m_transform.position);
-            
-            return distance < m_detectionRange || m_timeSinceAggrevated < m_aggroCooldown;
         }
 
         /*------------------------------------------------------------------------------- 

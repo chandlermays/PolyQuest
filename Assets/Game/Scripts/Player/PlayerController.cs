@@ -237,7 +237,7 @@ namespace PolyQuest.Player
         }
 
         /*--------------------------------------------------------------------- 
-        | --- SetPlayerVisibility: Set the visibility of the Player Model --- |
+        | --- SetPlayerVisibility: Set the visibility of the kPlayer Model --- |
         ---------------------------------------------------------------------*/
         public void SetPlayerVisibility(bool visible)
         {

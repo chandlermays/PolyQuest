@@ -70,7 +70,7 @@ namespace PolyQuest.Dialogues
         private void BeginDialogue()
         {
             m_inActiveDialogue = true;
-            m_currentNode = m_activeDialogue.GetRootNode();
+            m_currentNode = m_activeDialogue.GetRootNode(GetEvaluators());
             TriggerEnterAction();
 
             OnDialogueStarted?.Invoke();
@@ -95,7 +95,7 @@ namespace PolyQuest.Dialogues
             {
                 EndDialogue();
                 return;
-            }    
+            }
 
             m_activeNPC = null;
             m_activeDialogue = null;

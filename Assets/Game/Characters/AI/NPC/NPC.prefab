@@ -1877,6 +1877,9 @@ GameObject:
   - component: {fileID: 4587090530215678122}
   - component: {fileID: 5058887998526982570}
   - component: {fileID: 2708792213116424498}
+  - component: {fileID: -2369949876909521975}
+  - component: {fileID: -4584313945261361355}
+  - component: {fileID: 5238166851672994123}
   - component: {fileID: 1909811517450575725}
   m_Layer: 0
   m_Name: NPC
@@ -1894,7 +1897,7 @@ Transform:
   m_GameObject: {fileID: 6788340497021815511}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.2519822, y: 0.14999962, z: -13.439002}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2010,6 +2013,8 @@ MonoBehaviour:
   m_navigationPath: {fileID: 0}
   m_waypointTolerance: 1
   m_waypointDwellTime: 3
+  m_detectionRange: 8
+  m_suspicionTime: 4
 --- !u!114 &2708792213116424498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2023,6 +2028,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_maxPathLength: 20
+--- !u!114 &-2369949876909521975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6788340497021815511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 522a545531ea5ba4492f19395665a981, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Components.HealthComponent
+  m_health: 0
+--- !u!114 &-4584313945261361355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6788340497021815511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76d3bec88d6a83244b58819eae8aeb4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Components.CombatComponent
+  m_defaultWeapon: {fileID: 11400000, guid: 8020f99054b9f0c408d6ad5c146a25ac, type: 2}
+  m_leftHand: {fileID: 3502826255422293886}
+  m_rightHand: {fileID: 4820755163052266898}
+  m_attackCooldown: 1.2
+  m_autoAttackRange: 5
+  m_targetLayers:
+    serializedVersion: 2
+    m_Bits: 512
+--- !u!114 &5238166851672994123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6788340497021815511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb41a1b2a219ea644b469f7da058fc7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Attributes.BaseStats
+  m_baseProgression: {fileID: 11400000, guid: 30fee3abfa33c464fb0abc5f368e563a, type: 2}
+  m_useStatModifiers: 1
+  m_level: 1
 --- !u!114 &1909811517450575725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2035,7 +2088,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 369f73196dbc7a94c8c62b30be4b0fbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Saving.JsonSaveableEntity
-  m_uniqueIdentifier: c17ca58b-f94f-4f3b-818d-840ad583b82f
+  m_uniqueIdentifier: 8df83d23-2d34-4169-aba6-8f95dbecdaac
   m_lockIdentifier: 0
 --- !u!1 &6808664692873903774
 GameObject:

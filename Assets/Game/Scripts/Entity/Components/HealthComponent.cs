@@ -1,9 +1,10 @@
 using Newtonsoft.Json.Linq;
-using System;
-using UnityEngine;
 //---------------------------------
 using PolyQuest.Attributes;
 using PolyQuest.Saving;
+using System;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 
 namespace PolyQuest.Components
 {
@@ -133,6 +134,18 @@ namespace PolyQuest.Components
         {
             if (m_isDead)
                 return;
+
+            FactionComponent myFaction = GetComponent<FactionComponent>();
+            FactionComponent attackerFaction = instigator.GetComponent<FactionComponent>();
+
+            if (myFaction != null && attackerFaction != null)
+            {
+                if (!attackerFaction.IsHostileTo(myFaction))
+                {
+                    // Prevent friendly fire
+                    return;
+                }
+            }
 
             m_health -= damage;
 

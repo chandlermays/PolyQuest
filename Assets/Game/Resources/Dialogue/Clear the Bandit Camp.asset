@@ -17,7 +17,7 @@ MonoBehaviour:
   m_children: []
   m_rect:
     serializedVersion: 2
-    x: 605
+    x: 367
     y: 318
     width: 200
     height: 100
@@ -41,18 +41,22 @@ MonoBehaviour:
   m_text: Welcome to Stonewick!
   m_children:
   - 0c761e41-9011-463f-865c-923d8bfebc24
-  - de876385-307d-4c16-91f4-a4aa3044521d
-  - ebefb847-14a9-40e5-88f9-cb05e4d71cdd
   m_rect:
     serializedVersion: 2
-    x: 84
-    y: 317
+    x: 114
+    y: 182
     width: 200
     height: 100
   m_onEnterAction: 
   m_onExitAction: 
   m_condition:
-    m_AND: []
+    m_AND:
+    - m_OR:
+      - m_predicate: 2
+        m_parameters:
+        - Clear the Bandit Camp
+        - 
+        m_negate: 0
 --- !u!114 &-4430077980473154734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,7 +75,7 @@ MonoBehaviour:
   - 26aba06e-8185-4670-88e5-8b2262b7fad9
   m_rect:
     serializedVersion: 2
-    x: 366
+    x: 115
     y: 318
     width: 200
     height: 100
@@ -163,19 +167,7 @@ MonoBehaviour:
   m_onEnterAction: 
   m_onExitAction: 
   m_condition:
-    m_AND:
-    - m_OR:
-      - m_predicate: 2
-        m_parameters:
-        - Clear the Bandit Camp
-        - 
-        m_negate: 0
-    - m_OR:
-      - m_predicate: 4
-        m_parameters:
-        - Clear the Bandit Camp
-        - 
-        m_negate: 1
+    m_AND: []
 --- !u!114 &3710213524180428403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,8 +186,8 @@ MonoBehaviour:
   - 1a59dda5-0b66-47be-afb7-e4554acd084d
   m_rect:
     serializedVersion: 2
-    x: 366
-    y: 445
+    x: 117
+    y: 446
     width: 200
     height: 100
   m_onEnterAction: 
@@ -206,8 +198,9 @@ MonoBehaviour:
       - m_predicate: 1
         m_parameters:
         - Clear the Bandit Camp
-        - Kill
+        - 
         m_negate: 0
+    - m_OR:
       - m_predicate: 3
         m_parameters:
         - Clear the Bandit Camp
@@ -230,7 +223,7 @@ MonoBehaviour:
   m_children: []
   m_rect:
     serializedVersion: 2
-    x: 606
+    x: 366
     y: 446
     width: 200
     height: 100
