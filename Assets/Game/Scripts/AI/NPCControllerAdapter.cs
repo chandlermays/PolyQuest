@@ -50,8 +50,13 @@ namespace PolyQuest.AI
                 m_aiController = gameObject.AddComponent<AIController>();
             }
 
-            // TODO: If m_aiData is not assigned, maintainers should create an AIData asset
-            // and assign it, or set default values programmatically
+            // NOTE: AIController's AIType and AIData are serialized fields that should be
+            // configured in the Inspector. This adapter provides component setup and basic
+            // field mapping, but full migration requires:
+            // 1. Creating an AIData asset with patrol values from legacy fields
+            // 2. Assigning it to AIController in Inspector
+            // 3. Setting AIType to NPC in Inspector
+            // See migration docs for complete instructions.
 
             SetupPatrolComponent();
         }

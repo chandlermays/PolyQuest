@@ -57,9 +57,13 @@ namespace PolyQuest.AI
                 m_aiController = gameObject.AddComponent<AIController>();
             }
 
-            // TODO: Transfer legacy field values to new system
-            // If m_aiData is not assigned, create a ScriptableObject instance at runtime
-            // or use default values configured in AIData asset
+            // NOTE: AIController's AIType and AIData are serialized fields that should be
+            // configured in the Inspector. This adapter provides component setup and basic
+            // field mapping, but full migration requires:
+            // 1. Creating an AIData asset with values from legacy fields
+            // 2. Assigning it to AIController in Inspector
+            // 3. Setting AIType to Enemy in Inspector
+            // See migration docs for complete instructions.
 
             SetupDetectionComponent();
         }

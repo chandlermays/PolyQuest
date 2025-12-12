@@ -167,6 +167,15 @@ namespace PolyQuest.AI
                     m_direction *= -1;
                     nextIndex = m_currentWaypointIndex + m_direction;
                 }
+                
+                // Safety check: ensure nextIndex is valid after direction reversal
+                if (nextIndex < 0 || nextIndex >= m_waypoints.Count)
+                {
+                    Debug.LogError($"[PatrolComponent] Invalid waypoint index {nextIndex} on {gameObject.name}. Resetting to 0.");
+                    nextIndex = 0;
+                    m_direction = 1;
+                }
+                
                 m_currentWaypointIndex = nextIndex;
             }
 
