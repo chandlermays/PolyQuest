@@ -19,7 +19,7 @@ namespace PolyQuest.PCG
         /*-------------------------------------------------------------------------
         | --- GenerateDecorations: Generates decorations for the level layout --- |
         -------------------------------------------------------------------------*/
-        [ContextMenu("Generate Decorations")]
+        [ContextMenu("DEBUG: Generate Decorations")]
         public void GenerateDecorations()
         {
             Level level = m_layoutGenerator.GenerateLayout();

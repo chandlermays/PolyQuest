@@ -6,29 +6,24 @@ namespace PolyQuest.PCG
 {
     public class LayoutGenerator : MonoBehaviour
     {
-        // Fields
         [SerializeField] private GameObject m_layoutDisplay;
         [SerializeField] private long m_seed = 0;
         [SerializeField] private LevelLayoutConfig m_levelLayoutConfig;
-        [SerializeField] private List<Corridor> m_openCorridors;
 
         private XorShift128Plus m_rng;
         private Level m_level;
+        private List<Corridor> m_openCorridors;
         private Dictionary<RoomTemplate, int> m_availableRooms;
 
-        // Properties
         public XorShift128Plus RNG => m_rng;
 
         /*--------------------------------------------------------------------------------------
         | --- GenerateLayout: Generates a level layout based on the provided configuration --- |
         --------------------------------------------------------------------------------------*/
-        [ContextMenu("Generate Layout")]
+        [ContextMenu("DEBUG: Generate Layout")]
         public Level GenerateLayout()
         {
-            m_rng = new XorShift128Plus(unchecked((ulong)m_seed));
-            m_level = new Level();
-            m_availableRooms = m_levelLayoutConfig.GetAvailableRooms();
-            m_openCorridors = new();
+            InitializeGeneration();
 
             RectInt startRoomRect = CreateStartRoom();
             GenerateRooms();
@@ -46,7 +41,7 @@ namespace PolyQuest.PCG
         /*--------------------------------------------------------------------------------
         | --- GenerateNewSeed: Generates a new random seed based on the current time --- |
         --------------------------------------------------------------------------------*/
-        [ContextMenu("Generate New Seed")]
+        [ContextMenu("DEBUG: Generate New Seed")]
         public void GenerateNewSeed()
         {
             m_seed = DateTime.Now.Ticks;
@@ -55,11 +50,22 @@ namespace PolyQuest.PCG
         /*-------------------------------------------------------------------
         | --- GenerateNewSeedAndLayout: Generates a new seed and layout --- |
         -------------------------------------------------------------------*/
-        [ContextMenu("Generate New Seed and Layout")]
+        [ContextMenu("DEBUG: Generate New Seed and Layout")]
         public void GenerateNewSeedAndLayout()
         {
             GenerateNewSeed();
             GenerateLayout();
+        }
+
+        /*------------------------------------------------------------------
+        | --- InitializeGeneration: Initializes the generation process --- |
+        ------------------------------------------------------------------*/
+        private void InitializeGeneration()
+        {
+            m_rng = new XorShift128Plus(unchecked((ulong)m_seed));
+            m_level = new Level();
+            m_availableRooms = m_levelLayoutConfig.GetAvailableRooms();
+            m_openCorridors = new();
         }
 
         /*-------------------------------------------------------------------------
