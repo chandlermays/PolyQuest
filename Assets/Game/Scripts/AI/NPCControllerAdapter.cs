@@ -77,11 +77,12 @@ namespace PolyQuest.AI
                 m_patrolComponent = gameObject.AddComponent<PatrolComponent>();
             }
 
-            // Transfer legacy patrol settings
-            // TODO: Map m_navigationPath, m_waypointTolerance, m_waypointDwellTime to PatrolComponent
-            // The PatrolComponent can use NavigationPath directly if assigned
-            // m_patrolComponent.ArrivalRadius = m_waypointTolerance;
-
+            // Transfer legacy patrol settings to PatrolComponent
+            // Note: PatrolComponent fields are serialized, so set via reflection or configure in Inspector
+            m_patrolComponent.ArrivalRadius = m_waypointTolerance;
+            
+            // NavigationPath can be assigned directly to PatrolComponent in Inspector
+            // or the adapter's m_navigationPath can be linked if needed
             if (m_navigationPath != null)
             {
                 Debug.Log($"[NPCControllerAdapter] NavigationPath found on {gameObject.name}. " +

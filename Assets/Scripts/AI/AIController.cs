@@ -133,8 +133,7 @@ namespace PolyQuest.AI
             // Initialize state machine
             m_stateMachine = new AIStateMachine();
 
-            // Create state instances
-            // TODO: States need access to components and data - pass references in constructor
+            // Create state instances - states receive controller reference for component access
             m_idleState = new IdleState(this);
             m_patrolState = new PatrolState(this);
             m_suspicionState = new SuspicionState(this);

@@ -85,12 +85,11 @@ namespace PolyQuest.AI
                 m_detectionComponent = gameObject.AddComponent<DetectionComponent>();
             }
 
-            // Transfer legacy detection settings
-            // TODO: Map m_detectionRange to DetectionComponent.SightRange
-            // m_detectionComponent.SightRange = m_detectionRange;
-
-            Debug.LogWarning($"[EnemyControllerAdapter] Detection component setup on {gameObject.name}. " +
-                           "TODO: Manually configure DetectionComponent settings in Inspector or via AIData.");
+            // Transfer legacy detection settings to DetectionComponent
+            m_detectionComponent.SightRange = m_detectionRange;
+            
+            Debug.Log($"[EnemyControllerAdapter] DetectionComponent configured with SightRange={m_detectionRange}. " +
+                     "Additional settings (FOV, layers) should be configured in Inspector or AIData.");
         }
 
         /*------------------------------------------------------- 
