@@ -159,13 +159,15 @@ namespace PolyQuest.AI
             }
             else
             {
-                // Ping-pong behavior
-                if (m_currentWaypointIndex + m_direction >= m_waypoints.Count || 
-                    m_currentWaypointIndex + m_direction < 0)
+                // Ping-pong behavior: check bounds before applying direction
+                int nextIndex = m_currentWaypointIndex + m_direction;
+                if (nextIndex >= m_waypoints.Count || nextIndex < 0)
                 {
+                    // Reverse direction and calculate new next index
                     m_direction *= -1;
+                    nextIndex = m_currentWaypointIndex + m_direction;
                 }
-                m_currentWaypointIndex += m_direction;
+                m_currentWaypointIndex = nextIndex;
             }
 
             // Trigger event

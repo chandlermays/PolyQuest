@@ -12,6 +12,7 @@ namespace PolyQuest.AI
         private readonly AIController m_controller;
         private float m_dwellTimer;
         private bool m_isDwelling;
+        private float m_currentSpeed = -1f; // Cache current speed to avoid repeated NavMeshAgent updates
 
         /// <summary>
         /// Constructor for PatrolState.
@@ -150,22 +151,24 @@ namespace PolyQuest.AI
             // Use MoveTo for patrol navigation (doesn't cancel combat like StartMoveAction would)
             m_controller.MovementComponent.MoveTo(targetWaypoint);
 
-            // Set patrol speed if configured
-            // MovementComponent.Agent property provides access to NavMeshAgent for speed configuration
+            // Set patrol speed if configured (only if changed to avoid unnecessary NavMeshAgent updates)
+            float desiredSpeed = 0f;
             if (m_controller.Data != null && m_controller.Data.PatrolSpeed > 0)
             {
-                var navAgent = m_controller.MovementComponent.Agent;
-                if (navAgent != null)
-                {
-                    navAgent.speed = m_controller.Data.PatrolSpeed;
-                }
+                desiredSpeed = m_controller.Data.PatrolSpeed;
             }
             else if (m_controller.PatrolComponent.PatrolSpeed > 0)
             {
+                desiredSpeed = m_controller.PatrolComponent.PatrolSpeed;
+            }
+
+            if (desiredSpeed > 0 && m_currentSpeed != desiredSpeed)
+            {
                 var navAgent = m_controller.MovementComponent.Agent;
                 if (navAgent != null)
                 {
-                    navAgent.speed = m_controller.PatrolComponent.PatrolSpeed;
+                    navAgent.speed = desiredSpeed;
+                    m_currentSpeed = desiredSpeed;
                 }
             }
         }

@@ -31,6 +31,9 @@ namespace PolyQuest.AI
         [Tooltip("Whether to require line of sight for detection")]
         [SerializeField] private bool m_requireLineOfSight = true;
 
+        [Tooltip("Height offset for raycast origin (eye level, default 1.5m)")]
+        [SerializeField] private float m_raycastHeightOffset = 1.5f;
+
         // Runtime state
         private GameObject m_currentTarget;
         private float m_timeSinceLastCheck;
@@ -178,12 +181,16 @@ namespace PolyQuest.AI
             if (target == null)
                 return false;
 
-            Vector3 directionToTarget = target.transform.position - transform.position;
+            // Use height offset for raycast origin (eye level)
+            Vector3 rayOrigin = transform.position + Vector3.up * m_raycastHeightOffset;
+            Vector3 targetPosition = target.transform.position + Vector3.up * m_raycastHeightOffset;
+            
+            Vector3 directionToTarget = targetPosition - rayOrigin;
             float distanceToTarget = directionToTarget.magnitude;
 
-            // Perform raycast
+            // Perform raycast from eye level to target eye level
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, directionToTarget.normalized, out hit, distanceToTarget, m_obstacleLayers))
+            if (Physics.Raycast(rayOrigin, directionToTarget.normalized, out hit, distanceToTarget, m_obstacleLayers))
             {
                 // Check if we hit the target or an obstacle
                 return hit.collider.gameObject == target;
