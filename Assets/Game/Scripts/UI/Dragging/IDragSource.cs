@@ -7,6 +7,7 @@ namespace PolyQuest.UI.Dragging
      *      - Provides access to the m_item and m_quantity being dragged.                              *
      *      - Allows removal of items from the source during a drag-and-drop operation.            *
      *      - Enables generic handling of drag sources in UI systems.                              *
+     *      - Supports split operations by providing an override quantity.                         *
      * ------------------------------------------------------------------------------------------- */
     public interface IDragSource<T> where T : class
     {
@@ -18,5 +19,8 @@ namespace PolyQuest.UI.Dragging
 
         /// <summary>Remove a given number of items from the source.</summary>
         void RemoveItems(int quantity);
+
+        /// <summary>Get the quantity to drag if splitting is active, or 0 for full quantity.</summary>
+        int GetDragQuantityOverride();
     }
 }

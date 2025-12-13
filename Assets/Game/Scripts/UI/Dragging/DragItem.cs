@@ -125,6 +125,14 @@ namespace PolyQuest.UI.Dragging
         {
             T prevSourceItem = source.GetItem();
             int prevSourceQuantity = source.GetQuantity();
+            
+            // Check if source has a split quantity override
+            int overrideQuantity = source.GetDragQuantityOverride();
+            if (overrideQuantity > 0 && overrideQuantity < prevSourceQuantity)
+            {
+                prevSourceQuantity = overrideQuantity;
+            }
+            
             T prevDestinationItem = destination.GetItem();
             int prevDestinationQuantity = destination.GetQuantity();
 
@@ -173,6 +181,13 @@ namespace PolyQuest.UI.Dragging
         {
             T draggingItem = m_dragSource.GetItem();
             int draggingQuantity = m_dragSource.GetQuantity();
+            
+            // Check if source has a split quantity override
+            int overrideQuantity = m_dragSource.GetDragQuantityOverride();
+            if (overrideQuantity > 0 && overrideQuantity < draggingQuantity)
+            {
+                draggingQuantity = overrideQuantity;
+            }
 
             int transferableItemLimit = destination.GetMaxItemsCapacity(draggingItem);
             int itemsToTransfer = Mathf.Min(transferableItemLimit, draggingQuantity);

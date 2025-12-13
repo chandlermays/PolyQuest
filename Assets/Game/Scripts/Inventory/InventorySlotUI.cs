@@ -17,7 +17,7 @@ namespace PolyQuest.Inventories
      *      - Supports drag-and-drop operations for inventory items.                               *
      *      - Updates its display when the underlying inventory data changes.                      *
      * ------------------------------------------------------------------------------------------- */
-    public class InventorySlotUI : MonoBehaviour, IItemHolder, IDragContainer<InventoryItem>, IPointerEnterHandler, IPointerExitHandler
+    public class InventorySlotUI : MonoBehaviour, IItemHolder, IDragContainer<InventoryItem>, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
         [SerializeField] private InventoryItemIcon m_itemIcon;
 
@@ -26,9 +26,13 @@ namespace PolyQuest.Inventories
         private Equipment m_playerEquipment;
         private bool m_isCursorOver = false;
         private InputAction m_doubleClickAction;
+        private InputAction m_splitModifierAction;
+        private bool m_splitRequested = false;
+        private int m_splitQuantity = 0;
 
         public InventoryItem GetItem() => m_playerInventory.GetItemAtSlot(m_index);
         public int GetQuantity() => m_playerInventory.GetQuantityAtSlot(m_index);
+        public int GetDragQuantityOverride() => m_splitQuantity;
 
         /*---------------------------------------------------------------------
         | --- OnEnable: Called when the object becomes enabled and active --- |
@@ -39,6 +43,8 @@ namespace PolyQuest.Inventories
             {
                 m_doubleClickAction = InputManager.Instance.InputActions.UI.DoubleClick;
                 m_doubleClickAction.performed += OnDoubleClick;
+                
+                m_splitModifierAction = InputManager.Instance.InputActions.UI.SplitModifier;
             }
         }
 
@@ -135,6 +141,70 @@ namespace PolyQuest.Inventories
         public void OnPointerExit(PointerEventData eventData)
         {
             m_isCursorOver = false;
+        }
+
+        /*--------------------------------------------------------------------
+        | --- OnPointerClick: Called when the pointer clicks on object --- |
+        --------------------------------------------------------------------*/
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            // Only handle left-click (button 0)
+            if (eventData.button != PointerEventData.InputButton.Left)
+                return;
+
+            // Check if split modifier is pressed when clicking
+            if (m_splitModifierAction != null && m_splitModifierAction.IsPressed())
+            {
+                InventoryItem item = GetItem();
+                int quantity = GetQuantity();
+
+                // Only allow splitting stackable items with quantity > 1
+                if (item != null && item.IsStackable && quantity > 1)
+                {
+                    ShowSplitDialog(quantity);
+                }
+            }
+            else
+            {
+                // Reset split state for normal clicks/drags
+                m_splitRequested = false;
+                m_splitQuantity = 0;
+            }
+        }
+
+        /*--------------------------------------------------------------------
+        | --- ShowSplitDialog: Display dialog to get split quantity --- |
+        --------------------------------------------------------------------*/
+        private void ShowSplitDialog(int maxQuantity)
+        {
+            var splitDialog = FindObjectOfType<PolyQuest.UI.Core.ItemSplitDialog>();
+            if (splitDialog != null)
+            {
+                m_splitRequested = true;
+                splitDialog.Show(
+                    maxQuantity - 1, // Max to split (leave at least 1 in source)
+                    OnSplitConfirmed,
+                    OnSplitCancelled
+                );
+            }
+        }
+
+        /*--------------------------------------------------------------------
+        | --- OnSplitConfirmed: Handle split quantity confirmation --- |
+        --------------------------------------------------------------------*/
+        private void OnSplitConfirmed(int quantity)
+        {
+            m_splitQuantity = quantity;
+            // The split quantity is now set and will be used in the next drag operation
+        }
+
+        /*--------------------------------------------------------------------
+        | --- OnSplitCancelled: Handle split cancellation --- |
+        --------------------------------------------------------------------*/
+        private void OnSplitCancelled()
+        {
+            m_splitRequested = false;
+            m_splitQuantity = 0;
         }
 
         /*------------------------------------------------------------------------------

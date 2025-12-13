@@ -7,6 +7,12 @@ namespace PolyQuest.Input
         public static InputManager Instance { get; private set; }
         public PolyQuestInputActions InputActions { get; private set; }
 
+        /// <summary>
+        /// Returns true if the Split Modifier key (Shift) is currently pressed.
+        /// Used to indicate that the user wants to split an item stack during dragging.
+        /// </summary>
+        public bool IsSplitModifierPressed => InputActions.UI.SplitModifier.IsPressed();
+
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
