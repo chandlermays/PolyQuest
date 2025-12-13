@@ -2391,6 +2391,7 @@ GameObject:
   - component: {fileID: 457060934863393115}
   - component: {fileID: 3458550999613478228}
   - component: {fileID: 1598976807510280014}
+  - component: {fileID: -3800162938279545597}
   - component: {fileID: 1854557405534154658}
   - component: {fileID: 3358301316558742755}
   - component: {fileID: 950747730879798681}
@@ -2541,7 +2542,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_cursorSettings: {fileID: 11400000, guid: 85ab873470953ee4cb8ea7e7770f24c2, type: 2}
   m_maxNavMeshDistance: 1
-  m_numberOfActionSlots: 8
+--- !u!114 &-3800162938279545597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8136770854238850487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb4087e199063ee4f81b3d9f5b12a59b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Components.FactionComponent
+  m_faction: 0
 --- !u!114 &1854557405534154658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2567,7 +2580,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fac8fe8e104a204c8788f4f28b31b6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_maxPathLength: 20
 --- !u!114 &950747730879798681
 MonoBehaviour:
   m_ObjectHideFlags: 0

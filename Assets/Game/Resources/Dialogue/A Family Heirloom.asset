@@ -1,0 +1,273 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8026599618558465168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: fae8e859-2788-484e-8183-6f0257734906
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_isPlayerSpeaking: 0
+  m_text: Thank the Anvil, you have no idea how much this means to me.
+  m_children: []
+  m_rect:
+    serializedVersion: 2
+    x: 350
+    y: 400
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: CompleteObjective
+  m_condition:
+    m_AND: []
+--- !u!114 &-6549729149093602990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: a7577d4b-d709-4e18-997a-aadc29716b7b
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_isPlayerSpeaking: 0
+  m_text: You there! Say, uh.. you haven't seen an old iron sword anywhere, have
+    you?
+  m_children:
+  - 95ed74fc-e860-4baf-9a27-d6de2e88fdf3
+  m_rect:
+    serializedVersion: 2
+    x: 100
+    y: 100
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: 
+  m_condition:
+    m_AND:
+    - m_OR:
+      - m_predicate: 2
+        m_parameters:
+        - A Family Heirloom
+        - 
+        m_negate: 0
+    - m_OR:
+      - m_predicate: 4
+        m_parameters:
+        - A Family Heirloom
+        - 
+        m_negate: 1
+--- !u!114 &-6372628115626704015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 645edb57-10b7-47a9-acf1-350805959048
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_isPlayerSpeaking: 0
+  m_text: Thank you, traveler. I hope to see you again soon.
+  m_children: []
+  m_rect:
+    serializedVersion: 2
+    x: 850
+    y: 100
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: 'Quest Started: A Family''s Heirloom'
+  m_condition:
+    m_AND: []
+--- !u!114 &-6310832627386318687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 95ed74fc-e860-4baf-9a27-d6de2e88fdf3
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_isPlayerSpeaking: 0
+  m_text: If you happen to see it and return it to me, I'd really appreciate your
+    help!
+  m_children:
+  - bf0b5697-f2dd-4e60-91cd-1482143e8d59
+  m_rect:
+    serializedVersion: 2
+    x: 350
+    y: 100
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: 
+  m_condition:
+    m_AND: []
+--- !u!114 &-5336192877328289983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 93e945bc-85c7-42d2-a252-30663d958e1e
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_isPlayerSpeaking: 0
+  m_text: Thanks again for your help, traveler. Having this back... it means more
+    than you know. I won't forget it.
+  m_children: []
+  m_rect:
+    serializedVersion: 2
+    x: 100
+    y: 550
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: 
+  m_condition:
+    m_AND:
+    - m_OR:
+      - m_predicate: 4
+        m_parameters:
+        - A Family Heirloom
+        - 
+        m_negate: 0
+--- !u!114 &-3879181575997213034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: bf0b5697-f2dd-4e60-91cd-1482143e8d59
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_isPlayerSpeaking: 0
+  m_text: The last time I had it was on patrol, the route north of Town.
+  m_children:
+  - 645edb57-10b7-47a9-acf1-350805959048
+  m_rect:
+    serializedVersion: 2
+    x: 600
+    y: 100
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: 
+  m_condition:
+    m_AND: []
+--- !u!114 &-3574904906293297570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: e45ca446-e80c-4d32-8e7c-1f106f99c0e2
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_isPlayerSpeaking: 0
+  m_text: Oh! That's it! My family's sword!
+  m_children:
+  - fae8e859-2788-484e-8183-6f0257734906
+  m_rect:
+    serializedVersion: 2
+    x: 100
+    y: 400
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: 
+  m_condition:
+    m_AND:
+    - m_OR:
+      - m_predicate: 1
+        m_parameters:
+        - A Family Heirloom
+        - 
+        m_negate: 0
+    - m_OR:
+      - m_predicate: 3
+        m_parameters:
+        - A Family Heirloom
+        - Sword
+        m_negate: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5c8d063cb8c3f4796d574b90d0cf64, type: 3}
+  m_Name: A Family Heirloom
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.Dialogue
+  m_nodes:
+  - {fileID: -6549729149093602990}
+  - {fileID: -6310832627386318687}
+  - {fileID: -3879181575997213034}
+  - {fileID: -6372628115626704015}
+  - {fileID: 4156687966804916459}
+  - {fileID: -3574904906293297570}
+  - {fileID: -8026599618558465168}
+  - {fileID: -5336192877328289983}
+  m_newNodeOffset: {x: 300, y: 0}
+--- !u!114 &4156687966804916459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 35ea863f-b568-4571-b03b-5d6b8c4f19a6
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_isPlayerSpeaking: 0
+  m_text: Still no sign of it, huh? I'm sure it'll turn up... I hope.
+  m_children: []
+  m_rect:
+    serializedVersion: 2
+    x: 100
+    y: 250
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: 
+  m_condition:
+    m_AND:
+    - m_OR:
+      - m_predicate: 1
+        m_parameters:
+        - A Family Heirloom
+        - 
+        m_negate: 0
+    - m_OR:
+      - m_predicate: 3
+        m_parameters:
+        - A Family Heirloom
+        - Sword
+        m_negate: 1

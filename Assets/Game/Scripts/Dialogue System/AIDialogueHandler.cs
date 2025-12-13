@@ -1,9 +1,10 @@
+using UnityEngine;
+using Unity.Cinemachine;
 //---------------------------------
 using PolyQuest.Core;
 using PolyQuest.Input;
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
-using UnityEngine;
 
 namespace PolyQuest.Dialogues
 {
@@ -17,10 +18,12 @@ namespace PolyQuest.Dialogues
      * --------------------------------------------------------------------------------------------- */
     public class AIDialogueHandler : MonoBehaviour, IRaycastable
     {
+        [SerializeField] private CinemachineCamera m_dialogueCamera;
         [SerializeField] private Dialogue m_dialogue;
         [SerializeField] private string m_speakerName;
 
         public string SpeakerName => m_speakerName;
+        public CinemachineCamera DialogueCamera => m_dialogueCamera;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |

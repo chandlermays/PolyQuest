@@ -5,6 +5,7 @@ using UnityEngine;
 using PolyQuest.Tools;
 using PolyQuest.Components;
 using PolyQuest.Player;
+using Unity.Cinemachine;
 
 namespace PolyQuest.Dialogues
 {
@@ -32,6 +33,8 @@ namespace PolyQuest.Dialogues
         public event Action OnDialogueStarted;
         public event Action OnDialogueUpdated;
         public event Action OnDialogueEnded;
+
+        public CinemachineCamera ActiveDialogueCamera => m_activeNPC != null ? m_activeNPC.DialogueCamera : null;
 
         /*---------------------------------------------------------------- 
         | --- Awake: Called when the script instance is being loaded --- |

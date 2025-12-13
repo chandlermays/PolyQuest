@@ -11,12 +11,12 @@ namespace PolyQuest.Core
     public class DialogueCameraController : MonoBehaviour
     {
         [SerializeField] private Camera m_mainCamera;
-        [SerializeField] private CinemachineCamera m_dialogueCamera;
         [SerializeField] private PlayerController m_playerController;
         [SerializeField] private PlayerDialogueHandler m_playerDialogueHandler;
         [SerializeField] private DialogueUI m_dialogueUI;
         [SerializeField] private GameObject m_playerHUD;
 
+        private CinemachineCamera m_dialogueCamera;
         private bool m_isDialogueCameraActive = false;
         private bool m_isTransitioning = false;
 
@@ -26,7 +26,6 @@ namespace PolyQuest.Core
         private void Awake()
         {
             Utilities.CheckForNull(m_mainCamera, nameof(m_mainCamera));
-            Utilities.CheckForNull(m_dialogueCamera, nameof(m_dialogueCamera));
             Utilities.CheckForNull(m_playerController, nameof(m_playerController));
             Utilities.CheckForNull(m_playerDialogueHandler, nameof(m_playerDialogueHandler));
             Utilities.CheckForNull(m_dialogueUI, nameof(m_dialogueUI));
@@ -56,6 +55,13 @@ namespace PolyQuest.Core
         -------------------------------------------------------------------------------------*/
         private void HandleDialogueStarted()
         {
+            m_dialogueCamera = m_playerDialogueHandler.ActiveDialogueCamera;
+            if (m_dialogueCamera == null)
+            {
+                Debug.LogError("DialogueCameraController: ActiveDialogueCamera is null when dialogue started.");
+                return;
+            }
+
             StartCoroutine(SwitchCameraRoutine(toDialogue: true));
         }
 
@@ -140,12 +146,21 @@ namespace PolyQuest.Core
             if (m_isDialogueCameraActive)
             {
                 m_mainCamera.enabled = false;
-                m_dialogueCamera.gameObject.SetActive(true);
+
+                if (m_dialogueCamera != null)
+                {
+                    m_dialogueCamera.gameObject.SetActive(true);
+                }
             }
             else
             {
                 m_mainCamera.enabled = true;
-                m_dialogueCamera.gameObject.SetActive(false);
+
+                if (m_dialogueCamera != null)
+                {
+                    m_dialogueCamera.gameObject.SetActive(false);
+                    m_dialogueCamera = null;
+                }
             }
         }
 

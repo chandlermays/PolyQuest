@@ -1876,6 +1876,7 @@ GameObject:
   - component: {fileID: 4340238570151201378}
   - component: {fileID: 4587090530215678122}
   - component: {fileID: 5058887998526982570}
+  - component: {fileID: 9022949404109340675}
   - component: {fileID: 2708792213116424498}
   - component: {fileID: -2369949876909521975}
   - component: {fileID: -4584313945261361355}
@@ -2015,6 +2016,19 @@ MonoBehaviour:
   m_waypointDwellTime: 3
   m_detectionRange: 8
   m_suspicionTime: 4
+--- !u!114 &9022949404109340675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6788340497021815511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb4087e199063ee4f81b3d9f5b12a59b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Components.FactionComponent
+  m_faction: 1
 --- !u!114 &2708792213116424498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2027,7 +2041,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fac8fe8e104a204c8788f4f28b31b6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_maxPathLength: 20
 --- !u!114 &-2369949876909521975
 MonoBehaviour:
   m_ObjectHideFlags: 0

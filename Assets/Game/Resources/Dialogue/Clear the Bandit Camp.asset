@@ -17,8 +17,8 @@ MonoBehaviour:
   m_children: []
   m_rect:
     serializedVersion: 2
-    x: 367
-    y: 318
+    x: 350
+    y: 250
     width: 200
     height: 100
   m_onEnterAction: 
@@ -43,8 +43,8 @@ MonoBehaviour:
   - 0c761e41-9011-463f-865c-923d8bfebc24
   m_rect:
     serializedVersion: 2
-    x: 114
-    y: 182
+    x: 100
+    y: 100
     width: 200
     height: 100
   m_onEnterAction: 
@@ -57,6 +57,12 @@ MonoBehaviour:
         - Clear the Bandit Camp
         - 
         m_negate: 0
+    - m_OR:
+      - m_predicate: 4
+        m_parameters:
+        - Clear the Bandit Camp
+        - 
+        m_negate: 1
 --- !u!114 &-4430077980473154734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,8 +81,8 @@ MonoBehaviour:
   - 26aba06e-8185-4670-88e5-8b2262b7fad9
   m_rect:
     serializedVersion: 2
-    x: 115
-    y: 318
+    x: 100
+    y: 250
     width: 200
     height: 100
   m_onEnterAction: 
@@ -95,6 +101,37 @@ MonoBehaviour:
         - Clear the Bandit Camp
         - Kill
         m_negate: 1
+--- !u!114 &-3825064345468559739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: e0838d88-303a-4feb-8b8c-84da7907ba76
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_isPlayerSpeaking: 0
+  m_text: Thanks again for your help, traveler. Stonewick is in your debt.
+  m_children: []
+  m_rect:
+    serializedVersion: 2
+    x: 100
+    y: 550
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: 
+  m_condition:
+    m_AND:
+    - m_OR:
+      - m_predicate: 4
+        m_parameters:
+        - Clear the Bandit Camp
+        - 
+        m_negate: 0
 --- !u!114 &-606129337982572048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,8 +149,8 @@ MonoBehaviour:
   m_children: []
   m_rect:
     serializedVersion: 2
-    x: 861
-    y: 181
+    x: 850
+    y: 100
     width: 200
     height: 100
   m_onEnterAction: 
@@ -141,6 +178,7 @@ MonoBehaviour:
   - {fileID: 8710286783924125001}
   - {fileID: -4430077980473154734}
   - {fileID: -8286136582653668342}
+  - {fileID: -3825064345468559739}
   m_newNodeOffset: {x: 300, y: 0}
 --- !u!114 &1547641241715060196
 MonoBehaviour:
@@ -160,8 +198,8 @@ MonoBehaviour:
   - 746a8e37-9cc7-4204-b215-de4cc0838739
   m_rect:
     serializedVersion: 2
-    x: 367
-    y: 182
+    x: 350
+    y: 100
     width: 200
     height: 100
   m_onEnterAction: 
@@ -186,8 +224,8 @@ MonoBehaviour:
   - 1a59dda5-0b66-47be-afb7-e4554acd084d
   m_rect:
     serializedVersion: 2
-    x: 117
-    y: 446
+    x: 100
+    y: 400
     width: 200
     height: 100
   m_onEnterAction: 
@@ -223,8 +261,8 @@ MonoBehaviour:
   m_children: []
   m_rect:
     serializedVersion: 2
-    x: 366
-    y: 446
+    x: 350
+    y: 400
     width: 200
     height: 100
   m_onEnterAction: 
@@ -249,8 +287,8 @@ MonoBehaviour:
   - 31ccec43-d1ae-43d9-bcd9-8fad4cb24d08
   m_rect:
     serializedVersion: 2
-    x: 610
-    y: 181
+    x: 600
+    y: 100
     width: 200
     height: 100
   m_onEnterAction: 
