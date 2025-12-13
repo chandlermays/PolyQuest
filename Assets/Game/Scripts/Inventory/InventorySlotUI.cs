@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 //---------------------------------
 using PolyQuest.UI.Dragging;
+using PolyQuest.UI.Core;
 using PolyQuest.Input;
 using UnityEngine.SceneManagement;
 
@@ -27,8 +28,8 @@ namespace PolyQuest.Inventories
         private bool m_isCursorOver = false;
         private InputAction m_doubleClickAction;
         private InputAction m_splitModifierAction;
-        private bool m_splitRequested = false;
         private int m_splitQuantity = 0;
+        private ItemSplitDialog m_cachedSplitDialog;
 
         public InventoryItem GetItem() => m_playerInventory.GetItemAtSlot(m_index);
         public int GetQuantity() => m_playerInventory.GetQuantityAtSlot(m_index);
@@ -167,7 +168,6 @@ namespace PolyQuest.Inventories
             else
             {
                 // Reset split state for normal clicks/drags
-                m_splitRequested = false;
                 m_splitQuantity = 0;
             }
         }
@@ -177,16 +177,23 @@ namespace PolyQuest.Inventories
         --------------------------------------------------------------------*/
         private void ShowSplitDialog(int maxQuantity)
         {
-            var splitDialog = FindObjectOfType<PolyQuest.UI.Core.ItemSplitDialog>();
-            if (splitDialog != null)
+            // Cache the dialog reference on first use
+            if (m_cachedSplitDialog == null)
             {
-                m_splitRequested = true;
-                splitDialog.Show(
-                    maxQuantity - 1, // Max to split (leave at least 1 in source)
-                    OnSplitConfirmed,
-                    OnSplitCancelled
-                );
+                m_cachedSplitDialog = FindObjectOfType<ItemSplitDialog>();
+                
+                if (m_cachedSplitDialog == null)
+                {
+                    Debug.LogWarning("ItemSplitDialog not found in scene. Stack splitting will not work. Please add an ItemSplitDialog component to your UI.");
+                    return;
+                }
             }
+
+            m_cachedSplitDialog.Show(
+                maxQuantity - 1, // Max to split (leave at least 1 in source)
+                OnSplitConfirmed,
+                OnSplitCancelled
+            );
         }
 
         /*--------------------------------------------------------------------
@@ -203,7 +210,6 @@ namespace PolyQuest.Inventories
         --------------------------------------------------------------------*/
         private void OnSplitCancelled()
         {
-            m_splitRequested = false;
             m_splitQuantity = 0;
         }
 

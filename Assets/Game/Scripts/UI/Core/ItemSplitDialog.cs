@@ -125,9 +125,15 @@ namespace PolyQuest.UI.Core
                 quantity = Mathf.Clamp(quantity, 1, m_maxQuantity);
 
                 m_onConfirm?.Invoke(quantity);
+                Hide();
             }
-
-            Hide();
+            else
+            {
+                // If parsing fails, treat it as a cancel
+                Debug.LogWarning("Failed to parse split quantity input. Cancelling split operation.");
+                m_onCancel?.Invoke();
+                Hide();
+            }
         }
 
         /*------------------------------------------------------------------
