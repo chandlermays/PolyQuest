@@ -92,6 +92,9 @@ namespace PolyQuest.UI.Core
                 m_quantityInputField.text = defaultValue.ToString();
                 m_quantityInputField.ActivateInputField();
                 m_quantityInputField.Select();
+                
+                // Validate the default value to set button state
+                OnInputValueChanged(defaultValue.ToString());
             }
 
             if (m_dialogPanel != null)
@@ -125,15 +128,16 @@ namespace PolyQuest.UI.Core
                 quantity = Mathf.Clamp(quantity, 1, m_maxQuantity);
 
                 m_onConfirm?.Invoke(quantity);
-                Hide();
             }
             else
             {
-                // If parsing fails, treat it as a cancel
-                Debug.LogWarning("Failed to parse split quantity input. Cancelling split operation.");
-                m_onCancel?.Invoke();
-                Hide();
+                // This should not happen if validation is working correctly,
+                // but as a fallback, use 1 as the minimum valid value
+                Debug.LogWarning("Failed to parse split quantity input. Using minimum value of 1.");
+                m_onConfirm?.Invoke(1);
             }
+            
+            Hide();
         }
 
         /*------------------------------------------------------------------

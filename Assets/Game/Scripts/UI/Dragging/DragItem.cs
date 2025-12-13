@@ -124,14 +124,7 @@ namespace PolyQuest.UI.Dragging
         private void SwapItems(IDragContainer<T> destination, IDragContainer<T> source)
         {
             T prevSourceItem = source.GetItem();
-            int prevSourceQuantity = source.GetQuantity();
-            
-            // Check if source has a split quantity override
-            int overrideQuantity = source.GetDragQuantityOverride();
-            if (overrideQuantity > 0 && overrideQuantity < prevSourceQuantity)
-            {
-                prevSourceQuantity = overrideQuantity;
-            }
+            int prevSourceQuantity = GetEffectiveDragQuantity(source);
             
             T prevDestinationItem = destination.GetItem();
             int prevDestinationQuantity = destination.GetQuantity();
@@ -175,19 +168,29 @@ namespace PolyQuest.UI.Dragging
         }
 
         /*-------------------------------------------------------------------------------
+        | --- GetEffectiveDragQuantity: Get the actual quantity to drag (with override) --- |
+        -------------------------------------------------------------------------------*/
+        private int GetEffectiveDragQuantity(IDragSource<T> source)
+        {
+            int quantity = source.GetQuantity();
+            int overrideQuantity = source.GetDragQuantityOverride();
+            
+            // Use override if it's set and valid
+            if (overrideQuantity > 0 && overrideQuantity < quantity)
+            {
+                return overrideQuantity;
+            }
+            
+            return quantity;
+        }
+
+        /*-------------------------------------------------------------------------------
         | --- ProcessItemTransfer: Transfers items from the source to a destination --- |
         -------------------------------------------------------------------------------*/
         private bool ProcessItemTransfer(IDragDestination<T> destination)
         {
             T draggingItem = m_dragSource.GetItem();
-            int draggingQuantity = m_dragSource.GetQuantity();
-            
-            // Check if source has a split quantity override
-            int overrideQuantity = m_dragSource.GetDragQuantityOverride();
-            if (overrideQuantity > 0 && overrideQuantity < draggingQuantity)
-            {
-                draggingQuantity = overrideQuantity;
-            }
+            int draggingQuantity = GetEffectiveDragQuantity(m_dragSource);
 
             int transferableItemLimit = destination.GetMaxItemsCapacity(draggingItem);
             int itemsToTransfer = Mathf.Min(transferableItemLimit, draggingQuantity);

@@ -168,7 +168,7 @@ namespace PolyQuest.Inventories
             else
             {
                 // Reset split state for normal clicks/drags
-                m_splitQuantity = 0;
+                ResetSplitState();
             }
         }
 
@@ -203,12 +203,22 @@ namespace PolyQuest.Inventories
         {
             m_splitQuantity = quantity;
             // The split quantity is now set and will be used in the next drag operation
+            // Note: Split state is reset at the start of next pointer interaction
         }
 
         /*--------------------------------------------------------------------
         | --- OnSplitCancelled: Handle split cancellation --- |
         --------------------------------------------------------------------*/
         private void OnSplitCancelled()
+        {
+            // Reset split state immediately when cancelled
+            m_splitQuantity = 0;
+        }
+
+        /*--------------------------------------------------------------------
+        | --- ResetSplitState: Reset split state to default --- |
+        --------------------------------------------------------------------*/
+        private void ResetSplitState()
         {
             m_splitQuantity = 0;
         }
