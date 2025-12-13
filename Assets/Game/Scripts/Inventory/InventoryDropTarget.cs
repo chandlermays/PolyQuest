@@ -35,8 +35,6 @@ namespace PolyQuest.Inventories
         ---------------------------------------------------------------------------------------------*/
         public void AddItems(InventoryItem item, int quantity)
         {
-            Debug.Log("Dropping m_item: " + item.Name + " x" + quantity);
-
             m_itemDropper.DropItem(item, quantity);
         }
 

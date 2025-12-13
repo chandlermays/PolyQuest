@@ -4,7 +4,6 @@ using UnityEngine.InputSystem;
 //---------------------------------
 using PolyQuest.UI.Dragging;
 using PolyQuest.Input;
-using UnityEngine.SceneManagement;
 
 namespace PolyQuest.Inventories
 {
@@ -166,6 +165,9 @@ namespace PolyQuest.Inventories
             }
         }
 
+        /*---------------------------------------------------------------------
+        | --- EquipItem: Equip the specified equipable item to the player --- |
+        ---------------------------------------------------------------------*/
         private void EquipItem(EquipableItem equipableItem)
         {
             EquipmentSlot targetSlot = equipableItem.TargetEquipmentSlot;

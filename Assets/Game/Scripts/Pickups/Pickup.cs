@@ -55,6 +55,9 @@ namespace PolyQuest.Pickups
             if (slotAvailable)
             {
                 Destroy(gameObject);
+                //... replace this with some notification that the
+                // inventory is too full, instead of destroying the item.
+                // OR CanBePickedUp handles this behavior?
             }
         }
 

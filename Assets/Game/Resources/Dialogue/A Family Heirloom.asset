@@ -210,7 +210,7 @@ MonoBehaviour:
       - m_predicate: 3
         m_parameters:
         - A Family Heirloom
-        - Sword
+        - Find Sword
         m_negate: 0
 --- !u!114 &11400000
 MonoBehaviour:
@@ -269,5 +269,5 @@ MonoBehaviour:
       - m_predicate: 3
         m_parameters:
         - A Family Heirloom
-        - Sword
+        - Find Sword
         m_negate: 1

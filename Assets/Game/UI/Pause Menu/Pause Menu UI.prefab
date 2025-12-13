@@ -317,6 +317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.UI.Core.UIToggler
   m_uiPrefab: {fileID: 5639265901519324224}
   m_toggleAction: {fileID: 8749534322948311193, guid: b72a72ec29b84e74c920c1c2c45f34cf, type: 3}
+  m_isEscapeToggled: 1
 --- !u!1 &3792725195898320569
 GameObject:
   m_ObjectHideFlags: 0

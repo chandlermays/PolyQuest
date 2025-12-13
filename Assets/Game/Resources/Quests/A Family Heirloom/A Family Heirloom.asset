@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: A Family Heirloom
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Quests.Quest
   m_objectives:
-  - m_identifier: Sword
+  - m_identifier: Find Sword
     m_description: Find the Family's Sword
   - m_identifier: Return
     m_description: Return to the Guard
