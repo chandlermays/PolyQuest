@@ -171,5 +171,14 @@ namespace PolyQuest.Inventories
                 m_playerEquipment.RemoveItem(m_equipmentSlot);
             }
         }
+
+        /*-----------------------------------------------------------------------
+        | --- GetDragQuantityOverride: Get the drag quantity override for split --- |
+        -----------------------------------------------------------------------*/
+        public int GetDragQuantityOverride()
+        {
+            // Equipment slots don't support splitting (always 1 item)
+            return 0;
+        }
     }
 }

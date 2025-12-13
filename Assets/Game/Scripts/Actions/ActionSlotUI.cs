@@ -95,5 +95,14 @@ namespace PolyQuest.Inventories
         {
             m_itemIcon.SetItem(GetItem(), GetQuantity());
         }
+
+        /*-----------------------------------------------------------------------
+        | --- GetDragQuantityOverride: Get the drag quantity override for split --- |
+        -----------------------------------------------------------------------*/
+        public int GetDragQuantityOverride()
+        {
+            // Action slots don't support splitting
+            return 0;
+        }
     }
 }
