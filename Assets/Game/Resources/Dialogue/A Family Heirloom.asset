@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: fae8e859-2788-484e-8183-6f0257734906
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_isPlayerSpeaking: 0
-  m_text: Thank the Anvil, you have no idea how much this means to me.
-  m_children: []
+  m_text: Thank the Anvil... I was afraid it was lost for good.
+  m_children:
+  - 0acf4efb-e838-4ba0-afd9-b00bfd5abbad
   m_rect:
     serializedVersion: 2
     x: 350
@@ -22,7 +23,7 @@ MonoBehaviour:
     width: 200
     height: 100
   m_onEnterAction: 
-  m_onExitAction: CompleteObjective
+  m_onExitAction: 
   m_condition:
     m_AND: []
 --- !u!114 &-6549729149093602990
@@ -129,8 +130,8 @@ MonoBehaviour:
   m_Name: 93e945bc-85c7-42d2-a252-30663d958e1e
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_isPlayerSpeaking: 0
-  m_text: Thanks again for your help, traveler. Having this back... it means more
-    than you know. I won't forget it.
+  m_text: Thanks again for your help, traveler. The anvil favors those who act without
+    expecting reward.
   m_children: []
   m_rect:
     serializedVersion: 2
@@ -233,6 +234,8 @@ MonoBehaviour:
   - {fileID: -3574904906293297570}
   - {fileID: -8026599618558465168}
   - {fileID: -5336192877328289983}
+  - {fileID: 4851071162730556759}
+  - {fileID: 4392419792442870665}
   m_newNodeOffset: {x: 300, y: 0}
 --- !u!114 &4156687966804916459
 MonoBehaviour:
@@ -271,3 +274,56 @@ MonoBehaviour:
         - 03bea15d-3acc-4f77-afda-ed14ab0807ad
         - Recover Sword
         m_negate: 1
+--- !u!114 &4392419792442870665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 39551d6b-bc4b-4a0d-baad-723c7d52f248
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_isPlayerSpeaking: 0
+  m_text: Consider it a token of my gratutude--for your kindness, and for taking
+    the time to help an old guard.
+  m_children: []
+  m_rect:
+    serializedVersion: 2
+    x: 850
+    y: 400
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: CompleteObjective
+  m_condition:
+    m_AND: []
+--- !u!114 &4851071162730556759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 0acf4efb-e838-4ba0-afd9-b00bfd5abbad
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_isPlayerSpeaking: 0
+  m_text: You know... seeing it in your hands like that, I think it's better where
+    it is.
+  m_children:
+  - 39551d6b-bc4b-4a0d-baad-723c7d52f248
+  m_rect:
+    serializedVersion: 2
+    x: 600
+    y: 400
+    width: 200
+    height: 100
+  m_onEnterAction: 
+  m_onExitAction: 
+  m_condition:
+    m_AND: []

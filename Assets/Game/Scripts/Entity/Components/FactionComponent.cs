@@ -12,7 +12,7 @@ namespace PolyQuest.Components
     public enum Faction
     {
         kPlayer,
-        kFriendly,
+        kNPC,
         kEnemy,
         kNeutral
     }
@@ -39,22 +39,27 @@ namespace PolyQuest.Components
         -----------------------------------------------------------------------*/
         public bool IsHostileTo(Faction otherFaction)
         {
-            // Same faction is never hostile
+            // Same faction is never hostile (no friendly fire)
             if (m_faction == otherFaction)
                 return false;
 
-            // kFriendly NPCs are never hostile to anyone
-            if (m_faction == Faction.kFriendly || otherFaction == Faction.kFriendly)
+            // Player and NPCs are allies; never hostile to each other
+            if ((m_faction == Faction.kPlayer && otherFaction == Faction.kNPC) ||
+                (m_faction == Faction.kNPC && otherFaction == Faction.kPlayer))
                 return false;
 
-            // kPlayer vs kEnemy
-            if (m_faction == Faction.kPlayer && otherFaction == Faction.kEnemy)
+            // Hostile pairs:
+            // - Player vs Enemy
+            // - Enemy vs Player
+            // - NPC vs Enemy
+            // - Enemy vs NPC
+            if ((m_faction == Faction.kPlayer && otherFaction == Faction.kEnemy) ||
+                (m_faction == Faction.kEnemy && otherFaction == Faction.kPlayer) ||
+                (m_faction == Faction.kNPC && otherFaction == Faction.kEnemy) ||
+                (m_faction == Faction.kEnemy && otherFaction == Faction.kNPC))
                 return true;
 
-            if (m_faction == Faction.kEnemy && otherFaction == Faction.kPlayer)
-                return true;
-
-            // kNeutral is not hostile to anyone by default
+            // Neutral is not hostile to anyone by default
             return false;
         }
     }

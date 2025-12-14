@@ -88,9 +88,9 @@ namespace PolyQuest.AI
             m_timeSinceArrivedAtWaypoint += Time.deltaTime;
         }
 
-        /*----------------------------------------------------------------------
-        | --- FindNearestEnemy: Find the Nearest kEnemy within Detection Range --- |
-        ----------------------------------------------------------------------*/
+        /*-------------------------------------------------------------------------
+        | --- FindNearestEnemy: Find the Nearest Enemy within Detection Range --- |
+        -------------------------------------------------------------------------*/
         private GameObject FindNearestEnemy()
         {
             GameObject nearestEnemy = null;

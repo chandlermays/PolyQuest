@@ -32,7 +32,7 @@ namespace PolyQuest.Quests
         ---------------------------------------------------------------------*/
         private void OnEnable()
         {
-            m_playerQuestMgr.OnUpdate += RefreshQuestUI;
+            m_playerQuestMgr.OnQuestsUpdate += RefreshQuestUI;
             RefreshQuestUI();
         }
 
@@ -41,7 +41,7 @@ namespace PolyQuest.Quests
         --------------------------------------------------------------------*/
         private void OnDisable()
         {
-            m_playerQuestMgr.OnUpdate -= RefreshQuestUI;
+            m_playerQuestMgr.OnQuestsUpdate -= RefreshQuestUI;
         }
 
         /*-----------------------------------------------------

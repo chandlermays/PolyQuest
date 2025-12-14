@@ -33,7 +33,7 @@ namespace PolyQuest.Quests
 
         public IEnumerable<QuestStatus> ActiveQuests => m_activeQuests.Values;
 
-        public event Action OnUpdate;
+        public event Action OnQuestsUpdate;
 
         /*--------------------------------------------------
         | --- AddQuest: Add a new quest to the manager --- |
@@ -55,7 +55,7 @@ namespace PolyQuest.Quests
             }
 
             m_activeQuests[quest] = new QuestStatus(quest);
-            OnUpdate?.Invoke();
+            OnQuestsUpdate?.Invoke();
         }
 
         /*-------------------------------------------------------
@@ -92,7 +92,7 @@ namespace PolyQuest.Quests
                 m_activeQuests.Remove(quest);
             }
 
-            OnUpdate?.Invoke();
+            OnQuestsUpdate?.Invoke();
         }
 
         /*-------------------------------------------------------------------
@@ -155,7 +155,7 @@ namespace PolyQuest.Quests
                     }
                 }
 
-                OnUpdate?.Invoke();
+                OnQuestsUpdate?.Invoke();
             }
         }
 

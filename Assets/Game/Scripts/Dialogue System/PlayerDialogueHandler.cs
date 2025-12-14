@@ -172,7 +172,6 @@ namespace PolyQuest.Dialogues
         ------------------------------------------------------------------------------------*/
         public bool HasNextDialogueNode()
         {
-            Debug.LogError("This dialogue node has " + GetValidChildren().Count + " valid children.");
             return GetValidChildren().Count > 0;
         }
 
