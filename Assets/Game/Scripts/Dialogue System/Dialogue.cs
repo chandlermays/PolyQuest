@@ -48,6 +48,7 @@ namespace PolyQuest.Dialogues
 #if UNITY_EDITOR
             EnsureRootNode();
 #endif
+            RebuildNodeDictionary();
         }
 
         /*---------------------------------------------------------------------------------------------
@@ -58,10 +59,21 @@ namespace PolyQuest.Dialogues
 #if UNITY_EDITOR
             EnsureRootNode();
 #endif
+            RebuildNodeDictionary();
+        }
+
+        /*----------------------------------------------------------------------
+        | --- RebuildNodeDictionary: Rebuilds the internal node dictionary --- |
+        ----------------------------------------------------------------------*/
+        private void RebuildNodeDictionary()
+        {
             m_nodeDictionary.Clear();
             foreach (DialogueNode node in m_nodes)
             {
-                m_nodeDictionary[node.name] = node;
+                if (node != null)
+                {
+                    m_nodeDictionary[node.name] = node;
+                }
             }
         }
 

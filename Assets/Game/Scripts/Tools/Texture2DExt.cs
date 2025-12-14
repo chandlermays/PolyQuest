@@ -1,6 +1,8 @@
 using System.IO;
-using UnityEditor;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 //---------------------------------
 
 namespace PolyQuest
@@ -107,6 +109,7 @@ namespace PolyQuest
             texture.Apply();
         }
 
+#if UNITY_EDITOR
         /*------------------------------------------------------------------
         | --- SaveAsset: Saves the texture asset to disk as a PNG file --- |
         ------------------------------------------------------------------*/
@@ -117,5 +120,6 @@ namespace PolyQuest
             File.WriteAllBytes(assetPath, bytes);
             AssetDatabase.Refresh();
         }
+#endif
     }
 }

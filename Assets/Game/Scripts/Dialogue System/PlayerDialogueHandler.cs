@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Tools;
 using PolyQuest.Components;
 using PolyQuest.Player;
-using Unity.Cinemachine;
 
 namespace PolyQuest.Dialogues
 {
@@ -172,6 +172,7 @@ namespace PolyQuest.Dialogues
         ------------------------------------------------------------------------------------*/
         public bool HasNextDialogueNode()
         {
+            Debug.LogError("This dialogue node has " + GetValidChildren().Count + " valid children.");
             return GetValidChildren().Count > 0;
         }
 

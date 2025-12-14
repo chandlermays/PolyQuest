@@ -207,10 +207,10 @@ MonoBehaviour:
         - 
         m_negate: 0
     - m_OR:
-      - m_predicate: 3
+      - m_predicate: 6
         m_parameters:
-        - A Family Heirloom
-        - Find Sword
+        - 03bea15d-3acc-4f77-afda-ed14ab0807ad
+        - 
         m_negate: 0
 --- !u!114 &11400000
 MonoBehaviour:
@@ -266,8 +266,8 @@ MonoBehaviour:
         - 
         m_negate: 0
     - m_OR:
-      - m_predicate: 3
+      - m_predicate: 6
         m_parameters:
-        - A Family Heirloom
-        - Find Sword
+        - 03bea15d-3acc-4f77-afda-ed14ab0807ad
+        - Recover Sword
         m_negate: 1

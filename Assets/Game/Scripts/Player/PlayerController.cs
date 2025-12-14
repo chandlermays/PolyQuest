@@ -70,7 +70,6 @@ namespace PolyQuest.Player
         -----------------------------------------------------*/
         private void Start()
         {
-            m_renderers = GetComponentsInChildren<Renderer>();
             m_inputActions = InputManager.Instance.InputActions;
         }
 
@@ -245,9 +244,19 @@ namespace PolyQuest.Player
                 return;
 
             m_isVisible = visible;
+
+            if (m_renderers == null || m_renderers.Length == 0)
+            {
+                // lazy initialization -- get renderers only when needed
+                m_renderers = GetComponentsInChildren<Renderer>();
+            }
+
             foreach (Renderer renderer in m_renderers)
             {
-                renderer.enabled = m_isVisible;
+                if (renderer != null)
+                {
+                    renderer.enabled = m_isVisible;
+                }
             }
         }
 

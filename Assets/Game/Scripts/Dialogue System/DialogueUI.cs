@@ -46,7 +46,6 @@ namespace PolyQuest.Dialogues
         private void OnEnable()
         {
             m_playerDialogueHandler.OnDialogueUpdated += UpdateUI;
-            
         }
 
         /*--------------------------------------------------------------------

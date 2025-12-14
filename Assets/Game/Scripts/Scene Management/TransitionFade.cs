@@ -99,6 +99,8 @@ namespace PolyQuest.SceneManagement
                 m_canvasGroup.alpha = Mathf.MoveTowards(m_canvasGroup.alpha, target, Time.unscaledDeltaTime / time);
                 yield return null;
             }
+
+            m_currentActiveFade = null;
         }
 
         /*------------------------------------------------------------------------------------------------
@@ -106,7 +108,7 @@ namespace PolyQuest.SceneManagement
         ------------------------------------------------------------------------------------------------*/
         public IEnumerator Wait()
         {
-            yield return new WaitForSeconds(m_waitDuration);
+            yield return new WaitForSecondsRealtime(m_waitDuration);
         }
     }
 }
