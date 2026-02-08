@@ -66,6 +66,9 @@ namespace PolyQuest.Inventories
         public void CreatePickupAtLocation(InventoryItem item, Vector3 location, int quantity)
         {
             Pickup pickup = item.SpawnPickup(location, quantity);
+            if (pickup == null)
+                return;
+
             m_droppedItems.Add(pickup);
         }
 
@@ -133,7 +136,7 @@ namespace PolyQuest.Inventories
                 {
                     [kItemIDKey] = drop.ItemID,
                     [kQuantityKey] = drop.Quantity,
-                    [kWorldPositionKey] = JToken.FromObject(drop.WorldPosition),
+                    [kWorldPositionKey] = drop.WorldPosition.ToToken(),
                     [kSceneBuildIndexKey] = drop.SceneBuildIndex
                 };
                 state.Add(dropState);
