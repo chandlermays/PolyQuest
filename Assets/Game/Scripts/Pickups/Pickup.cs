@@ -1,6 +1,8 @@
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Inventories;
+using PolyQuest.Player;
+using PolyQuest.Components;
 
 namespace PolyQuest.Pickups
 {
@@ -14,9 +16,15 @@ namespace PolyQuest.Pickups
      * ------------------------------------------------------------------------------------------- */
     public class Pickup : MonoBehaviour
     {
+        [SerializeField] private float m_pickupRange = 1.5f;
+
         private Inventory m_inventory;
         private InventoryItem m_item;
         private int m_quantity = 1;
+        private Transform m_transform;
+
+        private PlayerController m_targetPlayer;
+        private MovementComponent m_playerMovement;
 
         public InventoryItem Item => m_item;
         public int Quantity => m_quantity;
@@ -35,6 +43,47 @@ namespace PolyQuest.Pickups
             var player = GameObject.FindWithTag(kPlayerTag);
             m_inventory = player?.GetComponent<Inventory>();
             Utilities.CheckForNull(m_inventory, nameof(m_inventory));
+
+            m_transform = transform;
+        }
+
+        /*-----------------------------------------
+        | --- Update: Called upon every frame --- |
+        -----------------------------------------*/
+        private void Update()
+        {
+            if (m_targetPlayer == null)
+                return;
+
+            MoveToPickup();
+        }
+
+        /*------------------------------------------------------------------
+        | --- MoveToPickup: Move the Player within range of the Pickup --- |
+        ------------------------------------------------------------------*/
+        private void MoveToPickup()
+        {
+            float distanceToPickup = Vector3.Distance(m_playerMovement.transform.position, m_transform.position);
+
+            if (distanceToPickup >= m_pickupRange)
+            {
+                m_playerMovement.MoveTo(m_transform.position);
+            }
+            else
+            {
+                m_playerMovement.Stop();
+                PickupItem();
+                ClearTarget();
+            }
+        }
+
+        /*----------------------------------------------
+        | --- ClearTarget: Clear the player target --- |
+        ----------------------------------------------*/
+        private void ClearTarget()
+        {
+            m_targetPlayer = null;
+            m_playerMovement = null;
         }
 
         /*----------------------------------------------------------------
@@ -44,6 +93,16 @@ namespace PolyQuest.Pickups
         {
             m_item = item;
             m_quantity = item.IsStackable ? quantity : 1;
+        }
+
+        /*-------------------------------------------------------------
+        | --- SetAsTarget: Set this pickup as the player's target --- |
+        -------------------------------------------------------------*/
+        public void SetAsTarget(PlayerController playerController)
+        {
+            m_targetPlayer = playerController;
+            m_playerMovement = playerController.GetComponent<MovementComponent>();
+            Utilities.CheckForNull(m_playerMovement, nameof(m_playerMovement));
         }
 
         /*--------------------------------------------------------------------------

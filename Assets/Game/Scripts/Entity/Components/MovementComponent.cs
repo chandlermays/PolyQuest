@@ -1,9 +1,9 @@
+using System;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 //---------------------------------
 using PolyQuest.Saving;
-using System;
 
 namespace PolyQuest.Components
 {
@@ -75,7 +75,7 @@ namespace PolyQuest.Components
         }
 
         /*---------------------------------------------------------------------
-        | --- CanMoveTo: Checks if the Player can Move to the Destination --- |
+        | --- CanMoveTo: Checks if the Entity can Move to the Destination --- |
         ---------------------------------------------------------------------*/
         public bool CanMoveTo(Vector3 destination)
         {
@@ -93,7 +93,7 @@ namespace PolyQuest.Components
         }
 
         /*----------------------------------------------------- 
-        | --- MoveTo: Moves the Player to the Destination --- |
+        | --- MoveTo: Moves the Entity to the Destination --- |
         -----------------------------------------------------*/
         public void MoveTo(Vector3 destination)
         {
@@ -111,7 +111,7 @@ namespace PolyQuest.Components
         }
 
         /*--------------------------------------------------------- 
-        | --- RotateTo: Rotates the Player to the Destination --- |
+        | --- RotateTo: Rotates the Entity to the Destination --- |
         ---------------------------------------------------------*/
         public void RotateTo(Quaternion rotation)
         {
@@ -138,11 +138,17 @@ namespace PolyQuest.Components
             }
         }
 
+        /*-------------------------------------------------------------------------- 
+        | --- CaptureState: Capture the current state of the Entity's position --- |
+        --------------------------------------------------------------------------*/
         public JToken CaptureState()
         {
             return Transform.position.ToToken();
         }
 
+        /*-------------------------------------------------------------------------- 
+        | --- RestoreState: Restore the Entity's position from the saved state --- |
+        --------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
             NavMeshAgent.enabled = false;
@@ -152,7 +158,7 @@ namespace PolyQuest.Components
         }
 
         /*------------------------------------------------------------------------------ 
-        | --- UpdateAnimator: Updates the Animator with the Player's current speed --- |
+        | --- UpdateAnimator: Updates the Animator with the Entity's current speed --- |
         ------------------------------------------------------------------------------*/
         private void UpdateAnimator()
         {
