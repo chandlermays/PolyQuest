@@ -4,8 +4,6 @@ using UnityEngine.UI;
 using PolyQuest.Components;
 using PolyQuest.Attributes;
 
-// NOTE FOR LATER: Consolidate Experience and Health bar to be a single, parameteried class, or extract repeated functionality to parent class
-
 namespace PolyQuest.UI.HUD
 {
     /* --------------------------------------------------------------------------------------------
@@ -31,9 +29,10 @@ namespace PolyQuest.UI.HUD
         ----------------------------------------------------------------*/
         private void Awake()
         {
+            Utilities.CheckForNull(m_healthComponent, nameof(m_healthComponent));
+
             m_healthBarFill = GetComponent<Image>();
             Utilities.CheckForNull(m_healthBarFill, nameof(m_healthBarFill));
-            Utilities.CheckForNull(m_healthComponent, nameof(m_healthComponent));
 
             m_baseStats = m_healthComponent.GetComponent<BaseStats>();
             Utilities.CheckForNull(m_baseStats, nameof(m_baseStats));

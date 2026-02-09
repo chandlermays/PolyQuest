@@ -28,9 +28,10 @@ namespace PolyQuest.UI.HUD
         ----------------------------------------------------------------*/
         private void Awake()
         {
+            Utilities.CheckForNull(m_experienceComponent, nameof(m_experienceComponent));
+
             m_experienceBarFill = GetComponent<Slider>();
             Utilities.CheckForNull(m_experienceBarFill, nameof(m_experienceBarFill));
-            Utilities.CheckForNull(m_experienceComponent, nameof(m_experienceComponent));
         }
 
         /*---------------------------------------------------------------------
