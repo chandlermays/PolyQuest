@@ -7,7 +7,7 @@ using PolyQuest.Inventories;
 namespace PolyQuest.AI
 {
     /*------------------------------------------------------------- 
-    | --- Responsible for Controlling an AI's Actions (kEnemy) --- |
+    | --- Responsible for Controlling an AI's Actions (Enemy) --- |
     -------------------------------------------------------------*/
     public class EnemyController : AIController
     {
@@ -127,10 +127,20 @@ namespace PolyQuest.AI
         /*------------------------------------------------------- 
         | --- Aggrevate: The Behavior of Aggrevating the AI --- |
         -------------------------------------------------------*/
-        public void Aggrevate()
+        public void Aggrevate(GameObject instigator)
         {
             // Reset the timer to push the AI into AttackState
             m_timeSinceAggrevated = 0;
+
+            if (instigator != null)
+            {
+                NPCController npc = instigator.GetComponent<NPCController>();
+                if (npc != null)
+                {
+                    m_currentTarget = instigator;
+                    m_combatComponent.SetTarget(m_currentTarget);
+                }
+            }
         }
 
         /*---------------------------------------------------------------------
@@ -138,6 +148,21 @@ namespace PolyQuest.AI
         ---------------------------------------------------------------------*/
         private GameObject FindBestTarget()
         {
+            // If we already have a target from Aggrevate (e.g., an NPC that hit us), keep attacking them
+            if (m_currentTarget != null)
+            {
+                HealthComponent targetHealth = m_currentTarget.GetComponent<HealthComponent>();
+                if (targetHealth != null && !targetHealth.IsDead)
+                {
+                    return m_currentTarget;
+                }
+                else
+                {
+                    // Target is dead, clear it
+                    m_currentTarget = null;
+                }
+            }
+
             GameObject bestTarget = null;
             float closestDistance = Mathf.Infinity;
 
@@ -190,7 +215,11 @@ namespace PolyQuest.AI
         private void AttackState()
         {
             m_timeSincePlayerLastDetected = 0;
-            m_combatComponent.SetTarget(m_player);
+
+            if (m_currentTarget != null)
+            {
+                m_combatComponent.SetTarget(m_currentTarget);
+            }
 
             AlertNearbyEnemies();
         }
@@ -208,7 +237,7 @@ namespace PolyQuest.AI
                 // This enemy instance should already be aggrevated at this point so there's no need to do it again
                 if (enemyAI != null && enemyAI != this)
                 {
-                    enemyAI.Aggrevate();
+                    enemyAI.Aggrevate(m_currentTarget);
                 }
             }
         }

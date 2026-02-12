@@ -24,7 +24,7 @@ namespace PolyQuest.Components
 
         private bool m_isDead = false;
         public event Action OnHealthChanged;        // Event for when the Health changes
-        public event Action OnHit;                  // Event for when the Entity is hit
+        public event Action<GameObject> OnHit;      // Event for when the Entity is hit
         public event Action OnDeath;                // Event for when the Entity dies
 
         public float CurrentHealth => m_health;     // Returns the Current Health
@@ -149,7 +149,7 @@ namespace PolyQuest.Components
             m_health -= damage;
 
             OnHealthChanged?.Invoke();
-            OnHit?.Invoke();
+            OnHit?.Invoke(instigator);
 
             if (m_health <= 0)
             {

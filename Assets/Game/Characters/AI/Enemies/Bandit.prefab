@@ -1779,6 +1779,7 @@ GameObject:
   - component: {fileID: 1865444336509654807}
   - component: {fileID: 5008227000221217880}
   - component: {fileID: 6928696131343925156}
+  - component: {fileID: 2857182479567065796}
   m_Layer: 9
   m_Name: Bandit
   m_TagString: Enemy
@@ -2020,6 +2021,18 @@ MonoBehaviour:
   m_distanceThreshold: 2
   m_enemyLootTable: {fileID: 11400000, guid: 248401c73ddeac341a71abe17bdf16e5, type: 2}
   m_dropCount: 2
+--- !u!114 &2857182479567065796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6051408657710484760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c3bd99cde03e23438e3302dd6ced124, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Core.ActionManager
 --- !u!1 &6177420467291151336
 GameObject:
   m_ObjectHideFlags: 0

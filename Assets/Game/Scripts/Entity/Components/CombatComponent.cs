@@ -20,7 +20,7 @@ namespace PolyQuest.Components
      *      - Implements IRaycastable for player interaction and targeting via raycast.              *
      *      - Controls attack animations and cooldowns.                                              *
      * --------------------------------------------------------------------------------------------- */
-    public class CombatComponent : EntityComponent, IRaycastable, IStatModifier
+    public class CombatComponent : EntityComponent, IRaycastable, IStatModifier, IAction
     {
         [Header("Weapon Settings")]
         [SerializeField] private Weapon m_defaultWeapon;
@@ -33,14 +33,16 @@ namespace PolyQuest.Components
         private float m_timeSinceLastAttack = Mathf.Infinity;
 
         /* --- References --- */
-        private GameObject m_target;
-        private Transform m_targetTransform;
-        private HealthComponent m_targetHealth;
         private MovementComponent m_movementComponent;
         private HealthComponent m_healthComponent;
+        private ActionManager m_actionManager;
         private Weapon m_currentWeapon;
         private BaseStats m_baseStats;
         private Equipment m_equipment;
+
+        private GameObject m_target;
+        private HealthComponent m_targetHealth;
+        private Transform m_targetTransform;
 
         /* --- Animation Parameters --- */
         private static readonly int kAttack = Animator.StringToHash("Attack");
@@ -65,6 +67,9 @@ namespace PolyQuest.Components
 
             m_healthComponent = GetComponent<HealthComponent>();
             Utilities.CheckForNull(m_healthComponent, nameof(m_healthComponent));
+
+            m_actionManager = GetComponent<ActionManager>();
+            Utilities.CheckForNull(m_actionManager, nameof(m_actionManager));
 
             m_baseStats = GetComponent<BaseStats>();
             Utilities.CheckForNull(m_baseStats, nameof(m_baseStats));
@@ -161,36 +166,6 @@ namespace PolyQuest.Components
             }
         }
 
-        /*---------------------------------------------
-        | --- SetTarget: Set the Target to Attack --- |
-        ---------------------------------------------*/
-        public void SetTarget(GameObject target)
-        {
-            m_target = target;
-            m_targetTransform = target.transform;
-            m_targetHealth = target.GetComponent<HealthComponent>();
-        }
-
-        /*-----------------------------------------------
-        | --- StopAttack: Stop the Attack Animation --- |
-        -----------------------------------------------*/
-        public void StopAttack()
-        {
-            Animator.ResetTrigger(kAttack);
-            Animator.SetTrigger(kStopAttacking);
-        }
-
-        /*-------------------------------------------
-        | --- Cancel: Clear the Target and Stop --- |
-        -------------------------------------------*/
-        public void Cancel()
-        {
-            StopAttack();
-            m_target = null;
-            m_targetTransform = null;
-            m_targetHealth = null;
-        }
-
         /*---------------------------------------------------------
         | --- CanAttack: Checks if the Target can be Attacked --- |
         ---------------------------------------------------------*/
@@ -214,7 +189,7 @@ namespace PolyQuest.Components
                 return false;
 
             m_targetHealth = target.GetComponent<HealthComponent>();
-            return m_targetHealth != null && !m_targetHealth.IsDead;
+            return IsTargetValid();
         }
 
         /*--------------------------------------------------------------------
@@ -226,11 +201,41 @@ namespace PolyQuest.Components
 
             if (m_timeSinceLastAttack > m_attackCooldown)
             {
-                m_movementComponent.Cancel();
                 Animator.ResetTrigger(kStopAttacking);
                 Animator.SetTrigger(kAttack);
                 m_timeSinceLastAttack = 0;
             }
+        }
+
+        /*---------------------------------------------
+        | --- SetTarget: Set the Target to Attack --- |
+        ---------------------------------------------*/
+        public void SetTarget(GameObject target)
+        {
+            m_actionManager.StartAction(this);
+            m_target = target;
+            m_targetTransform = target.transform;
+            m_targetHealth = target.GetComponent<HealthComponent>();
+        }
+
+        /*-------------------------------------------
+        | --- Cancel: Clear the Target and Stop --- |
+        -------------------------------------------*/
+        public void Cancel()
+        {
+            StopAttack();
+            m_target = null;
+            m_targetTransform = null;
+            m_targetHealth = null;
+        }
+
+        /*-----------------------------------------------
+        | --- StopAttack: Stop the Attack Animation --- |
+        -----------------------------------------------*/
+        public void StopAttack()
+        {
+            Animator.ResetTrigger(kAttack);
+            Animator.SetTrigger(kStopAttacking);
         }
 
         /*--------------------------------------------------------------------------
@@ -357,7 +362,7 @@ namespace PolyQuest.Components
         }
 
         /*--------------------------------------------------------------
-        | --- Hit: Animation Event upon Attacking an kEnemy (Sword) --- |
+        | --- Hit: Animation Event upon Attacking an Enemy (Sword) --- |
         --------------------------------------------------------------*/
         private void Hit()
         {
@@ -365,7 +370,7 @@ namespace PolyQuest.Components
         }
 
         /*--------------------------------------------------------------
-        | --- Shoot: Animation Event upon Attacking an kEnemy (Bow) --- |
+        | --- Shoot: Animation Event upon Attacking an Enemy (Bow) --- |
         --------------------------------------------------------------*/
         private void Shoot()
         {

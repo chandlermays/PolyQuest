@@ -2410,6 +2410,7 @@ GameObject:
   - component: {fileID: 7596575801378017501}
   - component: {fileID: 449716864117483759}
   - component: {fileID: 988986447363148554}
+  - component: {fileID: -1471082835158277173}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -2812,6 +2813,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 223c4ceaa83ca5d449cc2990665b8196, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-1471082835158277173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8136770854238850487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c3bd99cde03e23438e3302dd6ced124, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Core.ActionManager
 --- !u!1 &8153190366075793432
 GameObject:
   m_ObjectHideFlags: 0

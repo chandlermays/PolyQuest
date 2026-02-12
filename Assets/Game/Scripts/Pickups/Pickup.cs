@@ -3,6 +3,7 @@ using UnityEngine;
 using PolyQuest.Inventories;
 using PolyQuest.Player;
 using PolyQuest.Components;
+using PolyQuest.Core;
 
 namespace PolyQuest.Pickups
 {
@@ -14,7 +15,7 @@ namespace PolyQuest.Pickups
      *      - Handles player interaction (i.e. adding the item to the inventory when picked up).   *
      *      - Contains logic for whether it can be picked up and what happens on pickup.           *
      * ------------------------------------------------------------------------------------------- */
-    public class Pickup : MonoBehaviour
+    public class Pickup : MonoBehaviour, IAction
     {
         [SerializeField] private float m_pickupRange = 1.5f;
 
@@ -25,6 +26,7 @@ namespace PolyQuest.Pickups
 
         private PlayerController m_targetPlayer;
         private MovementComponent m_playerMovement;
+        private ActionManager m_actionManager;
 
         public InventoryItem Item => m_item;
         public int Quantity => m_quantity;
@@ -41,8 +43,11 @@ namespace PolyQuest.Pickups
             // I'm doing this just because the Pickup is instantiated upon Play
             // so the Inventory cannot be assigned in the Inspector. Fix this asap.
             var player = GameObject.FindWithTag(kPlayerTag);
-            m_inventory = player?.GetComponent<Inventory>();
+            m_inventory = player.GetComponent<Inventory>();
             Utilities.CheckForNull(m_inventory, nameof(m_inventory));
+
+            m_actionManager = player.GetComponent<ActionManager>();
+            Utilities.CheckForNull(m_actionManager, nameof(m_actionManager));
 
             m_transform = transform;
         }
@@ -103,6 +108,8 @@ namespace PolyQuest.Pickups
             m_targetPlayer = playerController;
             m_playerMovement = playerController.GetComponent<MovementComponent>();
             Utilities.CheckForNull(m_playerMovement, nameof(m_playerMovement));
+
+            m_actionManager.StartAction(this);
         }
 
         /*--------------------------------------------------------------------------
@@ -134,6 +141,11 @@ namespace PolyQuest.Pickups
             {
                 return m_inventory.HasSpaceFor(m_item);
             }
+        }
+
+        public void Cancel()
+        {
+            ClearTarget();
         }
     }
 }

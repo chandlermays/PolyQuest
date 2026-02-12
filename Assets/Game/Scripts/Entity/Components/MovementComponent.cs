@@ -1,9 +1,9 @@
-using System;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 //---------------------------------
 using PolyQuest.Saving;
+using PolyQuest.Core;
 
 namespace PolyQuest.Components
 {
@@ -17,7 +17,7 @@ namespace PolyQuest.Components
      *      - Updates animation parameters based on movement state.                                 *
      *      - Supports saving and restoring the entity's position for persistence.                  *
      * ------------------------------------------------------------------------------------------- */
-    public class MovementComponent : EntityComponent, ISaveable
+    public class MovementComponent : EntityComponent, ISaveable, IAction
     {
         /* --- Navigation --- */
         private float m_maxPathLength = 20f;
@@ -25,11 +25,10 @@ namespace PolyQuest.Components
         /* --- References --- */
         private CombatComponent m_combatComponent;
         private HealthComponent m_healthComponent;
+        private ActionManager m_actionManager;
 
         /* --- Animation Parameters --- */
         private static readonly int kSpeed = Animator.StringToHash("Speed");
-
-        public event Action OnMoveActionStarted;
 
         private bool IsAlive() => m_healthComponent == null || !m_healthComponent.IsDead;
 
@@ -38,14 +37,15 @@ namespace PolyQuest.Components
         ----------------------------------------------------------------*/
         protected override void Awake()
         {
-            // TODO: Find a different approach; every "Entity" has a movement component,
-            // but will not always have a Health/Combat component, so while for now it
-            // works to return null and proceed, it is not a good practice.
-            // ...Unless it's fine as it is?
-
             base.Awake();
             m_combatComponent = GetComponent<CombatComponent>();
+            Utilities.CheckForNull(m_combatComponent, nameof(CombatComponent));
+
             m_healthComponent = GetComponent<HealthComponent>();
+            Utilities.CheckForNull(m_healthComponent, nameof(HealthComponent));
+
+            m_actionManager = GetComponent<ActionManager>();
+            Utilities.CheckForNull(m_actionManager, nameof(ActionManager));
         }
 
         /*----------------------------------------- 
@@ -69,8 +69,7 @@ namespace PolyQuest.Components
             if (!IsAlive())
                 return;
 
-            OnMoveActionStarted?.Invoke();
-            m_combatComponent?.Cancel();    // Null the Target before Moving
+            m_actionManager.StartAction(this);
             MoveTo(destination);
         }
 
@@ -154,7 +153,7 @@ namespace PolyQuest.Components
             NavMeshAgent.enabled = false;
             Transform.position = state.ToVector3();
             NavMeshAgent.enabled = true;
-            m_combatComponent?.Cancel();
+            m_actionManager.CancelCurrentAction();
         }
 
         /*------------------------------------------------------------------------------ 

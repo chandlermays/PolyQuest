@@ -6,6 +6,7 @@ using UnityEngine;
 using PolyQuest.Tools;
 using PolyQuest.Components;
 using PolyQuest.Player;
+using PolyQuest.Core;
 
 namespace PolyQuest.Dialogues
 {
@@ -19,13 +20,14 @@ namespace PolyQuest.Dialogues
      *      - Triggers enter/exit actions and dialogue events as nodes are traversed.              *
      *      - Notifies listeners when the conversation state updates.                              *
      * ------------------------------------------------------------------------------------------- */
-    public class PlayerDialogueHandler : MonoBehaviour
+    public class PlayerDialogueHandler : MonoBehaviour, IAction
     {
         private Dialogue m_activeDialogue;
         private DialogueNode m_currentNode;
         private AIDialogueHandler m_activeNPC;
         private PlayerController m_playerController;
         private MovementComponent m_movementComponent;
+        private ActionManager m_actionManager;
 
         private const float kProximityThreshold = 4.0f;
         private bool m_inActiveDialogue = false;
@@ -46,6 +48,9 @@ namespace PolyQuest.Dialogues
 
             m_movementComponent = GetComponent<MovementComponent>();
             Utilities.CheckForNull(m_movementComponent, nameof(MovementComponent));
+
+            m_actionManager = GetComponent<ActionManager>();
+            Utilities.CheckForNull(m_actionManager, nameof(ActionManager));
         }
 
         /*----------------------------------------- 
@@ -87,21 +92,7 @@ namespace PolyQuest.Dialogues
         {
             m_activeNPC = newNPC;
             m_activeDialogue = newDialogue;
-        }
-
-        /*-------------------------------------------------------------------
-        | --- CancelDialogueAction: Cancels the current Dialogue action --- |
-        -------------------------------------------------------------------*/
-        public void CancelDialogueAction()
-        {
-            if (m_inActiveDialogue)
-            {
-                EndDialogue();
-                return;
-            }
-
-            m_activeNPC = null;
-            m_activeDialogue = null;
+            m_actionManager.StartAction(this);
         }
 
         /*------------------------------------------------------- 
@@ -173,6 +164,21 @@ namespace PolyQuest.Dialogues
         public bool HasNextDialogueNode()
         {
             return GetValidChildren().Count > 0;
+        }
+
+        /*-----------------------------------------------------
+        | --- Cancel: Cancels the current Dialogue action --- |
+        -----------------------------------------------------*/
+        public void Cancel()
+        {
+            if (m_inActiveDialogue)
+            {
+                EndDialogue();
+                return;
+            }
+
+            m_activeNPC = null;
+            m_activeDialogue = null;
         }
 
         /*------------------------------------------------------------------------------------ 

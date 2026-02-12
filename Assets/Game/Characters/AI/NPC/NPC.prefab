@@ -1882,6 +1882,7 @@ GameObject:
   - component: {fileID: -4584313945261361355}
   - component: {fileID: 5238166851672994123}
   - component: {fileID: 1909811517450575725}
+  - component: {fileID: 2770295979244506965}
   m_Layer: 10
   m_Name: NPC
   m_TagString: NPC
@@ -2103,6 +2104,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Saving.JsonSaveableEntity
   m_uniqueIdentifier: 8df83d23-2d34-4169-aba6-8f95dbecdaac
   m_lockIdentifier: 0
+--- !u!114 &2770295979244506965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6788340497021815511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c3bd99cde03e23438e3302dd6ced124, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Core.ActionManager
 --- !u!1 &6808664692873903774
 GameObject:
   m_ObjectHideFlags: 0

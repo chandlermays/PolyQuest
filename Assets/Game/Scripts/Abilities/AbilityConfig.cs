@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //---------------------------------
+using PolyQuest.Core;
 
 namespace PolyQuest.Abilities
 {
-    public class AbilityConfig
+    public class AbilityConfig : IAction
     {
         private GameObject m_user;
         private Vector3 m_targetPoint;
