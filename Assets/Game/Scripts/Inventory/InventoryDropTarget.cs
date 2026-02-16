@@ -31,7 +31,7 @@ namespace PolyQuest.Inventories
         }
 
         /*---------------------------------------------------------------------------------------------
-        | --- AddItems: Drops the specified m_item(s) into the world, "adding" to the "destination" --- |
+        | --- AddItems: Drops the specified item(s) into the world, "adding" to the "destination" --- |
         ---------------------------------------------------------------------------------------------*/
         public void AddItems(InventoryItem item, int quantity)
         {

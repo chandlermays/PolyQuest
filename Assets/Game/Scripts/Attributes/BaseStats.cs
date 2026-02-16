@@ -114,6 +114,15 @@ namespace PolyQuest.Attributes
             OnStatModified?.Invoke();
         }
 
+        /*------------------------------------------------------------------------
+        | --- SetLevel: Set the Player's Level directly (used for save/load) --- |
+        ------------------------------------------------------------------------*/
+        public void SetLevel(int level)
+        {
+            m_level = Mathf.Clamp(level, 1, 99);
+            OnStatModified?.Invoke();
+        }
+
         /*----------------------------------------------------------------------------
         | --- GetAdditiveModifier: Calculates Additive Modifiers from Components --- |
         ----------------------------------------------------------------------------*/

@@ -84,22 +84,31 @@ namespace PolyQuest.Attributes
             CheckForLevelUp();
         }
 
-        /*---------------------------------------------------------------------------
+        /*--------------------------------------------------------------------------
         | --- CaptureState: Save the Current State of the Experience Component --- |
-        ---------------------------------------------------------------------------*/
+        --------------------------------------------------------------------------*/
         public JToken CaptureState()
         {
-            return JToken.FromObject(m_experiencePoints);
+            JObject state = new JObject();
+            state["experiencePoints"] = m_experiencePoints;
+            state["level"] = m_stats.Level;
+            return state;
         }
 
-        /*---------------------------------------------------------------------------
+        /*--------------------------------------------------------------------------
         | --- RestoreState: Load the Current State of the Experience Component --- |
-        ---------------------------------------------------------------------------*/
+        --------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
-            m_experiencePoints = state.ToObject<float>();
+            if (state is JObject stateObj)
+            {
+                m_experiencePoints = stateObj["experiencePoints"]?.ToObject<float>() ?? 0f;
+                int savedLevel = stateObj["level"]?.ToObject<int>() ?? 1;
+
+                m_stats.SetLevel(savedLevel);
+            }
+
             OnExperienceChanged?.Invoke();
-            CheckForLevelUp();
         }
 
         /*--------------------------------------------------------------
