@@ -134,20 +134,21 @@ namespace PolyQuest.Inventories
         -----------------------------------------------------------------*/
         public bool TryAddItemToSlot(int slot, InventoryItem item, int quantity)
         {
-            if (m_inventorySlots[slot].m_item != null)
+            // If target slot has a different item, try to find available slot
+            if (m_inventorySlots[slot].m_item != null && m_inventorySlots[slot].m_item != item)
             {
                 return TryAddToAvailableSlot(item, quantity);
             }
 
-            if (item.IsStackable && m_itemSlotMapping.ContainsKey(item))
+            // If target slot already has the same stackable item, stack it there
+            if (m_inventorySlots[slot].m_item == item && item.IsStackable)
             {
-                var existingSlots = m_itemSlotMapping[item];
-                if (existingSlots.Count > 0)
-                {
-                    slot = existingSlots[0];
-                }
+                AddItemToSlotInternal(slot, item, quantity);
+                return true;
             }
 
+            // For stackable items being placed in an empty slot, allow the placement
+            // This enables drag-and-drop rearrangement
             AddItemToSlotInternal(slot, item, quantity);
             return true;
         }

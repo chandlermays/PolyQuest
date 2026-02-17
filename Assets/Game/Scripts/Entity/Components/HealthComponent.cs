@@ -43,6 +43,7 @@ namespace PolyQuest.Components
         /* --- Components --- */
         private BaseStats m_stats;
         private Experience m_experienceComponent;
+        private CapsuleCollider m_capsuleCollider;
 
         /* --- Animation Parameter --- */
         private const string kDeath = "Death";
@@ -58,6 +59,7 @@ namespace PolyQuest.Components
             Utilities.CheckForNull(m_stats, nameof(m_stats));
 
             TryGetComponent(out m_experienceComponent);
+            TryGetComponent(out m_capsuleCollider);
         }
 
         /*---------------------------------------------------------------------
@@ -212,6 +214,11 @@ namespace PolyQuest.Components
         private void ApplyDeathState()
         {
             Animator.SetTrigger(kDeath);
+
+            if (m_capsuleCollider != null)
+            {
+                m_capsuleCollider.enabled = false;
+            }
         }
 
         /*------------------------------------------------------------
@@ -252,11 +259,18 @@ namespace PolyQuest.Components
             if (m_isDead)
             {
                 ApplyDeathState();
+                Animator.Update(0f);
+                Animator.Play(kDeath, 0, 1f);
             }
             else
             {
                 // Restore the "alive" state
                 Animator.Rebind();
+
+                if (m_capsuleCollider != null)
+                {
+                    m_capsuleCollider.enabled = true;
+                }
             }
         }
     }
