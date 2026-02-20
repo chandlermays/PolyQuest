@@ -38,10 +38,6 @@ namespace PolyQuest.Pickups
         ----------------------------------------------------------------*/
         private void Awake()
         {
-            // NOTE:
-            // Don't use Find(). Retrieve the Player by other means.
-            // I'm doing this just because the Pickup is instantiated upon Play
-            // so the Inventory cannot be assigned in the Inspector. Fix this asap.
             var player = GameObject.FindWithTag(kPlayerTag);
             m_inventory = player.GetComponent<Inventory>();
             Utilities.CheckForNull(m_inventory, nameof(m_inventory));
@@ -134,7 +130,7 @@ namespace PolyQuest.Pickups
         {
             if (m_inventory == null)
             {
-                Debug.Log("Pickup: Inventory is not assigned.");
+                Debug.Log("Pickup: Inventory is not assigned on the player.");
                 return false;
             }
             else
@@ -143,6 +139,9 @@ namespace PolyQuest.Pickups
             }
         }
 
+        /*--------------------------------------------------------------------------
+        | --- Cancel: 
+        --------------------------------------------------------------------------*/
         public void Cancel()
         {
             ClearTarget();
