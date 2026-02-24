@@ -6,12 +6,12 @@ using UnityEngine.UI;
 namespace PolyQuest.Inventories
 {
     /* --------------------------------------------------------------------------------------------
-     * Role: Displays the icon and m_quantity of an inventory m_item in the UI.                        *
+     * Role: Displays the icon and m_quantity of an inventory m_item in the UI.                    *
      *                                                                                             *
      * Responsibilities:                                                                           *
-     *      - Shows the m_item's icon and m_quantity in the inventory UI.                              *
-     *      - Updates the display based on the assigned InventoryItem and m_quantity.                *
-     *      - Hides or shows the m_quantity text as appropriate.                                     *
+     *      - Shows the m_item's icon and m_quantity in the inventory UI.                          *
+     *      - Updates the display based on the assigned InventoryItem and m_quantity.              *
+     *      - Hides or shows the m_quantity text as appropriate.                                   *
      * ------------------------------------------------------------------------------------------- */
     [RequireComponent(typeof(Image))]
     public class InventoryItemIcon : MonoBehaviour
@@ -30,7 +30,7 @@ namespace PolyQuest.Inventories
         }
 
         /*--------------------------------------------------------------------------------
-        | --- SetItem: Set the icon and m_quantity of an InventoryItem, if more than 1 --- |
+        | --- SetItem: Set the icon and quantity of an InventoryItem, if more than 1 --- |
         --------------------------------------------------------------------------------*/
         public void SetItem(InventoryItem item, int quantity)
         {
