@@ -16,7 +16,7 @@ namespace PolyQuest.UI.Core
         -----------------------------------------------------*/
         private void Start()
         {
-            m_saveLoadController = FindFirstObjectByType<SaveLoadController>();
+            m_saveLoadController = FindFirstObjectByType<SaveLoadController>(); // instead of find, retrieve the instance using static methods?
         }
 
         /*-------------------------------------------------------
@@ -28,7 +28,7 @@ namespace PolyQuest.UI.Core
         }
 
         /*----------------------------------------
-        | --- QuitGame: Quit the application --- | 
+        | --- QuitGame: Quit the application --- |
         ----------------------------------------*/
         public void QuitGame()
         {
