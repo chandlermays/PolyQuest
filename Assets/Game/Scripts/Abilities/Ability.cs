@@ -2,6 +2,7 @@ using UnityEngine;
 //---------------------------------
 using PolyQuest.Inventories;
 using PolyQuest.Components;
+using PolyQuest.Core;
 
 namespace PolyQuest.Abilities
 {
@@ -33,6 +34,12 @@ namespace PolyQuest.Abilities
                 return false;
 
             AbilityConfig config = new(user);
+
+            ActionManager actionManager = user.GetComponent<ActionManager>();
+            Utilities.CheckForNull(actionManager, nameof(actionManager));
+
+            actionManager.StartAction(config);
+
             m_targetingStrategy.StartTargeting(config, () => TargetAcquired(config));
             return true;
         }
