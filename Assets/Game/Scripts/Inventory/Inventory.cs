@@ -210,6 +210,9 @@ namespace PolyQuest.Inventories
             if (state is JObject stateObject)
             {
                 m_inventorySlots = new InventorySlot[m_inventorySize];
+                m_itemSlotMapping.Clear();
+                InitializeEmptySlots();
+
                 IDictionary<string, JToken> stateDict = stateObject;
 
                 for (int i = 0; i < m_inventorySize; ++i)
@@ -217,10 +220,21 @@ namespace PolyQuest.Inventories
                     if (stateDict.ContainsKey(i.ToString()) && stateDict[i.ToString()] is JObject itemState)
                     {
                         IDictionary<string, JToken> itemStateDict = itemState;
-                        m_inventorySlots[i].m_item = InventoryItem.FindByID(itemStateDict["item"].ToObject<string>());
-                        m_inventorySlots[i].m_quantity = itemStateDict["quantity"].ToObject<int>();
+                        var item = InventoryItem.FindByID(itemStateDict["item"].ToObject<string>());
+                        int quantity = itemStateDict["quantity"].ToObject<int>();
+
+                        m_inventorySlots[i].m_item = item;
+                        m_inventorySlots[i].m_quantity = quantity;
+
+                        // Rebuild the derived state to match the restored slots
+                        if (item != null)
+                        {
+                            m_emptySlots.Remove(i);
+                            AddItemToMapping(item, i);
+                        }
                     }
                 }
+
                 OnInventoryChanged?.Invoke();
             }
         }
