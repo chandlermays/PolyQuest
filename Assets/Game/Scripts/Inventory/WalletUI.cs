@@ -41,9 +41,9 @@ namespace PolyQuest.Inventories
             RefreshUI();
         }
 
-        /*-----------------------------------------------------------------------------
-        | --- RefreshUI: Updates the wallet UI to reflect the current gold amount --- |
-        -----------------------------------------------------------------------------*/
+        /*-------------------------------------------------------------------------------
+        | --- RefreshUI: Updates the wallet UI to reflect the current silver amount --- |
+        -------------------------------------------------------------------------------*/
         private void RefreshUI()
         {
             m_amountText.text = m_wallet.CurrentSilver.ToString();

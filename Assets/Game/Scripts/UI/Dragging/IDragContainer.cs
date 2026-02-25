@@ -5,8 +5,8 @@ namespace PolyQuest.UI.Dragging
      *                                                                                             *
      * Responsibilities:                                                                           *
      *      - Acts as both a drag source and a drag destination for items.                         *
-     *      - Enables two-way m_item transfer and swapping between containers.                       *
-     *      - Supports generic m_item handling for flexible UI systems.                              *
+     *      - Enables two-way item transfer and swapping between containers.                       *
+     *      - Supports generic item handling for flexible UI systems.                              *
      * ------------------------------------------------------------------------------------------- */
     public interface IDragContainer<T> : IDragDestination<T>, IDragSource<T> where T : class
     {}

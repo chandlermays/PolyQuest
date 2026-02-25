@@ -27,11 +27,12 @@ namespace PolyQuest.Inventories
         }
 
         [SerializeField] private int m_inventorySize = 20;
-        public int Size => m_inventorySlots.Length;
         private InventorySlot[] m_inventorySlots;
 
         private readonly Dictionary<InventoryItem, List<int>> m_itemSlotMapping = new();
         private readonly SortedSet<int> m_emptySlots = new();
+
+        public int Size => m_inventorySlots.Length;
 
         public event Action OnInventoryChanged;
 

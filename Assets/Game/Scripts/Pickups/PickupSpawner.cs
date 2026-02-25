@@ -44,11 +44,17 @@ namespace PolyQuest.Pickups
             return GetPickup() == null;
         }
 
+        /*-------------------------------------------------------------------------------------
+        | --- CaptureState: Capture the state of whether the pickup is present for saving --- |
+        -------------------------------------------------------------------------------------*/
         public JToken CaptureState()
         {
             return JToken.FromObject(IsPickedUp());
         }
 
+        /*--------------------------------------------------------------------------
+        | --- RestoreState: Restore the pickup's presence based on saved state --- |
+        --------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
             bool shouldBePickedUp = state.ToObject<bool>();
