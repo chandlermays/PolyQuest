@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97b75ef2f2152e34b9c40fa23875c43e, type: 3}
-  m_Name: Projectile AoE Ability
+  m_Name: Scorch
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Abilities.Ability
   m_itemID: aa188a87-a443-4613-98b8-24e78cf840b8
-  m_itemName: Projectile AoE
-  m_itemDescription: An area of effect projectile blast
+  m_itemName: Scorch
+  m_itemDescription: A targeted burst of fire that scorches all nearby enemies.
   m_itemIcon: {fileID: 21300000, guid: db427fab3e94daf4caa704d9314a77a1, type: 3}
   m_pickup: {fileID: 3714728132098454972, guid: ce734acb24202304793d0fc60816bfdf, type: 3}
   m_isStackable: 0

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace PolyQuest.AI
 {
     /* ----------------------------------------------------------------------------------------------
-     * Role: Defines and manages a sequence of waypoints for agent navigation in the scene.         *
+     * Role: Defines and manages a sequence of waypoints for m_agent navigation in the scene.         *
      *                                                                                              *
      * Responsibilities:                                                                            *
      *      - Stores and caches waypoint positions as child transforms.                             *

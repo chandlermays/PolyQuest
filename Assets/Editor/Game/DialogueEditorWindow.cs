@@ -51,7 +51,7 @@ namespace PolyQuest.Edit
         [OnOpenAssetAttribute(1)]
         public static bool OnOpenAsset(int ID, int line)
         {
-            if (EditorUtility.InstanceIDToObject(ID) is Dialogue dialogue)
+            if (EditorUtility.EntityIdToObject(ID) is Dialogue dialogue)
             {
                 ShowEditorWindow();
                 return true;
