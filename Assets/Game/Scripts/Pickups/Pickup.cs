@@ -1,9 +1,10 @@
-using UnityEngine;
+using PolyQuest.Components;
+using PolyQuest.Core;
 //---------------------------------
 using PolyQuest.Inventories;
 using PolyQuest.Player;
-using PolyQuest.Components;
-using PolyQuest.Core;
+using PolyQuest.Quests;
+using UnityEngine;
 
 namespace PolyQuest.Pickups
 {
@@ -116,10 +117,12 @@ namespace PolyQuest.Pickups
             bool slotAvailable = m_inventory.TryAddToAvailableSlot(m_item, m_quantity);
             if (slotAvailable)
             {
+                if (m_item is QuestItem questItem)
+                {
+                    QuestManager questManager = m_inventory.GetComponent<QuestManager>();
+                    questManager.CompleteObjective(questItem.Quest, questItem.Objective);
+                }
                 Destroy(gameObject);
-                //... replace this with some notification that the
-                // inventory is too full, instead of destroying the item.
-                // OR CanBePickedUp handles this behavior?
             }
         }
 

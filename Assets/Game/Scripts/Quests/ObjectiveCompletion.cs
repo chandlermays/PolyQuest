@@ -17,7 +17,7 @@ namespace PolyQuest.Quests
     {
         [SerializeField] private QuestManager m_questManager;
         [SerializeField] private Quest m_quest;
-        [SerializeField] private string m_objective;
+        [SerializeField] private QuestObjective m_objective;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -26,6 +26,7 @@ namespace PolyQuest.Quests
         {
             Utilities.CheckForNull(m_questManager, nameof(m_questManager));
             Utilities.CheckForNull(m_quest, nameof(m_quest));
+            Utilities.CheckForNull(m_objective, nameof(m_objective));
         }
 
         /*-----------------------------------------------------------------

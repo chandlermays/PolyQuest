@@ -13,12 +13,9 @@ MonoBehaviour:
   m_Name: Clear the Bandit Camp
   m_EditorClassIdentifier: 
   m_objectives:
-  - m_identifier: Camp
-    m_description: Find the Bandit Camp
-  - m_identifier: Kill
-    m_description: Kill the Bandits
-  - m_identifier: Return
-    m_description: Return to the Captain
+  - {fileID: 11400000, guid: 84db0dc5474f4c94195dc58476aededd, type: 2}
+  - {fileID: 11400000, guid: e891d9fb18d91ff44887800d11fb6c29, type: 2}
+  - {fileID: 11400000, guid: a710067ce83c60148a0ce62146fe9b2b, type: 2}
   m_rewards:
   - m_item: {fileID: 11400000, guid: ad99bf7cafdc1f841bc7753d73a5118b, type: 2}
     m_amount: 2

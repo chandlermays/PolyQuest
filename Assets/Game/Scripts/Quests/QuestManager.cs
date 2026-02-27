@@ -77,7 +77,7 @@ namespace PolyQuest.Quests
         /*--------------------------------------------------------------------------------------------------
         | --- CompleteObjective: Mark an objective as complete and grants rewards if quest is complete --- |
         --------------------------------------------------------------------------------------------------*/
-        public void CompleteObjective(Quest quest, string objective)
+        public void CompleteObjective(Quest quest, QuestObjective objective)
         {
             QuestStatus status = GetQuestStatus(quest);
             if (status == null)
@@ -100,10 +100,10 @@ namespace PolyQuest.Quests
         -------------------------------------------------------------------*/
         public JToken CaptureState()
         {
-            JObject state = new JObject();
+            JObject state = new();
 
             // Capture active quests
-            JArray activeQuestsArray = new JArray();
+            JArray activeQuestsArray = new();
             foreach (QuestStatus status in m_activeQuests.Values)
             {
                 activeQuestsArray.Add(status.CaptureAsJToken());
@@ -167,12 +167,15 @@ namespace PolyQuest.Quests
             switch (predicate)
             {
                 case PredicateType.kCompletedObjective:
-
                     QuestStatus questStatus = GetQuestStatus(Quest.GetByName(parameters[0]));
                     if (questStatus == null)
                         return false;
 
-                    return questStatus.IsObjectiveComplete(parameters[1]);
+                    QuestObjective objective = QuestObjective.GetByName(parameters[1]);
+                    if (objective == null)
+                        return false;
+
+                    return questStatus.IsObjectiveComplete(objective);
 
                 case PredicateType.kHasQuest:
                     return HasQuest(Quest.GetByName(parameters[0]));

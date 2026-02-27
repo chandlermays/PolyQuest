@@ -1,5 +1,6 @@
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Linq;
 //---------------------------------
 
 namespace PolyQuest.Quests
@@ -18,14 +19,14 @@ namespace PolyQuest.Quests
     public class QuestStatus
     {
         private Quest m_quest;
-        private HashSet<string> m_completedObjectives = new();
+        private HashSet<QuestObjective> m_completedObjectives = new();
 
         private const string kQuestNameKey = "QuestName";
         private const string kCompletedObjectivesKey = "CompletedObjectives";
 
         public Quest Quest => m_quest;
         public int CompletedObjectiveCount => m_completedObjectives.Count;
-        public bool IsObjectiveComplete(string objective) => m_completedObjectives.Contains(objective);
+        public bool IsObjectiveComplete(QuestObjective objective) => m_completedObjectives.Contains(objective);
 
         /*---------------------------------------------------------------------
         | --- Constructor: Initialize the QuestStatus from a Quest object --- |
@@ -42,16 +43,16 @@ namespace PolyQuest.Quests
         {
             if (objectState is JObject state)
             {
-                IDictionary<string, JToken> stateDict = state;
-                m_quest = Quest.GetByName(stateDict[kQuestNameKey].ToObject<string>());
+                m_quest = Quest.GetByName(state[kQuestNameKey].ToObject<string>());
                 m_completedObjectives.Clear();
 
-                if (stateDict[kCompletedObjectivesKey] is JArray completedState)
+                if (state[kCompletedObjectivesKey] is JArray completedState)
                 {
-                    IList<JToken> completedStateArray = completedState;
-                    foreach (JToken objective in completedStateArray)
+                    foreach (JToken token in completedState)
                     {
-                        m_completedObjectives.Add(objective.ToObject<string>());
+                        string savedName = token.ToObject<string>();
+                        QuestObjective obj = m_quest.Objectives.FirstOrDefault(o => o.name == savedName);
+                        if (obj != null) m_completedObjectives.Add(obj);
                     }
                 }
             }
@@ -60,7 +61,7 @@ namespace PolyQuest.Quests
         /*--------------------------------------------------------------------
         | --- CompleteObjective: Adds an objective to the completed list --- |
         --------------------------------------------------------------------*/
-        public void CompleteObjective(string objective)
+        public void CompleteObjective(QuestObjective objective)
         {
             if (m_quest.HasObjective(objective) && !m_completedObjectives.Contains(objective))
             {
@@ -79,12 +80,13 @@ namespace PolyQuest.Quests
             };
 
             JArray completedState = new();
-            foreach (string objective in m_completedObjectives)
-            {
-                completedState.Add(objective);
-            }
-            state[kCompletedObjectivesKey] = completedState;
 
+            foreach (QuestObjective objective in m_completedObjectives)
+            {
+                completedState.Add(objective.name);
+            }
+
+            state[kCompletedObjectivesKey] = completedState;
             return state;
         }
 
@@ -93,12 +95,10 @@ namespace PolyQuest.Quests
         ----------------------------------------------------------------*/
         public bool IsQuestComplete()
         {
-            foreach (Quest.Objective objective in m_quest.Objectives)
+            foreach (QuestObjective objective in m_quest.Objectives)
             {
-                if (!m_completedObjectives.Contains(objective.Identifier))
-                {
+                if (!m_completedObjectives.Contains(objective))
                     return false;
-                }
             }
             return true;
         }

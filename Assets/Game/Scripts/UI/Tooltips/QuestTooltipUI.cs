@@ -46,17 +46,14 @@ namespace PolyQuest.UI.Tooltip
                 Destroy(item.gameObject);
             }
 
-            foreach (Quest.Objective objective in quest.Objectives)
+            foreach (QuestObjective objective in quest.Objectives)
             {
-                GameObject objPrefab = m_incompleteObjectivePrefab;
-                if (status.IsObjectiveComplete(objective.Identifier))
-                {
-                    objPrefab = m_completedObjectivePrefab;
-                }
+                GameObject objPrefab = status.IsObjectiveComplete(objective)
+                    ? m_completedObjectivePrefab
+                    : m_incompleteObjectivePrefab;
 
                 GameObject objInstance = Instantiate(objPrefab, m_objectives);
-                TextMeshProUGUI objectiveText = objInstance.GetComponentInChildren<TextMeshProUGUI>();
-                objectiveText.text = objective.Description;
+                objInstance.GetComponentInChildren<TextMeshProUGUI>().text = objective.Description;
             }
 
             m_rewardText.text = GetRewardText(quest);

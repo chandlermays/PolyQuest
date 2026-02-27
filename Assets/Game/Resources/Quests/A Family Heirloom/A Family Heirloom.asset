@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: A Family Heirloom
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Quests.Quest
   m_objectives:
-  - m_identifier: Recover Sword
-    m_description: Recover the Guard's Family Heirloom
+  - {fileID: 11400000, guid: 9dfe1329cf7e3924db9f84a89eae3b3a, type: 2}
+  - {fileID: 11400000, guid: af44e699d05cced44837ce8920edacb7, type: 2}
   m_rewards:
   - m_item: {fileID: 11400000, guid: 969a495089f91be4897ab1d54aa212bb, type: 2}
     m_amount: 1

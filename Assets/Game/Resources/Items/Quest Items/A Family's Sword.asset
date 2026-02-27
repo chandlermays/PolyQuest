@@ -21,3 +21,5 @@ MonoBehaviour:
   m_isStackable: 0
   m_category: 5
   m_itemPrice: 0
+  m_quest: {fileID: 11400000, guid: 123e00e8fb8391c4698ee2f6a07d8fc1, type: 2}
+  m_objective: {fileID: 11400000, guid: 9dfe1329cf7e3924db9f84a89eae3b3a, type: 2}

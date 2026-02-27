@@ -18,7 +18,7 @@ MonoBehaviour:
   m_rect:
     serializedVersion: 2
     x: 350
-    y: 250
+    y: 251
     width: 200
     height: 100
   m_onEnterAction: 
@@ -96,10 +96,10 @@ MonoBehaviour:
         - Clear the Bandit Camp
         m_negate: 0
     - m_OR:
-      - m_predicate: 3
+      - m_predicate: 4
         m_parameters:
         - Clear the Bandit Camp
-        - Kill
+        - Kill the Bandits
         m_negate: 1
 --- !u!114 &-3825064345468559739
 MonoBehaviour:
@@ -224,7 +224,7 @@ MonoBehaviour:
   - 1a59dda5-0b66-47be-afb7-e4554acd084d
   m_rect:
     serializedVersion: 2
-    x: 100
+    x: 98
     y: 400
     width: 200
     height: 100
@@ -242,7 +242,7 @@ MonoBehaviour:
       - m_predicate: 3
         m_parameters:
         - Clear the Bandit Camp
-        - Kill
+        - Kill the Bandits
         m_negate: 0
 --- !u!114 &8710286783924125001
 MonoBehaviour:
