@@ -30,10 +30,13 @@ namespace PolyQuest.Shops
         }
 
         private ShopInteractor m_shopInteractor;
+        private Inventory m_shopperInventory;
+        private Wallet m_shopperWallet;
+
         private Dictionary<InventoryItem, int> m_purchase = new();
         private Dictionary<InventoryItem, int> m_currentStock = new();
-        private bool m_isBuyingMode = true;
         private ItemCategory m_currentFilter = ItemCategory.kNone;
+        private bool m_isBuyingMode = true;
 
         public event Action OnShopUpdated;
 
@@ -58,6 +61,17 @@ namespace PolyQuest.Shops
         public void SetShopInteractor(ShopInteractor shopper)
         {
             this.m_shopInteractor = shopper;
+
+            if (shopper != null)
+            {
+                m_shopperInventory = shopper.GetComponent<Inventory>();
+                m_shopperWallet = shopper.GetComponent<Wallet>();
+            }
+            else
+            {
+                m_shopperInventory = null;
+                m_shopperWallet = null;
+            }
         }
 
         /*-------------------------------------------------------------
@@ -122,9 +136,7 @@ namespace PolyQuest.Shops
         --------------------------------------------------------------------------------------------*/
         public bool HasSufficientFunds()
         {
-            Wallet wallet = m_shopInteractor.GetComponent<Wallet>();
-
-            return wallet.CurrentSilver >= PurchaseTotal();
+            return m_shopperWallet.CurrentSilver >= PurchaseTotal();
         }
 
         /*-----------------------------------------------------------------------------------------------
@@ -132,9 +144,6 @@ namespace PolyQuest.Shops
         -----------------------------------------------------------------------------------------------*/
         public bool HasInventorySpace()
         {
-            if (!m_shopInteractor.TryGetComponent<Inventory>(out var shopperInventory))
-                return false;
-
             List<InventoryItem> itemsToPurchase = new();
             foreach (ShopItem shopItem in GetAllItems())
             {
@@ -146,7 +155,7 @@ namespace PolyQuest.Shops
                 }
             }
 
-            return shopperInventory.HasSpaceFor(itemsToPurchase);
+            return m_shopperInventory.HasSpaceFor(itemsToPurchase);
         }
 
         /*----------------------------------------------------------------------------------------------------
@@ -154,12 +163,6 @@ namespace PolyQuest.Shops
         ----------------------------------------------------------------------------------------------------*/
         public void CompletePurchase()
         {
-            if (!m_shopInteractor.TryGetComponent<Inventory>(out var shopperInventory))
-                return;
-
-            if (!m_shopInteractor.TryGetComponent<Wallet>(out var shopperWallet))
-                return;
-
             foreach (ShopItem shopItem in GetAllItems())
             {
                 InventoryItem item = shopItem.Item;
@@ -167,15 +170,15 @@ namespace PolyQuest.Shops
                 int price = shopItem.Price;
                 for (int i = 0; i < quantity; ++i)
                 {
-                    if (shopperWallet.CurrentSilver < price)
+                    if (m_shopperWallet.CurrentSilver < price)
                         return;
 
-                    bool success = shopperInventory.TryAddToAvailableSlot(item, 1);
+                    bool success = m_shopperInventory.TryAddToAvailableSlot(item, 1);
                     if (success)
                     {
                         AddToPurchase(item, -1);
                         --m_currentStock[item];
-                        shopperWallet.UpdateSiver(-price);
+                        m_shopperWallet.UpdateSiver(-price);
                     }
                 }
             }
@@ -240,7 +243,7 @@ namespace PolyQuest.Shops
         {
             if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
             {
-                playerController.GetComponent<ShopInteractor>().SetActiveShop(this);
+                playerController.GetComponent<ShopInteractor>().SetTargetShop(this);
             }
             return true;
         }
@@ -254,7 +257,7 @@ namespace PolyQuest.Shops
             {
                 int price = GetPrice(entry);
                 m_purchase.TryGetValue(entry.Item, out int quantityInPurchase);
-                yield return new ShopItem(entry.Item, m_currentStock[entry.Item], entry.Item.Price, quantityInPurchase);
+                yield return new ShopItem(entry.Item, m_currentStock[entry.Item], price, quantityInPurchase);
             }
         }
 
@@ -269,7 +272,7 @@ namespace PolyQuest.Shops
             }
             else
             {
-                // Selling price is 50% of the m_item's price
+                // Selling price is 50% of the item's price - not yet implemented!
                 return Mathf.CeilToInt(entry.Item.Price * (m_sellPricePercentage / 100.0f));
             }
         }
