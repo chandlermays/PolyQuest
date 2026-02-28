@@ -1,10 +1,11 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.AI;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 //---------------------------------
 using PolyQuest.Player;
+using PolyQuest.Saving;
 
 namespace PolyQuest.SceneManagement
 {
@@ -89,15 +90,13 @@ namespace PolyQuest.SceneManagement
             }
             DontDestroyOnLoad(gameObject);
 
-            SaveLoadController saveLoadController = FindFirstObjectByType<SaveLoadController>();
-
             PlayerController playerController = m_player.GetComponent<PlayerController>();
             playerController.enabled = false;
 
             yield return TransitionFade.Instance.FadeOut();
 
             // Checkpoint before scene transition
-            saveLoadController.Save();
+            SaveManager.Instance.Save();
 
             yield return SceneManager.LoadSceneAsync(m_sceneField.SceneName);
 
@@ -105,13 +104,13 @@ namespace PolyQuest.SceneManagement
             PlayerController newPlayerController = GameObject.FindWithTag(kPlayerTag).GetComponent<PlayerController>();
             newPlayerController.enabled = false;
 
-            saveLoadController.Load();
+            SaveManager.Instance.Load();
 
             Portal destination = GetDestination();
             UpdatePlayer(destination);
 
             // Checkpoint after scene transition
-            saveLoadController.Save();
+            SaveManager.Instance.Save();
 
             yield return TransitionFade.Instance.Wait();
             yield return TransitionFade.Instance.FadeIn();

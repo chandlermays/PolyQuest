@@ -1,7 +1,7 @@
-using PolyQuest.Inventories;
 using UnityEngine;
 using UnityEngine.UI;
 //---------------------------------
+using PolyQuest.Inventories;
 
 namespace PolyQuest.Shops
 {

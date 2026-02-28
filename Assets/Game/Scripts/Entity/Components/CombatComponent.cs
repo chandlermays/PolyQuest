@@ -1,13 +1,13 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 //---------------------------------
-using PolyQuest.Core;
+using PolyQuest.Attributes;
 using PolyQuest.Combat;
+using PolyQuest.Core;
+using PolyQuest.Input;
+using PolyQuest.Inventories;
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
-using PolyQuest.Inventories;
-using PolyQuest.Attributes;
-using PolyQuest.Input;
 
 namespace PolyQuest.Components
 {

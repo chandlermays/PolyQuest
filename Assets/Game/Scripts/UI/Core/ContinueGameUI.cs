@@ -1,8 +1,7 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 //---------------------------------
-using PolyQuest.SceneManagement;
 using PolyQuest.Saving;
 
 namespace PolyQuest.UI.Core
@@ -20,6 +19,22 @@ namespace PolyQuest.UI.Core
         | --- OnEnable: Called when the object becomes enabled and active --- |
         ---------------------------------------------------------------------*/
         private void OnEnable()
+        {
+            if (SaveManager.Instance == null)
+                return;
+
+            RefreshSaveList();
+            if (m_playButton != null)
+                m_playButton.interactable = false;
+
+            if (m_deleteButton != null)
+                m_deleteButton.interactable = false;
+        }
+
+        /*-----------------------------------------------------
+        | --- Start: Called before the first frame update --- |
+        -----------------------------------------------------*/
+        private void Start()
         {
             RefreshSaveList();
             if (m_playButton != null)
@@ -50,11 +65,7 @@ namespace PolyQuest.UI.Core
             if (string.IsNullOrEmpty(m_selectedSaveFile))
                 return;
 
-            SaveLoadController saveLoadController = FindFirstObjectByType<SaveLoadController>();
-            if (saveLoadController == null)
-                return;
-
-            saveLoadController.ContinueGame(m_selectedSaveFile);
+            SaveManager.Instance.ContinueGame(m_selectedSaveFile);
         }
 
         /*---------------------------------------------------------------------
@@ -65,16 +76,7 @@ namespace PolyQuest.UI.Core
             if (string.IsNullOrEmpty(m_selectedSaveFile))
                 return;
 
-            SaveLoadController saveLoadController = FindFirstObjectByType<SaveLoadController>();
-            if (saveLoadController == null)
-                return;
-
-            SavingSystem saveSystem = saveLoadController.GetComponent<SavingSystem>();
-            if (saveSystem == null)
-                return;
-
-            // Delete the selected save file
-            saveSystem.Delete(m_selectedSaveFile);
+            SaveManager.Instance.Delete(m_selectedSaveFile);
 
             // Clear selection and refresh the list
             m_selectedSaveFile = null;
@@ -92,10 +94,6 @@ namespace PolyQuest.UI.Core
         -------------------------------------------------------------------*/
         private void RefreshSaveList()
         {
-            SaveLoadController saveLoadController = FindFirstObjectByType<SaveLoadController>();
-            if (saveLoadController == null)
-                return;
-
             // Clear existing buttons
             foreach (Transform child in m_contentRoot)
             {
@@ -103,7 +101,7 @@ namespace PolyQuest.UI.Core
             }
 
             // Rebuild from available save files
-            foreach (string saveFile in saveLoadController.ListSaveFiles())
+            foreach (string saveFile in SaveManager.Instance.ListSaveFiles())
             {
                 GameObject buttonInstance = Instantiate(m_buttonPrefab, m_contentRoot);
                 TMP_Text buttonText = buttonInstance.GetComponentInChildren<TMP_Text>();

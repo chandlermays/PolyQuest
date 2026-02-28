@@ -1,10 +1,10 @@
+using UnityEngine;
+//---------------------------------
 using PolyQuest.Components;
 using PolyQuest.Core;
-//---------------------------------
 using PolyQuest.Inventories;
 using PolyQuest.Player;
 using PolyQuest.Quests;
-using UnityEngine;
 
 namespace PolyQuest.Pickups
 {

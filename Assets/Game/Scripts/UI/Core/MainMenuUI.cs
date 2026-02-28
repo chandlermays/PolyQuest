@@ -1,22 +1,25 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 //---------------------------------
-using PolyQuest.SceneManagement;
+using PolyQuest.Saving;
 
 namespace PolyQuest.UI.Core
 {
     public class MainMenuUI : MonoBehaviour
     {
         [SerializeField] private TMP_InputField m_newGameText;
-
-        private SaveLoadController m_saveLoadController;
+        [SerializeField] private GameObject m_errorMessage;
 
         /*-----------------------------------------------------
         | --- Start: Called before the first frame update --- |
         -----------------------------------------------------*/
         private void Start()
         {
-            m_saveLoadController = FindFirstObjectByType<SaveLoadController>(); // instead of find, retrieve the instance using static methods?
+            // hide the error message at the start
+            m_errorMessage.SetActive(false);
+
+            // hide if the user starts typing
+            m_newGameText.onValueChanged.AddListener(_ => m_errorMessage.SetActive(false));
         }
 
         /*-------------------------------------------------------
@@ -24,7 +27,14 @@ namespace PolyQuest.UI.Core
         -------------------------------------------------------*/
         public void NewGame()
         {
-            m_saveLoadController.NewGame(m_newGameText.text);
+            if (string.IsNullOrWhiteSpace(m_newGameText.text))
+            {
+                m_errorMessage.SetActive(true);
+                return;
+            }
+
+            m_errorMessage.SetActive(false);
+            SaveManager.Instance.NewGame(m_newGameText.text);
         }
 
         /*----------------------------------------

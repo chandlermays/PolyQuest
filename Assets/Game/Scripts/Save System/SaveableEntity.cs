@@ -1,6 +1,8 @@
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 //---------------------------------
 

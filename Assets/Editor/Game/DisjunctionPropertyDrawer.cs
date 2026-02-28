@@ -1,6 +1,6 @@
-﻿using UnityEditor;
+﻿using System.Collections;
+using UnityEditor;
 using UnityEngine;
-using System.Collections;
 //---------------------------------
 using PolyQuest.Tools;
 

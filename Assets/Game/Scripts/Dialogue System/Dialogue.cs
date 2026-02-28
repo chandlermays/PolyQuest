@@ -1,9 +1,11 @@
-using PolyQuest.Tools;
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 //---------------------------------
+using PolyQuest.Tools;
 
 namespace PolyQuest.Dialogues
 {

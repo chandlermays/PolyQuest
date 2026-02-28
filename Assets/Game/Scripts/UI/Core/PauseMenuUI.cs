@@ -1,8 +1,8 @@
 using UnityEngine;
+using UnityEngine.UI;
 //---------------------------------
 using PolyQuest.Player;
-using PolyQuest.SceneManagement;
-using UnityEngine.UI;
+using PolyQuest.Saving;
 
 namespace PolyQuest.UI.Core
 {
@@ -36,11 +36,7 @@ namespace PolyQuest.UI.Core
         ---------------------------------------------------------------------*/
         public void Save()
         {
-            SaveLoadController saveLoadController = FindFirstObjectByType<SaveLoadController>();
-            if (saveLoadController != null)
-            {
-                saveLoadController.Save();
-            }
+            SaveManager.Instance.Save();
         }
 
         /*------------------------------------------------------------
@@ -48,17 +44,13 @@ namespace PolyQuest.UI.Core
         ------------------------------------------------------------*/
         public void Quit()
         {
-            SaveLoadController saveLoadController = FindFirstObjectByType<SaveLoadController>();
-            if (saveLoadController != null)
-            {
-                m_playerController.enabled = false;
-                m_resumeButton.interactable = false;
-                m_saveButton.interactable = false;
-                m_quitButton.interactable = false;
+            m_playerController.enabled = false;
+            m_resumeButton.interactable = false;
+            m_saveButton.interactable = false;
+            m_quitButton.interactable = false;
 
-                saveLoadController.Save();
-                saveLoadController.LoadMainMenu();
-            }
+            SaveManager.Instance.Save();
+            SaveManager.Instance.LoadMainMenu();
         }
     }
 }

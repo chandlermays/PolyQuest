@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 //---------------------------------
-using PolyQuest.Components;
 using PolyQuest.Attributes;
+using PolyQuest.Components;
 
 // NOTE FOR LATER: Consolidate Experience and Health bar to be a single, parameteried class, or extract repeated functionality to parent class
 

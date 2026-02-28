@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 //---------------------------------
-using PolyQuest.Components;
 using PolyQuest.Attributes;
+using PolyQuest.Components;
 
 namespace PolyQuest.UI.HUD
 {

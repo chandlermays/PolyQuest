@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 //---------------------------------
-using PolyQuest.Saving;
+using PolyQuest.SceneManagement;
 
-namespace PolyQuest.SceneManagement
+namespace PolyQuest.Saving
 {
     /* --------------------------------------------------------------------------------------------
      * Role: Coordinates saving and loading of game state, including scene restoration and input.  *
@@ -18,8 +18,10 @@ namespace PolyQuest.SceneManagement
      *      - Ensures the correct save file is used for all operations.                            *
      *      - Provides a simple API for other systems to invoke save/load functionality.           *
      * ------------------------------------------------------------------------------------------- */
-    public class SaveLoadController : MonoBehaviour
+    public class SaveManager : MonoBehaviour
     {
+        public static SaveManager Instance { get; private set; }
+
         private const string kCurrentSaveKey = "CurrentSaveName";
 
         /* --- kCurrentSaveKey Bindings --- */
@@ -33,6 +35,13 @@ namespace PolyQuest.SceneManagement
         ----------------------------------------------------------------*/
         private void Awake()
         {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+
             m_saveSystem = GetComponent<SavingSystem>();
             Utilities.CheckForNull(m_saveSystem, nameof(m_saveSystem));
         }
@@ -84,7 +93,7 @@ namespace PolyQuest.SceneManagement
         }
 
         /*--------------------------------------------------------
-        | --- Save: Perform the action of Saving to the File --- |
+        | --- Save: Perform the action of saving to the file --- |
         --------------------------------------------------------*/
         public void Save()
         {
@@ -92,19 +101,27 @@ namespace PolyQuest.SceneManagement
         }
 
         /*---------------------------------------------------------
-        | --- Load: Perform the action of Loading from a File --- |
+        | --- Load: Perform the action of loading from a file --- |
         ---------------------------------------------------------*/
         public void Load()
         {
             m_saveSystem.Load(GetCurrentSave());
         }
 
-        /*------------------------------------------------------------
-        | --- Delete: Perform the action of Deleting a Save File --- |
-        ------------------------------------------------------------*/
+        /*----------------------------------------------------------------------
+        | --- Delete: Perform the action of deleting the current save file --- |
+        ----------------------------------------------------------------------*/
         public void Delete()
         {
             m_saveSystem.Delete(GetCurrentSave());
+        }
+
+        /*----------------------------------------------------------------------
+        | --- Delete: Perform the action of deleting a specified save file --- |
+        ----------------------------------------------------------------------*/
+        public void Delete(string saveFile)
+        {
+            m_saveSystem.Delete(saveFile);
         }
 
         /*------------------------------------------------------
@@ -116,7 +133,7 @@ namespace PolyQuest.SceneManagement
         }
 
         /*--------------------------------------------------------
-        | --- ContinueGame: Continue a Game from a Save File --- |
+        | --- ContinueGame: Continue a Game from a save file --- |
         --------------------------------------------------------*/
         public void ContinueGame(string saveFile)
         {
@@ -125,7 +142,7 @@ namespace PolyQuest.SceneManagement
         }
 
         /*----------------------------------------------------
-        | --- NewGame: Start a New Game with a Save File --- |
+        | --- NewGame: Start a New Game with a save file --- |
         ----------------------------------------------------*/
         public void NewGame(string saveFile)
         {
@@ -138,7 +155,7 @@ namespace PolyQuest.SceneManagement
         }
 
         /*------------------------------------------------
-        | --- LoadMainMenu: Load the Main Menu Scene --- |
+        | --- LoadMainMenu: Load the main menu scene --- |
         ------------------------------------------------*/
         public void LoadMainMenu()
         {

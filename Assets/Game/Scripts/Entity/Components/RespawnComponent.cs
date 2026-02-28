@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 //---------------------------------
-using PolyQuest.SceneManagement;
+using PolyQuest.Saving;
 
 namespace PolyQuest.Components
 {
@@ -60,13 +60,7 @@ namespace PolyQuest.Components
             if (m_respawnDelay > 0f)
                 yield return new WaitForSeconds(m_respawnDelay);
 
-            SaveLoadController saveLoadController = FindFirstObjectByType<SaveLoadController>();
-            if (saveLoadController == null)
-            {
-                Debug.LogError("RespawnComponent: SaveLoadController not found in the scene.");
-                yield break;
-            }
-            saveLoadController.RespawnCheckpoint();
+            SaveManager.Instance.RespawnCheckpoint();
             m_isRespawning = false;
         }
     }

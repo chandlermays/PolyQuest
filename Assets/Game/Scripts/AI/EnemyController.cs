@@ -1,7 +1,7 @@
 using UnityEngine;
 //---------------------------------
-using PolyQuest.Core;
 using PolyQuest.Components;
+using PolyQuest.Core;
 using PolyQuest.Inventories;
 
 namespace PolyQuest.AI

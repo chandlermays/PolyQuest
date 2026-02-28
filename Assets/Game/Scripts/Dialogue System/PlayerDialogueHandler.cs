@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 //---------------------------------
-using PolyQuest.Tools;
 using PolyQuest.Components;
-using PolyQuest.Player;
 using PolyQuest.Core;
+using PolyQuest.Player;
+using PolyQuest.Tools;
 
 namespace PolyQuest.Dialogues
 {

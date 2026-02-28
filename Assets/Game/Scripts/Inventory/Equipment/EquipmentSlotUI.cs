@@ -1,9 +1,9 @@
-using PolyQuest.Input;
-//---------------------------------
-using PolyQuest.UI.Dragging;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+//---------------------------------
+using PolyQuest.Input;
+using PolyQuest.UI.Dragging;
 
 namespace PolyQuest.Inventories
 {

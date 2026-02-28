@@ -1,8 +1,8 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 //---------------------------------
-using PolyQuest.Inventories;
 using PolyQuest.Attributes;
+using PolyQuest.Inventories;
 
 namespace PolyQuest.Combat
 {

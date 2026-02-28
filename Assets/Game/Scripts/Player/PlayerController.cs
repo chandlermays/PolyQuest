@@ -2,12 +2,12 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
 //---------------------------------
-using PolyQuest.Core;
 using PolyQuest.Components;
-using PolyQuest.Inventories;
-using PolyQuest.UI.Core;
+using PolyQuest.Core;
 using PolyQuest.Dialogues;
 using PolyQuest.Input;
+using PolyQuest.Inventories;
+using PolyQuest.UI.Core;
 
 namespace PolyQuest.Player
 {
