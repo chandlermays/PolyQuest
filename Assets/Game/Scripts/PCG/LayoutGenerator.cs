@@ -46,20 +46,9 @@ namespace PolyQuest.PCG
         /*--------------------------------------------------------------------------------
         | --- GenerateNewSeed: Generates a new random seed based on the current time --- |
         --------------------------------------------------------------------------------*/
-        [ContextMenu("DEBUG: Generate New Seed")]
         public void GenerateNewSeed()
         {
             m_seed = DateTime.Now.Ticks;
-        }
-
-        /*-------------------------------------------------------------------
-        | --- GenerateNewSeedAndLayout: Generates a new seed and layout --- |
-        -------------------------------------------------------------------*/
-        [ContextMenu("DEBUG: Generate New Seed and Layout")]
-        public void GenerateNewSeedAndLayout()
-        {
-            GenerateNewSeed();
-            GenerateLayout();
         }
 
         /*------------------------------------------------------------------

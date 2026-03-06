@@ -15,7 +15,6 @@ namespace PolyQuest.PCG
         /*-----------------------------------------------------------------------------------
         | --- CreateLevelGeometry: Creates level geometry based on the provided texture --- |
         -----------------------------------------------------------------------------------*/
-        [ContextMenu("DEBUG: Create Level Geometry")]
         public void CreateLevelGeometry()
         {
             DestroyAllChildren(m_levelGeometry.transform);

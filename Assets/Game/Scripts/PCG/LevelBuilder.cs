@@ -13,17 +13,14 @@ namespace PolyQuest.PCG
         [SerializeField] private RoomDecorator m_roomDecorator;
         [SerializeField] private NavMeshSurface m_navMeshSurface;
 
-        private bool m_restoredThisLoad = false;
+        private const string kSeedKey = "Seed";
 
-        /*-----------------------------------------------------
-        | --- Start: Called before the first frame update --- |
-        -----------------------------------------------------*/
-        private void Start()
+        /*----------------------------------------------------------------
+        | --- Awake: Called when the script instance is being loaded --- |
+        ----------------------------------------------------------------*/
+        private void Awake()
         {
-            if (!m_restoredThisLoad)
-            {
-                GenerateNewSeedAndLevel();
-            }
+            GenerateNewSeedAndLevel();
         }
 
         /*------------------------------------------------------------------------
@@ -33,7 +30,7 @@ namespace PolyQuest.PCG
         public void GenerateNewSeedAndLevel()
         {
             m_layoutGenerator.GenerateNewSeed();
-            BuildLevel();
+            GenerateLevel();
         }
 
         /*---------------------------------------------------------------------
@@ -42,36 +39,45 @@ namespace PolyQuest.PCG
         [ContextMenu("DEBUG: Generate New Level")]
         public void GenerateNewLevel()
         {
-            BuildLevel();
+            GenerateLevel();
         }
 
-        /*------------------------------------------------------------------------
-        | --- BuildLevel: Constructs geometry, navmesh, and room decorations --- |
-        ------------------------------------------------------------------------*/
-        private void BuildLevel()
+        /*---------------------------------------------------------------------------------------------
+        | --- GenerateLevel: Generates the level geometry and navmesh based on the current layout --- |
+        ---------------------------------------------------------------------------------------------*/
+        private void GenerateLevel()
         {
             Level level = m_layoutGenerator.GenerateLayout();
             m_levelGeometry.CreateLevelGeometry();
             m_navMeshSurface.BuildNavMesh();
-            m_roomDecorator.Initialize(level);
+            m_roomDecorator.Initialize(level, m_layoutGenerator.Seed);
         }
 
-        /*--------------------------------------------------------------------
-        | --- CaptureState: Saves the current seed so it can be restored --- |
-        --------------------------------------------------------------------*/
+        /*-----------------------------------------------------------------------------------
+        | --- CptureState: Captures the current seed of the layout generator for saving --- |
+        -----------------------------------------------------------------------------------*/
         public JToken CaptureState()
         {
-            return new JValue(m_layoutGenerator.Seed);
+            JObject state = new()
+            {
+                [kSeedKey] = m_layoutGenerator.Seed
+            };
+            return state;
         }
 
-        /*---------------------------------------------------------------------------
-        | --- RestoreState: Restores the saved seed and rebuilds level geometry --- |
-        ---------------------------------------------------------------------------*/
+        /*--------------------------------------------------------------------------------------------
+        | --- RestoreState: Restores the seed and regenerates the level based on the saved state --- |
+        --------------------------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
-            m_layoutGenerator.Seed = state.ToObject<long>();
-            BuildLevel();
-            m_restoredThisLoad = true;
+            if (state is not JObject jObject)
+                return;
+
+            if (!jObject.TryGetValue(kSeedKey, out JToken seedToken))
+                return;
+
+            m_layoutGenerator.Seed = seedToken.ToObject<long>();
+            GenerateLevel();
         }
     }
 }

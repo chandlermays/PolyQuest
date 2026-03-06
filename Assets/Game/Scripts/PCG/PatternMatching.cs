@@ -14,8 +14,6 @@ namespace PolyQuest.PCG
         [SerializeField] private Array2D<TileType> m_targetPattern;
         [SerializeField] private Array2D<TileType> m_resultPattern;
 
-        private readonly XorShift128Plus m_rng = new(unchecked((ulong)DateTime.Now.Ticks));
-
         /*------------------------------------------------------------------------------
         | --- CanBeApplied: Checks if the pattern can be applied to the given room --- |
         ------------------------------------------------------------------------------*/
@@ -30,13 +28,15 @@ namespace PolyQuest.PCG
         /*-----------------------------------------------------------------------------
         | --- Apply: Applies the pattern to the given room in the decorated level --- |
         -----------------------------------------------------------------------------*/
-        public override void Apply(TileType[,] decoratedLevel, Room room, Transform parent)
+        public override void Apply(TileType[,] decoratedLevel, Room room, Transform parent, long seed)
         {
+            XorShift128Plus rng = new(unchecked((ulong)seed));
+
             Vector2Int[] patterns = FindMatchingPositions(decoratedLevel, room);
             if (patterns.Length == 0)
                 return;
 
-            int patternIndex = m_rng.RandomRange(0, patterns.Length);
+            int patternIndex = rng.RandomRange(0, patterns.Length);
             Vector2Int pattern = patterns[patternIndex];
 
             for (int y = 0; y < m_targetPattern.Height; ++y)

@@ -39,11 +39,11 @@ namespace PolyQuest.PCG
         /*-------------------------------------------------------------------------------------
         | --- Apply: Applies all of the patterns to the given room in the decorated level --- |
         -------------------------------------------------------------------------------------*/
-        public override void Apply(TileType[,] decoratedLevel, Room room, Transform parent)
+        public override void Apply(TileType[,] decoratedLevel, Room room, Transform parent, long seed)
         {
             foreach (DecoratorPattern pattern in Patterns)
             {
-                pattern.Apply(decoratedLevel, room, parent);
+                pattern.Apply(decoratedLevel, room, parent, seed);
             }
         }
     }

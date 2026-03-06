@@ -19,24 +19,23 @@ namespace PolyQuest.PCG
         /*-------------------------------------------------------------------------
         | --- GenerateDecorations: Generates decorations for the level layout --- |
         -------------------------------------------------------------------------*/
-        [ContextMenu("DEBUG: Generate Decorations")]
         public void GenerateDecorations()
         {
             Level level = m_layoutGenerator.GenerateLayout();
-            Initialize(level);
+            Initialize(level, m_layoutGenerator.Seed);
         }
 
         /*-------------------------------------------------------------------------
         | --- Initialize: Initializes the room decorator with the given level --- |
         -------------------------------------------------------------------------*/
-        public void Initialize(Level level)
+        public void Initialize(Level level, long seed)
         {
             Transform decorationsTransform = InitializeDecorations();
 
             TileType[,] decoratedLevel = GenerateDecoratedLevel(level);
             foreach (Room room in level.Rooms)
             {
-                DecorateRoom(decoratedLevel, room, decorationsTransform);
+                DecorateRoom(decoratedLevel, room, decorationsTransform, seed);
             }
             UpdateDecorationTexture(decoratedLevel);
         }
@@ -64,16 +63,15 @@ namespace PolyQuest.PCG
         /*---------------------------------------------------------------------
         | --- DecorateRoom: Decorates a room based on the decorated level --- |
         ---------------------------------------------------------------------*/
-        private void DecorateRoom(TileType[,] decoratedLevel, Room room, Transform decorationsTransform)
+        private void DecorateRoom(TileType[,] decoratedLevel, Room room, Transform decorationsTransform, long seed)
         {
             RoomPattern roomPattern = GetMatchingRoomPattern(room);
             if (roomPattern == null)
                 return;
 
-            // Apply the room pattern once - it handles all sub-patterns internally
             if (roomPattern.CanBeApplied(decoratedLevel, room))
             {
-                roomPattern.Apply(decoratedLevel, room, decorationsTransform);
+                roomPattern.Apply(decoratedLevel, room, decorationsTransform, seed);
             }
         }
 

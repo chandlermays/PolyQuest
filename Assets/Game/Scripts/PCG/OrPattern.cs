@@ -27,7 +27,7 @@ namespace PolyQuest.PCG
         /*-----------------------------------------------------------------------------------
         | --- Apply: Randomly selects and applies one of the patterns to the given room --- |
         -----------------------------------------------------------------------------------*/
-        public override void Apply(TileType[,] decoratedLevel, Room room, Transform parent)
+        public override void Apply(TileType[,] decoratedLevel, Room room, Transform parent, long seed)
         {
             List<DecoratorPattern> applicablePatterns = new();
             foreach (DecoratorPattern pattern in Patterns)
@@ -41,9 +41,9 @@ namespace PolyQuest.PCG
             if (applicablePatterns.Count == 0)
                 return;
 
-            XorShift128Plus rng = new((ulong)(DateTime.Now.Ticks));
+            XorShift128Plus rng = new(unchecked((ulong)seed));
             int patternIndex = rng.RandomRange(0, applicablePatterns.Count);
-            applicablePatterns[patternIndex].Apply(decoratedLevel, room, parent);
+            applicablePatterns[patternIndex].Apply(decoratedLevel, room, parent, seed);
         }
     }
 }
