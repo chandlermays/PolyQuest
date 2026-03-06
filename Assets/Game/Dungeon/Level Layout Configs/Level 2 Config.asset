@@ -18,8 +18,8 @@ MonoBehaviour:
     m_maxCountPerTemplate: 4
   - m_roomTemplate: {fileID: 11400000, guid: 0bccd983bc9a68d4d946a1017276678b, type: 2}
     m_maxCountPerTemplate: 5
-  m_minCorridorLength: 4
-  m_maxCorridorLength: 6
+  m_minCorridorLength: 3
+  m_maxCorridorLength: 4
   m_doorDistanceFromEdge: 2
   m_minDistanceBetweenRooms: 4
   m_bossRoomScoring:

@@ -15,10 +15,10 @@ MonoBehaviour:
   m_prefab: {fileID: 6448671511022927515, guid: 4f993851c8f635b4b93e53eaec65f8bc, type: 3}
   m_prefabRotation: 0
   m_targetPattern:
-    m_array: 00000000000000000500000005000000
-    m_width: 2
-    m_height: 2
+    m_array: 040000000400000004000000050000000500000005000000050000000500000005000000
+    m_width: 3
+    m_height: 3
   m_resultPattern:
-    m_array: 03000000010000000500000001000000
-    m_width: 2
-    m_height: 2
+    m_array: 040000000300000004000000050000000500000005000000050000000500000005000000
+    m_width: 3
+    m_height: 3

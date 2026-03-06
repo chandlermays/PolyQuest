@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f955b5bd84c1e0544a3424cf9d4893e6, type: 3}
   m_Name: Medium Room
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.PCG.RoomTemplate
-  m_minRoomWidth: 8
-  m_maxRoomWidth: 10
-  m_minRoomLength: 8
-  m_maxRoomLength: 10
+  m_minRoomWidth: 10
+  m_maxRoomWidth: 12
+  m_minRoomLength: 10
+  m_maxRoomLength: 12

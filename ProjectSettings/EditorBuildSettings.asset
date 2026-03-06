@@ -15,8 +15,11 @@ EditorBuildSettings:
     path: Assets/Game/Scenes/Route 2/Route 2.unity
     guid: 4103cf08c26472e4aa74e26f83f0f7f7
   - enabled: 1
-    path: Assets/Game/Scenes/Dungeon/Dungeon.unity
+    path: Assets/Game/Scenes/Dungeon/Dungeon Level 1.unity
     guid: 5bc95ab016a12f548b0e15076b03b19f
+  - enabled: 1
+    path: Assets/Game/Scenes/Dungeon/Dungeon Level 2.unity
+    guid: 6ab072e7ca4b25647bfba7ce663327d2
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: b72a72ec29b84e74c920c1c2c45f34cf, type: 3}
   m_UseUCBPForAssetBundles: 0

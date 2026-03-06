@@ -19,6 +19,6 @@ MonoBehaviour:
     m_width: 2
     m_height: 2
   m_resultPattern:
-    m_array: 00000000020000000000000002000000
+    m_array: 03000000020000000300000002000000
     m_width: 2
     m_height: 2

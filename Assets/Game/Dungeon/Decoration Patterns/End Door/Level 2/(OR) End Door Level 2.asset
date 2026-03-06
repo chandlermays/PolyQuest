@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56d80e2008b338e46bafbe7a7fcc023b, type: 3}
+  m_Name: (OR) End Door Level 2
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.PCG.OrPattern
+  m_patterns:
+  - {fileID: 11400000, guid: 70e8e7259670dc44695013c9b9b91dc6, type: 2}
+  - {fileID: 11400000, guid: 4cfdd512dae84ec4bb2d6644e48c9d7a, type: 2}
+  - {fileID: 11400000, guid: 55bf337ca4ac09743a42774cbd5155d5, type: 2}
+  - {fileID: 11400000, guid: 075e142c8238f404e83d182fa15d1e75, type: 2}

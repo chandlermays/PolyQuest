@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 //---------------------------------
+
 namespace PolyQuest.PCG
 {
     public class LayoutGenerator : MonoBehaviour
@@ -16,6 +17,11 @@ namespace PolyQuest.PCG
         private Dictionary<RoomTemplate, int> m_availableRooms;
 
         public XorShift128Plus RNG => m_rng;
+        public long Seed
+        {
+            get => m_seed;
+            set => m_seed = value;
+        }
 
         /*--------------------------------------------------------------------------------------
         | --- GenerateLayout: Generates a level layout based on the provided configuration --- |
@@ -34,7 +40,6 @@ namespace PolyQuest.PCG
 #if UNITY_EDITOR
             DrawLayout(startRoomRect);
 #endif
-
             return m_level;
         }
 
@@ -125,6 +130,7 @@ namespace PolyQuest.PCG
                     if (incomingCorridor.StartRoom == room)
                         room.AddCorridor(incomingCorridor);
                 }
+
                 foreach (Corridor outgoingCorridor in m_level.Corridors)
                 {
                     if (outgoingCorridor.EndRoom == room)
@@ -407,14 +413,17 @@ namespace PolyQuest.PCG
                     roomPosition.x -= endPosition.x;
                     roomPosition.y += distance + 1;
                     break;
+
                 case Direction.kSouth:
                     roomPosition.x -= endPosition.x;
                     roomPosition.y -= distance + roomLength;
                     break;
+
                 case Direction.kWest:
                     roomPosition.x -= distance + roomWidth;
                     roomPosition.y -= endPosition.y;
                     break;
+
                 case Direction.kEast:
                     roomPosition.x += distance + roomWidth;
                     roomPosition.y -= endPosition.y;
@@ -453,6 +462,7 @@ namespace PolyQuest.PCG
                 if (paddedRoomRect.Overlaps(room.Area))
                     return true;
             }
+
             foreach (Corridor corridor in corridors)
             {
                 if (paddedRoomRect.Overlaps(corridor.Area))

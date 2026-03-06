@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56d80e2008b338e46bafbe7a7fcc023b, type: 3}
+  m_Name: (OR) Stairs Level 2
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.PCG.OrPattern
+  m_patterns:
+  - {fileID: 11400000, guid: 1f845f7667088244892275bb23ca65b2, type: 2}
+  - {fileID: 11400000, guid: eb41ed6df71afcc429e40ee0014afb3a, type: 2}
+  - {fileID: 11400000, guid: bef3dfb6e66bca140b0b557137910fa8, type: 2}
+  - {fileID: 11400000, guid: 7b6a36198a39bcc47987730688df286c, type: 2}

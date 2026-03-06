@@ -15,10 +15,10 @@ namespace PolyQuest.Components
      * ------------------------------------------------------------------------------------------------ */
     public abstract class EntityComponent : MonoBehaviour
     {
-        protected GameObject Owner { get; private set; }
-        protected Transform Transform { get; private set; }
-        protected Animator Animator { get; private set; }
-        protected NavMeshAgent NavMeshAgent { get; private set; }
+        public GameObject Owner { get; private set; }
+        public Transform Transform { get; private set; }
+        public Animator Animator { get; private set; }
+        public NavMeshAgent NavMeshAgent { get; private set; }
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |

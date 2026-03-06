@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4539794af5a80b24194494c77eb01469, type: 3}
+  m_Name: End Room (Level 2)
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.PCG.RoomPattern
+  m_patterns:
+  - {fileID: 11400000, guid: 5f3e18707badd0c4a89fb26734860412, type: 2}
+  - {fileID: 11400000, guid: f59ff95f79edaa145aac9a7a9989dd6c, type: 2}
+  - {fileID: 11400000, guid: 6a6e7f9c7e3b8a74c90c0981135331a4, type: 2}
+  - {fileID: 11400000, guid: 66451739d93bb2041a3b22a465b595ff, type: 2}
+  - {fileID: 11400000, guid: 491e9c015f972614dbef428985668a73, type: 2}
+  - {fileID: 11400000, guid: d58633e54744f9041af8443fa1a07a63, type: 2}
+  m_roomType: 1
