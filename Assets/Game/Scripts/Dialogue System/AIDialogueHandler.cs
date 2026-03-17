@@ -5,6 +5,7 @@ using PolyQuest.Core;
 using PolyQuest.Input;
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
+using PolyQuest.Components;
 
 namespace PolyQuest.Dialogues
 {
@@ -22,6 +23,8 @@ namespace PolyQuest.Dialogues
         [SerializeField] private Dialogue m_dialogue;
         [SerializeField] private string m_speakerName;
 
+        private HighlightComponent m_highlightComponent;
+
         public string SpeakerName => m_speakerName;
         public CinemachineCamera DialogueCamera => m_dialogueCamera;
 
@@ -31,6 +34,9 @@ namespace PolyQuest.Dialogues
         private void Awake()
         {
             Utilities.CheckForNull(m_dialogue, nameof(m_dialogue));
+
+            m_highlightComponent = GetComponent<HighlightComponent>();
+            Utilities.CheckForNull(m_highlightComponent, nameof(m_highlightComponent));
         }
 
         /*-------------------------------------------------------------
@@ -46,6 +52,8 @@ namespace PolyQuest.Dialogues
         ----------------------------------------------------------------------------*/
         public bool HandleRaycast(PlayerController playerController)
         {
+            m_highlightComponent.Highlight();
+
             if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
             {
                 playerController.GetComponent<PlayerDialogueHandler>().BeginDialogueAction(this, m_dialogue);

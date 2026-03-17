@@ -40,6 +40,8 @@ namespace PolyQuest.Player
         private Renderer[] m_renderers;
         private bool m_isVisible = true;
 
+        private GameObject m_lastHighlightedObject;
+
         private PolyQuestInputActions m_inputActions;
 
         /*----------------------------------------------------------------
@@ -176,7 +178,6 @@ namespace PolyQuest.Player
             {
                 RaycastHit hit = m_raycasts[i];
 
-                // Ignore self
                 if (hit.transform.gameObject == gameObject)
                     continue;
 
@@ -185,12 +186,33 @@ namespace PolyQuest.Player
                 {
                     if (raycastable.HandleRaycast(this))
                     {
+                        // Clear the previous highlight if we've moved to a new target
+                        if (m_lastHighlightedObject != hit.transform.gameObject)
+                        {
+                            ClearLastHighlight();
+                            m_lastHighlightedObject = hit.transform.gameObject;
+                        }
+
                         SetCursor(raycastable.GetCursorType());
                         return true;
                     }
                 }
             }
+
+            ClearLastHighlight();
             return false;
+        }
+
+        /*--------------------------------------------------------------------------------
+        | --- ClearLastHighlight: Clear the highlight on the last highlighted object --- |
+        --------------------------------------------------------------------------------*/
+        private void ClearLastHighlight()
+        {
+            if (m_lastHighlightedObject == null)
+                return;
+
+            m_lastHighlightedObject.GetComponent<HighlightComponent>()?.ClearHighlight();
+            m_lastHighlightedObject = null;
         }
 
         /*--------------------------------------------------------------------- 

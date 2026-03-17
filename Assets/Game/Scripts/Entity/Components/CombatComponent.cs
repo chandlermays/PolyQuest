@@ -273,6 +273,8 @@ namespace PolyQuest.Components
             if (!playerController.GetComponent<CombatComponent>().CanAttack(gameObject))
                 return false;
 
+            GetComponent<HighlightComponent>()?.Highlight();
+
             if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
             {
                 playerController.GetComponent<CombatComponent>().SetTarget(gameObject);
