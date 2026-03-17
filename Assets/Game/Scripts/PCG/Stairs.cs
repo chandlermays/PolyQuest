@@ -53,7 +53,6 @@ namespace PolyQuest.SceneManagement
 
             if (distanceToStairs >= m_interactRange)
             {
-                Debug.Log($"Agent enabled: {m_playerMovement.NavMeshAgent.enabled}, isOnNavMesh: {m_playerMovement.NavMeshAgent.isOnNavMesh}");
                 m_playerMovement.MoveTo(m_transform.position);
             }
             else

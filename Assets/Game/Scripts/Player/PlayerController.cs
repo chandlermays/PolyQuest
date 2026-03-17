@@ -178,9 +178,7 @@ namespace PolyQuest.Player
 
                 // Ignore self
                 if (hit.transform.gameObject == gameObject)
-                {
                     continue;
-                }
 
                 IRaycastable[] raycastables = hit.transform.GetComponents<IRaycastable>();
                 foreach (IRaycastable raycastable in raycastables)
@@ -205,7 +203,8 @@ namespace PolyQuest.Player
 
             if (RaycastNavMesh(out Vector3 target))
             {
-                if (!m_movement.CanMoveTo(target)) return false;
+                if (!m_movement.CanMoveTo(target))
+                    return false;
 
                 m_movement.StartMoveAction(target);
                 SetCursor(CursorSettings.CursorType.kMovement);

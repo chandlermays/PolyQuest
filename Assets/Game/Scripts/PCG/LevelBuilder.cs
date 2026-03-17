@@ -49,8 +49,8 @@ namespace PolyQuest.PCG
         {
             Level level = m_layoutGenerator.GenerateLayout();
             m_levelGeometry.CreateLevelGeometry();
-            m_navMeshSurface.BuildNavMesh();
             m_roomDecorator.Initialize(level, m_layoutGenerator.Seed);
+            m_navMeshSurface.BuildNavMesh();
         }
 
         /*-----------------------------------------------------------------------------------

@@ -51,9 +51,9 @@ namespace PolyQuest.SceneManagement
             MoveToDoor();
         }
 
-        /*-----------------------------------------------------------------------
+        /*------------------------------------------------------------------
         | --- MoveToDoor: Move the Player within range of the End Door --- |
-        -----------------------------------------------------------------------*/
+        ------------------------------------------------------------------*/
         private void MoveToDoor()
         {
             float distanceToDoor = Vector3.Distance(m_playerMovement.transform.position, m_transform.position);
