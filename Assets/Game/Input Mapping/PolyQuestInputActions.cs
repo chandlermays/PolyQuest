@@ -466,6 +466,182 @@ namespace PolyQuest.Input
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Debug"",
+            ""id"": ""9eaf365d-f488-4d07-92ec-773b2314cb20"",
+            ""actions"": [
+                {
+                    ""name"": ""Decrease Health"",
+                    ""type"": ""Button"",
+                    ""id"": ""5a16792a-b2a6-4d16-b664-b9ff6e70ac3d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Increase Health"",
+                    ""type"": ""Button"",
+                    ""id"": ""944590cb-0ffd-4771-a7f7-4796ada1d95a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Increase Experience"",
+                    ""type"": ""Button"",
+                    ""id"": ""e6be4f5c-b457-44b1-99c3-a57203ff293a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AddItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""3fbc5aef-bbe0-4875-98dc-efa681e9e62a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""d79b2813-b307-45f7-95c4-bbb04cc9d142"",
+                    ""path"": ""OneModifier(modifiersOrder=1)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Decrease Health"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""00281564-a628-4f2e-9398-f2cd7419f440"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Decrease Health"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""cc938cbb-5662-469a-b560-6bb655ab0edb"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Decrease Health"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""87e8b59c-2d1d-4092-a026-52e360da0a08"",
+                    ""path"": ""OneModifier(modifiersOrder=1)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Increase Health"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""7c28ec4a-02d2-4e42-8e43-13b5bcb04de3"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Increase Health"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""d6c5ae56-555c-48ff-a8c3-1e937f71fff4"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Increase Health"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""97834e4c-163d-4747-9901-4b1dc68c9e4e"",
+                    ""path"": ""OneModifier(modifiersOrder=1)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Increase Experience"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""8a8dbbed-b9a4-44b6-a440-2750fa5e793b"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Increase Experience"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""38e61f57-2e4e-4ac7-8926-824d291fdb22"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Increase Experience"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""03bfd312-b1c9-4157-b56a-63dc2f78bfaa"",
+                    ""path"": ""OneModifier(modifiersOrder=1)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AddItem"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""8d662b92-40d9-4821-9bef-d4ee6c87556b"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AddItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""7d4b7886-e3a7-4548-8d9a-7ae2dce8631d"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AddItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -492,6 +668,12 @@ namespace PolyQuest.Input
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_DoubleClick = m_UI.FindAction("Double Click", throwIfNotFound: true);
             m_UI_SplitModifier = m_UI.FindAction("Split Modifier", throwIfNotFound: true);
+            // Debug
+            m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
+            m_Debug_DecreaseHealth = m_Debug.FindAction("Decrease Health", throwIfNotFound: true);
+            m_Debug_IncreaseHealth = m_Debug.FindAction("Increase Health", throwIfNotFound: true);
+            m_Debug_IncreaseExperience = m_Debug.FindAction("Increase Experience", throwIfNotFound: true);
+            m_Debug_AddItem = m_Debug.FindAction("AddItem", throwIfNotFound: true);
         }
 
         ~@PolyQuestInputActions()
@@ -499,6 +681,7 @@ namespace PolyQuest.Input
             UnityEngine.Debug.Assert(!m_Camera.enabled, "This will cause a leak and performance issues, PolyQuestInputActions.Camera.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_Gameplay.enabled, "This will cause a leak and performance issues, PolyQuestInputActions.Gameplay.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PolyQuestInputActions.UI.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_Debug.enabled, "This will cause a leak and performance issues, PolyQuestInputActions.Debug.Disable() has not been called.");
         }
 
         /// <summary>
@@ -1001,6 +1184,135 @@ namespace PolyQuest.Input
         /// Provides a new <see cref="UIActions" /> instance referencing this action map.
         /// </summary>
         public UIActions @UI => new UIActions(this);
+
+        // Debug
+        private readonly InputActionMap m_Debug;
+        private List<IDebugActions> m_DebugActionsCallbackInterfaces = new List<IDebugActions>();
+        private readonly InputAction m_Debug_DecreaseHealth;
+        private readonly InputAction m_Debug_IncreaseHealth;
+        private readonly InputAction m_Debug_IncreaseExperience;
+        private readonly InputAction m_Debug_AddItem;
+        /// <summary>
+        /// Provides access to input actions defined in input action map "Debug".
+        /// </summary>
+        public struct DebugActions
+        {
+            private @PolyQuestInputActions m_Wrapper;
+
+            /// <summary>
+            /// Construct a new instance of the input action map wrapper class.
+            /// </summary>
+            public DebugActions(@PolyQuestInputActions wrapper) { m_Wrapper = wrapper; }
+            /// <summary>
+            /// Provides access to the underlying input action "Debug/DecreaseHealth".
+            /// </summary>
+            public InputAction @DecreaseHealth => m_Wrapper.m_Debug_DecreaseHealth;
+            /// <summary>
+            /// Provides access to the underlying input action "Debug/IncreaseHealth".
+            /// </summary>
+            public InputAction @IncreaseHealth => m_Wrapper.m_Debug_IncreaseHealth;
+            /// <summary>
+            /// Provides access to the underlying input action "Debug/IncreaseExperience".
+            /// </summary>
+            public InputAction @IncreaseExperience => m_Wrapper.m_Debug_IncreaseExperience;
+            /// <summary>
+            /// Provides access to the underlying input action "Debug/AddItem".
+            /// </summary>
+            public InputAction @AddItem => m_Wrapper.m_Debug_AddItem;
+            /// <summary>
+            /// Provides access to the underlying input action map instance.
+            /// </summary>
+            public InputActionMap Get() { return m_Wrapper.m_Debug; }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+            public void Enable() { Get().Enable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+            public void Disable() { Get().Disable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+            public bool enabled => Get().enabled;
+            /// <summary>
+            /// Implicitly converts an <see ref="DebugActions" /> to an <see ref="InputActionMap" /> instance.
+            /// </summary>
+            public static implicit operator InputActionMap(DebugActions set) { return set.Get(); }
+            /// <summary>
+            /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <param name="instance">Callback instance.</param>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+            /// </remarks>
+            /// <seealso cref="DebugActions" />
+            public void AddCallbacks(IDebugActions instance)
+            {
+                if (instance == null || m_Wrapper.m_DebugActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_DebugActionsCallbackInterfaces.Add(instance);
+                @DecreaseHealth.started += instance.OnDecreaseHealth;
+                @DecreaseHealth.performed += instance.OnDecreaseHealth;
+                @DecreaseHealth.canceled += instance.OnDecreaseHealth;
+                @IncreaseHealth.started += instance.OnIncreaseHealth;
+                @IncreaseHealth.performed += instance.OnIncreaseHealth;
+                @IncreaseHealth.canceled += instance.OnIncreaseHealth;
+                @IncreaseExperience.started += instance.OnIncreaseExperience;
+                @IncreaseExperience.performed += instance.OnIncreaseExperience;
+                @IncreaseExperience.canceled += instance.OnIncreaseExperience;
+                @AddItem.started += instance.OnAddItem;
+                @AddItem.performed += instance.OnAddItem;
+                @AddItem.canceled += instance.OnAddItem;
+            }
+
+            /// <summary>
+            /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <remarks>
+            /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+            /// </remarks>
+            /// <seealso cref="DebugActions" />
+            private void UnregisterCallbacks(IDebugActions instance)
+            {
+                @DecreaseHealth.started -= instance.OnDecreaseHealth;
+                @DecreaseHealth.performed -= instance.OnDecreaseHealth;
+                @DecreaseHealth.canceled -= instance.OnDecreaseHealth;
+                @IncreaseHealth.started -= instance.OnIncreaseHealth;
+                @IncreaseHealth.performed -= instance.OnIncreaseHealth;
+                @IncreaseHealth.canceled -= instance.OnIncreaseHealth;
+                @IncreaseExperience.started -= instance.OnIncreaseExperience;
+                @IncreaseExperience.performed -= instance.OnIncreaseExperience;
+                @IncreaseExperience.canceled -= instance.OnIncreaseExperience;
+                @AddItem.started -= instance.OnAddItem;
+                @AddItem.performed -= instance.OnAddItem;
+                @AddItem.canceled -= instance.OnAddItem;
+            }
+
+            /// <summary>
+            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="DebugActions.UnregisterCallbacks(IDebugActions)" />.
+            /// </summary>
+            /// <seealso cref="DebugActions.UnregisterCallbacks(IDebugActions)" />
+            public void RemoveCallbacks(IDebugActions instance)
+            {
+                if (m_Wrapper.m_DebugActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            /// <summary>
+            /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+            /// </summary>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+            /// </remarks>
+            /// <seealso cref="DebugActions.AddCallbacks(IDebugActions)" />
+            /// <seealso cref="DebugActions.RemoveCallbacks(IDebugActions)" />
+            /// <seealso cref="DebugActions.UnregisterCallbacks(IDebugActions)" />
+            public void SetCallbacks(IDebugActions instance)
+            {
+                foreach (var item in m_Wrapper.m_DebugActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_DebugActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        /// <summary>
+        /// Provides a new <see cref="DebugActions" /> instance referencing this action map.
+        /// </summary>
+        public DebugActions @Debug => new DebugActions(this);
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Camera" which allows adding and removing callbacks.
         /// </summary>
@@ -1136,6 +1448,42 @@ namespace PolyQuest.Input
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnSplitModifier(InputAction.CallbackContext context);
+        }
+        /// <summary>
+        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Debug" which allows adding and removing callbacks.
+        /// </summary>
+        /// <seealso cref="DebugActions.AddCallbacks(IDebugActions)" />
+        /// <seealso cref="DebugActions.RemoveCallbacks(IDebugActions)" />
+        public interface IDebugActions
+        {
+            /// <summary>
+            /// Method invoked when associated input action "Decrease Health" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnDecreaseHealth(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Increase Health" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnIncreaseHealth(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Increase Experience" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnIncreaseExperience(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "AddItem" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnAddItem(InputAction.CallbackContext context);
         }
     }
 }

@@ -1,18 +1,27 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 //---------------------------------
-using PolyQuest.UI.Dragging;
 using PolyQuest.Abilities;
+using PolyQuest.Input;
+using PolyQuest.UI.Dragging;
 
 namespace PolyQuest.Inventories
 {
-    public class ActionSlotUI : MonoBehaviour, IItemHolder, IDragContainer<InventoryItem>
+    public class ActionSlotUI : MonoBehaviour, IItemHolder, IDragContainer<InventoryItem>, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private InventoryItemIcon m_itemIcon;
         [SerializeField] private int m_index = 0;
-        [SerializeField] private Actions m_playerActions;
-        [SerializeField] private Cooldowns m_playerCooldowns;
+        [SerializeField] private GameObject m_player;
         [SerializeField] private Image m_cooldownOverlay;
+
+        private Actions m_playerActions;
+        private Cooldowns m_playerCooldowns;
+        private Inventory m_playerInventory;
+
+        private bool m_isCursorOver = false;
+        private InputAction m_doubleClickAction;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -20,8 +29,15 @@ namespace PolyQuest.Inventories
         private void Awake()
         {
             Utilities.CheckForNull(m_itemIcon, nameof(m_itemIcon));
+
+            m_playerActions = m_player.GetComponent<Actions>();
             Utilities.CheckForNull(m_playerActions, nameof(m_playerActions));
+
+            m_playerCooldowns = m_player.GetComponent<Cooldowns>();
             Utilities.CheckForNull(m_playerCooldowns, nameof(m_playerCooldowns));
+
+            m_playerInventory = m_player.GetComponent<Inventory>();
+            Utilities.CheckForNull(m_playerInventory, nameof(m_playerInventory));
         }
 
         /*---------------------------------------------------------------------
@@ -38,14 +54,70 @@ namespace PolyQuest.Inventories
         private void OnDisable()
         {
             m_playerActions.OnActionTabUpdated -= UpdateIcon;
+
+            if (m_doubleClickAction != null)
+            {
+                m_doubleClickAction.performed -= OnDoubleClick;
+            }
         }
 
-        /*----------------------------------------- 
+        /*-----------------------------------------------------
+        | --- Start: Called before the first frame update --- |
+        -----------------------------------------------------*/
+        private void Start()
+        {
+            m_doubleClickAction = InputManager.Instance.InputActions.UI.DoubleClick;
+            m_doubleClickAction.performed += OnDoubleClick;
+        }
+
+        /*-----------------------------------------
         | --- Update: Called upon every frame --- |
         -----------------------------------------*/
         private void Update()
         {
             m_cooldownOverlay.fillAmount = m_playerCooldowns.GetRemainingPercentage(GetItem());
+        }
+
+        /*-------------------------------------------------------------
+        | --- OnDoubleClick: Handle the double-click input action --- |
+        -------------------------------------------------------------*/
+        private void OnDoubleClick(InputAction.CallbackContext context)
+        {
+            if (m_isCursorOver)
+            {
+                HandleDoubleClick();
+            }
+        }
+
+        /*--------------------------------------------------------------------
+        | --- OnPointerEnter: Called when the pointer enters this object --- |
+        --------------------------------------------------------------------*/
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            m_isCursorOver = true;
+            Debug.Log("Cursor entered ActionSlotUI.");
+        }
+
+        /*-------------------------------------------------------------------
+        | --- OnPointerEnter: Called when the pointer exits this object --- |
+        -------------------------------------------------------------------*/
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            m_isCursorOver = false;
+            Debug.Log("Cursor exited ActionSlotUI.");
+        }
+
+        /*------------------------------------------------------------------------------
+        | --- HandleDoubleClick: Handle double-click actions on the inventory slot --- |
+        ------------------------------------------------------------------------------*/
+        private void HandleDoubleClick()
+        {
+            Debug.Log("Executed the HandleDoubleClick method.");
+
+            if (GetItem() == null)
+                return;
+
+            m_playerActions.Use(m_playerInventory.gameObject, m_index);
         }
 
         /*------------------------------------------------

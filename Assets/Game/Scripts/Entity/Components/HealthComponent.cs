@@ -100,6 +100,11 @@ namespace PolyQuest.Components
                 m_lastKnownMaxHealth = m_health;
                 m_hasBeenInitialized = true;
                 OnHealthChanged?.Invoke();
+
+                if (Owner.name.Contains("Player"))
+                {
+                    Debug.Log($"Max health starts at: {m_lastKnownMaxHealth} with the Current health at: {m_health}");
+                }
             }
         }
 
@@ -119,13 +124,13 @@ namespace PolyQuest.Components
                 return;
             }
 
-            if (m_health > newMaxHealth)
-            {
-                m_health = newMaxHealth; // Clamp down if necessary
-            }
+            float delta = newMaxHealth - m_lastKnownMaxHealth;
+            m_health = Mathf.Clamp(m_health + delta, 0f, newMaxHealth);
 
             m_lastKnownMaxHealth = newMaxHealth;
             OnHealthChanged?.Invoke();
+
+            Debug.Log($"Max Health recalculated: {newMaxHealth}, Current Health: {m_health}");
         }
 
         /*---------------------------------------------------------------
