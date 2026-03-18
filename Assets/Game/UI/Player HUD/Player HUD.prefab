@@ -725,6 +725,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Health Container
       objectReference: {fileID: 0}
+    - target: {fileID: 5526891716664447042, guid: 93387f323d875da41a4933dccd9db5db, type: 3}
+      propertyPath: m_healthBarFill
+      value: 
+      objectReference: {fileID: 1388352152168134061}
     - target: {fileID: 9200442454420102433, guid: 93387f323d875da41a4933dccd9db5db, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -810,6 +814,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93387f323d875da41a4933dccd9db5db, type: 3}
+--- !u!114 &1388352152168134061 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2621750087379496520, guid: 93387f323d875da41a4933dccd9db5db, type: 3}
+  m_PrefabInstance: {fileID: 3973926657189469157}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &5226621534396335812 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 9200442454420102433, guid: 93387f323d875da41a4933dccd9db5db, type: 3}

@@ -23,10 +23,10 @@ namespace PolyQuest.Dialogues
         [SerializeField] private Dialogue m_dialogue;
         [SerializeField] private string m_speakerName;
 
-        private HighlightComponent m_highlightComponent;
-
         public string SpeakerName => m_speakerName;
         public CinemachineCamera DialogueCamera => m_dialogueCamera;
+
+        private Outline m_outline;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -35,8 +35,8 @@ namespace PolyQuest.Dialogues
         {
             Utilities.CheckForNull(m_dialogue, nameof(m_dialogue));
 
-            m_highlightComponent = GetComponent<HighlightComponent>();
-            Utilities.CheckForNull(m_highlightComponent, nameof(m_highlightComponent));
+            m_outline = GetComponent<Outline>();
+            Utilities.CheckForNull(m_outline, nameof(m_outline));
         }
 
         /*-------------------------------------------------------------
@@ -52,14 +52,17 @@ namespace PolyQuest.Dialogues
         ----------------------------------------------------------------------------*/
         public bool HandleRaycast(PlayerController playerController)
         {
-            m_highlightComponent.Highlight();
-
             if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
             {
                 playerController.GetComponent<PlayerDialogueHandler>().BeginDialogueAction(this, m_dialogue);
             }
 
             return true;
+        }
+
+        public void ToggleHighlight(bool highlight)
+        {
+            m_outline.enabled = highlight;
         }
     }
 }

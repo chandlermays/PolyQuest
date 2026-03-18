@@ -1,9 +1,10 @@
-﻿using UnityEngine;
-//---------------------------------
+﻿//---------------------------------
 using PolyQuest.Core;
 using PolyQuest.Input;
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace PolyQuest.SceneManagement
 {
@@ -20,6 +21,8 @@ namespace PolyQuest.SceneManagement
     {
         private EndDoor m_endDoor;
 
+        private Outline m_outline;
+
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
@@ -27,6 +30,9 @@ namespace PolyQuest.SceneManagement
         {
             m_endDoor = GetComponent<EndDoor>();
             Utilities.CheckForNull(m_endDoor, nameof(m_endDoor));
+
+            m_outline = GetComponent<Outline>();
+            Utilities.CheckForNull(m_outline, nameof(m_outline));
         }
 
         /*-----------------------------------------------------------------
@@ -47,6 +53,11 @@ namespace PolyQuest.SceneManagement
                 m_endDoor.SetAsTarget(playerController);
             }
             return true;
+        }
+
+        public void ToggleHighlight(bool highlight)
+        {
+            m_outline.enabled = highlight;
         }
     }
 }

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1323364903592557527}
   - component: {fileID: 3714728132098454972}
   - component: {fileID: 4251764870681324784}
+  - component: {fileID: 1704329252419452213}
   m_Layer: 0
   m_Name: Pickup
   m_TagString: Untagged
@@ -68,6 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb137ede59101b499240d85d1076599, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_pickupRange: 1.5
 --- !u!114 &4251764870681324784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,6 +82,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b60b0c5edca987f4e8afeb559a125bab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1704329252419452213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5701707653884172157}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 1, g: 0.69803923, b: 0, a: 1}
+  outlineWidth: 6
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &7360997588171357322
 GameObject:
   m_ObjectHideFlags: 0
@@ -138,6 +158,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -159,7 +184,9 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}

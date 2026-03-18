@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 //---------------------------------
 using PolyQuest.Core;
 using PolyQuest.Input;
@@ -9,6 +6,10 @@ using PolyQuest.Inventories;
 using PolyQuest.Player;
 using PolyQuest.Saving;
 using PolyQuest.UI.Core;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace PolyQuest.Shops
 {
@@ -44,11 +45,16 @@ namespace PolyQuest.Shops
         public bool IsBuyMode => m_isBuyingMode;
         public ItemCategory CurrentFilter => m_currentFilter;
 
+        private Outline m_outline;
+
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
         private void Awake()
         {
+            m_outline = GetComponent<Outline>();
+            Utilities.CheckForNull(m_outline, nameof(m_outline));
+
             foreach (ShopItemEntry entry in m_shopInventory)
             {
                 m_currentStock[entry.Item] = entry.InitialStock;
@@ -311,6 +317,11 @@ namespace PolyQuest.Shops
                     }
                 }
             }
+        }
+
+        public void ToggleHighlight(bool highlight)
+        {
+            m_outline.enabled = highlight;
         }
     }
 }

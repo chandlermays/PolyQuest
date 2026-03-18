@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using UnityEngine;
 //---------------------------------
 using PolyQuest.Attributes;
 using PolyQuest.Combat;
@@ -8,6 +6,9 @@ using PolyQuest.Input;
 using PolyQuest.Inventories;
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace PolyQuest.Components
 {
@@ -51,6 +52,8 @@ namespace PolyQuest.Components
         public GameObject Target => m_target;
         public LayerMask TargetLayers => m_targetLayers;
 
+        private Outline m_outline;
+
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
@@ -75,6 +78,8 @@ namespace PolyQuest.Components
             Utilities.CheckForNull(m_baseStats, nameof(m_baseStats));
 
             m_equipment = GetComponent<Equipment>();
+
+            m_outline = GetComponent<Outline>();
         }
 
         /*---------------------------------------------------------------------
@@ -272,9 +277,7 @@ namespace PolyQuest.Components
         {
             if (!playerController.GetComponent<CombatComponent>().CanAttack(gameObject))
                 return false;
-
-            GetComponent<HighlightComponent>()?.Highlight();
-
+            
             if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
             {
                 playerController.GetComponent<CombatComponent>().SetTarget(gameObject);
@@ -377,6 +380,11 @@ namespace PolyQuest.Components
         private void Shoot()
         {
             PerformAttack();
+        }
+
+        public void ToggleHighlight(bool highlight)
+        {
+            m_outline.enabled = highlight;
         }
     }
 }

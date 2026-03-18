@@ -19,7 +19,8 @@ namespace PolyQuest.UI.HUD
     {
         [Header("Health Bar Settings")]
         [SerializeField] private HealthComponent m_healthComponent;
-        private Image m_healthBarFill;
+        [SerializeField] private Image m_healthBarFill;
+
         private BaseStats m_baseStats;
 
         private float m_maxHealth;
@@ -30,8 +31,6 @@ namespace PolyQuest.UI.HUD
         private void Awake()
         {
             Utilities.CheckForNull(m_healthComponent, nameof(m_healthComponent));
-
-            m_healthBarFill = GetComponent<Image>();
             Utilities.CheckForNull(m_healthBarFill, nameof(m_healthBarFill));
 
             m_baseStats = m_healthComponent.GetComponent<BaseStats>();

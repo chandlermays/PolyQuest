@@ -20,6 +20,8 @@ namespace PolyQuest.Pickups
     {
         private Pickup m_pickup;
 
+        private Outline m_outline;
+
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
@@ -27,6 +29,9 @@ namespace PolyQuest.Pickups
         {
             m_pickup = GetComponent<Pickup>();
             Utilities.CheckForNull(m_pickup, nameof(m_pickup));
+
+            m_outline = GetComponent<Outline>();
+            Utilities.CheckForNull(m_outline, nameof(m_outline));
         }
 
         /*-------------------------------------------------------------
@@ -47,6 +52,11 @@ namespace PolyQuest.Pickups
                 m_pickup.SetAsTarget(playerController);
             }
             return true;
+        }
+
+        public void ToggleHighlight(bool highlight)
+        {
+            m_outline.enabled = highlight;
         }
     }
 }

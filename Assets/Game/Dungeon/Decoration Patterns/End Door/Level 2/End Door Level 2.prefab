@@ -9,8 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7940564443605406541}
-  - component: {fileID: 168477573794258175}
-  - component: {fileID: 6951437352027555707}
   m_Layer: 0
   m_Name: End Door Level 2
   m_TagString: Untagged
@@ -35,31 +33,6 @@ Transform:
   - {fileID: 6177026728264907859}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &168477573794258175
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5238322419112640143}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f70e45173244c34cb4254e81d3282ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.SceneManagement.EndDoor
-  m_interactRange: 2
---- !u!114 &6951437352027555707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5238322419112640143}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf67c9615b949c74fbf3d5f6c3ddf1f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.SceneManagement.ClickableEndDoor
 --- !u!1001 &4161512458744759545
 PrefabInstance:
   m_ObjectHideFlags: 0

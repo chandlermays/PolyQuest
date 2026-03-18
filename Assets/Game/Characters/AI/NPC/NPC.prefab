@@ -1891,7 +1891,7 @@ GameObject:
   - component: {fileID: 5238166851672994123}
   - component: {fileID: 1909811517450575725}
   - component: {fileID: 2770295979244506965}
-  - component: {fileID: 5941589328681557375}
+  - component: {fileID: 8498877888543027432}
   m_Layer: 10
   m_Name: NPC
   m_TagString: NPC
@@ -2125,19 +2125,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c3bd99cde03e23438e3302dd6ced124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Core.ActionManager
---- !u!114 &5941589328681557375
+--- !u!114 &8498877888543027432
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6788340497021815511}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 125542959cb9c654abd4093aa56fad45, type: 3}
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Components.HighlightComponent
-  m_highlightMaterial: {fileID: 2100000, guid: c0b3937f52f624c4398f9575a3e99e49, type: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0, g: 0.614023, b: 1, a: 1}
+  outlineWidth: 6
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &6808664692873903774
 GameObject:
   m_ObjectHideFlags: 0

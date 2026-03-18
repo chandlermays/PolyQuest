@@ -909,6 +909,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7260862250635321012}
+  - component: {fileID: 3792714295672574939}
   m_Layer: 0
   m_Name: Health Bar
   m_TagString: Untagged
@@ -932,6 +933,20 @@ Transform:
   - {fileID: 2296441993731250889}
   m_Father: {fileID: 3169505572643624113}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3792714295672574939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3151290293282786356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7cb8d9132a7d6046b9ca6556bc2f850, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.UI.HUD.HealthBar
+  m_healthComponent: {fileID: 3272163512795474766}
+  m_healthBarFill: {fileID: 3848417212891271642}
 --- !u!1 &3416239109133963329
 GameObject:
   m_ObjectHideFlags: 0
@@ -1346,7 +1361,6 @@ GameObject:
   - component: {fileID: 2961541858737900035}
   - component: {fileID: 2942040660402566470}
   - component: {fileID: 3848417212891271642}
-  - component: {fileID: 4912046938674239678}
   m_Layer: 0
   m_Name: HP Bar Fill
   m_TagString: Untagged
@@ -1411,19 +1425,6 @@ MonoBehaviour:
   m_FillOrigin: 1
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4912046938674239678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4584243561089262778}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7cb8d9132a7d6046b9ca6556bc2f850, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.UI.HUD.HealthBar
-  m_healthComponent: {fileID: 3272163512795474766}
 --- !u!1 &4927312495503246781
 GameObject:
   m_ObjectHideFlags: 0
@@ -1784,7 +1785,7 @@ GameObject:
   - component: {fileID: 5008227000221217880}
   - component: {fileID: 6928696131343925156}
   - component: {fileID: 2857182479567065796}
-  - component: {fileID: 9031662513217235077}
+  - component: {fileID: 6745226246766713138}
   m_Layer: 9
   m_Name: Bandit
   m_TagString: Enemy
@@ -2038,19 +2039,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c3bd99cde03e23438e3302dd6ced124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Core.ActionManager
---- !u!114 &9031662513217235077
+--- !u!114 &6745226246766713138
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6051408657710484760}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 125542959cb9c654abd4093aa56fad45, type: 3}
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Components.HighlightComponent
-  m_highlightMaterial: {fileID: 2100000, guid: 08d36b5d1a77cbd4cb263af1377a0298, type: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 1, g: 0, b: 0, a: 1}
+  outlineWidth: 6
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &6177420467291151336
 GameObject:
   m_ObjectHideFlags: 0

@@ -15,5 +15,6 @@ namespace PolyQuest.Core
     {
         CursorSettings.CursorType GetCursorType();
         bool HandleRaycast(PlayerController playerController);
+        void ToggleHighlight(bool highlight);
     }
 }

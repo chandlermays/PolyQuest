@@ -20,6 +20,8 @@ namespace PolyQuest.SceneManagement
     {
         private Stairs m_stairs;
 
+        private Outline m_outline;
+
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
@@ -47,6 +49,11 @@ namespace PolyQuest.SceneManagement
                 m_stairs.SetAsTarget(playerController);
             }
             return true;
+        }
+
+        public void ToggleHighlight(bool highlight)
+        {
+            m_outline.enabled = highlight;
         }
     }
 }

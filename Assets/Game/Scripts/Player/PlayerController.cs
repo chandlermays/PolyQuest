@@ -83,6 +83,8 @@ namespace PolyQuest.Player
             // Do nothing if you're dead
             if (m_healthComponent.IsDead)
             {
+                m_lastHighlightedObject?.GetComponent<IRaycastable>()?.ToggleHighlight(false);
+                m_lastHighlightedObject = null;
                 SetCursor(CursorSettings.CursorType.kNone);
                 return;
             }
@@ -119,23 +121,22 @@ namespace PolyQuest.Player
         -----------------------------------------------------------------------*/
         private bool HandleAbilities()
         {
-            if (m_inputActions.Gameplay.ActionSlot1.WasPressedThisFrame() && m_actions.Use(gameObject, 0))
-                return true;
+            var slots = m_inputActions.Gameplay;
+            var slotActions = new[]
+            {
+                slots.ActionSlot1,
+                slots.ActionSlot2,
+                slots.ActionSlot3,
+                slots.ActionSlot4,
+                slots.ActionSlot5,
+                slots.ActionSlot6
+            };
 
-            if (m_inputActions.Gameplay.ActionSlot2.WasPressedThisFrame() && m_actions.Use(gameObject, 1))
-                return true;
-
-            if (m_inputActions.Gameplay.ActionSlot3.WasPressedThisFrame() && m_actions.Use(gameObject, 2))
-                return true;
-
-            if (m_inputActions.Gameplay.ActionSlot4.WasPressedThisFrame() && m_actions.Use(gameObject, 3))
-                return true;
-
-            if (m_inputActions.Gameplay.ActionSlot5.WasPressedThisFrame() && m_actions.Use(gameObject, 4))
-                return true;
-
-            if (m_inputActions.Gameplay.ActionSlot6.WasPressedThisFrame() && m_actions.Use(gameObject, 5))
-                return true;
+            for (int i = 0; i < slotActions.Length; i++)
+            {
+                if (slotActions[i].WasPressedThisFrame() && m_actions.Use(gameObject, i))
+                    return true;
+            }
 
             return false;
         }
@@ -174,45 +175,44 @@ namespace PolyQuest.Player
         private bool HandleInteractable()
         {
             int hits = Physics.RaycastNonAlloc(GetCursorRay(), m_raycasts);
+            GameObject newHighlight = null;
+
             for (int i = 0; i < hits; ++i)
             {
                 RaycastHit hit = m_raycasts[i];
 
+                // ignore self
                 if (hit.transform.gameObject == gameObject)
                     continue;
 
-                IRaycastable[] raycastables = hit.transform.GetComponents<IRaycastable>();
-                foreach (IRaycastable raycastable in raycastables)
+                foreach (IRaycastable raycastable in hit.transform.GetComponents<IRaycastable>())
                 {
-                    if (raycastable.HandleRaycast(this))
-                    {
-                        // Clear the previous highlight if we've moved to a new target
-                        if (m_lastHighlightedObject != hit.transform.gameObject)
-                        {
-                            ClearLastHighlight();
-                            m_lastHighlightedObject = hit.transform.gameObject;
-                        }
+                    if (!raycastable.HandleRaycast(this))
+                        continue;
 
-                        SetCursor(raycastable.GetCursorType());
-                        return true;
-                    }
+                    newHighlight = hit.transform.gameObject;
+                    SetCursor(raycastable.GetCursorType());
+                    break;
                 }
+
+                if (newHighlight != null)
+                    break;
             }
 
-            ClearLastHighlight();
-            return false;
+            UpdateHighlight(newHighlight);
+            return newHighlight != null;
         }
 
-        /*--------------------------------------------------------------------------------
-        | --- ClearLastHighlight: Clear the highlight on the last highlighted object --- |
-        --------------------------------------------------------------------------------*/
-        private void ClearLastHighlight()
+        /*-----------------------------------------------------------------------------------------
+        | --- UpdateHighlight: Update the highlighted object based on the current raycast hit --- |
+        -----------------------------------------------------------------------------------------*/
+        private void UpdateHighlight(GameObject newHighlight)
         {
-            if (m_lastHighlightedObject == null)
-                return;
+            if (newHighlight == m_lastHighlightedObject) return;
 
-            m_lastHighlightedObject.GetComponent<HighlightComponent>()?.ClearHighlight();
-            m_lastHighlightedObject = null;
+            m_lastHighlightedObject?.GetComponent<IRaycastable>()?.ToggleHighlight(false);
+            newHighlight?.GetComponent<IRaycastable>()?.ToggleHighlight(true);
+            m_lastHighlightedObject = newHighlight;
         }
 
         /*--------------------------------------------------------------------- 

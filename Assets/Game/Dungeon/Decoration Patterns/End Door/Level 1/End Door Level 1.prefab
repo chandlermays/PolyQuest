@@ -110,6 +110,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 164216, guid: c39c4cd0967de674eb0b5c00da3fdccd, type: 3}
       insertIndex: 9
       addedObject: {fileID: 5556587117576806372}
+    - targetCorrespondingSourceObject: {fileID: 164216, guid: c39c4cd0967de674eb0b5c00da3fdccd, type: 3}
+      insertIndex: 10
+      addedObject: {fileID: 4299269447998590726}
   m_SourcePrefab: {fileID: 100100000, guid: c39c4cd0967de674eb0b5c00da3fdccd, type: 3}
 --- !u!1 &4161512458744923521 stripped
 GameObject:
@@ -141,6 +144,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf67c9615b949c74fbf3d5f6c3ddf1f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.SceneManagement.ClickableEndDoor
+--- !u!114 &4299269447998590726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4161512458744923521}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0, g: 0.6886792, b: 0.07161942, a: 1}
+  outlineWidth: 6
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!4 &4161512458745227061 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 467916, guid: c39c4cd0967de674eb0b5c00da3fdccd, type: 3}
