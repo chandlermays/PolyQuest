@@ -1,6 +1,6 @@
+using System;
 using UnityEngine;
 //---------------------------------
-
 namespace PolyQuest.Core
 {
     /* ---------------------------------------------------------------------------------------------
@@ -17,6 +17,8 @@ namespace PolyQuest.Core
         [SerializeField] private string m_areaName;
         private const string kPlayerTag = "Player";
 
+        public static event Action<string> OnAreaEntered;
+        public static event Action<string> OnAreaExited;
         private bool m_hasEntered = false;
 
         /*------------------------------------------------------------------------
@@ -26,7 +28,7 @@ namespace PolyQuest.Core
         {
             if (!m_hasEntered && other.CompareTag(kPlayerTag))
             {
-                Debug.Log($"Entering area: {m_areaName}");
+                OnAreaEntered?.Invoke(m_areaName);
                 m_hasEntered = true;
             }
         }
@@ -38,6 +40,7 @@ namespace PolyQuest.Core
         {
             if (other.CompareTag(kPlayerTag))
             {
+                OnAreaExited?.Invoke(m_areaName);
                 m_hasEntered = false;
             }
         }

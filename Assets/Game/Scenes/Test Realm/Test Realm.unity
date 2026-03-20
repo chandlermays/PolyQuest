@@ -339,6 +339,73 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 450684, guid: 4a6556da5abedc44594c45ac4a2cf5fe, type: 3}
   m_PrefabInstance: {fileID: 50514809}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &103003764
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 103003765}
+  - component: {fileID: 103003767}
+  - component: {fileID: 103003766}
+  m_Layer: 0
+  m_Name: Caledon Basin Trigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &103003765
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103003764}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -30, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 146447304}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &103003766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103003764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3daa43589fc28b6469e4496956a64fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_areaName: Caledon Basin
+--- !u!65 &103003767
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103003764}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 150, y: 1, z: 90}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &103279284
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -424,7 +491,7 @@ GameObject:
   - component: {fileID: 146447304}
   - component: {fileID: 146447303}
   m_Layer: 0
-  m_Name: World
+  m_Name: Caledon Basin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -479,6 +546,8 @@ Transform:
   - {fileID: 215765899}
   - {fileID: 1548179679}
   - {fileID: 341145663}
+  - {fileID: 1044950294}
+  - {fileID: 103003765}
   - {fileID: 1283662577}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2766,6 +2835,73 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1044950293
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1044950294}
+  - component: {fileID: 1044950296}
+  - component: {fileID: 1044950295}
+  m_Layer: 0
+  m_Name: Stonewick Trigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1044950294
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044950293}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 7, y: 0.5, z: -25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 146447304}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1044950295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044950293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3daa43589fc28b6469e4496956a64fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_areaName: Stonewick
+--- !u!65 &1044950296
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044950293}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 40, y: 1, z: 40}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1061671845
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4546,7 +4682,7 @@ GameObject:
   - component: {fileID: 1548179681}
   - component: {fileID: 1548179680}
   m_Layer: 0
-  m_Name: Camp Area Trigger
+  m_Name: Bandit Camp Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5706,6 +5842,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 413166214961161914, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 417533818313889297, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
+      propertyPath: m_Name
+      value: Name Text
+      objectReference: {fileID: 0}
     - target: {fileID: 583054019281519617, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -5737,6 +5881,18 @@ PrefabInstance:
     - target: {fileID: 712856045654174521, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 799881335017227537, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 799881335017227537, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 799881335017227537, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 925164553517977578, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchorMax.y
@@ -5832,7 +5988,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1778555730307951195, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000114519324
+      value: 0.0005053649
       objectReference: {fileID: 0}
     - target: {fileID: 1835078688839469837, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchorMax.x
@@ -5890,6 +6046,14 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1957857263762746594, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
+      propertyPath: m_text
+      value: Stonewick
+      objectReference: {fileID: 0}
+    - target: {fileID: 1957857263762746594, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
+      propertyPath: m_fontSize
+      value: 33.75
+      objectReference: {fileID: 0}
     - target: {fileID: 2472145919086624591, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -5930,6 +6094,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2593778385957523658, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2661090985032301532, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -5966,6 +6134,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2804381048113925174, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2942141433900459214, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -5981,6 +6153,10 @@ PrefabInstance:
     - target: {fileID: 2942141433900459214, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2964137199192900453, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
+      propertyPath: m_Name
+      value: Background
       objectReference: {fileID: 0}
     - target: {fileID: 3166853982959018548, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchorMax.x
@@ -6020,7 +6196,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3539979374730838559, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -113.50002
+      value: -113.49903
       objectReference: {fileID: 0}
     - target: {fileID: 3638126853809614104, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_SizeDelta.x
@@ -6262,6 +6438,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5851758528284167256, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5865667272244190265, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6153959105747564954, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -6277,6 +6461,10 @@ PrefabInstance:
     - target: {fileID: 6153959105747564954, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6348297843796203376, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6420773780628552735, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_SizeDelta.x
@@ -6312,7 +6500,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6866855087299853756, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -115.0001
+      value: -115.00088
+      objectReference: {fileID: 0}
+    - target: {fileID: 6963727198884903383, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7039541026429956030, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
+      propertyPath: m_Name
+      value: Frame
       objectReference: {fileID: 0}
     - target: {fileID: 7109608900201789735, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchorMax.x
@@ -6369,6 +6565,10 @@ PrefabInstance:
     - target: {fileID: 7803248373799501793, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7877892247503298134, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7996099775708042738, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchorMax.x
@@ -6459,7 +6659,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 417533818313889297, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
