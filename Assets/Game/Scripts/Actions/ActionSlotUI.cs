@@ -95,7 +95,6 @@ namespace PolyQuest.Inventories
         public void OnPointerEnter(PointerEventData eventData)
         {
             m_isCursorOver = true;
-            Debug.Log("Cursor entered ActionSlotUI.");
         }
 
         /*-------------------------------------------------------------------
@@ -104,7 +103,6 @@ namespace PolyQuest.Inventories
         public void OnPointerExit(PointerEventData eventData)
         {
             m_isCursorOver = false;
-            Debug.Log("Cursor exited ActionSlotUI.");
         }
 
         /*------------------------------------------------------------------------------
@@ -112,8 +110,6 @@ namespace PolyQuest.Inventories
         ------------------------------------------------------------------------------*/
         private void HandleDoubleClick()
         {
-            Debug.Log("Executed the HandleDoubleClick method.");
-
             if (GetItem() == null)
                 return;
 

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
@@ -41,8 +42,13 @@ namespace PolyQuest.Player
         private bool m_isVisible = true;
 
         private GameObject m_lastHighlightedObject;
+        private bool m_isTargeting = false;
+        private Action<GameObject, Vector3> m_onTargetSelected;
+        private Action m_onTargetingCancelled;
 
         private PolyQuestInputActions m_inputActions;
+
+        public bool IsTargeting => m_isTargeting;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -85,7 +91,6 @@ namespace PolyQuest.Player
             {
                 m_lastHighlightedObject?.GetComponent<IRaycastable>()?.ToggleHighlight(false);
                 m_lastHighlightedObject = null;
-                SetCursor(CursorSettings.CursorType.kNone);
                 return;
             }
 
@@ -100,6 +105,12 @@ namespace PolyQuest.Player
             if (HandleUI())
                 return;
 
+            if (m_isTargeting)
+            {
+                HandleInteractable();
+                return;
+            }
+
             if (m_isVisible)
             {
                 if (HandleAbilities())
@@ -112,7 +123,6 @@ namespace PolyQuest.Player
                     return;
             }
 
-            // If no action was taken, set the Cursor to normal
             SetCursor(CursorSettings.CursorType.kNone);
         }
 
@@ -176,12 +186,12 @@ namespace PolyQuest.Player
         {
             int hits = Physics.RaycastNonAlloc(GetCursorRay(), m_raycasts);
             GameObject newHighlight = null;
+            IRaycastable hoveredRaycastable = null;
 
             for (int i = 0; i < hits; ++i)
             {
                 RaycastHit hit = m_raycasts[i];
 
-                // ignore self
                 if (hit.transform.gameObject == gameObject)
                     continue;
 
@@ -191,6 +201,7 @@ namespace PolyQuest.Player
                         continue;
 
                     newHighlight = hit.transform.gameObject;
+                    hoveredRaycastable = raycastable;
                     SetCursor(raycastable.GetCursorType());
                     break;
                 }
@@ -200,6 +211,25 @@ namespace PolyQuest.Player
             }
 
             UpdateHighlight(newHighlight);
+
+            // During targeting, suppress normal click behaviour and instead
+            // fire the targeting callback when the player clicks.
+            if (m_isTargeting)
+            {
+                if (m_inputActions.Gameplay.Interact.WasPressedThisFrame())
+                {
+                    if (newHighlight != null && Physics.Raycast(GetCursorRay(), out RaycastHit targetHit))
+                        m_onTargetSelected?.Invoke(newHighlight, targetHit.point);
+                    else
+                        m_onTargetingCancelled?.Invoke();
+                }
+
+                // Return true only if something is highlighted — keeps movement
+                // blocked while hovering a valid target, but falls through to
+                // HandleMovement() on open ground so the cursor still updates.
+                return newHighlight != null;
+            }
+
             return newHighlight != null;
         }
 
@@ -208,7 +238,8 @@ namespace PolyQuest.Player
         -----------------------------------------------------------------------------------------*/
         private void UpdateHighlight(GameObject newHighlight)
         {
-            if (newHighlight == m_lastHighlightedObject) return;
+            if (newHighlight == m_lastHighlightedObject)
+                return;
 
             m_lastHighlightedObject?.GetComponent<IRaycastable>()?.ToggleHighlight(false);
             newHighlight?.GetComponent<IRaycastable>()?.ToggleHighlight(true);
@@ -254,6 +285,28 @@ namespace PolyQuest.Player
             target = navMeshHit.position;
 
             return true;
+        }
+
+        /*---------------------------------------------------------------------------------------------------
+        | --- BeginTargeting: Start the targeting process with callbacks for selection and cancellation --- |
+        ---------------------------------------------------------------------------------------------------*/
+        public void BeginTargeting(Action<GameObject, Vector3> onTargetSelected, Action onCancelled)
+        {
+            m_isTargeting = true;
+            m_onTargetSelected = onTargetSelected;
+            m_onTargetingCancelled = onCancelled;
+            SetCursor(CursorSettings.CursorType.kTargeting);
+        }
+
+        /*---------------------------------------------------------------------
+        | --- EndTargeting: End the targeting process and clear callbacks --- |
+        ---------------------------------------------------------------------*/
+        public void EndTargeting()
+        {
+            m_isTargeting = false;
+            m_onTargetSelected = null;
+            m_onTargetingCancelled = null;
+            SetCursor(CursorSettings.CursorType.kNone);
         }
 
         /*--------------------------------------------------------------------- 

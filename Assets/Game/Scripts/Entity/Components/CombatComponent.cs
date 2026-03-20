@@ -253,13 +253,12 @@ namespace PolyQuest.Components
             weapon.Spawn(m_leftHand, m_rightHand, Animator);
         }
 
-        /*------------------------------------------------------------------------------
-        | --- UpdateWeapon: Update the Equipped Weapon based on the Equipment Slot --- |
-        ------------------------------------------------------------------------------*/
-        private void UpdateWeapon()
+        /*---------------------------------------------------------------------------------------
+        | --- GetHandTransform: Get the Transform of the Left or Right Hand based on Weapon --- |
+        ---------------------------------------------------------------------------------------*/
+        public Transform GetHandTransform(bool isRightHand)
         {
-            Weapon weapon = m_equipment.GetItemInSlot(EquipmentSlot.kWeapon) as Weapon;
-            EquipWeapon(weapon ?? m_defaultWeapon);
+            return isRightHand ? m_rightHand : m_leftHand;
         }
 
         /*-----------------------------------------------------------
@@ -280,7 +279,10 @@ namespace PolyQuest.Components
             
             if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
             {
-                playerController.GetComponent<CombatComponent>().SetTarget(gameObject);
+                if (!playerController.IsTargeting)
+                {
+                    playerController.GetComponent<CombatComponent>().SetTarget(gameObject);
+                }
             }
 
             return true;
@@ -306,6 +308,15 @@ namespace PolyQuest.Components
             {
                 yield return m_currentWeapon.GetPercentageBonus();
             }
+        }
+
+        /*------------------------------------------------------------------------------
+        | --- UpdateWeapon: Update the Equipped Weapon based on the Equipment Slot --- |
+        ------------------------------------------------------------------------------*/
+        private void UpdateWeapon()
+        {
+            Weapon weapon = m_equipment.GetItemInSlot(EquipmentSlot.kWeapon) as Weapon;
+            EquipWeapon(weapon ?? m_defaultWeapon);
         }
 
         /*--------------------------------------------------------------------

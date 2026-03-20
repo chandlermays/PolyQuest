@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 362791060c5afa54aa90a8f37fc131d6, type: 3}
-  m_Name: Area of Effect
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Abilities.DelayedClickTest
+  m_Script: {fileID: 11500000, guid: 80c4ebb66b044af42ac421cc22903129, type: 3}
+  m_Name: Select Target
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Abilities.SelectTarget
   m_groundLayer:
     serializedVersion: 2
     m_Bits: 256
-  m_areaOfEffectRadius: 5
-  m_areaRadiusPrefab: {fileID: 9005237582483654243, guid: 52cebb92dccefb849bf914971733ae71, type: 3}

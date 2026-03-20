@@ -12,7 +12,7 @@ namespace PolyQuest.Abilities
     [CreateAssetMenu(fileName = "New Delayed Click Strategy", menuName = "PolyQuest/Abilities/Targeting/New Delayed Click Strategy", order = 0)]
     public class DelayedClick : TargetingStrategy
     {
-        [SerializeField] private LayerMask m_targetLayer;
+        [SerializeField] private LayerMask m_groundLayer;
         [SerializeField] private float m_areaOfEffectRadius;
         [SerializeField] private GameObject m_areaRadiusPrefab;
 
@@ -58,7 +58,7 @@ namespace PolyQuest.Abilities
                     break;
                 }
 
-                if (Physics.Raycast(playerController.GetCursorRay(), out RaycastHit raycastHit, kMaxDistance, m_targetLayer))
+                if (Physics.Raycast(playerController.GetCursorRay(), out RaycastHit raycastHit, kMaxDistance, m_groundLayer))
                 {
                     m_areaRadiusInstance.transform.position = raycastHit.point;
 

@@ -186,6 +186,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &500668650445274772
 GameObject:
@@ -267,6 +268,7 @@ SkinnedMeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -734,6 +736,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2928747531746428626
 GameObject:
@@ -1047,6 +1050,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &3907950210473662644
 GameObject:
@@ -1136,6 +1140,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &4181048393989292512
 GameObject:
@@ -1225,6 +1230,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &4222431500626272059
 GameObject:
@@ -1314,6 +1320,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &4284570792329737458
 GameObject:
@@ -1561,6 +1568,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &4891318194176869676
 GameObject:
@@ -1715,6 +1723,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &5504910743571083013
 GameObject:
@@ -2188,6 +2197,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7654455629123662163
 GameObject:
@@ -2277,6 +2287,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7751291372911061935
 GameObject:
@@ -2593,7 +2604,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76d3bec88d6a83244b58819eae8aeb4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_defaultWeapon: {fileID: 11400000, guid: ac79242d2cfe2d54f8479c16bf337229, type: 2}
+  m_defaultWeapon: {fileID: 11400000, guid: f640c2173d1c623468b49568be108f84, type: 2}
   m_leftHand: {fileID: 2484110344413389623}
   m_rightHand: {fileID: 6889686824066836522}
   m_attackCooldown: 0.6

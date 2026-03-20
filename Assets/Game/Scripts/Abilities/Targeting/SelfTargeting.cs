@@ -9,9 +9,7 @@ namespace PolyQuest.Abilities
     {
         public override void StartTargeting(AbilityConfig config, Action onComplete)
         {
-            // Targets is expecting an IEnumerable (any container) and not a single item so we store the user in a single-element array
-            // *** NOTE: See about refactoring this so that it could take in a single target without having to call 'new' ***
-            config.Targets = (new GameObject[] { config.User });
+            config.SetSingleTarget(config.User);
             config.TargetPoint = config.User.transform.position;
             onComplete?.Invoke();
         }

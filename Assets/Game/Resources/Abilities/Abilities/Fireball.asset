@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97b75ef2f2152e34b9c40fa23875c43e, type: 3}
+  m_Name: Fireball
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Abilities.Ability
+  m_itemID: 90bf4918-3c4e-44f3-a7cd-5b001336c610
+  m_itemName: Fireball
+  m_itemDescription: 
+  m_itemIcon: {fileID: 21300000, guid: db427fab3e94daf4caa704d9314a77a1, type: 3}
+  m_pickup: {fileID: 3714728132098454972, guid: ce734acb24202304793d0fc60816bfdf, type: 3}
+  m_isStackable: 0
+  m_category: 4
+  m_itemPrice: 0
+  m_isConsumable: 0
+  m_manaCost: 30
+  m_cooldownTime: 5
+  m_targetingStrategy: {fileID: 11400000, guid: 7422eb064cf57894c82bdb3a786b2836, type: 2}
+  m_effects:
+  - {fileID: 11400000, guid: 353eeda872563354a930c1d32ae9bcd0, type: 2}
+  - {fileID: 11400000, guid: ba468e31f4ffae346ba4a8fb42a1fd14, type: 2}
+  - {fileID: 11400000, guid: 00a0ad1c2ad4a8947b0fd7fbec46abda, type: 2}
+  m_filters:
+  - {fileID: 11400000, guid: 7a5d7ce4d79322741912694bb9057296, type: 2}

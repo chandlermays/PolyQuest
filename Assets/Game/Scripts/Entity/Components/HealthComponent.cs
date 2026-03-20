@@ -100,11 +100,6 @@ namespace PolyQuest.Components
                 m_lastKnownMaxHealth = m_health;
                 m_hasBeenInitialized = true;
                 OnHealthChanged?.Invoke();
-
-                if (Owner.name.Contains("Player"))
-                {
-                    Debug.Log($"Max health starts at: {m_lastKnownMaxHealth} with the Current health at: {m_health}");
-                }
             }
         }
 

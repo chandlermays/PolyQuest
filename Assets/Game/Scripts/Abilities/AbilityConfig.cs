@@ -36,9 +36,19 @@ namespace PolyQuest.Abilities
             m_user.GetComponent<MonoBehaviour>().StartCoroutine(coroutine);
         }
 
+        public void SetSingleTarget(GameObject target)
+        {
+            m_targets = SingleTarget(target);
+        }
+
         public void Cancel()
         {
             m_isCancelled = true;
+        }
+
+        private static IEnumerable<GameObject> SingleTarget(GameObject target)
+        {
+            yield return target;
         }
     }
 }

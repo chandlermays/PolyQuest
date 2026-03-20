@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3757868174017970174}
   - component: {fileID: 7510969856864846288}
   - component: {fileID: 6526806960844892942}
+  - component: {fileID: 733116218514324378}
   m_Layer: 0
   m_Name: Weapon Pickup
   m_TagString: Untagged
@@ -67,6 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb137ede59101b499240d85d1076599, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Pickups.Pickup
+  m_pickupRange: 1.5
 --- !u!114 &6526806960844892942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,3 +81,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b60b0c5edca987f4e8afeb559a125bab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Pickups.ClickablePickup
+--- !u!114 &733116218514324378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2169245326957996527}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 1, g: 0.69803923, b: 0, a: 1}
+  outlineWidth: 6
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
