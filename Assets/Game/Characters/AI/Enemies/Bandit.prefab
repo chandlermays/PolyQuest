@@ -910,6 +910,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7260862250635321012}
   - component: {fileID: 3792714295672574939}
+  - component: {fileID: 2378273908854590287}
   m_Layer: 0
   m_Name: Health Bar
   m_TagString: Untagged
@@ -947,6 +948,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.UI.HUD.HealthBar
   m_healthComponent: {fileID: 3272163512795474766}
   m_healthBarFill: {fileID: 3848417212891271642}
+--- !u!114 &2378273908854590287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3151290293282786356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7acb6f0260c721f49b971f49ae7f1038, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.UI.BillboardUI
 --- !u!1 &3416239109133963329
 GameObject:
   m_ObjectHideFlags: 0

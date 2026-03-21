@@ -25,6 +25,8 @@ namespace PolyQuest.Player
 
     public class PlayerController : MonoBehaviour
     {
+        private PolyQuestInputActions m_inputActions;
+
         [SerializeField] private CursorSettings m_cursorSettings;
         private CursorSettings.CursorType m_currentCursorType;
         private bool m_isDraggingUI = false;
@@ -46,7 +48,11 @@ namespace PolyQuest.Player
         private Action<GameObject, Vector3> m_onTargetSelected;
         private Action m_onTargetingCancelled;
 
-        private PolyQuestInputActions m_inputActions;
+        private GameObject LastHighlightedObject
+        {
+            get => m_lastHighlightedObject != null ? m_lastHighlightedObject : null;
+            set => m_lastHighlightedObject = value;
+        }
 
         public bool IsTargeting => m_isTargeting;
 
@@ -89,8 +95,8 @@ namespace PolyQuest.Player
             // Do nothing if you're dead
             if (m_healthComponent.IsDead)
             {
-                m_lastHighlightedObject?.GetComponent<IRaycastable>()?.ToggleHighlight(false);
-                m_lastHighlightedObject = null;
+                LastHighlightedObject?.GetComponent<IRaycastable>()?.ToggleHighlight(false);
+                LastHighlightedObject = null;
                 return;
             }
 
@@ -238,12 +244,12 @@ namespace PolyQuest.Player
         -----------------------------------------------------------------------------------------*/
         private void UpdateHighlight(GameObject newHighlight)
         {
-            if (newHighlight == m_lastHighlightedObject)
+            if (newHighlight == LastHighlightedObject)
                 return;
 
-            m_lastHighlightedObject?.GetComponent<IRaycastable>()?.ToggleHighlight(false);
+            LastHighlightedObject?.GetComponent<IRaycastable>()?.ToggleHighlight(false);
             newHighlight?.GetComponent<IRaycastable>()?.ToggleHighlight(true);
-            m_lastHighlightedObject = newHighlight;
+            LastHighlightedObject = newHighlight;
         }
 
         /*--------------------------------------------------------------------- 

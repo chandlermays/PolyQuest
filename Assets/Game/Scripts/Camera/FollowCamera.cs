@@ -37,9 +37,9 @@ namespace PolyQuest.Core
             m_inputActions = InputManager.Instance.InputActions;
         }
 
-        /*------------------------------------------------------------------------------------------------------------
-        | --- LateUpdate: Called upon every frame AFTER the internal animation update (Unity Order of Execution) --- |
-        ------------------------------------------------------------------------------------------------------------*/
+        /*---------------------------------------------------------------------------------
+        | --- LateUpdate: Called upon every frame after the internal animation update --- |
+        ---------------------------------------------------------------------------------*/
         private void LateUpdate()
         {
             transform.position = m_target.position;
