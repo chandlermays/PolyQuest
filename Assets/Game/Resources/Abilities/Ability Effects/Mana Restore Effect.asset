@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98126bbddabb54d4189dd4015a543aff, type: 3}
   m_Name: Mana Restore Effect
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Abilities.ManaEffect
-  m_manaAmount: 30
+  m_manaAmount: 40

@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Core;
+using PolyQuest.Dialogues;
 
 namespace PolyQuest.UI.Core
 {
@@ -11,11 +12,13 @@ namespace PolyQuest.UI.Core
     {
         [SerializeField] private TextMeshProUGUI m_areaNameText;
         [SerializeField] private CanvasGroup m_areaCanvasGroup;
+        [SerializeField] private PlayerDialogueHandler m_playerDialogueHandler;
         [SerializeField] private float m_fadeDuration = 0.5f;
         [SerializeField] private float m_displayDuration = 3f;
 
         private Coroutine m_displayCoroutine;
         private readonly Stack<string> m_zoneStack = new Stack<string>();
+        private bool m_isDialogueActive = false;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -23,6 +26,7 @@ namespace PolyQuest.UI.Core
         private void Awake()
         {
             m_areaCanvasGroup.alpha = 0f;
+            Utilities.CheckForNull(m_playerDialogueHandler, nameof(m_playerDialogueHandler));
         }
 
         /*---------------------------------------------------------------------
@@ -32,6 +36,8 @@ namespace PolyQuest.UI.Core
         {
             AreaTrigger.OnAreaEntered += HandleAreaEntered;
             AreaTrigger.OnAreaExited += HandleAreaExited;
+            m_playerDialogueHandler.OnDialogueStarted += HandleDialogueStarted;
+            m_playerDialogueHandler.OnDialogueEnded += HandleDialogueEnded;
         }
 
         /*---------------------------------------------------------------------------
@@ -41,6 +47,8 @@ namespace PolyQuest.UI.Core
         {
             AreaTrigger.OnAreaEntered -= HandleAreaEntered;
             AreaTrigger.OnAreaExited -= HandleAreaExited;
+            m_playerDialogueHandler.OnDialogueStarted -= HandleDialogueStarted;
+            m_playerDialogueHandler.OnDialogueEnded -= HandleDialogueEnded;
         }
 
         /*-------------------------------------------------------------------------------
@@ -49,7 +57,9 @@ namespace PolyQuest.UI.Core
         private void HandleAreaEntered(string areaName)
         {
             m_zoneStack.Push(areaName);
-            ShowZone(areaName);
+
+            if (!m_isDialogueActive)
+                ShowZone(areaName);
         }
 
         /*-----------------------------------------------------------------------------------
@@ -60,8 +70,32 @@ namespace PolyQuest.UI.Core
             if (m_zoneStack.Count > 0 && m_zoneStack.Peek() == areaName)
                 m_zoneStack.Pop();
 
-            if (m_zoneStack.Count > 0)
+            if (!m_isDialogueActive && m_zoneStack.Count > 0)
                 ShowZone(m_zoneStack.Peek());
+        }
+
+        /*----------------------------------------------------------------------------------
+        | --- HandleDialogueStarted: Cancel any active display and suppress future ones --- |
+        ----------------------------------------------------------------------------------*/
+        private void HandleDialogueStarted()
+        {
+            m_isDialogueActive = true;
+
+            if (m_displayCoroutine != null)
+            {
+                StopCoroutine(m_displayCoroutine);
+                m_displayCoroutine = null;
+            }
+
+            m_areaCanvasGroup.alpha = 0f;
+        }
+
+        /*--------------------------------------------------------------------------------------
+        | --- HandleDialogueEnded: Re-enable the UI so future zone entries display normally --- |
+        --------------------------------------------------------------------------------------*/
+        private void HandleDialogueEnded()
+        {
+            m_isDialogueActive = false;
         }
 
         /*---------------------------------------------------------------------

@@ -714,6 +714,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3696555986627652176, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
+      propertyPath: m_playerDialogueHandler
+      value: 
+      objectReference: {fileID: 81216155690147253}
     - target: {fileID: 3714664056586466652, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7dec67906fba6a4384d62708b35249a, type: 3}
   m_Name: Health Restore Effect
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Abilities.HealingEffect
-  m_healAmount: 30
+  m_healAmount: 40

@@ -1086,7 +1086,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6788340497021815511, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
       propertyPath: m_Name
-      value: Cole the Guard - Q Variant
+      value: Cole the Guard
       objectReference: {fileID: 0}
     - target: {fileID: 6928810173852621949, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
       propertyPath: m_LocalPosition.y

@@ -22,7 +22,7 @@ MonoBehaviour:
   m_itemPrice: 0
   m_isConsumable: 1
   m_manaCost: 0
-  m_cooldownTime: 2
+  m_cooldownTime: 0
   m_targetingStrategy: {fileID: 11400000, guid: 957f3a33b5a896c4fbadc0531482e233, type: 2}
   m_effects:
   - {fileID: 11400000, guid: e2404ed9456ec2d44a745707d23a8f8e, type: 2}

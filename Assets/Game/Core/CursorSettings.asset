@@ -15,13 +15,19 @@ MonoBehaviour:
   m_cursorMappings:
   - m_type: 0
     m_texture: {fileID: 2800000, guid: 2e71a8202d3b4a3448ec85ced5a40265, type: 3}
+    m_hotspot: {x: 10, y: 4}
   - m_type: 1
     m_texture: {fileID: 2800000, guid: 6fdfcd4167ed5e7488584241bb671bb2, type: 3}
+    m_hotspot: {x: 10, y: 4}
   - m_type: 2
     m_texture: {fileID: 2800000, guid: 8859fce41c5d0a148ad0b7eebfca7fe9, type: 3}
+    m_hotspot: {x: 5, y: 2}
   - m_type: 3
     m_texture: {fileID: 2800000, guid: 96d4bfdb0d6d8c042bf8fccf6524d239, type: 3}
+    m_hotspot: {x: 5, y: 2}
   - m_type: 4
     m_texture: {fileID: 2800000, guid: f8c873f1e53e83f4aabf342d6be1dfc3, type: 3}
+    m_hotspot: {x: 5, y: 2}
   - m_type: 5
     m_texture: {fileID: 2800000, guid: aabf699d32f0ce349920801e3ef898f0, type: 3}
+    m_hotspot: {x: 5, y: 2}

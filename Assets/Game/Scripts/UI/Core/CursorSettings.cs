@@ -30,9 +30,7 @@ namespace PolyQuest.UI.Core
         {
             public CursorType m_type;
             public Texture2D m_texture;
-            private Vector2 m_hotspot;
-
-            public readonly Vector2 Hotspot => m_hotspot;
+            public Vector2 m_hotspot;
 
             public static readonly CursorMapping Default = new()
             {
