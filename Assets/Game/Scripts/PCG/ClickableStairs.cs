@@ -29,6 +29,9 @@ namespace PolyQuest.SceneManagement
         {
             m_stairs = GetComponent<Stairs>();
             Utilities.CheckForNull(m_stairs, nameof(m_stairs));
+
+            m_outline = GetComponent<Outline>();
+            Utilities.CheckForNull(m_outline, nameof(m_outline));
         }
 
         /*---------------------------------------------------------------

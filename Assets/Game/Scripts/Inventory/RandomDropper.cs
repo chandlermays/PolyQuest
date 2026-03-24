@@ -12,6 +12,7 @@ namespace PolyQuest.Inventories
         [SerializeField] private int m_dropCount;
 
         private BaseStats m_baseStats;
+        private Equipment m_equipment;
 
         private const int kMaxAttempts = 10;
 
@@ -22,6 +23,9 @@ namespace PolyQuest.Inventories
         {
             m_baseStats = GetComponent<BaseStats>();
             Utilities.CheckForNull(m_baseStats, nameof(m_baseStats));
+
+            m_equipment = GetComponent<Equipment>();
+            Utilities.CheckForNull(m_equipment, nameof(m_equipment));
         }
 
         /*------------------------------------------------------
@@ -29,7 +33,7 @@ namespace PolyQuest.Inventories
         ------------------------------------------------------*/
         public void RandomDrop()
         {
-            var drops = m_enemyLootTable.GetRandomDrops(m_baseStats.Level);
+            var drops = m_enemyLootTable.GetRandomDrops(m_baseStats.Level, m_equipment);
             foreach (var drop in drops)
             {
                 DropItem(drop.Item, drop.Quantity);

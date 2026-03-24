@@ -19,7 +19,7 @@ MonoBehaviour:
   m_pickup: {fileID: 43750079280132342, guid: 33f4baa1b170dd340803693946ad2c27, type: 3}
   m_isStackable: 0
   m_category: 1
-  m_itemPrice: 15
+  m_itemPrice: 80
   m_targetEquipmentSlot: 6
   m_equipCondition:
     m_AND: []

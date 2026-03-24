@@ -79,22 +79,6 @@ namespace PolyQuest.Player
             Utilities.CheckForNull(m_dialogueHandler, nameof(m_dialogueHandler));
         }
 
-        /*---------------------------------------------------------------------
-        | --- OnEnable: Called when the object becomes enabled and active --- |
-        ---------------------------------------------------------------------*/
-        private void OnEnable()
-        {
-            m_dialogueHandler.OnDialogueStarted += ClearHighlight;
-        }
-
-        /*---------------------------------------------------------------------------
-        | --- OnDisable: Called when the behaviour becomes disabled or inactive --- |
-        ---------------------------------------------------------------------------*/
-        private void OnDisable()
-        {
-            m_dialogueHandler.OnDialogueStarted -= ClearHighlight;
-        }
-
         /*-----------------------------------------------------
         | --- Start: Called before the first frame update --- |
         -----------------------------------------------------*/
@@ -254,15 +238,6 @@ namespace PolyQuest.Player
             return newHighlight != null;
         }
 
-        /*-------------------------------------------------------------------------
-        | --- ClearHighlight: Remove the highlight from the last known target --- |
-        -------------------------------------------------------------------------*/
-        private void ClearHighlight()
-        {
-            LastHighlightedObject?.GetComponent<IRaycastable>()?.ToggleHighlight(false);
-            LastHighlightedObject = null;
-        }
-
         /*-----------------------------------------------------------------------------------------
         | --- UpdateHighlight: Update the highlighted object based on the current raycast hit --- |
         -----------------------------------------------------------------------------------------*/
@@ -337,6 +312,15 @@ namespace PolyQuest.Player
             m_onTargetSelected = null;
             m_onTargetingCancelled = null;
             SetCursor(CursorSettings.CursorType.kNone);
+        }
+
+        /*-------------------------------------------------------------------------
+        | --- ClearHighlight: Remove the highlight from the last known target --- |
+        -------------------------------------------------------------------------*/
+        public void ClearHighlight()
+        {
+            LastHighlightedObject?.GetComponent<IRaycastable>()?.ToggleHighlight(false);
+            LastHighlightedObject = null;
         }
 
         /*--------------------------------------------------------------------- 

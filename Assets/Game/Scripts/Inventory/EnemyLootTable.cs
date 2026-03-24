@@ -9,6 +9,7 @@ namespace PolyQuest.Inventories
     [CreateAssetMenu(menuName = "PolyQuest/Inventory/EnemyLootTable", fileName = "New Enemy Loot Table", order = 0)]
     public class EnemyLootTable : ScriptableObject
     {
+        [SerializeField] LootItemConfig[] m_guaranteedDrops;
         [SerializeField] LootItemConfig[] m_possibleDrops;
         [SerializeField] float[] m_dropChancePercentage;            // Chance to drop any loot at all
         [SerializeField] int[] m_minDrops;
@@ -56,8 +57,33 @@ namespace PolyQuest.Inventories
         /*--------------------------------------------------------------------------
         | --- GetRandomDrops: Get random drops based on level and drop chances --- |
         --------------------------------------------------------------------------*/
-        public IEnumerable<Dropped> GetRandomDrops(int level)
+        public IEnumerable<Dropped> GetRandomDrops(int level, Equipment equipment)
         {
+            // Equipped weapon always drops
+            InventoryItem weapon = equipment.GetItemInSlot(EquipmentSlot.kWeapon);
+            if (weapon != null)
+            {
+                yield return new Dropped
+                {
+                    Item = weapon,
+                    Quantity = 1
+                };
+            }
+
+            // Guaranteed drops — always yield, no roll
+            if (m_guaranteedDrops != null)
+            {
+                foreach (var drop in m_guaranteedDrops)
+                {
+                    if (drop.Item == null) continue;
+                    yield return new Dropped
+                    {
+                        Item = drop.Item,
+                        Quantity = drop.GetRandomNumber(level)
+                    };
+                }
+            }
+
             if (!ShouldDrop(level))
             {
                 yield break;

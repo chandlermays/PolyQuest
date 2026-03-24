@@ -7,6 +7,7 @@ using PolyQuest.Saving;
 
 namespace PolyQuest.Inventories
 {
+    [RequireComponent(typeof(Inventory))]
     public class Actions : MonoBehaviour, ISaveable
     {
         private class ActionSlot
@@ -44,8 +45,52 @@ namespace PolyQuest.Inventories
         }
 
         private readonly Dictionary<int, ActionSlot> m_actionSlots = new();
+        private Inventory m_inventory;
 
         public event Action OnActionTabUpdated;
+
+        /*----------------------------------------------------------------
+        | --- Awake: Called when the script instance is being loaded --- |
+        ----------------------------------------------------------------*/
+        private void Awake()
+        {
+            m_inventory = GetComponent<Inventory>();
+            Utilities.CheckForNull(m_inventory, nameof(m_inventory));
+            m_inventory.OnBeforeAddItem += TryStackInActionSlot;
+        }
+
+        /*--------------------------------------------------------------------
+        | --- OnDestroy: Called when the MonoBehaviour will be destroyed --- |
+        --------------------------------------------------------------------*/
+        private void OnDestroy()
+        {
+            if (m_inventory != null)
+            {
+                m_inventory.OnBeforeAddItem -= TryStackInActionSlot;
+            }
+        }
+
+        /*-----------------------------------------------------------------------------------
+        | --- TryStackInActionSlot: Stack a stackable item into an existing action slot --- |
+        -----------------------------------------------------------------------------------*/
+        private bool TryStackInActionSlot(InventoryItem item, int quantity)
+        {
+            var actionItem = item as ActionItem;
+            if (actionItem == null)
+                return false;
+
+            foreach (var pair in m_actionSlots)
+            {
+                if (ReferenceEquals(pair.Value.Item, actionItem))
+                {
+                    pair.Value.AddQuantity(quantity);
+                    OnActionTabUpdated?.Invoke();
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         /*-----------------------------------------------------------------------------
         | --- GetActionItem: Retrieve the item in the specified action slot index --- |
@@ -150,9 +195,9 @@ namespace PolyQuest.Inventories
             return false;
         }
 
-        /*------------------------------------------------------------------
+        /*-----------------------------------------------------------------
         | --- CaptureState: Capture the current state of action slots --- |
-        ------------------------------------------------------------------*/
+        -----------------------------------------------------------------*/
         public JToken CaptureState()
         {
             JObject state = new();
@@ -166,9 +211,9 @@ namespace PolyQuest.Inventories
             return state;
         }
 
-        /*----------------------------------------------------------------------
+        /*---------------------------------------------------------------------
         | --- RestoreState: Restore the action slots from the given state --- |
-        ----------------------------------------------------------------------*/
+        ---------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
             if (state is JObject stateObject)

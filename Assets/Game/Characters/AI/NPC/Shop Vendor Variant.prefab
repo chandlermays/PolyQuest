@@ -85,3 +85,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c76850f750c5c3046914e18af8b4e444, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Shops.Shop
+  m_shopName: 
+  m_sellPricePercentage: 50
+  m_shopInventory: []

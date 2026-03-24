@@ -35,6 +35,7 @@ namespace PolyQuest.Inventories
         public int Size => m_inventorySlots.Length;
 
         public event Action OnInventoryChanged;
+        public Func<InventoryItem, int, bool> OnBeforeAddItem;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -98,6 +99,9 @@ namespace PolyQuest.Inventories
         ------------------------------------------------------------------------*/
         public bool TryAddToAvailableSlot(InventoryItem item, int quantity = 1)
         {
+            if (item.IsStackable && OnBeforeAddItem != null && OnBeforeAddItem(item, quantity))
+                return true;
+
             int slotIndex = FindSlotForItem(item);
             if (slotIndex < 0)
                 return false;

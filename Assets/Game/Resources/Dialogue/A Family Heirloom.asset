@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Name: 93e945bc-85c7-42d2-a252-30663d958e1e
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_isPlayerSpeaking: 0
-  m_text: Thanks again for your help, traveler. The anvil favors those who act without
+  m_text: Thanks again for your help, traveler. The Anvil favors those who act without
     expecting reward.
   m_children: []
   m_rect:

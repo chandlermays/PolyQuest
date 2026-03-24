@@ -19,7 +19,7 @@ MonoBehaviour:
   m_pickup: {fileID: 3714728132098454972, guid: ce734acb24202304793d0fc60816bfdf, type: 3}
   m_isStackable: 1
   m_category: 3
-  m_itemPrice: 0
+  m_itemPrice: 20
   m_isConsumable: 1
   m_manaCost: 0
   m_cooldownTime: 0

@@ -124,8 +124,6 @@ namespace PolyQuest.Components
 
             m_lastKnownMaxHealth = newMaxHealth;
             OnHealthChanged?.Invoke();
-
-            Debug.Log($"Max Health recalculated: {newMaxHealth}, Current Health: {m_health}");
         }
 
         /*---------------------------------------------------------------

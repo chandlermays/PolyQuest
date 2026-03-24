@@ -9,8 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7392149980266057365}
-  - component: {fileID: 6081739236262378520}
-  - component: {fileID: 2387963142932341474}
   m_Layer: 0
   m_Name: Stairs Level 2
   m_TagString: Untagged
@@ -35,31 +33,6 @@ Transform:
   - {fileID: 7872575202760535476}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6081739236262378520
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5569912369142724100}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b108c1b2c1f8d84c93b327ece15415e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.SceneManagement.Stairs
-  m_interactRange: 2
---- !u!114 &2387963142932341474
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5569912369142724100}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0d3d2b59265e6c409f03343da8a466d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.SceneManagement.ClickableStairs
 --- !u!1001 &8495076345755567848
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -142,7 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
-  outlineMode: 0
+  outlineMode: 1
   outlineColor: {r: 0, g: 0.6886792, b: 0.07161942, a: 1}
   outlineWidth: 6
   precomputeOutline: 0

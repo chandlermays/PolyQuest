@@ -5,7 +5,6 @@ using PolyQuest.Core;
 using PolyQuest.Input;
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
-using PolyQuest.Components;
 
 namespace PolyQuest.Dialogues
 {

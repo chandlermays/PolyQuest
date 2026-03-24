@@ -1796,6 +1796,7 @@ GameObject:
   - component: {fileID: 3272163512795474766}
   - component: {fileID: 1865444336509654807}
   - component: {fileID: 5008227000221217880}
+  - component: {fileID: 3114411632429733746}
   - component: {fileID: 6928696131343925156}
   - component: {fileID: 2857182479567065796}
   - component: {fileID: 6745226246766713138}
@@ -1975,14 +1976,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76d3bec88d6a83244b58819eae8aeb4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_defaultWeapon: {fileID: 11400000, guid: 8020f99054b9f0c408d6ad5c146a25ac, type: 2}
+  m_unarmedWeapon: {fileID: 11400000, guid: f640c2173d1c623468b49568be108f84, type: 2}
+  m_startingWeapon: {fileID: 0}
   m_leftHand: {fileID: 2378528995543327583}
   m_rightHand: {fileID: 6774488539617353924}
   m_attackCooldown: 1.2
   m_autoAttackRange: 5
   m_targetLayers:
     serializedVersion: 2
-    m_Bits: 576
+    m_Bits: 1088
 --- !u!114 &3272163512795474766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2007,8 +2009,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 369f73196dbc7a94c8c62b30be4b0fbf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Saving.JsonSaveableEntity
-  m_uniqueIdentifier: 373bc528-1221-4f71-8dfc-939a59ca6473
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Saving.SaveableEntity
+  m_uniqueIdentifier: f33c91d1-3649-432e-a473-234fa30377cb
   m_lockIdentifier: 0
 --- !u!114 &5008227000221217880
 MonoBehaviour:
@@ -2025,6 +2027,18 @@ MonoBehaviour:
   m_baseProgression: {fileID: 0}
   m_useStatModifiers: 1
   m_level: 1
+--- !u!114 &3114411632429733746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6051408657710484760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 550c88fc4ef72ac4cb568aa4ce60d254, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.Equipment
 --- !u!114 &6928696131343925156
 MonoBehaviour:
   m_ObjectHideFlags: 0

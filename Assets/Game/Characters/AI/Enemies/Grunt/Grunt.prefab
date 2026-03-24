@@ -8,6 +8,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1238266012735242243, guid: d64d14365592f024aadb6fc251dcdc2b, type: 3}
+      propertyPath: m_unarmedWeapon
+      value: 
+      objectReference: {fileID: 11400000, guid: f640c2173d1c623468b49568be108f84, type: 2}
+    - target: {fileID: 1238266012735242243, guid: d64d14365592f024aadb6fc251dcdc2b, type: 3}
+      propertyPath: m_startingWeapon
+      value: 
+      objectReference: {fileID: 11400000, guid: 8020f99054b9f0c408d6ad5c146a25ac, type: 2}
     - target: {fileID: 3169505572643624113, guid: d64d14365592f024aadb6fc251dcdc2b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

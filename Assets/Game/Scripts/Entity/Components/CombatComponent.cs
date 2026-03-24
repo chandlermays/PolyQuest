@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using UnityEngine;
 //---------------------------------
 using PolyQuest.Attributes;
 using PolyQuest.Combat;
@@ -6,13 +8,10 @@ using PolyQuest.Input;
 using PolyQuest.Inventories;
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace PolyQuest.Components
 {
-    /* ----------------------------------------------------------------------------------------------
+    /* -----------------------------------------------------------------------------------------------
      * Role: Handles combat logic and interactions for an entity, including attacking and targeting. *
      *                                                                                               *
      * Responsibilities:                                                                             *
@@ -24,7 +23,11 @@ namespace PolyQuest.Components
     public class CombatComponent : EntityComponent, IRaycastable, IStatModifier, IAction
     {
         [Header("Weapon Settings")]
-        [SerializeField] private Weapon m_defaultWeapon;
+        [Tooltip("Weapon used when no weapon is equipped. Always set this.")]
+        [SerializeField] private Weapon m_unarmedWeapon;
+        [Tooltip("Optional weapon to equip at the start. Leave empty to begin unarmed.")]
+        [SerializeField] private Weapon m_startingWeapon;
+
         [SerializeField] private Transform m_leftHand;
         [SerializeField] private Transform m_rightHand;
         [SerializeField] private float m_attackCooldown = 1.0f;
@@ -61,7 +64,7 @@ namespace PolyQuest.Components
         {
             base.Awake();
 
-            Utilities.CheckForNull(m_defaultWeapon, nameof(m_defaultWeapon));
+            Utilities.CheckForNull(m_unarmedWeapon, nameof(m_unarmedWeapon));
             Utilities.CheckForNull(m_leftHand, nameof(m_leftHand));
             Utilities.CheckForNull(m_rightHand, nameof(m_rightHand));
 
@@ -109,7 +112,7 @@ namespace PolyQuest.Components
         -----------------------------------------------------*/
         private void Start()
         {
-            EquipWeapon(m_defaultWeapon);
+            m_equipment.AddItem(EquipmentSlot.kWeapon, m_startingWeapon);
         }
 
         /*-----------------------------------------
@@ -276,7 +279,7 @@ namespace PolyQuest.Components
         {
             if (!playerController.GetComponent<CombatComponent>().CanAttack(gameObject))
                 return false;
-            
+
             if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
             {
                 if (!playerController.IsTargeting)
@@ -316,7 +319,7 @@ namespace PolyQuest.Components
         private void UpdateWeapon()
         {
             Weapon weapon = m_equipment.GetItemInSlot(EquipmentSlot.kWeapon) as Weapon;
-            EquipWeapon(weapon ?? m_defaultWeapon);
+            EquipWeapon(weapon ?? m_unarmedWeapon);
         }
 
         /*--------------------------------------------------------------------

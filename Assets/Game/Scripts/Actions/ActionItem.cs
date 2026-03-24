@@ -18,7 +18,6 @@ namespace PolyQuest.Inventories
         -----------------------------------------------------------------*/
         public virtual bool Use(GameObject user)
         {
-            //...
             return true;
         }
     }

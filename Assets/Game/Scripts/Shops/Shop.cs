@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 //---------------------------------
 using PolyQuest.Core;
 using PolyQuest.Input;
@@ -6,10 +9,6 @@ using PolyQuest.Inventories;
 using PolyQuest.Player;
 using PolyQuest.Saving;
 using PolyQuest.UI.Core;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace PolyQuest.Shops
 {
