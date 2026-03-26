@@ -84,12 +84,14 @@ namespace PolyQuest.Quests
                 return;
 
             status.CompleteObjective(objective);
+            SaveManager.Instance.Save();        // Auto-save after completing an objective
 
             if (status.IsQuestComplete())
             {
                 GrantReward(quest);
                 m_completedQuests.Add(quest.name);
                 m_activeQuests.Remove(quest);
+                SaveManager.Instance.Save();    // Auto-save after completing a quest
             }
 
             OnQuestsUpdate?.Invoke();

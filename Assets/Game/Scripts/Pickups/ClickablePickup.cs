@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Core;
@@ -7,7 +8,7 @@ using PolyQuest.UI.Core;
 
 namespace PolyQuest.Pickups
 {
-    /* --------------------------------------------------------------------------------------------------
+    /* ---------------------------------------------------------------------------------------------------
      * Role: Enables pickups in the world to be collected via mouse click using raycast interaction.     *
      *                                                                                                   *
      * Responsibilities:                                                                                 *
@@ -18,8 +19,10 @@ namespace PolyQuest.Pickups
     [RequireComponent(typeof(Pickup))]
     public class ClickablePickup : MonoBehaviour, IRaycastable
     {
-        private Pickup m_pickup;
+        [SerializeField] private GameObject m_itemLabel;
+        [SerializeField] private TextMeshProUGUI m_itemLabelText;
 
+        private Pickup m_pickup;
         private Outline m_outline;
 
         /*----------------------------------------------------------------
@@ -32,6 +35,15 @@ namespace PolyQuest.Pickups
 
             m_outline = GetComponent<Outline>();
             Utilities.CheckForNull(m_outline, nameof(m_outline));
+        }
+
+        /*--------------------------------------------------------------------------------
+        | --- Initialize: Sets up the pickup's item label and disables it by default --- |
+        --------------------------------------------------------------------------------*/
+        public void Initialize()
+        {
+            m_itemLabelText.text = m_pickup.Item.Name;
+            m_itemLabel.SetActive(false);
         }
 
         /*-------------------------------------------------------------
@@ -54,9 +66,13 @@ namespace PolyQuest.Pickups
             return true;
         }
 
+        /*------------------------------------------------------------------------------------------
+        | --- ToggleHighlight: Enables or disables the highlight and item label for the pickup --- |
+        ------------------------------------------------------------------------------------------*/
         public void ToggleHighlight(bool highlight)
         {
             m_outline.enabled = highlight;
+            m_itemLabel.SetActive(highlight);
         }
     }
 }

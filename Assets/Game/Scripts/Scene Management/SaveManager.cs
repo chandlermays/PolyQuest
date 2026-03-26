@@ -23,6 +23,7 @@ namespace PolyQuest.Saving
         public static SaveManager Instance { get; private set; }
 
         private const string kCurrentSaveKey = "CurrentSaveName";
+        private const string kAutoSaveSuffix = "_autosave";
 
         /* --- kCurrentSaveKey Bindings --- */
         [SerializeField] private SceneField m_firstSceneIndex;
@@ -63,6 +64,8 @@ namespace PolyQuest.Saving
         {
             yield return TransitionFade.Instance.FadeOut();
             yield return SceneManager.LoadSceneAsync(m_firstSceneIndex);
+            yield return null; // Wait one frame for Awake/OnEnable/Start to complete
+            Save();
             yield return TransitionFade.Instance.FadeIn();
         }
 
@@ -98,6 +101,14 @@ namespace PolyQuest.Saving
         public void Save()
         {
             m_saveSystem.Save(GetCurrentSave());
+        }
+
+        /*--------------------------------------------------------------------
+        | --- AutoSave: Save to a separate slot without touching the main save --- |
+        --------------------------------------------------------------------*/
+        public void AutoSave()
+        {
+            m_saveSystem.Save(GetCurrentSave() + kAutoSaveSuffix);
         }
 
         /*---------------------------------------------------------
@@ -151,7 +162,6 @@ namespace PolyQuest.Saving
 
             SetCurrentSave(saveFile);
             StartCoroutine(LoadFirstScene());
-            Save();
         }
 
         /*------------------------------------------------

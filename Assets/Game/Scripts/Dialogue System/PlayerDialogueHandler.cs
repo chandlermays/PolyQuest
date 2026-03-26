@@ -7,6 +7,7 @@ using PolyQuest.Components;
 using PolyQuest.Core;
 using PolyQuest.Player;
 using PolyQuest.Tools;
+using PolyQuest.Saving;
 
 namespace PolyQuest.Dialogues
 {
@@ -108,6 +109,7 @@ namespace PolyQuest.Dialogues
 
             OnDialogueEnded?.Invoke();
             OnDialogueUpdated?.Invoke();
+            SaveManager.Instance.Save();        // Auto-save after ending a dialogue
         }
 
         /*-------------------------------------------------------- 

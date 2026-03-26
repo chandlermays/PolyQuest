@@ -189,6 +189,7 @@ namespace PolyQuest.Shops
             }
 
             OnShopUpdated?.Invoke();
+            SaveManager.Instance.Save();        // Auto-save after purchase
         }
 
         /*--------------------------------------------------------------------------

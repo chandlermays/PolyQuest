@@ -14,7 +14,8 @@ namespace PolyQuest.Inventories
         private BaseStats m_baseStats;
         private Equipment m_equipment;
 
-        private const int kMaxAttempts = 10;
+        private const float m_navMeshSampleRadius = 1f;
+        private const int kMaxAttempts = 20;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -47,18 +48,17 @@ namespace PolyQuest.Inventories
         {
             for (int i = 0; i < kMaxAttempts; ++i)
             {
-                // Drop within a sphere of radius m_distanceThreshold around the dropper's position
                 Vector3 randomPosition = transform.position + Random.insideUnitSphere * m_distanceThreshold;
-
-                // We attempt to find a valid position on the NavMesh
-                NavMeshHit hit;
-                if (NavMesh.SamplePosition(randomPosition, out hit, 0.1f, NavMesh.AllAreas))
+                if (NavMesh.SamplePosition(randomPosition, out NavMeshHit hit, m_navMeshSampleRadius, NavMesh.AllAreas))
                 {
                     return hit.position;
                 }
             }
 
-            return transform.position;  // Failsafe if no valid position is found
+#if UNITY_EDITOR
+            Debug.LogWarning($"Failed to find a valid drop location after {kMaxAttempts} attempts. Dropping at the dropper's position.");
+#endif
+            return transform.position;      // Failsafe if no valid position is found after max attempts
         }
     }
 }

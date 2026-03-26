@@ -20,7 +20,7 @@ namespace PolyQuest.Components
      *      - Implements IRaycastable for player interaction and targeting via raycast.              *
      *      - Controls attack animations and cooldowns.                                              *
      * --------------------------------------------------------------------------------------------- */
-    public class CombatComponent : EntityComponent, IRaycastable, IStatModifier, IAction
+    public class CombatComponent : EntityComponent, IRaycastable, IAction
     {
         [Header("Weapon Settings")]
         [Tooltip("Weapon used when no weapon is equipped. Always set this.")]
@@ -289,28 +289,6 @@ namespace PolyQuest.Components
             }
 
             return true;
-        }
-
-        /*-------------------------------------------------------------------------
-        | --- GetAdditiveModifiers: Get Additive Modifiers for the Given Stat --- |
-        -------------------------------------------------------------------------*/
-        public IEnumerable<float> GetAdditiveModifiers(Stat stat)
-        {
-            if (stat == Stat.kDamage)
-            {
-                yield return m_currentWeapon.GetDamage();
-            }
-        }
-
-        /*-----------------------------------------------------------------------------
-        | --- GetPercentageModifiers: Get Percentage Modifiers for the Given Stat --- |
-        -----------------------------------------------------------------------------*/
-        public IEnumerable<float> GetPercentageModifiers(Stat stat)
-        {
-            if (stat == Stat.kDamage)
-            {
-                yield return m_currentWeapon.GetPercentageBonus();
-            }
         }
 
         /*------------------------------------------------------------------------------

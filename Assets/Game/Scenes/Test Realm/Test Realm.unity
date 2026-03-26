@@ -5408,6 +5408,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2467068232699816870, guid: 2904c9f09a1d08e4fbe5a9a72f6ac0d0, type: 3}
+      propertyPath: m_maxDropDistance
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467068232699816870, guid: 2904c9f09a1d08e4fbe5a9a72f6ac0d0, type: 3}
+      propertyPath: m_minDropDistance
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8021006436726947137, guid: 2904c9f09a1d08e4fbe5a9a72f6ac0d0, type: 3}
       propertyPath: m_Name
       value: Boss
@@ -6356,7 +6364,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3539979374730838559, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -113.50003
+      value: -113.50001
       objectReference: {fileID: 0}
     - target: {fileID: 3638126853809614104, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_SizeDelta.x

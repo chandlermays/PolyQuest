@@ -15,16 +15,18 @@ namespace PolyQuest.Pickups
      *      - Holds data about the item and quantity.                                              *
      *      - Handles player interaction (i.e. adding the item to the inventory when picked up).   *
      *      - Contains logic for whether it can be picked up and what happens on pickup.           *
-     * ------------------------------------------------------------------------------------------- */
+     * --------------------------------------------------------------------------------------------*/
+    [RequireComponent(typeof(ClickablePickup))]
     public class Pickup : MonoBehaviour, IAction
     {
         [SerializeField] private float m_pickupRange = 1.5f;
 
+        private Transform m_transform;
         private Inventory m_inventory;
         private InventoryItem m_item;
         private int m_quantity = 1;
-        private Transform m_transform;
 
+        private ClickablePickup m_clickablePickup;
         private PlayerController m_targetPlayer;
         private MovementComponent m_playerMovement;
         private ActionManager m_actionManager;
@@ -39,6 +41,9 @@ namespace PolyQuest.Pickups
         ----------------------------------------------------------------*/
         private void Awake()
         {
+            m_clickablePickup = GetComponent<ClickablePickup>();
+            Utilities.CheckForNull(m_clickablePickup, nameof(m_clickablePickup));
+
             var player = GameObject.FindWithTag(kPlayerTag);
             m_inventory = player.GetComponent<Inventory>();
             Utilities.CheckForNull(m_inventory, nameof(m_inventory));
@@ -95,6 +100,7 @@ namespace PolyQuest.Pickups
         {
             m_item = item;
             m_quantity = item.IsStackable ? quantity : 1;
+            m_clickablePickup.Initialize();
         }
 
         /*-------------------------------------------------------------

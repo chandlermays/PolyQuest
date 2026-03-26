@@ -135,6 +135,7 @@ namespace PolyQuest.Attributes
             m_stats.LevelUp();
             OnLevelUp?.Invoke();
             m_levelUpVFX.Play();
+            SaveManager.Instance.Save();        // Auto-save after leveling up
         }
     }
 }
