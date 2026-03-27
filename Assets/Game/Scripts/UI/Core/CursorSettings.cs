@@ -22,7 +22,7 @@ namespace PolyQuest.UI.Core
             kTargeting,
             kDialogue,
             kPickup,
-            kShop
+            kHealer
         }
 
         [System.Serializable]

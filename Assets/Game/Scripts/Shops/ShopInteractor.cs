@@ -11,7 +11,7 @@ namespace PolyQuest.Shops
         private Shop m_activeShop;
         private Shop m_targetShop;
 
-        private const float kProximityThreshold = 4.0f;
+        private const float kProximityThreshold = 3.0f;
 
         private MovementComponent m_movementComponent;
         private ActionManager m_actionManager;

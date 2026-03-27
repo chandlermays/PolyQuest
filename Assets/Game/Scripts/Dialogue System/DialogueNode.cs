@@ -27,13 +27,20 @@ namespace PolyQuest.Dialogues
         [SerializeField] private string m_onExitAction;
         [SerializeField] private Condition m_condition;
 
-        /* --- Getter Methods --- */
-        public bool IsPlayerSpeaking            => m_isPlayerSpeaking;
-        public string Text                      => m_text;
-        public List<string> Children            => m_children;
-        public Rect Rect                        => m_rect;
-        public string OnEnterAction             => m_onEnterAction;
-        public string OnExitAction              => m_onExitAction;
+        public bool IsPlayerSpeaking        =>       m_isPlayerSpeaking;
+        public string Text                  =>       m_text;
+        public List<string> Children        =>       m_children;
+        public Rect Rect                    =>       m_rect;
+        public string OnEnterAction         =>       m_onEnterAction;
+        public string OnExitAction          =>       m_onExitAction;
+
+        /*-----------------------------------------------------------------------------------
+        | --- CheckCondition: Checks if the condition is met to execute a Dialogue Node --- |
+        -----------------------------------------------------------------------------------*/
+        public bool CheckCondition(IEnumerable<IConditionChecker> evaluators)
+        {
+            return m_condition.Check(evaluators);
+        }
 
 #if UNITY_EDITOR
         /*-------------------------------------------------------------
@@ -103,13 +110,5 @@ namespace PolyQuest.Dialogues
             }
         }
 #endif
-
-        /*-----------------------------------------------------------------------------------
-        | --- CheckCondition: Checks if the condition is met to execute a Dialogue Node --- |
-        -----------------------------------------------------------------------------------*/
-        public bool CheckCondition(IEnumerable<IConditionChecker> evaluators)
-        {
-            return m_condition.Check(evaluators);
-        }
     }
 }

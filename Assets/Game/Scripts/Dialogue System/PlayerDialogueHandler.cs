@@ -26,11 +26,10 @@ namespace PolyQuest.Dialogues
         private Dialogue m_activeDialogue;
         private DialogueNode m_currentNode;
         private AIDialogueHandler m_activeNPC;
-        private PlayerController m_playerController;
         private MovementComponent m_movementComponent;
         private ActionManager m_actionManager;
 
-        private const float kProximityThreshold = 4.0f;
+        private const float kProximityThreshold = 3.0f;
         private bool m_inActiveDialogue = false;
 
         public event Action OnDialogueStarted;
@@ -44,9 +43,6 @@ namespace PolyQuest.Dialogues
         ----------------------------------------------------------------*/
         private void Awake()
         {
-            m_playerController = GetComponent<PlayerController>();
-            Utilities.CheckForNull(m_playerController, nameof(PlayerController));
-
             m_movementComponent = GetComponent<MovementComponent>();
             Utilities.CheckForNull(m_movementComponent, nameof(MovementComponent));
 

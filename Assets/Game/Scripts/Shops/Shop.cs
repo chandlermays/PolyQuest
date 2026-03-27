@@ -239,7 +239,7 @@ namespace PolyQuest.Shops
         ----------------------------------------------------------------------*/
         public CursorSettings.CursorType GetCursorType()
         {
-            return CursorSettings.CursorType.kShop;
+            return CursorSettings.CursorType.kTargeting;
         }
 
         /*-------------------------------------------------------------------

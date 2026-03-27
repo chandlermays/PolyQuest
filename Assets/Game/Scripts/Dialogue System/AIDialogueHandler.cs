@@ -59,6 +59,9 @@ namespace PolyQuest.Dialogues
             return true;
         }
 
+        /*-------------------------------------------------------------------------------------
+        | --- ToggleHighlight: Enables or Disables the Outline Component for Highlighting --- |
+        -------------------------------------------------------------------------------------*/
         public void ToggleHighlight(bool highlight)
         {
             m_outline.enabled = highlight;
