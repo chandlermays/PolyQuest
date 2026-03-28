@@ -870,6 +870,10 @@ PrefabInstance:
       propertyPath: m_playerInventory
       value: 
       objectReference: {fileID: 7563289364191995176}
+    - target: {fileID: 4608805806703990328, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
+      propertyPath: m_inventory
+      value: 
+      objectReference: {fileID: 7563289364191995176}
     - target: {fileID: 4665249465159110338, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1490,6 +1494,10 @@ PrefabInstance:
       propertyPath: m_Value
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8874784138411757550, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
+      propertyPath: m_experience
+      value: 
+      objectReference: {fileID: 1765758427239937586}
     - target: {fileID: 8877019673715142479, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_player
       value: 

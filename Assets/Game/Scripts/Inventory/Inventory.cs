@@ -35,6 +35,7 @@ namespace PolyQuest.Inventories
         public int Size => m_inventorySlots.Length;
 
         public event Action OnInventoryChanged;
+        public event Action<InventoryItem, int> OnItemAdded;
         public Func<InventoryItem, int, bool> OnBeforeAddItem;
 
         /*----------------------------------------------------------------
@@ -100,7 +101,10 @@ namespace PolyQuest.Inventories
         public bool TryAddToAvailableSlot(InventoryItem item, int quantity = 1)
         {
             if (item.IsStackable && OnBeforeAddItem != null && OnBeforeAddItem(item, quantity))
+            {
+                OnItemAdded?.Invoke(item, quantity);
                 return true;
+            }
 
             int slotIndex = FindSlotForItem(item);
             if (slotIndex < 0)
@@ -308,6 +312,7 @@ namespace PolyQuest.Inventories
                 AddItemToMapping(item, slot);
             }
 
+            OnItemAdded?.Invoke(item, quantity);
             OnInventoryChanged?.Invoke();
         }
 

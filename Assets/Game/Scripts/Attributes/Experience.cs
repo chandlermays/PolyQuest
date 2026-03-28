@@ -6,7 +6,7 @@ using PolyQuest.Saving;
 
 namespace PolyQuest.Attributes
 {
-    /* ---------------------------------------------------------------------------------------------
+    /* ----------------------------------------------------------------------------------------------
      * Role: Tracks and manages experience points and level progression for a character.            *
      *                                                                                              *
      * Responsibilities:                                                                            *
