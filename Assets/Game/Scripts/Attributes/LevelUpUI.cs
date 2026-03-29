@@ -8,8 +8,11 @@ namespace PolyQuest.UI
     public class LevelUpUI : MonoBehaviour
     {
         [SerializeField] private Experience m_experience;
+        [SerializeField] private CanvasGroup m_instructionText;
         [SerializeField] private float m_fadeDuration = 0.5f;
         [SerializeField] private float m_holdDuration = 2f;
+        [SerializeField] private float m_instructionDelay = 0.3f;
+        [SerializeField] private float m_instructionDuration = 0.5f;
 
         private CanvasGroup m_canvasGroup;
         private Coroutine m_activeCoroutine;
@@ -20,6 +23,7 @@ namespace PolyQuest.UI
         private void Awake()
         {
             Utilities.CheckForNull(m_experience, nameof(m_experience));
+            Utilities.CheckForNull(m_instructionText, nameof(m_instructionText));
 
             m_canvasGroup = GetComponent<CanvasGroup>();
             Utilities.CheckForNull(m_canvasGroup, nameof(m_canvasGroup));
@@ -51,6 +55,8 @@ namespace PolyQuest.UI
             m_canvasGroup.alpha = 0f;
             m_canvasGroup.interactable = false;
             m_canvasGroup.blocksRaycasts = false;
+
+            m_instructionText.alpha = 0f;
         }
 
         /*----------------------------------------------------------
@@ -71,28 +77,44 @@ namespace PolyQuest.UI
         ---------------------------------------------------------------------------------*/
         private IEnumerator PlayLevelUpSequence()
         {
-            yield return StartCoroutine(Fade(0f, 1f));
+            Hide();
+
+            Coroutine instructionSequence = StartCoroutine(PlayInstructionSequence());
+            yield return StartCoroutine(Fade(m_canvasGroup, 0f, 1f, m_fadeDuration));
             yield return new WaitForSeconds(m_holdDuration);
-            yield return StartCoroutine(Fade(1f, 0f));
+            yield return StartCoroutine(Fade(m_canvasGroup, 1f, 0f, m_fadeDuration));
+
+            yield return instructionSequence;
 
             Hide();
             m_activeCoroutine = null;
         }
 
+        /*----------------------------------------------------------------------------------
+        | --- PlayInstructionSequence: Fade the text in and out after an initial delay --- |
+        ----------------------------------------------------------------------------------*/
+        private IEnumerator PlayInstructionSequence()
+        {
+            yield return new WaitForSeconds(m_instructionDelay);
+            yield return StartCoroutine(Fade(m_instructionText, 0f, 1f, m_instructionDuration));
+            yield return new WaitForSeconds(m_holdDuration);
+            yield return StartCoroutine(Fade(m_instructionText, 1f, 0f, m_instructionDuration));
+        }
+
         /*-----------------------------------------------------------------------
         | --- Fade: Lerp the CanvasGroup alpha between two values over time --- |
         -----------------------------------------------------------------------*/
-        private IEnumerator Fade(float from, float to)
+        private IEnumerator Fade(CanvasGroup target, float from, float to, float duration)
         {
-            m_canvasGroup.alpha = from;
+            target.alpha = from;
 
-            for (float elapsed = 0f; elapsed < m_fadeDuration; elapsed += Time.deltaTime)
+            for (float elapsed = 0f; elapsed < duration; elapsed += Time.deltaTime)
             {
-                m_canvasGroup.alpha = Mathf.Lerp(from, to, elapsed / m_fadeDuration);
+                target.alpha = Mathf.Lerp(from, to, elapsed / duration);
                 yield return null;
             }
 
-            m_canvasGroup.alpha = to;
+            target.alpha = to;
         }
     }
 }

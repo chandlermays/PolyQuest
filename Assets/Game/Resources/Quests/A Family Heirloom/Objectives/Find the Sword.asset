@@ -12,5 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d890c84fb3ce8b449450022f2e23ac6, type: 3}
   m_Name: Find the Sword
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Quests.QuestObjective
-  m_description: A guard lost his family's sword during a recent scouting mission.
-    Search the area and recover it.
+  m_description: Recover the lost sword along the route

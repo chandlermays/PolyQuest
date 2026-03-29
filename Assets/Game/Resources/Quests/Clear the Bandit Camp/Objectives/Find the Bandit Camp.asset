@@ -12,5 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d890c84fb3ce8b449450022f2e23ac6, type: 3}
   m_Name: Find the Bandit Camp
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.QuestObjective
-  m_description: Scouts report a bandit encampment somewhere east of Stonewick. Track
-    it down and assess the threat.
+  m_description: Find the Eastern Bandit Camp

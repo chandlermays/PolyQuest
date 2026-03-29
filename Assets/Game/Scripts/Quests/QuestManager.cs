@@ -31,8 +31,12 @@ namespace PolyQuest.Quests
         private const string kActiveQuestsKey = "ActiveQuests";
         private const string kCompletedQuestsKey = "CompletedQuests";
 
+        private readonly Queue<Quest> m_pendingCompletionNotifs = new();
+        private readonly Queue<Quest> m_pendingRewards = new();
+
         public IEnumerable<QuestStatus> ActiveQuests => m_activeQuests.Values;
 
+        public event Action<Quest> OnQuestCompleted;
         public event Action OnQuestsUpdate;
 
         /*--------------------------------------------------
@@ -88,13 +92,26 @@ namespace PolyQuest.Quests
 
             if (status.IsQuestComplete())
             {
-                GrantReward(quest);
-                m_completedQuests.Add(quest.name);
-                m_activeQuests.Remove(quest);
-                SaveManager.Instance.Save();    // Auto-save after completing a quest
+                CompleteQuest(quest);
             }
 
             OnQuestsUpdate?.Invoke();
+        }
+
+        /*-------------------------------------------------------------------------------------------------------------------------------------
+        | --- FlushCompletionNotifs: Process any pending quest completion notifications to ensure they are raised at the appropriate time --- |
+        -------------------------------------------------------------------------------------------------------------------------------------*/
+        public void FlushCompletionNotifs()
+        {
+            while (m_pendingRewards.Count > 0)
+            {
+                GrantReward(m_pendingRewards.Dequeue());
+            }
+
+            while (m_pendingCompletionNotifs.Count > 0)
+            {
+                OnQuestCompleted?.Invoke(m_pendingCompletionNotifs.Dequeue());
+            }
         }
 
         /*-------------------------------------------------------------------
@@ -191,6 +208,18 @@ namespace PolyQuest.Quests
                 default:
                     return null;
             }
+        }
+
+        /*------------------------------------------------------------------------------------------------------------
+        | --- CompleteQuest: Mark a quest as complete, grant rewards, and update the manager's state accordingly --- |
+        ------------------------------------------------------------------------------------------------------------*/
+        private void CompleteQuest(Quest quest)
+        {
+            m_completedQuests.Add(quest.name);
+            m_activeQuests.Remove(quest);
+            m_pendingRewards.Enqueue(quest);
+            m_pendingCompletionNotifs.Enqueue(quest);
+            SaveManager.Instance.Save();
         }
 
         /*-----------------------------------------------------------------

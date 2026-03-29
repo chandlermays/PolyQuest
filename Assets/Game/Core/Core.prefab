@@ -894,6 +894,10 @@ PrefabInstance:
       propertyPath: m_playerController
       value: 
       objectReference: {fileID: 1237797602039935508}
+    - target: {fileID: 4875323025010506916, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
+      propertyPath: m_questManager
+      value: 
+      objectReference: {fileID: 766926249126215248}
     - target: {fileID: 5127357481726045053, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_playerEquipment
       value: 

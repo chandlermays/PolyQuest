@@ -84,7 +84,6 @@ namespace PolyQuest.UI.Tooltip
                 rewardText = "No reward";
             }
 
-            rewardText += ".";
             return rewardText;
         }
     }
