@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
@@ -13,15 +14,8 @@ namespace PolyQuest.PCG
         [SerializeField] private RoomDecorator m_roomDecorator;
         [SerializeField] private NavMeshSurface m_navMeshSurface;
 
+        private Level m_level;
         private const string kSeedKey = "Seed";
-
-        /*----------------------------------------------------------------
-        | --- Awake: Called when the script instance is being loaded --- |
-        ----------------------------------------------------------------*/
-        private void Awake()
-        {
-            GenerateNewSeedAndLevel();
-        }
 
         /*------------------------------------------------------------------------
         | --- GenerateNewSeedAndLevel: Generates a new seed and level layout --- |
@@ -33,13 +27,19 @@ namespace PolyQuest.PCG
             GenerateLevel();
         }
 
-        /*---------------------------------------------------------------------
-        | --- GenerateNewLevel: Rebuilds the level using the current seed --- |
-        ---------------------------------------------------------------------*/
-        [ContextMenu("DEBUG: Generate New Level")]
-        public void GenerateNewLevel()
+        /*----------------------------------------------------------------------------------------
+        | --- RegenerateDecorations: Generates a new arrangement of decorations in the level --- |
+        ----------------------------------------------------------------------------------------*/
+        [ContextMenu("DEBUG: Regenerate Decorations")]
+        public void RegenerateDecorations()
         {
-            GenerateLevel();
+            if (m_level == null)
+            {
+                Debug.LogWarning("Regenerate Decorations: Must generate a level before placing decorations.");
+                return;
+            }
+
+            m_roomDecorator.Initialize(m_level, DateTime.Now.Ticks);
         }
 
         /*---------------------------------------------------------------------------------------------
@@ -47,9 +47,9 @@ namespace PolyQuest.PCG
         ---------------------------------------------------------------------------------------------*/
         private void GenerateLevel()
         {
-            Level level = m_layoutGenerator.GenerateLayout();
+            m_level = m_layoutGenerator.GenerateLayout();
             m_levelGeometry.CreateLevelGeometry();
-            m_roomDecorator.Initialize(level, m_layoutGenerator.Seed);
+            m_roomDecorator.Initialize(m_level, m_layoutGenerator.Seed);
             m_navMeshSurface.BuildNavMesh();
         }
 
@@ -70,13 +70,17 @@ namespace PolyQuest.PCG
         --------------------------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
-            if (state is not JObject jObject)
-                return;
+            if (state is JObject jObject && jObject.TryGetValue(kSeedKey, out JToken seedToken))
+            {
+                // Return visit: reconstruct the exact same layout.
+                m_layoutGenerator.Seed = seedToken.ToObject<long>();
+            }
+            else
+            {
+                // First visit: pick a fresh seed so the level is brand-new.
+                m_layoutGenerator.GenerateNewSeed();
+            }
 
-            if (!jObject.TryGetValue(kSeedKey, out JToken seedToken))
-                return;
-
-            m_layoutGenerator.Seed = seedToken.ToObject<long>();
             GenerateLevel();
         }
     }
