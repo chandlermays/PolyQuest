@@ -54,7 +54,10 @@ namespace PolyQuest.Player
             set => m_lastHighlightedObject = value;
         }
 
+        private bool m_canMove = true;
+
         public bool IsTargeting => m_isTargeting;
+        public void ToggleInput(bool enabled) => m_canMove = enabled;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -110,22 +113,25 @@ namespace PolyQuest.Player
             if (HandleUI())
                 return;
 
-            if (m_isTargeting)
+            if (m_canMove)
             {
-                HandleInteractable();
-                return;
-            }
-
-            if (m_isVisible)
-            {
-                if (HandleAbilities())
+                if (m_isTargeting)
+                {
+                    HandleInteractable();
                     return;
+                }
 
-                if (HandleInteractable())
-                    return;
+                if (m_isVisible)
+                {
+                    if (HandleAbilities())
+                        return;
 
-                if (HandleMovement())
-                    return;
+                    if (HandleInteractable())
+                        return;
+
+                    if (HandleMovement())
+                        return;
+                }
             }
 
             SetCursor(CursorSettings.CursorType.kNone);

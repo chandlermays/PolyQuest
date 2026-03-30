@@ -6,16 +6,7 @@ using PolyQuest.Quests;
 
 namespace PolyQuest.UI
 {
-    /* --------------------------------------------------------------------------------------------
-     * Role: Controls the display of the quest completion UI panel.                              *
-     *                                                                                            *
-     * Responsibilities:                                                                          *
-     *      - Listens for the OnQuestCompleted event from the QuestManager.                       *
-     *      - Updates the quest title text to reflect the completed quest.                        *
-     *      - Fades the panel in, holds it, then fades it out.                                    *
-     *      - Safely handles rapid completions by restarting the sequence if already playing.     *
-     * ------------------------------------------------------------------------------------------ */
-    public class QuestCompleteUI : MonoBehaviour
+    public class QuestCompletionUI : MonoBehaviour
     {
         [SerializeField] private QuestManager m_questManager;
         [SerializeField] private TextMeshProUGUI m_questTitle;
@@ -72,7 +63,7 @@ namespace PolyQuest.UI
         }
 
         /*-------------------------------------------------------------------------
-        | --- HandleQuestCompleted: Initiate the quest completion UI sequence --- |
+        | --- HandleQuestStarted: Initiate the quest completion UI sequence --- |
         -------------------------------------------------------------------------*/
         private void HandleQuestCompleted(Quest quest)
         {
@@ -86,7 +77,7 @@ namespace PolyQuest.UI
         }
 
         /*--------------------------------------------------------------------------------------------
-        | --- PlayQuestCompleteSequence: Fade in, hold, then fade out the quest completion panel --- |
+        | --- PlayQuestStartedSequence: Fade in, hold, then fade out the quest completion panel --- |
         --------------------------------------------------------------------------------------------*/
         private IEnumerator PlayQuestCompleteSequence()
         {

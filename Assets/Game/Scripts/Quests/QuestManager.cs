@@ -1,11 +1,12 @@
-using System;
-using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 //---------------------------------
 using PolyQuest.Inventories;
+using PolyQuest.Pickups;
 using PolyQuest.Saving;
 using PolyQuest.Tools;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace PolyQuest.Quests
 {
@@ -31,12 +32,14 @@ namespace PolyQuest.Quests
         private const string kActiveQuestsKey = "ActiveQuests";
         private const string kCompletedQuestsKey = "CompletedQuests";
 
+        private readonly Queue<Quest> m_pendingStartNotifs = new();
         private readonly Queue<Quest> m_pendingCompletionNotifs = new();
         private readonly Queue<Quest> m_pendingRewards = new();
 
         public IEnumerable<QuestStatus> ActiveQuests => m_activeQuests.Values;
 
         public event Action<Quest> OnQuestCompleted;
+        public event Action<Quest> OnQuestStarted;
         public event Action OnQuestsUpdate;
 
         /*--------------------------------------------------
@@ -59,6 +62,7 @@ namespace PolyQuest.Quests
             }
 
             m_activeQuests[quest] = new QuestStatus(quest);
+            m_pendingStartNotifs.Enqueue(quest);
             OnQuestsUpdate?.Invoke();
         }
 
@@ -103,14 +107,19 @@ namespace PolyQuest.Quests
         -------------------------------------------------------------------------------------------------------------------------------------*/
         public void FlushCompletionNotifs()
         {
-            while (m_pendingRewards.Count > 0)
+            while (m_pendingStartNotifs.Count > 0)
             {
-                GrantReward(m_pendingRewards.Dequeue());
+                OnQuestStarted?.Invoke(m_pendingStartNotifs.Dequeue());
             }
 
             while (m_pendingCompletionNotifs.Count > 0)
             {
                 OnQuestCompleted?.Invoke(m_pendingCompletionNotifs.Dequeue());
+            }
+
+            while (m_pendingRewards.Count > 0)
+            {
+                GrantReward(m_pendingRewards.Dequeue());
             }
         }
 
@@ -238,6 +247,15 @@ namespace PolyQuest.Quests
         {
             foreach (Quest.Reward reward in quest.Rewards)
             {
+                if (reward.Item == null)
+                    continue;
+
+                if (reward.Item is CurrencyItem)
+                {
+                    GetComponent<Wallet>().UpdateSiver(reward.Amount);
+                    continue;
+                }
+
                 bool success = GetComponent<Inventory>().TryAddToAvailableSlot(reward.Item, reward.Amount);
                 if (!success)
                 {

@@ -9,7 +9,6 @@ namespace PolyQuest.Inventories
     {
         [SerializeField] private float m_distanceThreshold;
         [SerializeField] private EnemyLootTable m_enemyLootTable;
-        [SerializeField] private int m_dropCount;
 
         private BaseStats m_baseStats;
         private Equipment m_equipment;

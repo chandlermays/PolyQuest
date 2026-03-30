@@ -1796,7 +1796,7 @@ GameObject:
   - component: {fileID: 3272163512795474766}
   - component: {fileID: 1865444336509654807}
   - component: {fileID: 5008227000221217880}
-  - component: {fileID: 3114411632429733746}
+  - component: {fileID: 8473603397961994422}
   - component: {fileID: 6928696131343925156}
   - component: {fileID: 2857182479567065796}
   - component: {fileID: 6745226246766713138}
@@ -2027,7 +2027,7 @@ MonoBehaviour:
   m_baseProgression: {fileID: 0}
   m_useStatModifiers: 1
   m_level: 1
---- !u!114 &3114411632429733746
+--- !u!114 &8473603397961994422
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2036,9 +2036,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6051408657710484760}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 550c88fc4ef72ac4cb568aa4ce60d254, type: 3}
+  m_Script: {fileID: 11500000, guid: c2b1a95a090c88144a6dfe27c553b4c3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.Equipment
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.StatsEquipment
 --- !u!114 &6928696131343925156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2053,6 +2053,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.RandomDropper
   m_distanceThreshold: 2
   m_enemyLootTable: {fileID: 11400000, guid: 248401c73ddeac341a71abe17bdf16e5, type: 2}
+  m_silverPickupPrefab: {fileID: 2969380025193945682, guid: 31f2f4ea1ddf32541ad2b70f54cc7ef2, type: 3}
   m_dropCount: 2
 --- !u!114 &2857182479567065796
 MonoBehaviour:

@@ -16,7 +16,10 @@ namespace PolyQuest.UI.Tooltip
     public abstract class TooltipHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private GameObject m_tooltipPrefab;
-        private GameObject m_tooltip;
+
+        private static GameObject s_activeTooltip;
+        private static TooltipHandler s_activeHandler;
+
         private const int kCornerCount = 4;
 
         public abstract void UpdateTooltip(GameObject tooltip);
@@ -30,20 +33,18 @@ namespace PolyQuest.UI.Tooltip
             Utilities.CheckForNull(m_tooltipPrefab, nameof(m_tooltipPrefab));
         }
 
-        /*---------------------------------------------------------
-        | --- OnDestroy: Called when this object is destroyed --- |
-        ---------------------------------------------------------*/
-        private void OnDestroy()
-        {
-            ClearTooltip();
-        }
+        private void OnDestroy() => ClearIfOwner();
+        private void OnDisable() => ClearIfOwner();
 
-        /*--------------------------------------------------------------------
-        | --- OnDisable: Called when this object is disabled or inactive --- |
-        --------------------------------------------------------------------*/
-        private void OnDisable()
+        /*------------------------------------------------------------------------
+        | --- ClearIfOwner: Only destroy the tooltip if this handler owns it --- |
+        ------------------------------------------------------------------------*/
+        private void ClearIfOwner()
         {
-            ClearTooltip();
+            if (s_activeHandler == this)
+            {
+                ClearTooltip();
+            }
         }
 
         /*-------------------------------------------------------------
@@ -54,7 +55,7 @@ namespace PolyQuest.UI.Tooltip
             Canvas.ForceUpdateCanvases();
 
             Vector3[] tooltipCorners = new Vector3[kCornerCount];
-            m_tooltip.GetComponent<RectTransform>().GetWorldCorners(tooltipCorners);
+            s_activeTooltip.GetComponent<RectTransform>().GetWorldCorners(tooltipCorners);
             Vector3[] slotCorners = new Vector3[kCornerCount];
             GetComponent<RectTransform>().GetWorldCorners(slotCorners);
 
@@ -64,7 +65,7 @@ namespace PolyQuest.UI.Tooltip
             int slotCorner = GetCornerIndex(isBottom, isRight);
             int tooltipCorner = GetCornerIndex(!isBottom, !isRight);
 
-            m_tooltip.transform.position = slotCorners[slotCorner] - tooltipCorners[tooltipCorner] + m_tooltip.transform.position;
+            s_activeTooltip.transform.position = slotCorners[slotCorner] - tooltipCorners[tooltipCorner] + s_activeTooltip.transform.position;
         }
 
         /*-----------------------------------------------------
@@ -87,13 +88,14 @@ namespace PolyQuest.UI.Tooltip
         /*---------------------------------------------------
         | --- ClearTooltip: Destroy the tooltip display --- |
         ---------------------------------------------------*/
-        private void ClearTooltip()
+        private static void ClearTooltip()
         {
-            if (m_tooltip)
+            if (s_activeTooltip != null)
             {
-                Destroy(m_tooltip);
-                m_tooltip = null;
+                Destroy(s_activeTooltip);
+                s_activeTooltip = null;
             }
+            s_activeHandler = null;
         }
 
         /*--------------------------------------------------------------------
@@ -101,23 +103,17 @@ namespace PolyQuest.UI.Tooltip
         --------------------------------------------------------------------*/
         void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
         {
+            ClearTooltip();
+
+            if (!CanDisplayTooltip())
+                return;
+
             Canvas parentCanvas = GetComponentInParent<Canvas>();
+            s_activeTooltip = Instantiate(m_tooltipPrefab, parentCanvas.transform);
+            s_activeHandler = this;
 
-            if (m_tooltip && !CanDisplayTooltip())
-            {
-                ClearTooltip();
-            }
-
-            if (!m_tooltip && CanDisplayTooltip())
-            {
-                m_tooltip = Instantiate(m_tooltipPrefab, parentCanvas.transform);
-            }
-
-            if (m_tooltip)
-            {
-                UpdateTooltip(m_tooltip);
-                PositionTooltip();
-            }
+            UpdateTooltip(s_activeTooltip);
+            PositionTooltip();
         }
 
         /*------------------------------------------------------------------
@@ -125,7 +121,7 @@ namespace PolyQuest.UI.Tooltip
         ------------------------------------------------------------------*/
         void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
         {
-            ClearTooltip();
+            ClearIfOwner();
         }
     }
 }

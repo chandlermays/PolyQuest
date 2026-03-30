@@ -5,6 +5,7 @@ using PolyQuest.Core;
 using PolyQuest.Input;
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
+using PolyQuest.Inventories;
 
 namespace PolyQuest.Pickups
 {
@@ -40,9 +41,9 @@ namespace PolyQuest.Pickups
         /*--------------------------------------------------------------------------------
         | --- Initialize: Sets up the pickup's item label and disables it by default --- |
         --------------------------------------------------------------------------------*/
-        public void Initialize()
+        public void Initialize(InventoryItem item)
         {
-            m_itemLabelText.text = m_pickup.Item.Name;
+            m_itemLabelText.text = item.Name;
             m_itemLabel.SetActive(false);
         }
 

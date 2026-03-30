@@ -18,3 +18,5 @@ MonoBehaviour:
   m_rewards:
   - m_item: {fileID: 11400000, guid: 969a495089f91be4897ab1d54aa212bb, type: 2}
     m_amount: 1
+  - m_item: {fileID: 11400000, guid: 1516eee75c96ae442a680af3e164a10b, type: 2}
+    m_amount: 60

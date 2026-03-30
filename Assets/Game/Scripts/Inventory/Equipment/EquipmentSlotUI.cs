@@ -166,10 +166,12 @@ namespace PolyQuest.Inventories
             if (equippedItem == null)
                 return;
 
+            m_playerInventory.SuppressItemAddedNotif = true;
             if (m_playerInventory.TryAddToAvailableSlot(equippedItem, 1))
             {
                 m_playerEquipment.RemoveItem(m_equipmentSlot);
             }
+            m_playerInventory.SuppressItemAddedNotif = false;
         }
     }
 }

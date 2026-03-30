@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1387ad3b63929994cae5df834e7fae6e, type: 3}
+  m_Name: Silver
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Pickups.CurrencyItem
+  m_itemID: 4862143c-2be1-420b-ae4e-d7ff1ccfb194
+  m_itemName: Silver
+  m_itemDescription: 
+  m_itemIcon: {fileID: 21300000, guid: 3676a0b185daeb54fb257f700ba7ead4, type: 3}
+  m_pickup: {fileID: 3714728132098454972, guid: ce734acb24202304793d0fc60816bfdf, type: 3}
+  m_isStackable: 1
+  m_category: 8
+  m_itemPrice: 1

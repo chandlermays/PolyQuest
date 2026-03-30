@@ -28,7 +28,7 @@ namespace PolyQuest.Quests
         public class Reward
         {
             [SerializeField] private InventoryItem m_item;
-            [Min(1)] [SerializeField] private int m_amount;
+            [Min(1)][SerializeField] private int m_amount;
 
             public InventoryItem Item => m_item;
             public int Amount => m_amount;

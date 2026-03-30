@@ -23,8 +23,6 @@ namespace PolyQuest.UI.HUD
 
         private BaseStats m_baseStats;
 
-        private float m_maxHealth;
-
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
@@ -53,26 +51,21 @@ namespace PolyQuest.UI.HUD
             m_healthComponent.OnHealthChanged -= UpdateHealthBar;
         }
 
-        /*-----------------------------------------------------
-        | --- Start: Called before the first frame update --- |
-        -----------------------------------------------------*/
-        private void Start()
-        {
-            m_maxHealth = m_baseStats.GetHealth();
-        }
-
         /*-------------------------------------------------------------------------------------
         | --- UpdateHealthBar: Adjust the Fill Amount to the Current Health of the Entity --- |
         -------------------------------------------------------------------------------------*/
         private void UpdateHealthBar()
         {
-            m_maxHealth = m_baseStats.GetHealth();
-            float healthPercentage = Mathf.Clamp(m_healthComponent.CurrentHealth / m_maxHealth, 0f, 1f);
+            float maxHealth = m_baseStats.GetHealth();
+            if (maxHealth <= 0f)
+                return;
+
+            float healthPercentage = Mathf.Clamp(m_healthComponent.CurrentHealth / maxHealth, 0f, 1f);
             m_healthBarFill.fillAmount = healthPercentage;
 
             if (m_healthBarFill.fillAmount <= 0f)
             {
-                Destroy(gameObject);   // Destroy the Health Bar when the Entity is Dead
+                Destroy(gameObject);
             }
         }
     }

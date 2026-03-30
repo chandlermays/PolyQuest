@@ -100,7 +100,7 @@ namespace PolyQuest.Pickups
         {
             m_item = item;
             m_quantity = item.IsStackable ? quantity : 1;
-            m_clickablePickup.Initialize();
+            m_clickablePickup.Initialize(item);
         }
 
         /*-------------------------------------------------------------
@@ -120,6 +120,14 @@ namespace PolyQuest.Pickups
         --------------------------------------------------------------------------*/
         public void PickupItem()
         {
+            if (m_item is CurrencyItem)
+            {
+                Wallet wallet = m_inventory.GetComponent<Wallet>();
+                wallet.UpdateSiver(m_quantity);
+                Destroy(gameObject);
+                return;
+            }
+
             bool slotAvailable = m_inventory.TryAddToAvailableSlot(m_item, m_quantity);
             if (slotAvailable)
             {

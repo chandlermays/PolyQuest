@@ -88,6 +88,8 @@ namespace PolyQuest.Core
                 yield break;
 
             m_isTransitioning = true;
+            m_playerController.ToggleInput(false);
+            InputGuard.Instance.LockInput();
 
             var fade = TransitionFade.Instance;
 
@@ -126,6 +128,8 @@ namespace PolyQuest.Core
                 if (!toDialogue)
                 {
                     m_playerController.SetPlayerVisibility(true);
+                    m_playerController.ToggleInput(true);
+                    InputGuard.Instance.UnlockInput();
                 }
 
                 yield return fade.FadeIn();

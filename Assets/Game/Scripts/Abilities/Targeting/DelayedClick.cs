@@ -55,6 +55,7 @@ namespace PolyQuest.Abilities
                 if (inputActions.Gameplay.Cancel.WasPressedThisFrame())
                 {
                     config.Cancel();
+                    playerController.SetCursor(CursorSettings.CursorType.kNone);
                     break;
                 }
 
@@ -70,6 +71,7 @@ namespace PolyQuest.Abilities
                             if (inputActions.Gameplay.Cancel.WasPressedThisFrame())
                             {
                                 config.Cancel();
+                                playerController.SetCursor(CursorSettings.CursorType.kNone);
                                 break;
                             }
                             yield return null;

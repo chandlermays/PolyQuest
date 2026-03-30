@@ -38,6 +38,8 @@ namespace PolyQuest.Inventories
         public event Action<InventoryItem, int> OnItemAdded;
         public Func<InventoryItem, int, bool> OnBeforeAddItem;
 
+        public bool SuppressItemAddedNotif { get; set; } = false;
+
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
@@ -102,7 +104,11 @@ namespace PolyQuest.Inventories
         {
             if (item.IsStackable && OnBeforeAddItem != null && OnBeforeAddItem(item, quantity))
             {
-                OnItemAdded?.Invoke(item, quantity);
+                if (!SuppressItemAddedNotif)
+                {
+                    OnItemAdded?.Invoke(item, quantity);
+                }
+
                 return true;
             }
 
@@ -312,7 +318,10 @@ namespace PolyQuest.Inventories
                 AddItemToMapping(item, slot);
             }
 
-            OnItemAdded?.Invoke(item, quantity);
+            if (!SuppressItemAddedNotif)
+            {
+                OnItemAdded?.Invoke(item, quantity);
+            }
             OnInventoryChanged?.Invoke();
         }
 

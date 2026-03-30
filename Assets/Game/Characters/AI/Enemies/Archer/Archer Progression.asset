@@ -14,7 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Attributes.EnemyProgression
   m_healthIncreasePercentage: 5
   m_initialHealth: 30
-  m_maxHealthAmounts: 1e00000020000000220000002400000026000000280000002a0000002c0000002e00000030000000
+  m_maxHealthAmounts: 1e00000020000000220000002400000026000000
+  m_damageIncreasePercentage: 0
+  m_initialDamage: 0
+  m_damageAmounts: 0000000000000000000000000000000000000000
+  m_defenseIncreasePercentage: 0
+  m_initialDefense: 0
+  m_defenseAmounts: 0000000000000000000000000000000000000000
+  m_manaIncreasePercentage: 0
+  m_initialMana: 0
+  m_manaAmounts: 0000000000000000000000000000000000000000
+  m_manaRegenIncreasePercentage: 0
+  m_initialManaRegenRate: 0
+  m_manaRegenRates: 0000000000000000000000000000000000000000
   m_experienceRewardIncreasePercentage: 5
   m_initialExperienceReward: 20
-  m_experienceRewardAmounts: 1400000015000000160000001700000018000000190000001a0000001b0000001c0000001d000000
+  m_experienceRewardAmounts: 1400000015000000160000001700000018000000

@@ -274,6 +274,10 @@ PrefabInstance:
       propertyPath: m_playerEquipment
       value: 
       objectReference: {fileID: 6410894009878875111}
+    - target: {fileID: 493322027688035115, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
+      propertyPath: m_wallet
+      value: 
+      objectReference: {fileID: 1869988140558157448}
     - target: {fileID: 496748430612873402, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -690,6 +694,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3548484817717918276, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
+      propertyPath: m_questManager
+      value: 
+      objectReference: {fileID: 766926249126215248}
     - target: {fileID: 3622221598605016776, guid: cf1ed999eb5f42243a85ac259a68d4e2, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0

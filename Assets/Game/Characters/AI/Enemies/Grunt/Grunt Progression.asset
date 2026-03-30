@@ -24,6 +24,9 @@ MonoBehaviour:
   m_manaIncreasePercentage: 0
   m_initialMana: 0
   m_manaAmounts: 0000000000000000000000000000000000000000
+  m_manaRegenIncreasePercentage: 0
+  m_initialManaRegenRate: 0
+  m_manaRegenRates: 0000000000000000000000000000000000000000
   m_experienceRewardIncreasePercentage: 5
   m_initialExperienceReward: 20
   m_experienceRewardAmounts: 1400000015000000160000001700000018000000

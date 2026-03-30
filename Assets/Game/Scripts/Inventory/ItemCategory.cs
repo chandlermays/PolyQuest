@@ -17,6 +17,7 @@ namespace PolyQuest.Inventories
         kAbilities,
         kQuestItem,
         kCraftingMaterial,
-        kJunk
+        kJunk,
+        kCurrency
     }
 }

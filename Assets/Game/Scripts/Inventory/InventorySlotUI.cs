@@ -97,7 +97,9 @@ namespace PolyQuest.Inventories
         -----------------------------------------------------------------------------*/
         public void AddItems(InventoryItem item, int quantity)
         {
+            m_playerInventory.SuppressItemAddedNotif = true;
             m_playerInventory.TryAddItemToSlot(m_index, item, quantity);
+            m_playerInventory.SuppressItemAddedNotif = false;
         }
 
         /*-------------------------------------------------------------------------------------
@@ -179,17 +181,17 @@ namespace PolyQuest.Inventories
 
             // Check if there's an item currently equipped in the target slot
             EquipableItem currentlyEquipped = m_playerEquipment.GetItemInSlot(targetSlot);
+            m_playerInventory.RemoveItemsFromSlot(m_index, 1);
+
             if (currentlyEquipped != null)
             {
-                // Remove the currently equipped item and add it back to the same inventory slot
-                m_playerInventory.RemoveItemsFromSlot(m_index, 1);
+                m_playerInventory.SuppressItemAddedNotif = true;
                 m_playerEquipment.AddItem(targetSlot, equipableItem);
                 m_playerInventory.TryAddItemToSlot(m_index, currentlyEquipped, 1);
+                m_playerInventory.SuppressItemAddedNotif = false;
             }
             else
             {
-                // Equip the new item directly
-                m_playerInventory.RemoveItemsFromSlot(m_index, 1);
                 m_playerEquipment.AddItem(targetSlot, equipableItem);
             }
         }

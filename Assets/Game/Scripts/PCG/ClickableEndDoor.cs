@@ -1,21 +1,12 @@
-﻿//---------------------------------
+﻿using UnityEngine;
+//---------------------------------
 using PolyQuest.Core;
 using PolyQuest.Input;
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace PolyQuest.SceneManagement
 {
-    /* --------------------------------------------------------------------------------------------------
-     * Role: Enables the End Door to be interacted with via mouse click using raycast interaction.       *
-     *                                                                                                   *
-     * Responsibilities:                                                                                 *
-     *      - Implements IRaycastable to allow the End Door to be detected and interacted with.          *
-     *      - Sets the mouse cursor to the portal/interaction icon when hovered.                         *
-     *      - Handles mouse click input to begin moving the player toward the End Door.                  *
-     * ------------------------------------------------------------------------------------------------- */
     [RequireComponent(typeof(EndDoor))]
     public class ClickableEndDoor : MonoBehaviour, IRaycastable
     {

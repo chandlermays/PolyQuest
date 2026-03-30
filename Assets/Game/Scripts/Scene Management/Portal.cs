@@ -126,11 +126,11 @@ namespace PolyQuest.SceneManagement
         {
             foreach (Portal portal in s_portals)
             {
-                if (portal == this) continue;
+                if (portal == this)
+                    continue;
+
                 if (portal.m_portalID == m_portalID)
-                {
                     return portal;
-                }
             }
             return null;
         }

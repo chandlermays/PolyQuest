@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Attributes;
@@ -112,7 +111,17 @@ namespace PolyQuest.Components
         -----------------------------------------------------*/
         private void Start()
         {
-            m_equipment.AddItem(EquipmentSlot.kWeapon, m_startingWeapon);
+            if (m_equipment.GetItemInSlot(EquipmentSlot.kWeapon) == null)
+            {
+                if (m_startingWeapon != null)
+                {
+                    m_equipment.AddItem(EquipmentSlot.kWeapon, m_startingWeapon);
+                }
+                else
+                {
+                    EquipWeapon(m_unarmedWeapon);
+                }
+            }
         }
 
         /*-----------------------------------------

@@ -5,17 +5,17 @@ using PolyQuest.Inventories;
 namespace PolyQuest.UI.Tooltip
 {
     /* --------------------------------------------------------------------------------------------
-     * Role: Handles displaying m_item tooltips in the UI when hovering over m_item holders.           *
+     * Role: Handles displaying item tooltips in the UI when hovering over item holders.           *
      *                                                                                             *
      * Responsibilities:                                                                           *
-     *      - Determines if an m_item tooltip should be shown for the current UI element.            *
-     *      - Updates the tooltip content with m_item details (name, description, etc.).             *
+     *      - Determines if an item tooltip should be shown for the current UI element.            *
+     *      - Updates the tooltip content with item details (name, description, etc.).             *
      *      - Integrates with the TooltipHandler base for pointer event handling.                  *
      * ------------------------------------------------------------------------------------------- */
     public class ItemTooltipHandler : TooltipHandler
     {
         /*--------------------------------------------------------------------------------
-        | --- CanDisplayTooltip: Check if the tooltip can be displayed for this m_item --- |
+        | --- CanDisplayTooltip: Check if the tooltip can be displayed for this item --- |
         --------------------------------------------------------------------------------*/
         public override bool CanDisplayTooltip()
         {
@@ -27,7 +27,7 @@ namespace PolyQuest.UI.Tooltip
         }
 
         /*---------------------------------------------------------------------
-        | --- UpdateTooltip: Update the tooltip content with m_item details --- |
+        | --- UpdateTooltip: Update the tooltip content with item details --- |
         ---------------------------------------------------------------------*/
         public override void UpdateTooltip(GameObject tooltip)
         {

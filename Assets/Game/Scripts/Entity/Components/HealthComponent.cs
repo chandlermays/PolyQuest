@@ -93,7 +93,6 @@ namespace PolyQuest.Components
         -----------------------------------------------------*/
         private void Start()
         {
-            // only set the health if it hasn't been restored from a save state
             if (!m_hasBeenInitialized)
             {
                 m_health = m_stats.GetHealth();
@@ -110,18 +109,20 @@ namespace PolyQuest.Components
         {
             float newMaxHealth = m_stats.GetHealth();
 
-            // First-time initialization safeguard
             if (m_lastKnownMaxHealth <= 0f)
             {
                 m_lastKnownMaxHealth = newMaxHealth;
-                m_health = Mathf.Clamp(m_health, 0f, newMaxHealth);
-                OnHealthChanged?.Invoke();
+
+                if (m_hasBeenInitialized)
+                {
+                    m_health = Mathf.Clamp(m_health, 0f, newMaxHealth);
+                    OnHealthChanged?.Invoke();
+                }
                 return;
             }
 
             float delta = newMaxHealth - m_lastKnownMaxHealth;
             m_health = Mathf.Clamp(m_health + delta, 0f, newMaxHealth);
-
             m_lastKnownMaxHealth = newMaxHealth;
             OnHealthChanged?.Invoke();
         }
