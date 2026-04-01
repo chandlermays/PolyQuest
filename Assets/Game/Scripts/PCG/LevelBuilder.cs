@@ -17,6 +17,16 @@ namespace PolyQuest.PCG
         private Level m_level;
         private const string kSeedKey = "Seed";
 
+        private bool m_hasBeenGenerated = false;
+
+        private void Awake()
+        {
+            if (!m_hasBeenGenerated)
+            {
+                GenerateNewSeedAndLevel();
+            }
+        }
+
         /*------------------------------------------------------------------------
         | --- GenerateNewSeedAndLevel: Generates a new seed and level layout --- |
         ------------------------------------------------------------------------*/
@@ -70,17 +80,15 @@ namespace PolyQuest.PCG
         --------------------------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
-            if (state is JObject jObject && jObject.TryGetValue(kSeedKey, out JToken seedToken))
-            {
-                // Return visit: reconstruct the exact same layout.
-                m_layoutGenerator.Seed = seedToken.ToObject<long>();
-            }
-            else
-            {
-                // First visit: pick a fresh seed so the level is brand-new.
-                m_layoutGenerator.GenerateNewSeed();
-            }
+            m_hasBeenGenerated = true;
 
+            if (state is not JObject jObject)
+                return;
+
+            if (!jObject.TryGetValue(kSeedKey, out JToken seedToken))
+                return;
+
+            m_layoutGenerator.Seed = seedToken.ToObject<long>();
             GenerateLevel();
         }
     }
