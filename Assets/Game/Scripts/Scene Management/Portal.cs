@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 //---------------------------------
 using PolyQuest.Player;
 using PolyQuest.Saving;
+using PolyQuest.PCG;
 
 namespace PolyQuest.SceneManagement
 {
@@ -56,6 +57,7 @@ namespace PolyQuest.SceneManagement
         private void OnEnable()
         {
             s_portals.Add(this);
+            Debug.Log($"[Portal] Added to s_portals: {gameObject.name}, ID: {m_portalID}, Scene: {gameObject.scene.name}");
         }
 
         /*--------------------------------------------------------
@@ -63,6 +65,7 @@ namespace PolyQuest.SceneManagement
         --------------------------------------------------------*/
         private void OnDestroy()
         {
+            Debug.Log($"[Portal] Removed from s_portals: {gameObject.name}, ID: {m_portalID}, Scene: {gameObject.scene.name}");
             s_portals.Remove(this);
         }
 
@@ -104,9 +107,21 @@ namespace PolyQuest.SceneManagement
             PlayerController newPlayerController = GameObject.FindWithTag(kPlayerTag).GetComponent<PlayerController>();
             newPlayerController.enabled = false;
 
+            LevelBuilder levelBuilder = FindFirstObjectByType<LevelBuilder>();
+            if (levelBuilder != null)
+            {
+                yield return WaitForLevelReady(levelBuilder);
+            }
+
             SaveManager.Instance.Load();
 
             Portal destination = GetDestination();
+            if (destination == null)
+            {
+                Debug.LogError($"Portal: No destination found matching PortalID '{m_portalID}' in scene '{m_sceneField.SceneName}'.");
+                Destroy(gameObject);
+                yield break;
+            }
             UpdatePlayer(destination);
 
             // Checkpoint after scene transition
@@ -119,11 +134,21 @@ namespace PolyQuest.SceneManagement
             Destroy(gameObject);
         }
 
+        private IEnumerator WaitForLevelReady(LevelBuilder levelBuilder)
+        {
+            bool levelReady = false;
+            levelBuilder.OnLevelGenerated += () => levelReady = true;
+
+            yield return new WaitUntil(() => levelReady);
+        }
+
         /*--------------------------------------------------------------------
         | --- GetDestination: Returns the Portal the Player is headed to --- |
         --------------------------------------------------------------------*/
         private Portal GetDestination()
         {
+            Debug.Log($"[Portal] GetDestination called in scene: {SceneManager.GetActiveScene().name}");
+
             foreach (Portal portal in s_portals)
             {
                 if (portal == this)

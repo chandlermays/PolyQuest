@@ -58,9 +58,13 @@ namespace PolyQuest.PCG
         ------------------------------------------------------------------------------------------*/
         private void DestroyAllChildren(Transform parent)
         {
-            for (int i = parent.childCount - 1; i >= 0; i--)
+            for (int i = parent.childCount - 1; i >= 0; --i)
             {
+#if UNITY_EDITOR
                 DestroyImmediate(parent.GetChild(i).gameObject);
+#else
+                Destroy(parent.GetChild(i).gameObject);
+#endif
             }
         }
     }

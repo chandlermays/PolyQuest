@@ -18,8 +18,9 @@ namespace PolyQuest.PCG
         private const string kSeedKey = "Seed";
 
         private bool m_hasBeenGenerated = false;
+        public event Action OnLevelGenerated;
 
-        private void Awake()
+        private void Start()
         {
             if (!m_hasBeenGenerated)
             {
@@ -58,9 +59,17 @@ namespace PolyQuest.PCG
         private void GenerateLevel()
         {
             m_level = m_layoutGenerator.GenerateLayout();
+            if (m_level == null)
+            {
+                Debug.LogError("Generate Level: Failed to generate level layout.");
+                return;
+            }
             m_levelGeometry.CreateLevelGeometry();
             m_roomDecorator.Initialize(m_level, m_layoutGenerator.Seed);
             m_navMeshSurface.BuildNavMesh();
+
+            m_hasBeenGenerated = true;
+            OnLevelGenerated?.Invoke();
         }
 
         /*-----------------------------------------------------------------------------------
@@ -80,8 +89,6 @@ namespace PolyQuest.PCG
         --------------------------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
-            m_hasBeenGenerated = true;
-
             if (state is not JObject jObject)
                 return;
 

@@ -35,8 +35,11 @@ namespace PolyQuest.PCG
             TileType[,] decoratedLevel = GenerateDecoratedLevel(level);
             foreach (Room room in level.Rooms)
             {
+            //    Debug.LogError($"[RoomDecorator] Decorating room: {room.Type} at {room.Area}");
                 DecorateRoom(decoratedLevel, room, decorationsTransform, seed);
             }
+
+         //   Debug.LogError($"[RoomDecorator] Total decorations instantiated: {decorationsTransform.childCount}");
             UpdateDecorationTexture(decoratedLevel);
         }
 
@@ -140,9 +143,13 @@ namespace PolyQuest.PCG
         ------------------------------------------------------------------------------------------*/
         private void DestroyAllChildren(Transform parent)
         {
-            for (int i = parent.childCount - 1; i >= 0; i--)
+            for (int i = parent.childCount - 1; i >= 0; --i)
             {
+#if UNITY_EDITOR
                 DestroyImmediate(parent.GetChild(i).gameObject);
+#else
+                Destroy(parent.GetChild(i).gameObject);
+#endif
             }
         }
     }
