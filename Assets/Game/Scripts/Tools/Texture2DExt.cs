@@ -109,17 +109,17 @@ namespace PolyQuest
             texture.Apply();
         }
 
-#if UNITY_EDITOR
         /*------------------------------------------------------------------
         | --- SaveAsset: Saves the texture asset to disk as a PNG file --- |
         ------------------------------------------------------------------*/
         public static void SaveAsset(this Texture2D texture)
         {
+#if UNITY_EDITOR
             byte[] bytes = texture.EncodeToPNG();
             string assetPath = AssetDatabase.GetAssetPath(texture);
             File.WriteAllBytes(assetPath, bytes);
             AssetDatabase.Refresh();
-        }
 #endif
+        }
     }
 }

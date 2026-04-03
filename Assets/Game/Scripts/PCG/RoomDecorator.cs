@@ -35,11 +35,9 @@ namespace PolyQuest.PCG
             TileType[,] decoratedLevel = GenerateDecoratedLevel(level);
             foreach (Room room in level.Rooms)
             {
-            //    Debug.LogError($"[RoomDecorator] Decorating room: {room.Type} at {room.Area}");
                 DecorateRoom(decoratedLevel, room, decorationsTransform, seed);
             }
 
-         //   Debug.LogError($"[RoomDecorator] Total decorations instantiated: {decorationsTransform.childCount}");
             UpdateDecorationTexture(decoratedLevel);
         }
 
@@ -101,11 +99,24 @@ namespace PolyQuest.PCG
             TextureBasedLevel tbLevel = new(m_levelTexture);
             TileType[,] decoratedLevel = new TileType[level.Width, level.Length];
 
+            int wallCount = 0;
+            int floorCount = 0;
+
             for (int y = 0; y < level.Length; ++y)
             {
                 for (int x = 0; x < level.Width; ++x)
                 {
-                    decoratedLevel[x, y] = tbLevel.IsBlocked(x, y) ? TileType.kWall : TileType.kFloor;
+                    TileType tileType = tbLevel.IsBlocked(x, y) ? TileType.kWall : TileType.kFloor;
+                    decoratedLevel[x, y] = tileType;
+
+                    if (tileType == TileType.kWall)
+                    {
+                        ++wallCount;
+                    }
+                    else if (tileType == TileType.kFloor)
+                    {
+                        ++floorCount;
+                    }
                 }
             }
 
@@ -133,9 +144,7 @@ namespace PolyQuest.PCG
             m_decorationTexture.Reinitialize(width, length);
             m_decorationTexture.SetPixels32(pixels);
             m_decorationTexture.Apply();
-#if UNITY_EDITOR
             m_decorationTexture.SaveAsset();
-#endif
         }
 
         /*------------------------------------------------------------------------------------------
@@ -145,11 +154,7 @@ namespace PolyQuest.PCG
         {
             for (int i = parent.childCount - 1; i >= 0; --i)
             {
-#if UNITY_EDITOR
                 DestroyImmediate(parent.GetChild(i).gameObject);
-#else
-                Destroy(parent.GetChild(i).gameObject);
-#endif
             }
         }
     }

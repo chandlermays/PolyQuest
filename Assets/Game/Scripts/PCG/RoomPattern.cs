@@ -32,7 +32,6 @@ namespace PolyQuest.PCG
                     return false;
                 }
             }
-
             return true;
         }
 

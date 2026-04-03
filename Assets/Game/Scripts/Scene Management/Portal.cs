@@ -57,7 +57,6 @@ namespace PolyQuest.SceneManagement
         private void OnEnable()
         {
             s_portals.Add(this);
-            Debug.Log($"[Portal] Added to s_portals: {gameObject.name}, ID: {m_portalID}, Scene: {gameObject.scene.name}");
         }
 
         /*--------------------------------------------------------
@@ -65,7 +64,6 @@ namespace PolyQuest.SceneManagement
         --------------------------------------------------------*/
         private void OnDestroy()
         {
-            Debug.Log($"[Portal] Removed from s_portals: {gameObject.name}, ID: {m_portalID}, Scene: {gameObject.scene.name}");
             s_portals.Remove(this);
         }
 
@@ -107,6 +105,7 @@ namespace PolyQuest.SceneManagement
             PlayerController newPlayerController = GameObject.FindWithTag(kPlayerTag).GetComponent<PlayerController>();
             newPlayerController.enabled = false;
 
+            // If the scene has a LevelBuilder, wait until the level is fully generated before trying to find the destination portal
             LevelBuilder levelBuilder = FindFirstObjectByType<LevelBuilder>();
             if (levelBuilder != null)
             {
@@ -123,7 +122,7 @@ namespace PolyQuest.SceneManagement
                 yield break;
             }
             UpdatePlayer(destination);
-
+            
             // Checkpoint after scene transition
             SaveManager.Instance.Save();
 
@@ -134,6 +133,9 @@ namespace PolyQuest.SceneManagement
             Destroy(gameObject);
         }
 
+        /*----------------------------------------------------------------------------------------------------
+        | --- WaitForLevelReady: Coroutine to wait for the LevelBuilder to complete generating the level --- | 
+        ----------------------------------------------------------------------------------------------------*/
         private IEnumerator WaitForLevelReady(LevelBuilder levelBuilder)
         {
             bool levelReady = false;
@@ -147,8 +149,6 @@ namespace PolyQuest.SceneManagement
         --------------------------------------------------------------------*/
         private Portal GetDestination()
         {
-            Debug.Log($"[Portal] GetDestination called in scene: {SceneManager.GetActiveScene().name}");
-
             foreach (Portal portal in s_portals)
             {
                 if (portal == this)
@@ -165,6 +165,9 @@ namespace PolyQuest.SceneManagement
         -------------------------------------------------------------------------------------*/
         private void UpdatePlayer(Portal destination)
         {
+            Debug.LogError($"[Portal] Destination spawn point world position: {destination.m_spawnPoint.position}, " +
+              $"portal position: {destination.transform.position}");
+
             // Retrieve the player object again in the new scene
             m_player = GameObject.FindWithTag(kPlayerTag);
             if (m_player == null)

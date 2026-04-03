@@ -7,6 +7,7 @@ namespace PolyQuest.PCG
 {
     public class LayoutGenerator : MonoBehaviour
     {
+        [SerializeField] private Texture2D m_levelTexture;
         [SerializeField] private GameObject m_layoutDisplay;
         [SerializeField] private long m_seed = 0;
         [SerializeField] private LevelLayoutConfig m_levelLayoutConfig;
@@ -36,6 +37,7 @@ namespace PolyQuest.PCG
             GenerateCorridors();
             AssignStartAndEndRooms();
             PopulateLevelGrid();
+            WriteLevelToTexture();
 
 #if UNITY_EDITOR
             DrawLayout(startRoomRect);
@@ -326,6 +328,25 @@ namespace PolyQuest.PCG
             {
                 m_level.DrawLine(corridor.StartPositionAbs, corridor.EndPositionAbs, TileType.kFloor);
             }
+        }
+
+        /*---------------------------------------------------------------------------------------------------------------
+        | --- WriteLevelToTexture: Writes the level layout to a Texture2D for visualization and geometry generation --- |
+        ---------------------------------------------------------------------------------------------------------------*/
+        private void WriteLevelToTexture()
+        {
+            m_levelTexture.Reinitialize(m_level.Width, m_level.Length);
+
+            for (int y = 0; y < m_level.Length; ++y)
+            {
+                for (int x = 0; x < m_level.Width; ++x)
+                {
+                    Color color = m_level.GetTileType(x, y) == TileType.kEmpty ? Color.black : Color.white;
+                    m_levelTexture.SetPixel(x, y, color);
+                }
+            }
+
+            m_levelTexture.Apply();
         }
 
         /*---------------------------------------------------------------------------------

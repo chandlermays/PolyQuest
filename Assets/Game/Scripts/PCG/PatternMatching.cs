@@ -49,9 +49,6 @@ namespace PolyQuest.PCG
             }
 
             GameObject decoration = Instantiate(m_prefab, parent.transform);
-
-            Debug.LogError($"[PatternMatching] Instantiated '{decoration.name}' from prefab '{m_prefab.name}', active: {decoration.activeInHierarchy}, parent active: {parent.gameObject.activeInHierarchy}");
-
             decoration.transform.rotation = Quaternion.Euler(0, m_prefabRotation, 0);
             Vector3 center = new Vector3(pattern.x + m_targetPattern.Width / 2f, 0, pattern.y + m_targetPattern.Height / 2f);
             decoration.transform.position = (center + new Vector3(-1, 0, -1)) * 2;

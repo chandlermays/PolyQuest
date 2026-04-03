@@ -20,6 +20,9 @@ namespace PolyQuest.PCG
         private bool m_hasBeenGenerated = false;
         public event Action OnLevelGenerated;
 
+        /*-----------------------------------------------------
+        | --- Start: Called before the first frame update --- |
+        -----------------------------------------------------*/
         private void Start()
         {
             if (!m_hasBeenGenerated)
@@ -46,7 +49,7 @@ namespace PolyQuest.PCG
         {
             if (m_level == null)
             {
-                Debug.LogWarning("Regenerate Decorations: Must generate a level before placing decorations.");
+                Debug.LogWarning("[LevelBuilder] Regenerate Decorations: Must generate a level before placing decorations.");
                 return;
             }
 
@@ -58,10 +61,12 @@ namespace PolyQuest.PCG
         ---------------------------------------------------------------------------------------------*/
         private void GenerateLevel()
         {
+            Debug.LogError("[LevelBuilder] Generating Layout with Seed: " + m_layoutGenerator.Seed);
+
             m_level = m_layoutGenerator.GenerateLayout();
             if (m_level == null)
             {
-                Debug.LogError("Generate Level: Failed to generate level layout.");
+                Debug.LogError("[LevelBuilder] Generate Level: Failed to generate level layout.");
                 return;
             }
             m_levelGeometry.CreateLevelGeometry();
