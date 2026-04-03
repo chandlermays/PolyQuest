@@ -105,14 +105,14 @@ namespace PolyQuest.SceneManagement
             PlayerController newPlayerController = GameObject.FindWithTag(kPlayerTag).GetComponent<PlayerController>();
             newPlayerController.enabled = false;
 
+            SaveManager.Instance.Load();
+
             // If the scene has a LevelBuilder, wait until the level is fully generated before trying to find the destination portal
             LevelBuilder levelBuilder = FindFirstObjectByType<LevelBuilder>();
             if (levelBuilder != null)
             {
                 yield return WaitForLevelReady(levelBuilder);
             }
-
-            SaveManager.Instance.Load();
 
             Portal destination = GetDestination();
             if (destination == null)
@@ -141,7 +141,10 @@ namespace PolyQuest.SceneManagement
             bool levelReady = false;
             levelBuilder.OnLevelGenerated += () => levelReady = true;
 
-            yield return new WaitUntil(() => levelReady);
+            if (!levelBuilder.IsGenerated)
+            {
+                yield return new WaitUntil(() => levelReady);
+            }
         }
 
         /*--------------------------------------------------------------------
@@ -149,11 +152,19 @@ namespace PolyQuest.SceneManagement
         --------------------------------------------------------------------*/
         private Portal GetDestination()
         {
+            Scene activeScene = SceneManager.GetActiveScene();
+
             foreach (Portal portal in s_portals)
             {
+                // skip self cannot be destination
                 if (portal == this)
                     continue;
 
+                // filter portals in the active scene; again, source cannot be destination
+                if (portal.gameObject.scene != activeScene)
+                    continue;
+
+                // find the connecting portal with the same portalID
                 if (portal.m_portalID == m_portalID)
                     return portal;
             }

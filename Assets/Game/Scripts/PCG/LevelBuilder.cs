@@ -17,7 +17,7 @@ namespace PolyQuest.PCG
         private Level m_level;
         private const string kSeedKey = "Seed";
 
-        private bool m_hasBeenGenerated = false;
+        public bool IsGenerated { get; private set; }
         public event Action OnLevelGenerated;
 
         /*-----------------------------------------------------
@@ -25,8 +25,10 @@ namespace PolyQuest.PCG
         -----------------------------------------------------*/
         private void Start()
         {
-            if (!m_hasBeenGenerated)
+            if (!IsGenerated)
             {
+                Debug.LogError("[LevelBuilder.Start] Generating new seed and level.");
+
                 GenerateNewSeedAndLevel();
             }
         }
@@ -61,7 +63,9 @@ namespace PolyQuest.PCG
         ---------------------------------------------------------------------------------------------*/
         private void GenerateLevel()
         {
-            Debug.LogError("[LevelBuilder] Generating Layout with Seed: " + m_layoutGenerator.Seed);
+            Debug.LogError("[LevelBuilder.GenerateLevel] Generating the dungeon layout.");
+
+            IsGenerated = false;
 
             m_level = m_layoutGenerator.GenerateLayout();
             if (m_level == null)
@@ -73,7 +77,7 @@ namespace PolyQuest.PCG
             m_roomDecorator.Initialize(m_level, m_layoutGenerator.Seed);
             m_navMeshSurface.BuildNavMesh();
 
-            m_hasBeenGenerated = true;
+            IsGenerated = true;
             OnLevelGenerated?.Invoke();
         }
 
@@ -94,6 +98,8 @@ namespace PolyQuest.PCG
         --------------------------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
+            Debug.LogError("[LevelBuilder.RestoreState] Restoring the state of the dungeon layout.");
+
             if (state is not JObject jObject)
                 return;
 
