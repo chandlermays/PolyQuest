@@ -14,10 +14,10 @@ namespace PolyQuest.Inventories
 
         public int CurrentSilver => m_currentSilver;
 
-        /*--------------------------------------------------------------------------------
-        | --- UpdateSiver: Updates the current silver amount by the specified amount --- |
-        --------------------------------------------------------------------------------*/
-        public void UpdateSiver(int amount)
+        /*---------------------------------------------------------------------------------
+        | --- UpdateSilver: Updates the current silver amount by the specified amount --- |
+        ---------------------------------------------------------------------------------*/
+        public void UpdateSilver(int amount)
         {
             m_currentSilver += amount;
             OnWalletUpdated?.Invoke();

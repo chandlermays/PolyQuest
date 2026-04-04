@@ -14,24 +14,11 @@ namespace PolyQuest.Shops
 {
     public class Shop : MonoBehaviour, IRaycastable, ISaveable
     {
-        [SerializeField] private string m_shopName;
-        [Range(0.0f, 100.0f)]
-        [SerializeField] private float m_sellPricePercentage = 50.0f;
-        [SerializeField] private ShopItemEntry[] m_shopInventory;
+        [SerializeField] private ShopConfig m_shopConfig;
 
-        [System.Serializable]
-        private class ShopItemEntry
-        {
-            [SerializeField] private InventoryItem m_item;
-            [SerializeField] private int m_initialStock;
-
-            public InventoryItem Item => m_item;
-            public int InitialStock => m_initialStock;
-        }
-
-        private ShopInteractor m_shopInteractor;
         private Inventory m_shopperInventory;
         private Wallet m_shopperWallet;
+        private Outline m_outline;
 
         private Dictionary<InventoryItem, int> m_purchase = new();
         private Dictionary<InventoryItem, int> m_currentStock = new();
@@ -40,11 +27,9 @@ namespace PolyQuest.Shops
 
         public event Action OnShopUpdated;
 
-        public string ShopName => m_shopName;
-        public bool IsBuyMode => m_isBuyingMode;
+        public string ShopName => m_shopConfig.name;
+        public bool InBuyMode => m_isBuyingMode;
         public ItemCategory CurrentFilter => m_currentFilter;
-
-        private Outline m_outline;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -53,8 +38,9 @@ namespace PolyQuest.Shops
         {
             m_outline = GetComponent<Outline>();
             Utilities.CheckForNull(m_outline, nameof(m_outline));
+            Utilities.CheckForNull(m_shopConfig, nameof(m_shopConfig));
 
-            foreach (ShopItemEntry entry in m_shopInventory)
+            foreach (ShopConfig.ShopItemEntry entry in m_shopConfig.ShopInventory)
             {
                 m_currentStock[entry.Item] = entry.InitialStock;
             }
@@ -65,8 +51,6 @@ namespace PolyQuest.Shops
         ------------------------------------------------------------------*/
         public void SetShopInteractor(ShopInteractor shopper)
         {
-            this.m_shopInteractor = shopper;
-
             if (shopper != null)
             {
                 m_shopperInventory = shopper.GetComponent<Inventory>();
@@ -79,12 +63,50 @@ namespace PolyQuest.Shops
             }
         }
 
+        /*----------------------------------------------------------------------------------------
+        | --- ToggleHighlight: Enables or disables the outline highlight for the shop vendor --- |
+        ----------------------------------------------------------------------------------------*/
+        public void ToggleHighlight(bool highlight)
+        {
+            m_outline.enabled = highlight;
+        }
+
+        /*----------------------------------------------------------------------
+        | --- GetCursorType: Returns the cursor type for shop interactions --- |
+        ----------------------------------------------------------------------*/
+        public CursorSettings.CursorType GetCursorType()
+        {
+            return CursorSettings.CursorType.kTargeting;
+        }
+
+        /*-------------------------------------------------------------------
+        | --- HandleRaycast: Handles raycast interactions with the shop --- |
+        -------------------------------------------------------------------*/
+        public bool HandleRaycast(PlayerController playerController)
+        {
+            if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
+            {
+                playerController.GetComponent<ShopInteractor>().SetTargetShop(this);
+            }
+            return true;
+        }
+
         /*-------------------------------------------------------------
         | --- SelectMode: Sets the shop mode to buying or selling --- |
         -------------------------------------------------------------*/
         public void SelectMode(bool isBuying)
         {
             m_isBuyingMode = isBuying;
+            m_purchase.Clear();
+            OnShopUpdated?.Invoke();
+        }
+
+        /*--------------------------------------------------------------------
+        | --- SortByFilter: Sets the current item filter for the shop UI --- |
+        --------------------------------------------------------------------*/
+        public void SortByFilter(ItemCategory category)
+        {
+            m_currentFilter = category;
             OnShopUpdated?.Invoke();
         }
 
@@ -102,13 +124,19 @@ namespace PolyQuest.Shops
             }
         }
 
-        /*--------------------------------------------------------------------
-        | --- SortByFilter: Sets the current m_item filter for the shop UI --- |
-        --------------------------------------------------------------------*/
-        public void SortByFilter(ItemCategory category)
+        /*--------------------------------------------------------------------------
+        | --- PurchaseTotal: Calculates the total cost of the current purchase --- |
+        --------------------------------------------------------------------------*/
+        public int PurchaseTotal()
         {
-            m_currentFilter = category;
-            OnShopUpdated?.Invoke();
+            int total = 0;
+
+            foreach (ShopItem item in GetAllItems())
+            {
+                total += item.Price * item.QuantityToBuy;
+            }
+
+            return total;
         }
 
         /*----------------------------------------------------------------------------------
@@ -119,11 +147,14 @@ namespace PolyQuest.Shops
             if (!HasItemsInPurchase())
                 return false;
 
-            if (!HasSufficientFunds())
-                return false;
+            if (m_isBuyingMode)
+            {
+                if (!HasSufficientFunds())
+                    return false;
 
-            if (!HasInventorySpace())
-                return false;
+                if (!HasInventorySpace())
+                    return false;
+            }
 
             return true;
         }
@@ -163,35 +194,6 @@ namespace PolyQuest.Shops
             return m_shopperInventory.HasSpaceFor(itemsToPurchase);
         }
 
-        /*----------------------------------------------------------------------------------------------------
-        | --- CompletePurchase: Completes the current purchase and adds items to the shopper's inventory --- |
-        ----------------------------------------------------------------------------------------------------*/
-        public void CompletePurchase()
-        {
-            foreach (ShopItem shopItem in GetAllItems())
-            {
-                InventoryItem item = shopItem.Item;
-                int quantity = shopItem.QuantityToBuy;
-                int price = shopItem.Price;
-                for (int i = 0; i < quantity; ++i)
-                {
-                    if (m_shopperWallet.CurrentSilver < price)
-                        return;
-
-                    bool success = m_shopperInventory.TryAddToAvailableSlot(item, 1);
-                    if (success)
-                    {
-                        AddToPurchase(item, -1);
-                        --m_currentStock[item];
-                        m_shopperWallet.UpdateSiver(-price);
-                    }
-                }
-            }
-
-            OnShopUpdated?.Invoke();
-            SaveManager.Instance.Save();        // Auto-save after purchase
-        }
-
         /*--------------------------------------------------------------------------
         | --- AddToPurchase: Adds an item and quantity to the current purchase --- |
         --------------------------------------------------------------------------*/
@@ -202,14 +204,9 @@ namespace PolyQuest.Shops
                 m_purchase[item] = 0;
             }
 
-            if (m_purchase[item] + quantity > m_currentStock[item])
-            {
-                m_purchase[item] = m_currentStock[item];
-            }
-            else
-            {
-                m_purchase[item] += quantity;
-            }
+            int maxAllowed = m_isBuyingMode ? m_currentStock[item] : GetQuantityFromInventory(item);
+
+            m_purchase[item] = Mathf.Clamp(m_purchase[item] + quantity, 0, maxAllowed);
 
             if (m_purchase[item] <= 0)
             {
@@ -219,67 +216,77 @@ namespace PolyQuest.Shops
             OnShopUpdated?.Invoke();
         }
 
-        /*--------------------------------------------------------------------------
-        | --- PurchaseTotal: Calculates the total cost of the current purchase --- |
-        --------------------------------------------------------------------------*/
-        public int PurchaseTotal()
-        {
-            int total = 0;
-            
-            foreach (ShopItem item in GetAllItems())
-            {
-                total += item.Price * item.QuantityToBuy;
-            }
-
-            return total;
-        }
-
-        /*----------------------------------------------------------------------
-        | --- GetCursorType: Returns the cursor type for shop interactions --- |
-        ----------------------------------------------------------------------*/
-        public CursorSettings.CursorType GetCursorType()
-        {
-            return CursorSettings.CursorType.kTargeting;
-        }
-
-        /*-------------------------------------------------------------------
-        | --- HandleRaycast: Handles raycast interactions with the shop --- |
-        -------------------------------------------------------------------*/
-        public bool HandleRaycast(PlayerController playerController)
-        {
-            if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
-            {
-                playerController.GetComponent<ShopInteractor>().SetTargetShop(this);
-            }
-            return true;
-        }
-
-        /*--------------------------------------------------------------
-        | --- GetAllItems: Returns all items available in the shop --- |
-        --------------------------------------------------------------*/
-        private IEnumerable<ShopItem> GetAllItems()
-        {
-            foreach (ShopItemEntry entry in m_shopInventory)
-            {
-                int price = GetPrice(entry);
-                m_purchase.TryGetValue(entry.Item, out int quantityInPurchase);
-                yield return new ShopItem(entry.Item, m_currentStock[entry.Item], price, quantityInPurchase);
-            }
-        }
-
-        /*------------------------------------------------------------------------
-        | --- GetPrice: Calculates the price based on buying or selling mode --- |
-        ------------------------------------------------------------------------*/
-        private int GetPrice(ShopItemEntry entry)
+        /*----------------------------------------------------------------------------------------------------
+        | --- CompletePurchase: Completes the current purchase and adds items to the shopper's inventory --- |
+        ----------------------------------------------------------------------------------------------------*/
+        public void CompletePurchase()
         {
             if (m_isBuyingMode)
             {
-                return entry.Item.Price;
+                CompleteBuy();
             }
             else
             {
-                // Selling price is 50% of the item's price - not yet implemented!
-                return Mathf.CeilToInt(entry.Item.Price * (m_sellPricePercentage / 100.0f));
+                CompleteSell();
+            }
+
+            OnShopUpdated?.Invoke();
+            SaveManager.Instance.Save();
+        }
+
+        /*---------------------------------------------------------------------------------
+        | --- CompleteBuy: Handles the logic for completing a purchase in buying mode --- |
+        ---------------------------------------------------------------------------------*/
+        private void CompleteBuy()
+        {
+            foreach (ShopItem shopItem in GetAllItems())
+            {
+                InventoryItem item = shopItem.Item;
+                int quantity = shopItem.QuantityToBuy;
+                int price = shopItem.Price;
+
+                for (int i = 0; i < quantity; ++i)
+                {
+                    if (m_shopperWallet.CurrentSilver < price)
+                        continue;
+
+                    bool success = m_shopperInventory.TryAddToAvailableSlot(item, 1);
+                    if (success)
+                    {
+                        AddToPurchase(item, -1);
+                        --m_currentStock[item];
+                        m_shopperWallet.UpdateSilver(-price);
+                    }
+                }
+            }
+        }
+
+        /*-----------------------------------------------------------------------------------
+        | --- CompleteSell: Handles the logic for completing a purchase in selling mode --- |
+        -----------------------------------------------------------------------------------*/
+        private void CompleteSell()
+        {
+            foreach (ShopItem shopItem in GetAllItems())
+            {
+                InventoryItem item = shopItem.Item;
+                int quantity = shopItem.QuantityToBuy;
+                int price = shopItem.Price;
+
+                for (int i = 0; i < quantity; ++i)
+                {
+                    // Find and remove from the first slot that holds this item
+                    for (int slot = 0; slot < m_shopperInventory.Size; ++slot)
+                    {
+                        if (m_shopperInventory.GetItemAtSlot(slot) == item)
+                        {
+                            m_shopperInventory.RemoveItemsFromSlot(slot, 1);
+                            AddToPurchase(item, -1);
+                            ++m_currentStock[item];
+                            m_shopperWallet.UpdateSilver(price);
+                            break;
+                        }
+                    }
+                }
             }
         }
 
@@ -303,15 +310,19 @@ namespace PolyQuest.Shops
         ----------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
+            // Re-seed from config first so new items are always present
+            foreach (ShopConfig.ShopItemEntry entry in m_shopConfig.ShopInventory)
+            {
+                m_currentStock[entry.Item] = entry.InitialStock;
+            }
+
             if (state is JObject stateObject)
             {
                 IDictionary<string, JToken> stateDict = stateObject;
-                m_currentStock.Clear();
-
                 foreach (var pair in stateDict)
                 {
                     InventoryItem item = InventoryItem.FindByID(pair.Key);
-                    if (item)
+                    if (item != null && m_currentStock.ContainsKey(item))
                     {
                         m_currentStock[item] = pair.Value.ToObject<int>();
                     }
@@ -319,9 +330,71 @@ namespace PolyQuest.Shops
             }
         }
 
-        public void ToggleHighlight(bool highlight)
+        /*--------------------------------------------------------------
+        | --- GetAllItems: Returns all items available in the shop --- |
+        --------------------------------------------------------------*/
+        private IEnumerable<ShopItem> GetAllItems()
         {
-            m_outline.enabled = highlight;
+            foreach (ShopConfig.ShopItemEntry entry in m_shopConfig.ShopInventory)
+            {
+                int price = GetPrice(entry);
+                int stock = GetStock(entry);
+
+                if (!m_isBuyingMode && stock <= 0)
+                    continue;
+
+                m_purchase.TryGetValue(entry.Item, out int quantityInPurchase);
+                yield return new ShopItem(entry.Item, stock, price, quantityInPurchase);
+            }
+        }
+
+        /*-------------------------------------------------------------------------------------------
+        | --- GetStock: Returns the available stock for an item based on buying or selling mode --- |
+        -------------------------------------------------------------------------------------------*/
+        private int GetStock(ShopConfig.ShopItemEntry entry)
+        {
+            if (m_isBuyingMode)
+            {
+                return m_currentStock[entry.Item];
+            }
+            else
+            {
+                return GetQuantityFromInventory(entry.Item);
+            }
+        }
+
+        /*---------------------------------------------------------------------------------------------------
+        | --- GetQuantityFromInventory: Counts the total quantity of an item in the shopper's inventory --- |
+        ---------------------------------------------------------------------------------------------------*/
+        private int GetQuantityFromInventory(InventoryItem item)
+        {
+            if (m_shopperInventory == null)
+                return 0;
+
+            int quantity = 0;
+            for (int i = 0; i < m_shopperInventory.Size; ++i)
+            {
+                if (m_shopperInventory.GetItemAtSlot(i) == item)
+                {
+                    quantity += m_shopperInventory.GetQuantityAtSlot(i);
+                }
+            }
+            return quantity;
+        }
+
+        /*------------------------------------------------------------------------
+        | --- GetPrice: Calculates the price based on buying or selling mode --- |
+        ------------------------------------------------------------------------*/
+        private int GetPrice(ShopConfig.ShopItemEntry entry)
+        {
+            if (m_isBuyingMode)
+            {
+                return entry.Item.Price;
+            }
+            else
+            {
+                return Mathf.CeilToInt(entry.Item.Price * (m_shopConfig.SellPricePercentage / 100.0f));
+            }
         }
     }
 }

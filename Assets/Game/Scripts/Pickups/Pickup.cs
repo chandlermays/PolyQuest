@@ -123,7 +123,7 @@ namespace PolyQuest.Pickups
             if (m_item is CurrencyItem)
             {
                 Wallet wallet = m_inventory.GetComponent<Wallet>();
-                wallet.UpdateSiver(m_quantity);
+                wallet.UpdateSilver(m_quantity);
                 Destroy(gameObject);
                 return;
             }

@@ -93,11 +93,12 @@ namespace PolyQuest.Shops
             }
 
             m_purchaseTotalText.text = $"Total: {m_currentShop.PurchaseTotal()} Gold";
-            m_purchaseTotalText.color = m_currentShop.HasSufficientFunds() ? Color.white : Color.red;
+            m_purchaseTotalText.color = !m_currentShop.InBuyMode || m_currentShop.HasSufficientFunds() ? Color.white : Color.red;
             m_purchaseButton.interactable = m_currentShop.CanAffordPurchase();
 
-   //         m_switchModeButton.GetComponentInChildren<TextMeshProUGUI>().text = m_currentShop.IsBuyMode ? "SELL" : "BUY";
-            m_purchaseButton.GetComponentInChildren<TextMeshProUGUI>().text = m_currentShop.IsBuyMode ? "BUY" : "SELL";
+            // probably should change these names so they're not confusing. "confirm" for buying?
+            m_switchModeButton.GetComponentInChildren<TextMeshProUGUI>().text = m_currentShop.InBuyMode ? "SELL" : "BUY";
+            m_purchaseButton.GetComponentInChildren<TextMeshProUGUI>().text = m_currentShop.InBuyMode ? "BUY" : "SELL";
 
             foreach (ShopFilterUI filterButton in GetComponentsInChildren<ShopFilterUI>())
             {
@@ -126,8 +127,7 @@ namespace PolyQuest.Shops
         -------------------------------------------------------------*/
         public void SwitchShopMode()
         {
-    //        m_currentShop.SelectMode(!m_currentShop.IsBuyMode);
-            Debug.Log("This will be implemented in a future update once I figure out how to reflect the player's inventory in the shop UI.");
+            m_currentShop.SelectMode(!m_currentShop.InBuyMode);
         }
     }
 }

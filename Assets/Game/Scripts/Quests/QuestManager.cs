@@ -252,7 +252,7 @@ namespace PolyQuest.Quests
 
                 if (reward.Item is CurrencyItem)
                 {
-                    GetComponent<Wallet>().UpdateSiver(reward.Amount);
+                    GetComponent<Wallet>().UpdateSilver(reward.Amount);
                     continue;
                 }
 
