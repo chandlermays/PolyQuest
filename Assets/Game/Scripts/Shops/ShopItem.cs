@@ -20,7 +20,7 @@ namespace PolyQuest.Shops
         public InventoryItem Item => m_item;
 
         /*----------------------------------------------------------------------
-        | --- ShopItem: Constructor to initialize a shop m_item with details --- |
+        | --- ShopItem: Constructor to initialize a shop item with details --- |
         ----------------------------------------------------------------------*/
         public ShopItem(InventoryItem item, int availableStock, int price, int quantityToBuy)
         {

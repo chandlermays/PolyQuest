@@ -8,6 +8,7 @@ namespace PolyQuest.Shops
     public class ShopFilterUI : MonoBehaviour
     {
         [SerializeField] private ItemCategory m_itemCategory;
+
         private Button m_button;
         private Shop m_currentShop;
 

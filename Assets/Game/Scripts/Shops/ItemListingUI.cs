@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace PolyQuest.Shops
 {
-    public class ItemListing : MonoBehaviour
+    public class ItemListingUI : MonoBehaviour
     {
         [SerializeField] private Image m_itemIcon;
         [SerializeField] private TextMeshProUGUI m_itemName;

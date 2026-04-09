@@ -103,9 +103,9 @@ namespace PolyQuest.Saving
             m_saveSystem.Save(GetCurrentSave());
         }
 
-        /*--------------------------------------------------------------------
+        /*--------------------------------------------------------------------------
         | --- AutoSave: Save to a separate slot without touching the main save --- |
-        --------------------------------------------------------------------*/
+        --------------------------------------------------------------------------*/
         public void AutoSave()
         {
             m_saveSystem.Save(GetCurrentSave() + kAutoSaveSuffix);

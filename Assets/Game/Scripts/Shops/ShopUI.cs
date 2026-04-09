@@ -10,7 +10,7 @@ namespace PolyQuest.Shops
         [SerializeField] private ShopInteractor m_shopInteractor;
         [SerializeField] private TextMeshProUGUI m_shopNameText;
         [SerializeField] private Transform m_itemListingContainer;
-        [SerializeField] private ItemListing m_itemListingPrefab;
+        [SerializeField] private ItemListingUI m_itemListingPrefab;
         [SerializeField] private TextMeshProUGUI m_purchaseTotalText;
         [SerializeField] private Button m_purchaseButton;
         [SerializeField] private Button m_switchModeButton;
@@ -88,7 +88,7 @@ namespace PolyQuest.Shops
 
             foreach (ShopItem shopItem in m_currentShop.GetFilteredItems())
             {
-                ItemListing itemListing = Instantiate<ItemListing>(m_itemListingPrefab, m_itemListingContainer);
+                ItemListingUI itemListing = Instantiate<ItemListingUI>(m_itemListingPrefab, m_itemListingContainer);
                 itemListing.Setup(m_currentShop, shopItem);
             }
 
