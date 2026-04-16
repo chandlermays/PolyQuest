@@ -2020,12 +2020,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6788340497021815511}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 431bfcbc53b63c44c8623407fe1129a9, type: 3}
+  m_Script: {fileID: 11500000, guid: c8dee29659c3479489dfd179bd5ef472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.AI.NEW_AIController
   m_enemyTracker: {fileID: 0}
-  m_detectionRange: 8
-  m_alertRange: 8
+  m_detectionRange: 5
+  m_alertRange: 5
   m_suspicionTime: 3
   m_agroCooldownTime: 5
   m_patrolPath: {fileID: 0}

@@ -13,7 +13,7 @@ namespace PolyQuest.AI
      * --------------------------------------------------------------------------------------------- */
     public class AIStateMachine : MonoBehaviour
     {
-        private NEW_AIController m_owner;
+        private AIController m_owner;
         private IAIState m_currentState;
 
         /*----------------------------------------------------------------
@@ -21,7 +21,7 @@ namespace PolyQuest.AI
         ----------------------------------------------------------------*/
         private void Awake()
         {
-            m_owner = GetComponent<NEW_AIController>();
+            m_owner = GetComponent<AIController>();
             Utilities.CheckForNull(m_owner, nameof(m_owner));
         }
 

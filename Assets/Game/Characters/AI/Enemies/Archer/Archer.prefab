@@ -20,6 +20,10 @@ PrefabInstance:
       propertyPath: m_startingWeapon
       value: 
       objectReference: {fileID: 11400000, guid: ac79242d2cfe2d54f8479c16bf337229, type: 2}
+    - target: {fileID: 1718170076320307595, guid: d64d14365592f024aadb6fc251dcdc2b, type: 3}
+      propertyPath: m_detectionRange
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3169505572643624113, guid: d64d14365592f024aadb6fc251dcdc2b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

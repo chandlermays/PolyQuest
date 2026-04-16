@@ -1,97 +1,288 @@
+using System;
 using UnityEngine;
+using UnityEngine.AI;
 //---------------------------------
 using PolyQuest.Components;
+using PolyQuest.Core;
+using PolyQuest.Inventories;
 
 namespace PolyQuest.AI
 {
-    public abstract class AIController : MonoBehaviour
+    /* ----------------------------------------------------------------------------------------------
+     * Role: Central coordinator for AI behaviour; owns the state machine and exposes shared data.   *
+     *                                                                                               *
+     * Responsibilities:                                                                             *
+     *      - Bootstraps and drives the AIStateMachine.                                              *
+     *      - Exposes tuning parameters and cached component references to AI states.                *
+     *      - Provides Aggrevate() so nearby enemies can alert this agent.                           *
+     *      - Supports a Reset() path for scene reload / respawn systems.                            *
+     * --------------------------------------------------------------------------------------------- */
+    public class AIController : MonoBehaviour
     {
-        [Header("AI Settings")]
-        [SerializeField] protected NavigationPath m_navigationPath;
-        [SerializeField] protected float m_waypointTolerance = 1f;
-        [SerializeField] protected float m_waypointDwellTime = 3f;
+        [SerializeField] private EnemyTracker m_enemyTracker;
 
-        /* --- References --- */
-        protected Transform m_transform;
-        protected MovementComponent m_movementComponent;
+        [Header("Detection")]
+        [SerializeField] private float m_detectionRange = 5f;
+        [SerializeField] private float m_alertRange = 5f;
 
-        protected Vector3 m_startPosition;
-        protected Quaternion m_startRotation;
-        protected float m_timeSinceArrivedAtWaypoint = Mathf.Infinity;
-        protected int m_currentWaypointIndex = 0;
+        [Header("Suspicion")]
+        [SerializeField] private float m_suspicionTime = 3f;
+
+        [Header("Aggro")]
+        [SerializeField] private float m_agroCooldownTime = 5f;
+
+        [Header("Patrol")]
+        [SerializeField] private NavigationPath m_patrolPath;
+        [SerializeField] private float m_waypointTolerance = 1f;
+        [SerializeField] private float m_waypointDwellTime = 3f;
+        [Range(0, 1)]
+        [SerializeField] private float m_patrolSpeedFraction = 0.2f;
+
+        /* --- Exposed Properties (read by states) --- */
+        public float DetectionRange => m_detectionRange;
+        public float AlertRange => m_alertRange;
+        public float SuspicionTime => m_suspicionTime;
+        public float AgroCooldownTime => m_agroCooldownTime;
+        public NavigationPath PatrolPath => m_patrolPath;
+        public float WaypointTolerance => m_waypointTolerance;
+        public float WaypointDwellTime => m_waypointDwellTime;
+        public float PatrolSpeedFraction => m_patrolSpeedFraction;
+
+        /* --- Shared Mutable State (read/written by states) --- */
+        public float TimeSinceLastSawTarget { get; set; } = Mathf.Infinity;
+        public float TimeSinceAggrevated { get; set; } = Mathf.Infinity;
+
+        /* --- Cached Component References --- */
+        public AIStateMachine StateMachine { get; private set; }
+        public CombatComponent Combat { get; private set; }
+        public HealthComponent Health { get; private set; }
+        public MovementComponent Movement { get; private set; }
+        public RandomDropper Dropper { get; private set; }
+        public GameObject Target { get; private set; }
+
+        /* --- Guard Position --- */
+        public Vector3 GuardPosition { get; private set; }
+
+        private FactionComponent m_factionComponent;
+
+        private event Action OnDeath;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
-        protected virtual void Awake()
+        private void Awake()
         {
-            m_transform = transform;
+            Combat = GetComponent<CombatComponent>();
+            Health = GetComponent<HealthComponent>();
+            Movement = GetComponent<MovementComponent>();
+            StateMachine = GetComponent<AIStateMachine>();
+            m_factionComponent = GetComponent<FactionComponent>();
 
-            m_movementComponent = GetComponent<MovementComponent>();
-            Utilities.CheckForNull(m_movementComponent, nameof(m_movementComponent));
+            TryGetComponent(out RandomDropper dropper);
+            Dropper = dropper;
+
+            if (Dropper != null)
+            {
+                OnDeath = () => Dropper.RandomDrop();
+            }
+
+            Utilities.CheckForNull(Combat, nameof(CombatComponent));
+            Utilities.CheckForNull(Health, nameof(HealthComponent));
+            Utilities.CheckForNull(Movement, nameof(MovementComponent));
+            Utilities.CheckForNull(StateMachine, nameof(AIStateMachine));
+            Utilities.CheckForNull(m_factionComponent, nameof(FactionComponent));
+
+            GuardPosition = transform.position;
+
+            if (m_enemyTracker != null)
+            {
+                m_enemyTracker.RegisterEnemy(Health);
+            }
+        }
+
+        /*---------------------------------------------------------------------
+        | --- OnEnable: Called when the object becomes enabled and active --- |
+        ---------------------------------------------------------------------*/
+        private void OnEnable()
+        {
+            if (Health.IsDead)
+                return;
+
+            Health.OnHit += Aggrevate;
+
+            if (Dropper != null)
+            {
+                Health.OnDeath += OnDeath;
+            }
+        }
+
+        /*---------------------------------------------------------------------------
+        | --- OnDisable: Called when the behaviour becomes disabled or inactive --- |
+        ---------------------------------------------------------------------------*/
+        private void OnDisable()
+        {
+            Health.OnHit -= Aggrevate;
+
+            if (Dropper != null)
+            {
+                Health.OnDeath -= OnDeath;
+            }
+        }
+
+        /*--------------------------------------------------------------
+        | --- OnDestroy: Called when the object is being destroyed --- |
+        --------------------------------------------------------------*/
+        private void OnDestroy()
+        {
+            if (m_enemyTracker != null)
+            {
+                m_enemyTracker.UnregisterEnemy(Health);
+            }
         }
 
         /*-----------------------------------------------------
         | --- Start: Called before the first frame update --- |
         -----------------------------------------------------*/
-        protected virtual void Start()
+        private void Start()
         {
-            m_startPosition = m_transform.position;
-            m_startRotation = m_transform.rotation;
+            StateMachine.SetState(new PatrolState());
         }
 
-        /*--------------------------------------------------------------------- 
-        | --- PatrolState: The State of Patrolling an Associated Waypoint --- |
-        ---------------------------------------------------------------------*/
-        protected void PatrolState()
+        /*-----------------------------------------
+        | --- Update: Called upon every frame --- |
+        -----------------------------------------*/
+        private void Update()
         {
-            Vector3 nextPosition = m_startPosition;
+            if (Health.IsDead)
+                return;
 
-            if (m_navigationPath != null)
-            {
-                if (AtWaypoint(GetCurrentWaypoint()))
-                {
-                    m_timeSinceArrivedAtWaypoint = 0;
-                    CycleWaypoint();
-                }
-                nextPosition = GetCurrentWaypoint();
-            }
-
-            if (m_timeSinceArrivedAtWaypoint > m_waypointDwellTime)
-            {
-                m_movementComponent.StartMoveAction(nextPosition);
-
-                // Check if the character has reached its starting destination
-                if (AtWaypoint(m_startPosition))
-                {
-                    m_movementComponent.RotateTo(m_startRotation);
-                }
-            }
+            RefreshTarget();
+            UpdateTimers();
         }
 
-        /*-------------------------------------------------------------------- 
-        | --- AtWaypoint: Checks if the Agent is at the current Waypoint --- |
-        --------------------------------------------------------------------*/
-        protected bool AtWaypoint(Vector3 destination)
-        {
-            float distanceToWaypoint = Vector3.Distance(m_transform.position, destination);
-            return distanceToWaypoint < m_waypointTolerance;
-        }
-
-        /*--------------------------------------------------------------- 
-        | --- CycleWaypoint: Moves to the next Waypoint in the Path --- |
-        ---------------------------------------------------------------*/
-        protected void CycleWaypoint()
-        {
-            m_currentWaypointIndex = m_navigationPath.GetNextIndex(m_currentWaypointIndex);
-        }
-
-        /*---------------------------------------------------------------------- 
-        | --- GetCurrentWaypoint: Returns the current Waypoint destination --- |
+        /*----------------------------------------------------------------------
+        | --- Aggrevate: Alert this agent — resets the aggro cooldown timer --- |
         ----------------------------------------------------------------------*/
-        protected Vector3 GetCurrentWaypoint()
+        public void Aggrevate()
         {
-            return m_navigationPath.GetWaypoint(m_currentWaypointIndex);
+            Aggrevate(null);
+        }
+
+        /*----------------------------------------------------------------------------------
+        | --- Aggrevate: Alert this agent and optionally force the instigator as target --- |
+        ----------------------------------------------------------------------------------*/
+        public void Aggrevate(GameObject instigator)
+        {
+            TimeSinceAggrevated = 0f;
+
+            if (IsValidTarget(instigator))
+            {
+                Target = instigator;
+                TimeSinceLastSawTarget = 0f;
+            }
+        }
+
+        /*-------------------------------------------------------------------
+        | --- Reset: Warp back to guard position and clear all timers --- |
+        -------------------------------------------------------------------*/
+        public void Reset()
+        {
+            GetComponent<NavMeshAgent>().Warp(GuardPosition);
+            Combat.Cancel();
+            Target = null;
+            TimeSinceLastSawTarget = Mathf.Infinity;
+            TimeSinceAggrevated = Mathf.Infinity;
+            StateMachine.SetState(new PatrolState());
+        }
+
+        /*----------------------------------------------------
+        | --- IsAggrevated: True when the agent is alerted --- |
+        ----------------------------------------------------*/
+        public bool IsAggrevated()
+        {
+            if (!IsValidTarget(Target))
+                return false;
+
+            float distanceToTarget = Vector3.Distance(Target.transform.position, transform.position);
+            return distanceToTarget <= m_detectionRange || TimeSinceAggrevated < m_agroCooldownTime;
+        }
+
+        /*------------------------------------------------------------------
+        | --- RefreshTarget: Keep or acquire the best hostile target --- |
+        ------------------------------------------------------------------*/
+        private void RefreshTarget()
+        {
+            // Keep current target if it's still valid and we're still aggro'd
+            if (IsValidTarget(Target) && IsAggrevated())
+                return;
+
+            Target = FindBestTarget();
+        }
+
+        /*---------------------------------------------------------------------
+        | --- FindBestTarget: Returns the nearest valid hostile in range --- |
+        ---------------------------------------------------------------------*/
+        private GameObject FindBestTarget()
+        {
+            GameObject bestTarget = null;
+            float closestDistance = Mathf.Infinity;
+
+            Collider[] colliders = Physics.OverlapSphere(transform.position, m_detectionRange, Combat.TargetLayers);
+
+            foreach (Collider collider in colliders)
+            {
+                GameObject candidate = collider.gameObject;
+
+                if (!IsValidTarget(candidate))
+                    continue;
+
+                float distance = Vector3.Distance(transform.position, candidate.transform.position);
+                if (distance < closestDistance)
+                {
+                    bestTarget = candidate;
+                    closestDistance = distance;
+                }
+            }
+
+            return bestTarget;
+        }
+
+        /*-------------------------------------------------------------------
+        | --- IsValidTarget: Checks if a GameObject is a live hostile --- |
+        -------------------------------------------------------------------*/
+        private bool IsValidTarget(GameObject candidate)
+        {
+            if (candidate == null || candidate == gameObject)
+                return false;
+
+            if (!candidate.TryGetComponent(out HealthComponent targetHealth) || targetHealth.IsDead)
+                return false;
+
+            if (m_factionComponent == null)
+                return true;
+
+            if (!candidate.TryGetComponent(out FactionComponent targetFaction))
+                return false;
+
+            return m_factionComponent.IsHostileTo(targetFaction);
+        }
+
+        /*--------------------------------------------------------------------------
+        | --- UpdateTimers: Advance all shared timers every frame --- |
+        --------------------------------------------------------------------------*/
+        private void UpdateTimers()
+        {
+            TimeSinceLastSawTarget += Time.deltaTime;
+            TimeSinceAggrevated += Time.deltaTime;
+        }
+
+        /*---------------------------------------------------------------------
+        | --- OnDrawGizmosSelected: Visualize detection radius in editor --- |
+        ---------------------------------------------------------------------*/
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, m_detectionRange);
         }
     }
 }

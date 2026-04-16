@@ -14,12 +14,12 @@ namespace PolyQuest.AI
      * --------------------------------------------------------------------------------------------- */
     public class AttackState : IAIState
     {
-        private NEW_AIController m_owner;
+        private AIController m_owner;
 
         /*-------------------------------------------------------------
         | --- Initalize: Store reference to the owning controller --- |
         -------------------------------------------------------------*/
-        public void Initalize(NEW_AIController owner)
+        public void Initalize(AIController owner)
         {
             m_owner = owner;
         }
@@ -63,7 +63,7 @@ namespace PolyQuest.AI
 
             foreach (RaycastHit hit in hits)
             {
-                NEW_AIController ai = hit.collider.GetComponent<NEW_AIController>();
+                AIController ai = hit.collider.GetComponent<AIController>();
 
                 if (ai != null && ai != m_owner)
                 {

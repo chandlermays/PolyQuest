@@ -2423,18 +2423,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 8021006436726947137}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1835729cfdc616848b4dd12d3c10c656, type: 3}
+  m_Script: {fileID: 11500000, guid: c8dee29659c3479489dfd179bd5ef472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_navigationPath: {fileID: 0}
-  m_waypointTolerance: 0.25
-  m_waypointDwellTime: 5
   m_enemyTracker: {fileID: 0}
-  m_detectionRange: 10
-  m_alertRange: 10
-  m_suspicionTime: 7
-  m_aggroCooldown: 4
-  m_player: {fileID: 0}
+  m_detectionRange: 5
+  m_alertRange: 5
+  m_suspicionTime: 3
+  m_agroCooldownTime: 5
+  m_patrolPath: {fileID: 0}
+  m_waypointTolerance: 1
+  m_waypointDwellTime: 3
+  m_patrolSpeedFraction: 0.2
 --- !u!114 &-4861948880778647468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2549,7 +2549,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.RandomDropper
   m_distanceThreshold: 2
   m_enemyLootTable: {fileID: 11400000, guid: c751d9dcf7f60be439e82a81cf753510, type: 2}
-  m_dropCount: 2
 --- !u!114 &8464810927339565380
 MonoBehaviour:
   m_ObjectHideFlags: 0

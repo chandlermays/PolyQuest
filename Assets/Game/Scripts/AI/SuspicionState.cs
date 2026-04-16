@@ -14,12 +14,12 @@ namespace PolyQuest.AI
      * --------------------------------------------------------------------------------------------- */
     public class SuspicionState : IAIState
     {
-        private NEW_AIController m_owner;
+        private AIController m_owner;
 
         /*-------------------------------------------------------------
         | --- Initalize: Store reference to the owning controller --- |
         -------------------------------------------------------------*/
-        public void Initalize(NEW_AIController owner)
+        public void Initalize(AIController owner)
         {
             m_owner = owner;
         }

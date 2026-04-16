@@ -9,7 +9,7 @@ namespace PolyQuest.AI
      * --------------------------------------------------------------------------------------------- */
     public interface IAIState
     {
-        void Initalize(NEW_AIController owner);
+        void Initalize(AIController owner);
         void Enter();
         void Tick();
         void Exit();

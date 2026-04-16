@@ -48,9 +48,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1909811517450575725, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
+      propertyPath: m_uniqueIdentifier
+      value: fbcdca35-7300-429f-996c-36f090583764
+      objectReference: {fileID: 0}
     - target: {fileID: 6788340497021815511, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
       propertyPath: m_Name
-      value: Shop Vendor Variant
+      value: Shop Vendor
       objectReference: {fileID: 0}
     - target: {fileID: 7047126973917676655, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
       propertyPath: m_uniqueIdentifier
@@ -85,6 +89,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c76850f750c5c3046914e18af8b4e444, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Shops.Shop
-  m_shopName: 
-  m_sellPricePercentage: 50
-  m_shopInventory: []
+  m_shopConfig: {fileID: 0}
