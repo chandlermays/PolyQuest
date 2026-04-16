@@ -19,7 +19,9 @@ namespace PolyQuest.UI.HUD
     {
         [Header("Health Bar Settings")]
         [SerializeField] private HealthComponent m_healthComponent;
+        [SerializeField] private CanvasGroup m_healthBarRoot;
         [SerializeField] private Image m_healthBarFill;
+        [SerializeField] private bool m_alwaysVisible = false;
 
         private BaseStats m_baseStats;
 
@@ -41,6 +43,13 @@ namespace PolyQuest.UI.HUD
         private void OnEnable()
         {
             m_healthComponent.OnHealthChanged += UpdateHealthBar;
+            m_healthComponent.OnCombatEntered += ShowHealthBar;
+            m_healthComponent.OnCombatExited += HideHealthBar;
+
+            if (!m_alwaysVisible)
+            {
+                HideHealthBar();
+            }
         }
 
         /*---------------------------------------------------------------------------
@@ -49,6 +58,8 @@ namespace PolyQuest.UI.HUD
         private void OnDisable()
         {
             m_healthComponent.OnHealthChanged -= UpdateHealthBar;
+            m_healthComponent.OnCombatEntered -= ShowHealthBar;
+            m_healthComponent.OnCombatExited -= HideHealthBar;
         }
 
         /*-------------------------------------------------------------------------------------
@@ -65,7 +76,37 @@ namespace PolyQuest.UI.HUD
 
             if (m_healthBarFill.fillAmount <= 0f)
             {
-                Destroy(gameObject);
+                if (m_healthBarRoot != null)
+                {
+                    m_healthBarRoot.alpha = 0f;
+                }
+                else
+                {
+                    Destroy(gameObject);
+                }
+            }
+        }
+
+        /*------------------------------------------------------------------------------
+        | --- ShowHealthBar: Displays the health bar when the entity enters combat --- |
+        ------------------------------------------------------------------------------*/
+        private void ShowHealthBar()
+        {
+            if (!m_alwaysVisible)
+            {
+                m_healthBarRoot.alpha = 1f;
+                UpdateHealthBar();
+            }
+        }
+
+        /*--------------------------------------------------------------------------
+        | --- HideHealthBar: Hides the health bar when the entity exits combat --- |
+        --------------------------------------------------------------------------*/
+        private void HideHealthBar()
+        {
+            if (!m_alwaysVisible)
+            {
+                m_healthBarRoot.alpha = 0f;
             }
         }
     }

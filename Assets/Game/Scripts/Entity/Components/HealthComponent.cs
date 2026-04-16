@@ -48,6 +48,12 @@ namespace PolyQuest.Components
         /* --- Animation Parameter --- */
         private const string kDeath = "Death";
 
+        public event Action OnCombatEntered;
+        public event Action OnCombatExited;
+
+        public void NotifyCombatEntered() => OnCombatEntered?.Invoke();
+        public void NotifyCombatExited() => OnCombatExited?.Invoke();
+
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/

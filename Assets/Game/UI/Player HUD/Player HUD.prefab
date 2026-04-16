@@ -726,6 +726,10 @@ PrefabInstance:
       value: Health Container
       objectReference: {fileID: 0}
     - target: {fileID: 5526891716664447042, guid: 93387f323d875da41a4933dccd9db5db, type: 3}
+      propertyPath: m_alwaysVisible
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5526891716664447042, guid: 93387f323d875da41a4933dccd9db5db, type: 3}
       propertyPath: m_healthBarFill
       value: 
       objectReference: {fileID: 1388352152168134061}

@@ -1883,7 +1883,8 @@ GameObject:
   - component: {fileID: 4597293778869424191}
   - component: {fileID: 4340238570151201378}
   - component: {fileID: 4587090530215678122}
-  - component: {fileID: 5058887998526982570}
+  - component: {fileID: 6669878394588760721}
+  - component: {fileID: 4227339011788652731}
   - component: {fileID: 9022949404109340675}
   - component: {fileID: 2708792213116424498}
   - component: {fileID: -2369949876909521975}
@@ -2010,7 +2011,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &5058887998526982570
+--- !u!114 &6669878394588760721
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2019,14 +2020,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 6788340497021815511}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8b0454349d88b047bd029a850600424, type: 3}
+  m_Script: {fileID: 11500000, guid: 431bfcbc53b63c44c8623407fe1129a9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  m_navigationPath: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.AI.NEW_AIController
+  m_enemyTracker: {fileID: 0}
+  m_detectionRange: 8
+  m_alertRange: 8
+  m_suspicionTime: 3
+  m_agroCooldownTime: 5
+  m_patrolPath: {fileID: 0}
   m_waypointTolerance: 1
   m_waypointDwellTime: 3
-  m_detectionRange: 8
-  m_suspicionTime: 4
+  m_patrolSpeedFraction: 0.2
+--- !u!114 &4227339011788652731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6788340497021815511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8df14cf2258df784ea425b7c72310ba8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.AI.AIStateMachine
 --- !u!114 &9022949404109340675
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2125,7 +2142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 369f73196dbc7a94c8c62b30be4b0fbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Saving.JsonSaveableEntity
-  m_uniqueIdentifier: 8df83d23-2d34-4169-aba6-8f95dbecdaac
+  m_uniqueIdentifier: 464429e5-e167-47df-aa9b-bfdbee305775
   m_lockIdentifier: 0
 --- !u!114 &2770295979244506965
 MonoBehaviour:

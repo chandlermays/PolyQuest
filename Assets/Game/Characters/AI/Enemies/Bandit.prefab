@@ -909,7 +909,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7260862250635321012}
-  - component: {fileID: 3792714295672574939}
   - component: {fileID: 2378273908854590287}
   m_Layer: 0
   m_Name: Health Bar
@@ -934,20 +933,6 @@ Transform:
   - {fileID: 2296441993731250889}
   m_Father: {fileID: 3169505572643624113}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3792714295672574939
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3151290293282786356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7cb8d9132a7d6046b9ca6556bc2f850, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.UI.HUD.HealthBar
-  m_healthComponent: {fileID: 3272163512795474766}
-  m_healthBarFill: {fileID: 3848417212891271642}
 --- !u!114 &2378273908854590287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1374,6 +1359,7 @@ GameObject:
   - component: {fileID: 2961541858737900035}
   - component: {fileID: 2942040660402566470}
   - component: {fileID: 3848417212891271642}
+  - component: {fileID: 1959135913397847770}
   m_Layer: 0
   m_Name: HP Bar Fill
   m_TagString: Untagged
@@ -1438,6 +1424,22 @@ MonoBehaviour:
   m_FillOrigin: 1
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1959135913397847770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4584243561089262778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7cb8d9132a7d6046b9ca6556bc2f850, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.UI.HUD.HealthBar
+  m_healthComponent: {fileID: 3272163512795474766}
+  m_healthBarRoot: {fileID: 6003173310088755083}
+  m_healthBarFill: {fileID: 3848417212891271642}
+  m_alwaysVisible: 0
 --- !u!1 &4927312495503246781
 GameObject:
   m_ObjectHideFlags: 0
@@ -1789,7 +1791,8 @@ GameObject:
   - component: {fileID: 8916915952667345610}
   - component: {fileID: 858515729093118538}
   - component: {fileID: 5219018243499581605}
-  - component: {fileID: 4314146219117648906}
+  - component: {fileID: 1718170076320307595}
+  - component: {fileID: 8135194590340205584}
   - component: {fileID: 3972700665468055237}
   - component: {fileID: 2790322073465285918}
   - component: {fileID: 1238266012735242243}
@@ -1918,7 +1921,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &4314146219117648906
+--- !u!114 &1718170076320307595
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1927,18 +1930,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 6051408657710484760}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1835729cfdc616848b4dd12d3c10c656, type: 3}
+  m_Script: {fileID: 11500000, guid: 431bfcbc53b63c44c8623407fe1129a9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  m_navigationPath: {fileID: 0}
-  m_waypointTolerance: 0.25
-  m_waypointDwellTime: 5
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.AI.NEW_AIController
   m_enemyTracker: {fileID: 0}
-  m_detectionRange: 5
+  m_detectionRange: 8
   m_alertRange: 8
-  m_suspicionTime: 5
-  m_aggroCooldown: 5
-  m_player: {fileID: 0}
+  m_suspicionTime: 3
+  m_agroCooldownTime: 5
+  m_patrolPath: {fileID: 0}
+  m_waypointTolerance: 1
+  m_waypointDwellTime: 3
+  m_patrolSpeedFraction: 0.2
+--- !u!114 &8135194590340205584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6051408657710484760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8df14cf2258df784ea425b7c72310ba8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.AI.AIStateMachine
 --- !u!114 &3972700665468055237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2010,7 +2025,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 369f73196dbc7a94c8c62b30be4b0fbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Saving.SaveableEntity
-  m_uniqueIdentifier: f33c91d1-3649-432e-a473-234fa30377cb
+  m_uniqueIdentifier: 9a34b65b-dfa1-4282-9716-131d13d5cb8f
   m_lockIdentifier: 0
 --- !u!114 &5008227000221217880
 MonoBehaviour:
@@ -2053,8 +2068,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.RandomDropper
   m_distanceThreshold: 2
   m_enemyLootTable: {fileID: 11400000, guid: 248401c73ddeac341a71abe17bdf16e5, type: 2}
-  m_silverPickupPrefab: {fileID: 2969380025193945682, guid: 31f2f4ea1ddf32541ad2b70f54cc7ef2, type: 3}
-  m_dropCount: 2
 --- !u!114 &2857182479567065796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2849,6 +2862,7 @@ GameObject:
   - component: {fileID: 7515766288011314023}
   - component: {fileID: 5094535939514832522}
   - component: {fileID: 2742749632766133802}
+  - component: {fileID: 6003173310088755083}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -2941,6 +2955,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!225 &6003173310088755083
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7379276881781207110}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &7662894516086812667
 GameObject:
   m_ObjectHideFlags: 0

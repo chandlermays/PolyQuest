@@ -233,6 +233,8 @@ namespace PolyQuest.Components
             m_target = target;
             m_targetTransform = target.transform;
             m_targetHealth = target.GetComponent<HealthComponent>();
+            m_healthComponent.NotifyCombatEntered();
+            
         }
 
         /*-------------------------------------------
@@ -244,6 +246,7 @@ namespace PolyQuest.Components
             m_target = null;
             m_targetTransform = null;
             m_targetHealth = null;
+            m_healthComponent.NotifyCombatExited();
         }
 
         /*-----------------------------------------------
