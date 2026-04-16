@@ -146,11 +146,9 @@ namespace PolyQuest.Components
 
             if (myFaction != null && attackerFaction != null)
             {
+                // Prevent friendly fire
                 if (!attackerFaction.IsHostileTo(myFaction))
-                {
-                    // Prevent friendly fire
                     return;
-                }
             }
 
             m_health -= damage;
