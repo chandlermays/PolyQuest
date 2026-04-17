@@ -12,7 +12,7 @@ namespace PolyQuest.UI.Core
      *      - Stores mappings between gameplay actions and cursor visuals.                         *
      *      - Provides access to cursor mappings for use by UI and gameplay systems.               *
      * ------------------------------------------------------------------------------------------- */
-    [CreateAssetMenu(fileName = "CursorSettings", menuName = "PolyQuest/CursorSettings")]
+    [CreateAssetMenu(menuName = "PolyQuest/CursorSettings", fileName = "CursorSettings")]
     public class CursorSettings : ScriptableObject
     {
         public enum CursorType

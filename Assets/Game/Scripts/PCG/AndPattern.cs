@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PolyQuest.PCG
 {
     [Serializable]
-    [CreateAssetMenu(fileName = "New 'AND' Pattern", menuName = "PolyQuest/PCG/Decorators/AND Pattern", order = 1)]
+    [CreateAssetMenu(menuName = "PolyQuest/PCG/Decorators/AND Pattern", fileName = "New 'AND' Pattern")]
     public class AndPattern : CompositePattern
     {
         /*--------------------------------------------------------------------------------------

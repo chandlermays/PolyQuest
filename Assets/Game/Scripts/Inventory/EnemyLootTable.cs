@@ -6,7 +6,7 @@ namespace PolyQuest.Inventories
 {
     // Try implementing my custom RNG
 
-    [CreateAssetMenu(menuName = "PolyQuest/Inventory/EnemyLootTable", fileName = "New Enemy Loot Table", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Inventory/EnemyLootTable", fileName = "New Enemy Loot Table")]
     public class EnemyLootTable : ScriptableObject
     {
         [SerializeField] LootItemConfig[] m_guaranteedDrops;

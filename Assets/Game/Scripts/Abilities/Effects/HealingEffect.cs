@@ -5,7 +5,7 @@ using PolyQuest.Components;
 
 namespace PolyQuest.Abilities
 {
-    [CreateAssetMenu(fileName = "New Healing Effect", menuName = "PolyQuest/Abilities/Effects/New Healing Effect", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Abilities/Effects/New Healing Effect", fileName = "New Healing Effect")]
     public class HealingEffect : EffectStrategy
     {
         [SerializeField] private int m_healAmount;

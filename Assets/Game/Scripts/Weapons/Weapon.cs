@@ -14,7 +14,7 @@ namespace PolyQuest.Combat
      *      - Spawns and removes weapon instances on the character.                                *
      *      - Launches projectiles and sets their targets and damage.                              *
      * ------------------------------------------------------------------------------------------- */
-    [CreateAssetMenu(menuName = "PolyQuest/Items/Weapon", fileName = "New Weapon", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Items/Weapon", fileName = "New Weapon")]
     public class Weapon : EquipableItem, IStatModifier
     {
         [Header("Weapon Settings")]

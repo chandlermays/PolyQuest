@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PolyQuest.PCG
 {
-    [CreateAssetMenu(fileName = "New Room Template", menuName = "PolyQuest/PCG/Room Template", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/PCG/Room Template", fileName = "New Room Template")]
     public class RoomTemplate : ScriptableObject
     {
         [SerializeField] private int m_minRoomWidth = 3;

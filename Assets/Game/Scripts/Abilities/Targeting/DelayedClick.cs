@@ -9,7 +9,7 @@ using PolyQuest.Input;
 
 namespace PolyQuest.Abilities
 {
-    [CreateAssetMenu(fileName = "New Delayed Click Strategy", menuName = "PolyQuest/Abilities/Targeting/New Delayed Click Strategy", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Abilities/Targeting/New Delayed Click Strategy", fileName = "New Delayed Click Strategy")]
     public class DelayedClick : TargetingStrategy
     {
         [SerializeField] private LayerMask m_groundLayer;

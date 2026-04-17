@@ -6,7 +6,7 @@ using UnityEngine;
 namespace PolyQuest.PCG
 {
     [Serializable]
-    [CreateAssetMenu(fileName = "New 'OR' Pattern", menuName = "PolyQuest/PCG/Decorators/OR Pattern", order = 2)]
+    [CreateAssetMenu(menuName = "PolyQuest/PCG/Decorators/OR Pattern", fileName = "New 'OR' Pattern")]
     public class OrPattern : CompositePattern
     {
         /*--------------------------------------------------------------------------------------

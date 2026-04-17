@@ -19,7 +19,7 @@ namespace PolyQuest.Dialogues
      *      - Ensures a valid root node exists and maintains node relationships.                    *
      *      - Handles serialization and asset management for dialogue editing and saving.           *
      * -------------------------------------------------------------------------------------------- */
-    [CreateAssetMenu(fileName = "New Dialogue", menuName = "PolyQuest/Dialogue", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Dialogue/Dialogue Asset", fileName = "New Dialogue Asset")]
     public class Dialogue : ScriptableObject, ISerializationCallbackReceiver
     {
         [SerializeField] private List<DialogueNode> m_nodes = new();

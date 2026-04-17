@@ -22,8 +22,8 @@ MonoBehaviour:
     y: 400
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND: []
 --- !u!114 &-6549729149093602990
@@ -49,8 +49,8 @@ MonoBehaviour:
     y: 100
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND:
     - m_OR:
@@ -86,8 +86,9 @@ MonoBehaviour:
     y: 100
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 'Quest Started: A Family''s Heirloom'
+  m_onEnterEvents: []
+  m_onExitEvents:
+  - {fileID: 11400000, guid: 7d5f0d0838dcdb24899658df96cc067b, type: 2}
   m_condition:
     m_AND: []
 --- !u!114 &-6310832627386318687
@@ -113,8 +114,8 @@ MonoBehaviour:
     y: 100
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND: []
 --- !u!114 &-5336192877328289983
@@ -139,8 +140,8 @@ MonoBehaviour:
     y: 550
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND:
     - m_OR:
@@ -171,8 +172,8 @@ MonoBehaviour:
     y: 100
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND: []
 --- !u!114 &-3574904906293297570
@@ -197,8 +198,8 @@ MonoBehaviour:
     y: 400
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND:
     - m_OR:
@@ -258,8 +259,8 @@ MonoBehaviour:
     y: 250
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND:
     - m_OR:
@@ -296,8 +297,9 @@ MonoBehaviour:
     y: 400
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: CompleteObjective
+  m_onEnterEvents: []
+  m_onExitEvents:
+  - {fileID: 11400000, guid: abd41e4c82bd0d9408d37bf29e1365b0, type: 2}
   m_condition:
     m_AND: []
 --- !u!114 &4851071162730556759
@@ -323,7 +325,7 @@ MonoBehaviour:
     y: 400
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND: []

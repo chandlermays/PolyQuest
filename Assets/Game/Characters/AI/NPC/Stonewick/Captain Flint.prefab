@@ -526,7 +526,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1909811517450575725, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
       propertyPath: m_uniqueIdentifier
-      value: ef7625df-775b-44a0-b7f0-d346d640ba2a
+      value: 5bfee533-e963-47b8-8ebb-cefcf16a2830
       objectReference: {fileID: 0}
     - target: {fileID: 2129143184733769500, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1338,15 +1338,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6788340497021815511, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1788214766545370289}
-    - targetCorrespondingSourceObject: {fileID: 6788340497021815511, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4053059884726621803}
-    - targetCorrespondingSourceObject: {fileID: 6788340497021815511, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3088085314375780901}
-    - targetCorrespondingSourceObject: {fileID: 6788340497021815511, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2730991186420110234}
   m_SourcePrefab: {fileID: 100100000, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
 --- !u!1 &413723141175990190 stripped
 GameObject:
@@ -1368,80 +1359,6 @@ MonoBehaviour:
   m_dialogueCamera: {fileID: 2966625698241564166}
   m_dialogue: {fileID: 11400000, guid: 935c4076fe7074f4081fa53318d27d01, type: 2}
   m_speakerName: Captain Flint
---- !u!114 &4053059884726621803
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 413723141175990190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c60e9599af297448b2fb35b5d83860a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_actionTriggerPairs:
-  - m_action: 'Quest Started: Clear the Bandit Camp'
-    OnTrigger:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 3088085314375780901}
-          m_TargetAssemblyTypeName: PolyQuest.QuestAssigner, Assembly-CSharp
-          m_MethodName: AssignQuest
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - m_action: CompleteObjective
-    OnTrigger:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 2730991186420110234}
-          m_TargetAssemblyTypeName: PolyQuest.ObjectiveCompletion, Assembly-CSharp
-          m_MethodName: CompleteObjective
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
---- !u!114 &3088085314375780901
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 413723141175990190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b49ae2671a20d0f4f9326992196f6f57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_playerQuestMgr: {fileID: 0}
-  m_quest: {fileID: 11400000, guid: 5b14a68c783e1f548826848aff6c19e6, type: 2}
---- !u!114 &2730991186420110234
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 413723141175990190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b6d6456125244a4ca248484be9364b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_questManager: {fileID: 0}
-  m_quest: {fileID: 11400000, guid: 5b14a68c783e1f548826848aff6c19e6, type: 2}
-  m_objective: {fileID: 11400000, guid: a710067ce83c60148a0ce62146fe9b2b, type: 2}
 --- !u!4 &5305196070007443065 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1303518321023554304, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}

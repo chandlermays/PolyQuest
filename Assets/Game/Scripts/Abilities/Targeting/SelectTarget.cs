@@ -15,7 +15,7 @@ using PolyQuest.Input;
 
 namespace PolyQuest.Abilities
 {
-    [CreateAssetMenu(fileName = "New Select Target Strategy", menuName = "PolyQuest/Abilities/Targeting/New Select Target Strategy", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Abilities/Targeting/New Select Target Strategy", fileName = "New Select Target Strategy")]
     public class SelectTarget : TargetingStrategy
     {
         /*------------------------------------------------------------------------- 

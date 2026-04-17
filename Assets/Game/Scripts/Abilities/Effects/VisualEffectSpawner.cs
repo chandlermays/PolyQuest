@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PolyQuest.Abilities
 {
-    [CreateAssetMenu(fileName = "New Visual Effect Spawner", menuName = "PolyQuest/Abilities/Effects/New Visual Effect Spawner", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Abilities/Effects/New Visual Effect Spawner", fileName = "New Visual Effect Spawner")]
     public class VisualEffectSpawner : EffectStrategy
     {
         [SerializeField] private GameObject m_spawnedPrefab;

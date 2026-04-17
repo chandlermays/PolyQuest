@@ -6,7 +6,7 @@ using PolyQuest.Components;
 
 namespace PolyQuest.Abilities
 {
-    [CreateAssetMenu(fileName = "New Spawn Projectile Effect", menuName = "PolyQuest/Abilities/Effects/New Spawn Projectile Effect", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Abilities/Effects/New Spawn Projectile Effect", fileName = "New Spawn Projectile Effect")]
     public class SpawnProjectileEffect : EffectStrategy
     {
         [SerializeField] private Projectile m_projectilePrefab;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PolyQuest.Abilities
 {
-    [CreateAssetMenu(fileName = "New Self-Targeting Strategy", menuName = "PolyQuest/Abilities/Targeting/New Self-Targeting Strategy", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Abilities/Targeting/New Self-Targeting Strategy", fileName = "New Self-Targeting Strategy")]
     public class SelfTargeting : TargetingStrategy
     {
         public override void StartTargeting(AbilityConfig config, Action onComplete)

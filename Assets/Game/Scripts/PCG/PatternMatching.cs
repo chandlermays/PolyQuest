@@ -6,7 +6,7 @@ using UnityEngine;
 namespace PolyQuest.PCG
 {
     [Serializable]
-    [CreateAssetMenu(fileName = "New Pattern Matching", menuName = "PolyQuest/PCG/Decorators/Pattern Matching", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/PCG/Decorators/Pattern Matching", fileName = "New Pattern Matching")]
     public class PatternMatching : DecoratorPattern
     {
         [SerializeField] private GameObject m_prefab;

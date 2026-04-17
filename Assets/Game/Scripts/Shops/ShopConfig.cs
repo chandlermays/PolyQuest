@@ -4,7 +4,7 @@ using PolyQuest.Inventories;
 
 namespace PolyQuest.Shops
 {
-    [CreateAssetMenu(fileName = "ShopConfig", menuName = "PolyQuest/Shops/New Shop Config")]
+    [CreateAssetMenu(menuName = "PolyQuest/Shops/New Shop Config", fileName = "ShopConfig")]
     public class ShopConfig : ScriptableObject
     {
         [Range(0.0f, 100.0f)]

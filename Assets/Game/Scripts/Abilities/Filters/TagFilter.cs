@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PolyQuest.Abilities
 {
-    [CreateAssetMenu(fileName = "New Tag Filter", menuName = "PolyQuest/Abilities/Filters/Tag", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Abilities/Filters/Tag", fileName = "New Tag Filter")]
     public class TagFilter : FilteringStrategy
     {
         [SerializeField] private string m_filteredTag;

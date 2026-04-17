@@ -37,6 +37,9 @@ namespace PolyQuest.Dialogues
 
         public CinemachineCamera ActiveDialogueCamera => m_activeNPC != null ? m_activeNPC.DialogueCamera : null;
 
+        private void TriggerEnterAction() => FireEvents(m_currentNode.OnEnterEvents);
+        private void TriggerExitAction() => FireEvents(m_currentNode.OnExitEvents);
+
         /*---------------------------------------------------------------- 
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
@@ -206,25 +209,14 @@ namespace PolyQuest.Dialogues
             return GetComponents<IConditionChecker>();
         }
 
-        /*---------------------------------------------------------------------------- 
-        | --- TriggerEnterAction: Triggers the OnEnterAction of the current Node --- |
-        ----------------------------------------------------------------------------*/
-        private void TriggerEnterAction()
+        /*----------------------------------------------------------------------- 
+        | --- FireEvents: Executes a list of OnEnter/OnExit dialogue events --- |
+        -----------------------------------------------------------------------*/
+        private void FireEvents(IReadOnlyList<DialogueEvent> events)
         {
-            if (m_currentNode != null && m_currentNode.OnEnterAction != "")
+            foreach (DialogueEvent dialogueEvent in events)
             {
-                Trigger(m_currentNode.OnEnterAction);
-            }
-        }
-
-        /*-------------------------------------------------------------------------- 
-        | --- TriggerExitAction: Triggers the OnExitAction of the current Node --- |
-        --------------------------------------------------------------------------*/
-        private void TriggerExitAction()
-        {
-            if (m_currentNode != null && m_currentNode.OnExitAction != "")
-            {
-                Trigger(m_currentNode.OnExitAction);
+                dialogueEvent?.Execute(gameObject, m_activeNPC.gameObject);
             }
         }
 

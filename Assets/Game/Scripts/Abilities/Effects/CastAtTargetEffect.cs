@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PolyQuest.Abilities
 {
-    [CreateAssetMenu(fileName = "New Cast At Target Effect", menuName = "PolyQuest/Abilities/Effects/New Cast At Target Effect", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Abilities/Effects/New Cast At Target Effect", fileName = "New Cast At Target Effect")]
     public class CastAtTargetEffect : EffectStrategy
     {
         public override void StartEffect(AbilityConfig config, Action onComplete)

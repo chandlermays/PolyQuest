@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PolyQuest.Abilities
 {
-    [CreateAssetMenu(fileName = "New Animation Effect", menuName = "PolyQuest/Abilities/Effects/New Animation Effect", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Abilities/Effects/New Animation Effect", fileName = "New Animation Effect")]
     public class AnimationEffect : EffectStrategy
     {
         [SerializeField] private string m_animationTrigger;

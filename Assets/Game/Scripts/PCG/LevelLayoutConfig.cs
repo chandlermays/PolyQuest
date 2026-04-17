@@ -85,7 +85,7 @@ namespace PolyQuest.PCG
         public float MultiCorridorScore => m_multiCorridorScore;
     }
 
-    [CreateAssetMenu(fileName = "New Level Layout Config", menuName = "PolyQuest/PCG/Level Layout Config", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/PCG/Level Layout Config", fileName = "New Level Layout Config")]
     public class LevelLayoutConfig : ScriptableObject
     {
         [Header("Room Generation")]

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PolyQuest.Attributes
 {
-    [CreateAssetMenu(fileName = "PlayerProgression", menuName = "PolyQuest/Progression/Player", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Progression/Player", fileName = "PlayerProgression")]
     public class PlayerProgression : BaseProgression
     {
         [SerializeField] private int m_initialExperience;

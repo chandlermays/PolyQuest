@@ -1890,8 +1890,8 @@ GameObject:
   - component: {fileID: -2369949876909521975}
   - component: {fileID: -4584313945261361355}
   - component: {fileID: 5238166851672994123}
-  - component: {fileID: 6679032131808416936}
   - component: {fileID: 1909811517450575725}
+  - component: {fileID: 1259486095004902492}
   - component: {fileID: 2770295979244506965}
   - component: {fileID: 8498877888543027432}
   m_Layer: 10
@@ -2118,18 +2118,6 @@ MonoBehaviour:
   m_baseProgression: {fileID: 11400000, guid: 30fee3abfa33c464fb0abc5f368e563a, type: 2}
   m_useStatModifiers: 1
   m_level: 1
---- !u!114 &6679032131808416936
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6788340497021815511}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 550c88fc4ef72ac4cb568aa4ce60d254, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.Equipment
 --- !u!114 &1909811517450575725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2144,6 +2132,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Saving.JsonSaveableEntity
   m_uniqueIdentifier: 464429e5-e167-47df-aa9b-bfdbee305775
   m_lockIdentifier: 0
+--- !u!114 &1259486095004902492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6788340497021815511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2b1a95a090c88144a6dfe27c553b4c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.StatsEquipment
 --- !u!114 &2770295979244506965
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -18,9 +18,10 @@ namespace PolyQuest.Quests
      *      - Enables checking if a specific objective exists within the quest.                    *
      *      - Designed to be referenced by quest managers, UI, and quest status tracking.          *
      * ------------------------------------------------------------------------------------------- */
-    [CreateAssetMenu(fileName = "New Quest", menuName = "PolyQuest/Quests/Quest", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Quests/Quest", fileName = "New Quest")]
     public class Quest : ScriptableObject
     {
+        [SerializeField] private QuestRegion m_region;
         [SerializeField] private List<QuestObjective> m_objectives = new();
         [SerializeField] private List<Reward> m_rewards = new();
 
@@ -35,6 +36,7 @@ namespace PolyQuest.Quests
         }
 
         public string Title => name;
+        public QuestRegion Region => m_region;
         public IReadOnlyList<QuestObjective> Objectives => m_objectives;
         public int ObjectiveCount => m_objectives.Count;
         public List<Reward> Rewards => m_rewards;

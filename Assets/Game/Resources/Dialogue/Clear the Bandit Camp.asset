@@ -21,8 +21,8 @@ MonoBehaviour:
     y: 251
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND: []
 --- !u!114 &-6964223987575199658
@@ -47,8 +47,8 @@ MonoBehaviour:
     y: 100
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND:
     - m_OR:
@@ -85,8 +85,8 @@ MonoBehaviour:
     y: 250
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND:
     - m_OR:
@@ -122,8 +122,8 @@ MonoBehaviour:
     y: 550
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND:
     - m_OR:
@@ -153,8 +153,9 @@ MonoBehaviour:
     y: 100
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 'Quest Started: Clear the Bandit Camp'
+  m_onEnterEvents: []
+  m_onExitEvents:
+  - {fileID: 11400000, guid: 679c9e3e354eb2f45ae13da3be47d323, type: 2}
   m_condition:
     m_AND: []
 --- !u!114 &11400000
@@ -202,8 +203,8 @@ MonoBehaviour:
     y: 100
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND: []
 --- !u!114 &3710213524180428403
@@ -228,8 +229,8 @@ MonoBehaviour:
     y: 400
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND:
     - m_OR:
@@ -265,8 +266,9 @@ MonoBehaviour:
     y: 400
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: CompleteObjective
+  m_onEnterEvents: []
+  m_onExitEvents:
+  - {fileID: 11400000, guid: 07aa1a0c583d7ab41bca627df3e659b2, type: 2}
   m_condition:
     m_AND: []
 --- !u!114 &9192878735317720245
@@ -291,7 +293,7 @@ MonoBehaviour:
     y: 100
     width: 200
     height: 100
-  m_onEnterAction: 
-  m_onExitAction: 
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND: []

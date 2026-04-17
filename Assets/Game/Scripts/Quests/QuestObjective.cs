@@ -13,7 +13,7 @@ namespace PolyQuest.Quests
      *      - Serves as a data asset to be referenced by quests and quest systems.                 *
      *      - Enables modular and reusable objective definitions across multiple quests.           *
      * ------------------------------------------------------------------------------------------- */
-    [CreateAssetMenu(fileName = "New Quest Objective", menuName = "PolyQuest/Quests/Quest Objective", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Quests/Quest Objective", fileName = "New Quest Objective")]
     public class QuestObjective : ScriptableObject
     {
         [SerializeField, TextArea] private string m_description;    // do I really want this property?

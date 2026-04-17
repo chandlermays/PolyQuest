@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PolyQuest.PCG
 {
     [Serializable]
-    [CreateAssetMenu(fileName = "New Room Pattern", menuName = "PolyQuest/PCG/Decorators/Room Pattern", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/PCG/Decorators/Room Pattern", fileName = "New Room Pattern")]
     public class RoomPattern : CompositePattern
     {
         [SerializeField] private RoomType m_roomType;

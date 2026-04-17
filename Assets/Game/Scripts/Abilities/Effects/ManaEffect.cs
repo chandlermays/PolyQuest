@@ -5,7 +5,7 @@ using PolyQuest.Components;
 
 namespace PolyQuest.Abilities
 {
-    [CreateAssetMenu(fileName = "New Mana Effect", menuName = "PolyQuest/Abilities/Effects/New Mana Effect", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Abilities/Effects/New Mana Effect", fileName = "New Mana Effect")]
     public class ManaEffect : EffectStrategy
     {
         [SerializeField] private int m_manaAmount;

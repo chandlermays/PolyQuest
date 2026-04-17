@@ -4,7 +4,7 @@ using PolyQuest.Tools;
 
 namespace PolyQuest.Inventories
 {
-    [CreateAssetMenu(menuName = "PolyQuest/Items/Equipable Item", fileName = "New Equipable Item", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Items/Equipable Item", fileName = "New Equipable Item")]
     public class EquipableItem : InventoryItem
     {
         [Tooltip("The equipment slot this m_item can be equipped to.")]

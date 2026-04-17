@@ -5,7 +5,7 @@ using PolyQuest.Components;
 
 namespace PolyQuest.Abilities
 {
-    [CreateAssetMenu(fileName = "New Damage Effect", menuName = "PolyQuest/Abilities/Effects/New Damage Effect", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Abilities/Effects/New Damage Effect", fileName = "New Damage Effect")]
     public class DamageEffect : EffectStrategy
     {
         [SerializeField] private int m_damageAmount;

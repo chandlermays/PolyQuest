@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PolyQuest.PCG
 {
-    [CreateAssetMenu(fileName = "New Dungeon Tileset", menuName = "PolyQuest/PCG/Dungeon Tileset", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/PCG/Dungeon Tileset", fileName = "New Dungeon Tileset")]
     public class DungeonTileset : ScriptableObject
     {
         private const int kTileCount = 16;

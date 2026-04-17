@@ -4,7 +4,7 @@ using PolyQuest.Quests;
 
 namespace PolyQuest.Inventories
 {
-    [CreateAssetMenu(fileName = "New Quest Item", menuName = "PolyQuest/Items/Quest Item", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Items/Quest Item", fileName = "New Quest Item")]
     public class QuestItem : InventoryItem
     {
         [SerializeField] private Quest m_quest;

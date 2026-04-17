@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PolyQuest.Inventories
 {
-    [CreateAssetMenu(fileName = "New Action Item", menuName = "PolyQuest/Items/Action Item", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Items/Action Item", fileName = "New Action Item")]
     public class ActionItem : InventoryItem
     {
         // NOTE: Not sure if I even need this subclass since consumables are treated like abilities.

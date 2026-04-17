@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PolyQuest.Attributes
 {
-    [CreateAssetMenu(fileName = "New AI Progression", menuName = "PolyQuest/Progression/New AI Progression", order = 1)]
+    [CreateAssetMenu(menuName = "PolyQuest/Progression/New AI Progression", fileName = "New AI Progression")]
     public class AIProgression : BaseProgression
     {
         [SerializeField] private float m_experienceRewardIncreasePercentage;

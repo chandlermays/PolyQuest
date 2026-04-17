@@ -23,16 +23,16 @@ namespace PolyQuest.Dialogues
         [SerializeField] private string m_text;
         [SerializeField] private List<string> m_children = new();
         [SerializeField] private Rect m_rect = new(0, 0, 200, 100);
-        [SerializeField] private string m_onEnterAction;
-        [SerializeField] private string m_onExitAction;
+        [SerializeField] private List<DialogueEvent> m_onEnterEvents = new();
+        [SerializeField] private List<DialogueEvent> m_onExitEvents = new();
         [SerializeField] private Condition m_condition;
 
-        public bool IsPlayerSpeaking        =>       m_isPlayerSpeaking;
-        public string Text                  =>       m_text;
-        public List<string> Children        =>       m_children;
-        public Rect Rect                    =>       m_rect;
-        public string OnEnterAction         =>       m_onEnterAction;
-        public string OnExitAction          =>       m_onExitAction;
+        public bool IsPlayerSpeaking                            =>       m_isPlayerSpeaking;
+        public string Text                                      =>       m_text;
+        public List<string> Children                            =>       m_children;
+        public Rect Rect                                        =>       m_rect;
+        public IReadOnlyList<DialogueEvent> OnEnterEvents       =>       m_onEnterEvents;
+        public IReadOnlyList<DialogueEvent> OnExitEvents        =>       m_onExitEvents;
 
         /*-----------------------------------------------------------------------------------
         | --- CheckCondition: Checks if the condition is met to execute a Dialogue Node --- |

@@ -530,7 +530,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1909811517450575725, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
       propertyPath: m_uniqueIdentifier
-      value: 867031c0-d6d8-4530-9d03-342460113277
+      value: 4a9bcce2-f35c-4a31-b26f-ca5d95832247
       objectReference: {fileID: 0}
     - target: {fileID: 2129143184733769500, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1342,15 +1342,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6788340497021815511, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1408846728186848090}
-    - targetCorrespondingSourceObject: {fileID: 6788340497021815511, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6149881083383384585}
-    - targetCorrespondingSourceObject: {fileID: 6788340497021815511, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8346429873231319596}
-    - targetCorrespondingSourceObject: {fileID: 6788340497021815511, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 810902636069847685}
   m_SourcePrefab: {fileID: 100100000, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
 --- !u!4 &3697158862318818304 stripped
 Transform:
@@ -1377,77 +1368,3 @@ MonoBehaviour:
   m_dialogueCamera: {fileID: 3567661180966138721}
   m_dialogue: {fileID: 11400000, guid: 723affb108ebc664489c61ee721c8344, type: 2}
   m_speakerName: Cole the Guard
---- !u!114 &6149881083383384585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9181980730149014999}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c60e9599af297448b2fb35b5d83860a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueEventTrigger
-  m_actionTriggerPairs:
-  - m_action: 'Quest Started: A Family''s Heirloom'
-    OnTrigger:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 8346429873231319596}
-          m_TargetAssemblyTypeName: PolyQuest.Quests.QuestAssigner, Assembly-CSharp
-          m_MethodName: AssignQuest
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - m_action: CompleteObjective
-    OnTrigger:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 810902636069847685}
-          m_TargetAssemblyTypeName: PolyQuest.Quests.ObjectiveCompletion, Assembly-CSharp
-          m_MethodName: CompleteObjective
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
---- !u!114 &8346429873231319596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9181980730149014999}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b49ae2671a20d0f4f9326992196f6f57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Quests.QuestAssigner
-  m_playerQuestMgr: {fileID: 0}
-  m_quest: {fileID: 11400000, guid: 123e00e8fb8391c4698ee2f6a07d8fc1, type: 2}
---- !u!114 &810902636069847685
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9181980730149014999}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b6d6456125244a4ca248484be9364b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Quests.ObjectiveCompletion
-  m_questManager: {fileID: 0}
-  m_quest: {fileID: 11400000, guid: 123e00e8fb8391c4698ee2f6a07d8fc1, type: 2}
-  m_objective: {fileID: 11400000, guid: af44e699d05cced44837ce8920edacb7, type: 2}

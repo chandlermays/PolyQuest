@@ -6,7 +6,7 @@ using PolyQuest.Core;
 
 namespace PolyQuest.Abilities
 {
-    [CreateAssetMenu(fileName = "New Ability", menuName = "PolyQuest/Abilities/New Ability", order = 0)]
+    [CreateAssetMenu(menuName = "PolyQuest/Abilities/New Ability", fileName = "New Ability")]
     public class Ability : ActionItem
     {
         [Header("Ability Config")]
