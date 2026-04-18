@@ -35,11 +35,13 @@ namespace PolyQuest.Quests
             public int Amount => m_amount;
         }
 
-        public string Title => name;
-        public QuestRegion Region => m_region;
-        public IReadOnlyList<QuestObjective> Objectives => m_objectives;
-        public int ObjectiveCount => m_objectives.Count;
-        public List<Reward> Rewards => m_rewards;
+        public string Title                                     =>      name;
+        public QuestRegion Region                               =>      m_region;
+        public IReadOnlyList<QuestObjective> Objectives         =>      m_objectives;
+        public int ObjectiveCount                               =>      m_objectives.Count;
+        public List<Reward> Rewards                             =>      m_rewards;
+
+        public bool HasObjective(QuestObjective objective)      =>      m_objectives.Contains(objective);
 
         /*---------------------------------------------------------------------------
         | --- GetByName: Retrieve a Quest by its name from the Resources folder --- |
@@ -54,14 +56,6 @@ namespace PolyQuest.Quests
                 }
             }
             return null;
-        }
-
-        /*-------------------------------------------------------------------------------
-        | --- HasObjective: Check if the quest has a specific objective by its name --- |
-        -------------------------------------------------------------------------------*/
-        public bool HasObjective(QuestObjective objective)
-        {
-            return m_objectives.Contains(objective);
         }
     }
 }

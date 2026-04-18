@@ -219,19 +219,5 @@ namespace PolyQuest.Dialogues
                 dialogueEvent?.Execute(gameObject, m_activeNPC.gameObject);
             }
         }
-
-        /*-------------------------------------------------------------------------------------------- 
-        | --- Trigger: Triggers the given action for all DialogueEventTriggers on the active NPC --- |
-        --------------------------------------------------------------------------------------------*/
-        private void Trigger(string action)
-        {
-            if (action == "")
-                return;
-
-            foreach (DialogueEventTrigger trigger in m_activeNPC.GetComponents<DialogueEventTrigger>())
-            {
-                trigger.Trigger(action);
-            }
-        }
     }
 }
