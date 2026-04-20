@@ -1,3 +1,7 @@
+/*---------------------------
+File: Texture2DExt.cs
+Author: Chandler Mays
+----------------------------*/
 using System.IO;
 using UnityEngine;
 #if UNITY_EDITOR

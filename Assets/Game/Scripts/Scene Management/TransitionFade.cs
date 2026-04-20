@@ -1,3 +1,7 @@
+/*---------------------------
+File: TransitionFade.cs
+Author: Chandler Mays
+----------------------------*/
 using System.Collections;
 using UnityEngine;
 //---------------------------------

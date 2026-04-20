@@ -1,3 +1,7 @@
+/*---------------------------
+File: CharacterStat.cs
+Author: Chandler Mays
+----------------------------*/
 namespace PolyQuest.Attributes
 {
     public enum Stat

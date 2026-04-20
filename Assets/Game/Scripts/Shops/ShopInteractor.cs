@@ -1,3 +1,7 @@
+/*---------------------------
+File: ShopInteractor.cs
+Author: Chandler Mays
+----------------------------*/
 using System;
 using UnityEngine;
 //---------------------------------

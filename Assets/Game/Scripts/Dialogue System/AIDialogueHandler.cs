@@ -1,3 +1,7 @@
+/*---------------------------
+File: AIDialogueHandler.cs
+Author: Chandler Mays
+----------------------------*/
 using Unity.Cinemachine;
 using UnityEngine;
 //---------------------------------

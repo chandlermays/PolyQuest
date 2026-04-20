@@ -1,3 +1,7 @@
+/*---------------------------
+File: Level.cs
+Author: Chandler Mays
+----------------------------*/
 using System;
 using System.Collections.Generic;
 using UnityEngine;

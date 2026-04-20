@@ -1,3 +1,7 @@
+/*---------------------------
+File: HealthComponent.cs
+Author: Chandler Mays
+----------------------------*/
 using System;
 using Newtonsoft.Json.Linq;
 using UnityEngine;

@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿/*---------------------------
+File: DialogueEvent.cs
+Author: Chandler Mays
+----------------------------*/
+using UnityEngine;
 //---------------------------------
 
 namespace PolyQuest.Dialogues

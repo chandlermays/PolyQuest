@@ -1,3 +1,7 @@
+/*---------------------------
+File: PauseMenuUI.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 using UnityEngine.UI;
 //---------------------------------

@@ -1,3 +1,7 @@
+/*---------------------------
+File: PlayerDialogueHandler.cs
+Author: Chandler Mays
+----------------------------*/
 using System;
 using System.Collections.Generic;
 using Unity.Cinemachine;

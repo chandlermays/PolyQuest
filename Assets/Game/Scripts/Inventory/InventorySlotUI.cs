@@ -1,3 +1,7 @@
+/*---------------------------
+File: InventorySlotUI.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;

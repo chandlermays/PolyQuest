@@ -1,3 +1,7 @@
+/*---------------------------
+File: PatrolState.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 

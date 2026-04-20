@@ -1,3 +1,7 @@
+/*---------------------------
+File: DungeonTileset.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 

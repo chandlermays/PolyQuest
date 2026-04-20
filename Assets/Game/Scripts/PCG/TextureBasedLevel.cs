@@ -1,3 +1,7 @@
+/*---------------------------
+File: TextureBasedLevel.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 

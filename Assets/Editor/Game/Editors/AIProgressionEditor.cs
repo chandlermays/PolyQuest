@@ -1,3 +1,7 @@
+/*---------------------------
+File: AIProgressionEditor.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEditor;
 using UnityEngine;
 //---------------------------------

@@ -1,3 +1,7 @@
+/*---------------------------
+File: QuestObjective.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 

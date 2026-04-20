@@ -1,3 +1,7 @@
+/*---------------------------
+File: Array2DPropertyDrawer.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEditor;
 using UnityEngine;
 //---------------------------------

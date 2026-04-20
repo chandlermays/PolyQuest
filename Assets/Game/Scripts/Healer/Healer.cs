@@ -1,11 +1,15 @@
-using PolyQuest.Abilities;
+/*---------------------------
+File: Healer.cs
+Author: Chandler Mays
+----------------------------*/
+using UnityEngine;
 //---------------------------------
+using PolyQuest.Abilities;
 using PolyQuest.Components;
 using PolyQuest.Core;
 using PolyQuest.Input;
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
-using UnityEngine;
 
 namespace PolyQuest.Healing
 {

@@ -1,3 +1,7 @@
+/*---------------------------
+File: AbilityConfig.cs
+Author: Chandler Mays
+----------------------------*/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

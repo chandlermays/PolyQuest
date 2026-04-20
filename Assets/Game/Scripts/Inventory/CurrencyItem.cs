@@ -1,4 +1,9 @@
+/*---------------------------
+File: CurrencyItem.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
+//---------------------------------
 using PolyQuest.Inventories;
 
 namespace PolyQuest.Pickups

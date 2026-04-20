@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*---------------------------
+File: SpawnProjectileEffect.cs
+Author: Chandler Mays
+----------------------------*/
+using System;
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Combat;
@@ -13,6 +17,9 @@ namespace PolyQuest.Abilities
         [SerializeField] private float m_damage;
         [SerializeField] private bool m_isRightHanded = true;
 
+        /*-----------------------------------------------------------------------------------
+        | --- StartEffect: Spawns a projectile from the user's hand towards each target --- |
+        -----------------------------------------------------------------------------------*/
         public override void StartEffect(AbilityConfig config, Action onComplete)
         {
             CombatComponent combatComponent = config.User.GetComponent<CombatComponent>();

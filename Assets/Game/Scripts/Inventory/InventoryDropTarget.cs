@@ -1,3 +1,7 @@
+/*---------------------------
+File: InventoryDropTarget.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 using PolyQuest.UI.Dragging;

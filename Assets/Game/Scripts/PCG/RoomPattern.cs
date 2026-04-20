@@ -1,3 +1,7 @@
+/*---------------------------
+File: RoomPattern.cs
+Author: Chandler Mays
+----------------------------*/
 using System;
 using UnityEngine;
 //---------------------------------

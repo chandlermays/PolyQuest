@@ -1,3 +1,7 @@
+/*---------------------------
+File: Pickup.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Components;

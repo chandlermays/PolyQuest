@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿/*---------------------------
+File: DisjunctionPropertyDrawer.cs
+Author: Chandler Mays
+----------------------------*/
+using System.Collections;
 using UnityEditor;
 using UnityEngine;
 //---------------------------------
@@ -9,6 +13,9 @@ namespace PolyQuest.Edit
     [CustomPropertyDrawer(typeof(Condition.Disjunction))]
     public class DisjunctionPropertyDrawer : PropertyDrawer
     {
+        /*-------------------------------------------------------------
+        | --- OnGUI: Called for rendering and handling GUI events --- |
+        -------------------------------------------------------------*/
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             GUIStyle style = new GUIStyle(EditorStyles.label);
@@ -83,6 +90,9 @@ namespace PolyQuest.Edit
             }
         }
 
+        /*------------------------------------------------------------------------
+        | --- GetProperyHeight: Returns the height of the property in pixels --- |
+        ------------------------------------------------------------------------*/
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             float result = 0f;

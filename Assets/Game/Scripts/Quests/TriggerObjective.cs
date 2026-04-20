@@ -1,3 +1,7 @@
+/*---------------------------
+File: TriggerObjective.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 

@@ -1,3 +1,7 @@
+/*---------------------------
+File: BaseStats.cs
+Author: Chandler Mays
+----------------------------*/
 using System;
 using UnityEngine;
 //---------------------------------

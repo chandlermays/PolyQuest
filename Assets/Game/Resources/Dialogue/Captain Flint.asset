@@ -17,8 +17,8 @@ MonoBehaviour:
   m_children: []
   m_rect:
     serializedVersion: 2
-    x: 350
-    y: 251
+    x: 300
+    y: 200
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -43,8 +43,8 @@ MonoBehaviour:
   - 0c761e41-9011-463f-865c-923d8bfebc24
   m_rect:
     serializedVersion: 2
-    x: 99
-    y: 100
+    x: 50
+    y: 50
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -81,8 +81,8 @@ MonoBehaviour:
   - 26aba06e-8185-4670-88e5-8b2262b7fad9
   m_rect:
     serializedVersion: 2
-    x: 100
-    y: 250
+    x: 50
+    y: 200
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -118,8 +118,8 @@ MonoBehaviour:
   m_children: []
   m_rect:
     serializedVersion: 2
-    x: 100
-    y: 550
+    x: 37
+    y: 493
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -149,8 +149,8 @@ MonoBehaviour:
   m_children: []
   m_rect:
     serializedVersion: 2
-    x: 850
-    y: 100
+    x: 800
+    y: 50
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a5c8d063cb8c3f4796d574b90d0cf64, type: 3}
-  m_Name: Clear the Bandit Camp
+  m_Name: Captain Flint
   m_EditorClassIdentifier: 
   m_nodes:
   - {fileID: -6964223987575199658}
@@ -199,8 +199,8 @@ MonoBehaviour:
   - 746a8e37-9cc7-4204-b215-de4cc0838739
   m_rect:
     serializedVersion: 2
-    x: 350
-    y: 100
+    x: 300
+    y: 50
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -225,8 +225,8 @@ MonoBehaviour:
   - 1a59dda5-0b66-47be-afb7-e4554acd084d
   m_rect:
     serializedVersion: 2
-    x: 98
-    y: 400
+    x: 50
+    y: 350
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -262,8 +262,8 @@ MonoBehaviour:
   m_children: []
   m_rect:
     serializedVersion: 2
-    x: 350
-    y: 400
+    x: 300
+    y: 350
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -289,8 +289,8 @@ MonoBehaviour:
   - 31ccec43-d1ae-43d9-bcd9-8fad4cb24d08
   m_rect:
     serializedVersion: 2
-    x: 600
-    y: 100
+    x: 550
+    y: 50
     width: 200
     height: 100
   m_onEnterEvents: []

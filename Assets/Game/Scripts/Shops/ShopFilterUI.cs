@@ -1,3 +1,7 @@
+/*---------------------------
+File: ShopFilterUI.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 using UnityEngine.UI;
 //---------------------------------

@@ -1,5 +1,9 @@
+/*---------------------------
+File: QuestStatus.cs
+Author: Chandler Mays
+----------------------------*/
 using System.Collections.Generic;
-using System.Linq;  // remove this
+using System.Linq;  // April 20th: remove this
 using Newtonsoft.Json.Linq;
 //---------------------------------
 

@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿/*---------------------------
+File: QuestObjectiveSeelctorDrawer.cs
+Author: Chandler Mays
+----------------------------*/
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -7,7 +11,7 @@ using PolyQuest.Quests;
 
 namespace PolyQuest.Edit
 {
-    public class QuestObjectivePropertyDrawer
+    public class QuestObjectiveSelectorDrawer
     {
         private QuestRegion m_selectedRegion;
         private Dictionary<string, Quest> m_quests;
@@ -16,12 +20,15 @@ namespace PolyQuest.Edit
         private readonly SerializedProperty m_questProperty;
         private readonly SerializedProperty m_objectiveProperty;
 
-        public QuestObjectivePropertyDrawer(SerializedProperty questProperty, SerializedProperty objectiveProperty)
+        public QuestObjectiveSelectorDrawer(SerializedProperty questProperty, SerializedProperty objectiveProperty)
         {
             m_questProperty = questProperty;
             m_objectiveProperty = objectiveProperty;
         }
 
+        /*------------------------------------------------------------------------------
+        | --- OnInspectorGUI: Renders the custom inspector GUI in the Unity Editor --- |
+        ------------------------------------------------------------------------------*/
         public void OnInspectorGUI()
         {
             LoadQuestDictionary();
@@ -90,9 +97,17 @@ namespace PolyQuest.Edit
             }
         }
 
+        /*-----------------------------------------------------------------------------------------------
+        | --- GetQuestsForRegion: Returns a list of Quests that belong to the specified QuestRegion --- |
+        -----------------------------------------------------------------------------------------------*/
         private List<Quest> GetQuestsForRegion(QuestRegion region)
-            => m_quests.Values.Where(q => q.Region == region).ToList();
+        {
+            return m_quests.Values.Where(q => q.Region == region).ToList();
+        }
 
+        /*-----------------------------------------------------------------
+        | --- LoadQuestDictionary: Populate the quest lookup (cached) --- |
+        -----------------------------------------------------------------*/
         private void LoadQuestDictionary()
         {
             if (m_quests != null) return;
@@ -101,6 +116,9 @@ namespace PolyQuest.Edit
                 m_quests[quest.name] = quest;
         }
 
+        /*--------------------------------------------------------------------------------
+        | --- LoadObjectiveDictionary: Populate the quest objective lookup (cached)  --- |
+        --------------------------------------------------------------------------------*/
         private void LoadObjectiveDictionary()
         {
             if (m_objectivesByQuest != null) return;

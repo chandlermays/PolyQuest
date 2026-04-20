@@ -1,3 +1,7 @@
+/*---------------------------
+File: BillboardUI.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 
 namespace PolyQuest.UI

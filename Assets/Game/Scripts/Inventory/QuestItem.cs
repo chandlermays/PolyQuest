@@ -1,3 +1,7 @@
+/*---------------------------
+File: QuestItem.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Quests;

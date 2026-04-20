@@ -1,3 +1,7 @@
+﻿/*---------------------------
+File: DialogueEditorWindow.cs
+Author: Chandler Mays
+----------------------------*/
 using System;
 using UnityEditor;
 using UnityEditor.Callbacks;
@@ -15,7 +19,7 @@ namespace PolyQuest.Edit
      *      - Allows creation, deletion, linking, and editing of dialogue nodes via GUI.            *
      *      - Supports dragging nodes and panning the canvas for intuitive navigation.              *
      *      - Draws connections between parent and child nodes using Bezier curves.                 *
-     *      - Integrates with Unity�s selection and asset systems for seamless workflow.            *
+     *      - Integrates with Unity’s selection and asset systems for seamless workflow.            *
      *      - Applies custom styles for NPC and player nodes for visual clarity.                    *
      * -------------------------------------------------------------------------------------------- */
     public class DialogueEditorWindow : EditorWindow

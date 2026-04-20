@@ -1,3 +1,7 @@
+/*---------------------------
+File: LevelBuilder.cs
+Author: Chandler Mays
+----------------------------*/
 using System;
 using Newtonsoft.Json.Linq;
 using Unity.AI.Navigation;

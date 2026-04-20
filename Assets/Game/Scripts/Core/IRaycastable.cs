@@ -1,3 +1,7 @@
+/*---------------------------
+File: IRaycastable.cs
+Author: Chandler Mays
+----------------------------*/
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
 

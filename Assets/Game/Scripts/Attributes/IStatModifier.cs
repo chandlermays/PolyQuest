@@ -1,3 +1,7 @@
+/*---------------------------
+File: IStatModifier.cs
+Author: Chandler Mays
+----------------------------*/
 using System.Collections.Generic;
 //---------------------------------
 

@@ -1,3 +1,7 @@
+/*---------------------------
+File: ItemListingUI.cs
+Author: Chandler Mays
+----------------------------*/
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

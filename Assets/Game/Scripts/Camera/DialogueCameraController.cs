@@ -1,3 +1,7 @@
+/*---------------------------
+File: DialogueCameraController.cs
+Author: Chandler Mays
+----------------------------*/
 using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;

@@ -1,17 +1,18 @@
-using UnityEditor;
-using UnityEngine;
+/*---------------------------
+File: QuestItemEditor.cs
+Author: Chandler Mays
+----------------------------*/
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
+using UnityEngine;
 //---------------------------------
+using PolyQuest.Inventories;
 using PolyQuest.Quests;
 
 namespace PolyQuest.Edit
 {
-    /* ---------------------------------------------------------------------------------------------
-     * Role: Custom Inspector for QuestItem that filters available objectives based on the        *
-     *       currently selected Quest, keeping quest/objective pairs always in sync.              *
-     * ------------------------------------------------------------------------------------------- */
-    [CustomEditor(typeof(PolyQuest.Inventories.QuestItem))]
+    [CustomEditor(typeof(QuestItem))]
     public class QuestItemEditor : Editor
     {
         private Dictionary<string, Quest> m_quests;
@@ -20,18 +21,18 @@ namespace PolyQuest.Edit
         private SerializedProperty m_questProp;
         private SerializedProperty m_objectiveProp;
 
-        /*-------------------------------------------------------------
-        | --- OnEnable: Fetch serialized property references once --- |
-        -------------------------------------------------------------*/
+        /*---------------------------------------------------------------------
+        | --- OnEnable: Called when the object becomes enabled and active --- |
+        ---------------------------------------------------------------------*/
         private void OnEnable()
         {
             m_questProp = serializedObject.FindProperty("m_quest");
             m_objectiveProp = serializedObject.FindProperty("m_objective");
         }
 
-        /*--------------------------------------------------------------
-        | --- OnInspectorGUI: Draw the custom inspector             --- |
-        --------------------------------------------------------------*/
+        /*------------------------------------------------------------------------------
+        | --- OnInspectorGUI: Renders the custom inspector GUI in the Unity Editor --- |
+        ------------------------------------------------------------------------------*/
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
@@ -107,9 +108,9 @@ namespace PolyQuest.Edit
                 m_quests[quest.name] = quest;
         }
 
-        /*-----------------------------------------------------------------------
-        | --- LoadObjectiveDictionary: Populate objective lookup (cached)    --- |
-        -----------------------------------------------------------------------*/
+        /*--------------------------------------------------------------------------------
+        | --- LoadObjectiveDictionary: Populate the quest objective lookup (cached)  --- |
+        --------------------------------------------------------------------------------*/
         private void LoadObjectiveDictionary()
         {
             if (m_objectivesByQuest != null)

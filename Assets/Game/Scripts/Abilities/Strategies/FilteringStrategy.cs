@@ -1,3 +1,7 @@
+/*---------------------------
+File: FilteringStrategy.cs
+Author: Chandler Mays
+----------------------------*/
 using System.Collections.Generic;
 using UnityEngine;
 //---------------------------------

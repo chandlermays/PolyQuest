@@ -1,3 +1,7 @@
+/*---------------------------
+File: PlayerProgression.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 

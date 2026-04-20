@@ -1,3 +1,7 @@
+/*---------------------------
+File: FollowCamera.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Input;

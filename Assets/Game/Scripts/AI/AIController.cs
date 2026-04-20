@@ -1,3 +1,7 @@
+/*---------------------------
+File: AIController.cs
+Author: Chandler Mays
+----------------------------*/
 using System;
 using UnityEngine;
 using UnityEngine.AI;

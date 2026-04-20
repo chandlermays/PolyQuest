@@ -1,3 +1,7 @@
+/*---------------------------
+File: Experience.cs
+Author: Chandler Mays
+----------------------------*/
 using System;
 using Newtonsoft.Json.Linq;
 using UnityEngine;

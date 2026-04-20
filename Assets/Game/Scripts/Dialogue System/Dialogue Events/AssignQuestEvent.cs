@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿/*---------------------------
+File: AssignQuestEvent.cs
+Author: Chandler Mays
+----------------------------*/
+using UnityEngine;
 //---------------------------------
 using PolyQuest.Quests;
 

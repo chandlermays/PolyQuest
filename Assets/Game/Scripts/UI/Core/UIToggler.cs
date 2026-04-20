@@ -1,3 +1,7 @@
+/*---------------------------
+File: UIToggler.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 using UnityEngine.InputSystem;
 //---------------------------------

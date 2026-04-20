@@ -1,3 +1,7 @@
+/*---------------------------
+File: CinematicTrigger.cs
+Author: Chandler Mays
+----------------------------*/
 using System;
 using Unity.Cinemachine;
 using UnityEngine;

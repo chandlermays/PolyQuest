@@ -1,3 +1,7 @@
+/*---------------------------
+File: CompositePattern.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 

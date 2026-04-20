@@ -1,3 +1,7 @@
+/*---------------------------
+File: DelayedClick.cs
+Author: Chandler Mays
+----------------------------*/
 using System;
 using System.Collections;
 using System.Collections.Generic;

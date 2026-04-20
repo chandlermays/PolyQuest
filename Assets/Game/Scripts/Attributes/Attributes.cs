@@ -1,3 +1,7 @@
+/*---------------------------
+File: Attributee.cs
+Author: Chandler Mays
+----------------------------*/
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;

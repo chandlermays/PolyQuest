@@ -1,3 +1,7 @@
+/*---------------------------
+File: RoomTemplate.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 

@@ -1,3 +1,7 @@
+/*---------------------------
+File: TagFilter.cs
+Author: Chandler Mays
+----------------------------*/
 using System.Collections.Generic;
 using UnityEngine;
 //---------------------------------

@@ -1,6 +1,10 @@
-﻿using UnityEngine;
-using UnityEditor;
+﻿/*---------------------------
+File: MissingScriptReferences.cs
+Author: Chandler Mays
+----------------------------*/
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
 //---------------------------------
 
 namespace PolyQuest.Edit

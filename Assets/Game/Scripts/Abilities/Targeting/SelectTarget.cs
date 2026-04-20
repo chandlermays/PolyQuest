@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*---------------------------
+File: SelectTarget.cs
+Author: Chandler Mays
+----------------------------*/
+using System;
 using System.Collections;
 using UnityEngine;
 //---------------------------------
@@ -12,6 +16,8 @@ using PolyQuest.Input;
 // valid targets for the ability, and ignores other entities. This would require some refactoring of the PlayerController
 // to support this mode, and the SelectTarget strategy would need to communicate with the PlayerController to enable it.
 // While on the subject, it's possible that PlayerController should be divided into multiple components to make it easier.
+
+// April 20th: At the time of re-reading this comment, I believe I've already taken care of this concern. Check it and remove if so.
 
 namespace PolyQuest.Abilities
 {

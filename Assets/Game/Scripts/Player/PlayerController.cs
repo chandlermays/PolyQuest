@@ -1,3 +1,7 @@
+/*---------------------------
+File: PlayerController.cs
+Author: Chandler Mays
+----------------------------*/
 using System;
 using UnityEngine;
 using UnityEngine.AI;

@@ -1,9 +1,13 @@
+/*---------------------------
+File: ExperienceBar.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 using UnityEngine.UI;
 //---------------------------------
 using PolyQuest.Attributes;
 
-// NOTE FOR LATER: Consolidate Experience and Health bar to be a single, parameteried class, or extract repeated functionality to parent class
+// April 20th: Consolidate Experience and Health bar to be a single, parameteried class, or extract repeated functionality to parent class
 
 namespace PolyQuest.UI.HUD
 {

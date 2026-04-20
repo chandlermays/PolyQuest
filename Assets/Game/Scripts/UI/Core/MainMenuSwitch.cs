@@ -1,3 +1,7 @@
+/*---------------------------
+File: MainMenuSwitch.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 

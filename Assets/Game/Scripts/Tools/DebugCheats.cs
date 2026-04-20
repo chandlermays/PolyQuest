@@ -1,3 +1,7 @@
+/*---------------------------
+File: DebugCheats.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Attributes;

@@ -18,8 +18,8 @@ MonoBehaviour:
   - 0acf4efb-e838-4ba0-afd9-b00bfd5abbad
   m_rect:
     serializedVersion: 2
-    x: 350
-    y: 400
+    x: 300
+    y: 350
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -45,8 +45,8 @@ MonoBehaviour:
   - 95ed74fc-e860-4baf-9a27-d6de2e88fdf3
   m_rect:
     serializedVersion: 2
-    x: 100
-    y: 100
+    x: 50
+    y: 50
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -82,8 +82,8 @@ MonoBehaviour:
   m_children: []
   m_rect:
     serializedVersion: 2
-    x: 850
-    y: 100
+    x: 800
+    y: 50
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -110,8 +110,8 @@ MonoBehaviour:
   - bf0b5697-f2dd-4e60-91cd-1482143e8d59
   m_rect:
     serializedVersion: 2
-    x: 350
-    y: 100
+    x: 300
+    y: 50
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -136,8 +136,8 @@ MonoBehaviour:
   m_children: []
   m_rect:
     serializedVersion: 2
-    x: 100
-    y: 550
+    x: 50
+    y: 500
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -168,8 +168,8 @@ MonoBehaviour:
   - 645edb57-10b7-47a9-acf1-350805959048
   m_rect:
     serializedVersion: 2
-    x: 600
-    y: 100
+    x: 550
+    y: 50
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -194,8 +194,8 @@ MonoBehaviour:
   - fae8e859-2788-484e-8183-6f0257734906
   m_rect:
     serializedVersion: 2
-    x: 100
-    y: 400
+    x: 50
+    y: 350
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -224,7 +224,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a5c8d063cb8c3f4796d574b90d0cf64, type: 3}
-  m_Name: A Family Heirloom
+  m_Name: Cole the Guard
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.Dialogue
   m_nodes:
   - {fileID: -6549729149093602990}
@@ -255,8 +255,8 @@ MonoBehaviour:
   m_children: []
   m_rect:
     serializedVersion: 2
-    x: 100
-    y: 250
+    x: 50
+    y: 200
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -293,8 +293,8 @@ MonoBehaviour:
   m_children: []
   m_rect:
     serializedVersion: 2
-    x: 850
-    y: 400
+    x: 800
+    y: 350
     width: 200
     height: 100
   m_onEnterEvents: []
@@ -321,8 +321,8 @@ MonoBehaviour:
   - 39551d6b-bc4b-4a0d-baad-723c7d52f248
   m_rect:
     serializedVersion: 2
-    x: 600
-    y: 400
+    x: 550
+    y: 350
     width: 200
     height: 100
   m_onEnterEvents: []

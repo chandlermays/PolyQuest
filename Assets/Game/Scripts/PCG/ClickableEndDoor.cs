@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿/*---------------------------
+File: ClickableEndDoor.cs
+Author: Chandler Mays
+----------------------------*/
+using UnityEngine;
 //---------------------------------
 using PolyQuest.Core;
 using PolyQuest.Input;

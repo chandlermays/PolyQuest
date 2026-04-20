@@ -1,3 +1,7 @@
+/*---------------------------
+File: RoomDecorator.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 

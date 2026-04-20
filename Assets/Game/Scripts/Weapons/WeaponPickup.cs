@@ -1,3 +1,7 @@
+/*---------------------------
+File: WeaponPickup.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Components;

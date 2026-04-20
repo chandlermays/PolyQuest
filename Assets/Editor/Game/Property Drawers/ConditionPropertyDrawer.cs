@@ -1,23 +1,18 @@
+/*---------------------------
+File: ConditionPropertyDrawer.cs
+Author: Chandler Mays
+----------------------------*/
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Inventories;
-using PolyQuest.Tools;
 using PolyQuest.Quests;
+using PolyQuest.Tools;
 
 namespace PolyQuest.Edit
 {
-    /* ---------------------------------------------------------------------------------------------
-     * Role: Custom property drawer for Condition.Predicate that renders context-sensitive         *
-     *       dropdowns for quest, objective, and item parameters.                                  *
-     *                                                                                             *
-     * Changes vs original:                                                                        *
-     *      - Item predicates (kHasItem, kHasItems, kHasItemEquipped) show a two-step selection:   *
-     *        first a Quest filter popup, then an item list narrowed to QuestItems belonging to    *
-     *        that quest — mirroring how objectives are already filtered by quest.                 *
-     * ------------------------------------------------------------------------------------------- */
     [CustomPropertyDrawer(typeof(Condition.Predicate))]
     public class ConditionPropertyDrawer : PropertyDrawer
     {
@@ -28,6 +23,9 @@ namespace PolyQuest.Edit
         // Persists the selected quest filter per-property across repaints (editor session only)
         private readonly Dictionary<string, string> m_itemQuestFilter = new();
 
+        /*-------------------------------------------------------------
+        | --- OnGUI: Called for rendering and handling GUI events --- |
+        -------------------------------------------------------------*/
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             SerializedProperty predicate = property.FindPropertyRelative("m_predicate");
@@ -99,6 +97,9 @@ namespace PolyQuest.Edit
             EditorGUI.PropertyField(position, negate);
         }
 
+        /*------------------------------------------------------------------------
+        | --- GetProperyHeight: Returns the height of the property in pixels --- |
+        ------------------------------------------------------------------------*/
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             SerializedProperty predicate = property.FindPropertyRelative("m_predicate");
@@ -134,10 +135,9 @@ namespace PolyQuest.Edit
             return propertyHeight * 2;
         }
 
-        // =====================================================================
-        //  Quest helpers
-        // =====================================================================
-
+        /*-------------------------------------------------------------------------------------------------------
+        | --- LoadQuestDictionary: Caches all Quests in a name-to-asset dictionary for quick lookup by name --- |
+        -------------------------------------------------------------------------------------------------------*/
         private void LoadQuestDictionary()
         {
             if (m_quests != null)
@@ -148,6 +148,9 @@ namespace PolyQuest.Edit
                 m_quests[quest.name] = quest;
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------
+        | --- LoadObjectiveDictionary: Caches all QuestObjectives in a nested dictionary for quick lookup by quest and objective name --- |
+        ---------------------------------------------------------------------------------------------------------------------------------*/
         private void LoadObjectiveDictionary()
         {
             if (m_objectives != null)
@@ -164,6 +167,9 @@ namespace PolyQuest.Edit
             }
         }
 
+        /*---------------------------------------------------------------------
+        | --- DrawQuest: Renders a dropdown for selecting a Quest by name --- |
+        ---------------------------------------------------------------------*/
         private void DrawQuest(Rect position, SerializedProperty element)
         {
             LoadQuestDictionary();
@@ -178,6 +184,9 @@ namespace PolyQuest.Edit
             EditorGUI.EndProperty();
         }
 
+        /*--------------------------------------------------------------------------------------------------
+        | --- DrawObjective: Renders a dropdown of objectives filtered to the currently selected Quest --- |
+        --------------------------------------------------------------------------------------------------*/
         private void DrawObjective(Rect position, SerializedProperty element, SerializedProperty selectedQuest)
         {
             LoadObjectiveDictionary();
@@ -200,10 +209,9 @@ namespace PolyQuest.Edit
             EditorGUI.EndProperty();
         }
 
-        // =====================================================================
-        //  Item helpers
-        // =====================================================================
-
+        /*-----------------------------------------------------------------------------------------------------------
+        | --- LoadItemDictionary: Caches all InventoryItems in an ID-to-asset dictionary for quick lookup by ID --- |
+        -----------------------------------------------------------------------------------------------------------*/
         private void LoadItemDictionary()
         {
             if (m_items != null)
@@ -214,10 +222,9 @@ namespace PolyQuest.Edit
                 m_items[item.ID] = item;
         }
 
-        /// <summary>
-        /// Draws a "(Any)" / quest-name popup. Returns the selected quest name, or null for "(Any)".
-        /// The selection is stored per property path so each predicate has its own independent filter.
-        /// </summary>
+        /*--------------------------------------------------------------------------------------------------------
+        | --- DrawQuestFilter: Renders an optional Quest filter dropdown and returns the selected Quest name --- |
+        --------------------------------------------------------------------------------------------------------*/
         private string DrawQuestFilter(Rect position, string filterKey)
         {
             LoadQuestDictionary();
@@ -240,29 +247,20 @@ namespace PolyQuest.Edit
             return m_itemQuestFilter[filterKey];
         }
 
-        /// <summary>
-        /// Draws the item popup. When questFilter is non-null, only QuestItems whose
-        /// Quest reference matches the filter are shown. Non-QuestItems are always shown
-        /// when questFilter is null, but hidden when a quest is selected (they have no
-        /// quest affiliation to match against).
-        /// </summary>
-        private void DrawInventoryItemList(Rect position, SerializedProperty element,
-                                           bool stackable = false,
-                                           bool equipment = false,
-                                           string questFilter = null)
+        /*------------------------------------------------------------------------------------------------------
+        | --- DrawInventoryItemList: Renders a dropdown of InventoryItems filtered by type and Quest scope --- |
+        ------------------------------------------------------------------------------------------------------*/
+        private void DrawInventoryItemList(Rect position, SerializedProperty element, bool stackable = false, bool equipment = false, string questFilter = null)
         {
             LoadItemDictionary();
 
             IEnumerable<string> itemIDs = m_items.Keys;
 
-            // --- Apply quest filter via QuestItem.Quest ---
             if (questFilter != null && m_quests.TryGetValue(questFilter, out Quest filterQuest))
             {
-                itemIDs = itemIDs.Where(id =>
-                    m_items[id] is QuestItem qi && qi.Quest == filterQuest);
+                itemIDs = itemIDs.Where(id => m_items[id] is QuestItem qi && qi.Quest == filterQuest);
             }
 
-            // --- Apply existing stackable / equipment flags ---
             if (stackable)
                 itemIDs = itemIDs.Where(id => m_items[id].IsStackable);
 
@@ -292,13 +290,10 @@ namespace PolyQuest.Edit
             EditorGUI.EndProperty();
         }
 
-        // =====================================================================
-        //  Shared helpers
-        // =====================================================================
-
-        private static void DrawIntSlider(Rect position, string caption,
-                                          SerializedProperty intParam,
-                                          int minLevel = 1, int maxLevel = 100)
+        /*-------------------------------------------------------------------------
+        | --- DrawIntSlider: Renders an integer slider for numeric parameters --- |
+        -------------------------------------------------------------------------*/
+        private static void DrawIntSlider(Rect position, string caption, SerializedProperty intParam, int minLevel = 1, int maxLevel = 100)
         {
             EditorGUI.BeginProperty(position, new GUIContent(caption), intParam);
 

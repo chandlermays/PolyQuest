@@ -1,3 +1,7 @@
+/*---------------------------
+File: EquipableItem.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Tools;

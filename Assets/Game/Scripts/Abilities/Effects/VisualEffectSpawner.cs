@@ -1,3 +1,7 @@
+/*---------------------------
+File: VisualEffectSpawner.cs
+Author: Chandler Mays
+----------------------------*/
 using System;
 using System.Collections;
 using UnityEngine;

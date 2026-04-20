@@ -1,5 +1,9 @@
-using UnityEngine;
+/*---------------------------
+File: RenameChildren.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEditor;
+using UnityEngine;
 //---------------------------------
 
 namespace PolyQuest.Edit

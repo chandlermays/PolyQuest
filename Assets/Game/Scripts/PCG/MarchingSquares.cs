@@ -1,3 +1,7 @@
+/*---------------------------
+File: MarchingSquares.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 

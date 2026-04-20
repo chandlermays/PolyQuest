@@ -1,3 +1,7 @@
+/*---------------------------
+File: AIStateMachine.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 

@@ -1,3 +1,7 @@
+/*---------------------------
+File: PreservedObjectSpawner.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 

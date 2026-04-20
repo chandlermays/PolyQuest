@@ -1,3 +1,7 @@
+/*---------------------------
+File: IAction.cs
+Author: Chandler Mays
+----------------------------*/
 namespace PolyQuest.Core
 {
     public interface IAction
@@ -12,3 +16,6 @@ namespace PolyQuest.Core
         //.. anything else?
     }
 }
+
+
+// April 20th: Return to this concern for using Execute() or just leaving it out.

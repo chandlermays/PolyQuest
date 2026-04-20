@@ -1,3 +1,7 @@
+/*---------------------------
+File: ManaEffect.cs
+Author: Chandler Mays
+----------------------------*/
 using System;
 using UnityEngine;
 //---------------------------------
@@ -19,7 +23,7 @@ namespace PolyQuest.Abilities
             {
                 if (target.TryGetComponent<ManaComponent>(out var mana))
                 {
-
+                    mana.ReplenishMana(m_manaAmount);
                 }
             }
 

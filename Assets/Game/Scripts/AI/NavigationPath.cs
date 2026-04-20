@@ -1,3 +1,7 @@
+/*---------------------------
+File: NavigationPath.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 

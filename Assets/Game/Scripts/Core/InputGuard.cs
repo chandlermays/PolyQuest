@@ -1,3 +1,7 @@
+/*---------------------------
+File: InputGuard.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 
 namespace PolyQuest.Core

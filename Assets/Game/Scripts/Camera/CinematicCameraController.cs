@@ -1,3 +1,7 @@
+/*---------------------------
+File: CineaticCameraController.cs
+Author: Chandler Mays
+----------------------------*/
 using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;

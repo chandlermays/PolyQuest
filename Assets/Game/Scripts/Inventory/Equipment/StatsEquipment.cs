@@ -1,3 +1,7 @@
+/*---------------------------
+File: StatsEquipment.cs
+Author: Chandler Mays
+----------------------------*/
 using System.Collections.Generic;
 //---------------------------------
 using PolyQuest.Attributes;

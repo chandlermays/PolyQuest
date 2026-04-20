@@ -1,3 +1,7 @@
+/*---------------------------
+File: SceneField.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 

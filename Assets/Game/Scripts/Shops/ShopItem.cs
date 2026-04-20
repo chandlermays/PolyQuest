@@ -1,3 +1,7 @@
+/*---------------------------
+File: ShopItem.cs
+Author: Chandler Mays
+----------------------------*/
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Inventories;

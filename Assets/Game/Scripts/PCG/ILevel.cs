@@ -1,3 +1,7 @@
+/*---------------------------
+File: ILevel.cs
+Author: Chandler Mays
+----------------------------*/
 namespace PolyQuest.PCG
 {
     public interface ILevel

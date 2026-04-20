@@ -1,3 +1,7 @@
+/*---------------------------
+File: WalletUI.cs
+Author: Chandler Mays
+----------------------------*/
 using TMPro;
 using UnityEngine;
 //---------------------------------

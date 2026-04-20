@@ -1,3 +1,7 @@
+/*---------------------------
+File: DialogueNode.cs
+Author: Chandler Mays
+----------------------------*/
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -20,7 +24,7 @@ namespace PolyQuest.Dialogues
     public class DialogueNode : ScriptableObject
     {
         [SerializeField] private bool m_isPlayerSpeaking = false;
-        [SerializeField] private string m_text;
+        [SerializeField, TextArea(3, 5)] private string m_text;
         [SerializeField] private List<string> m_children = new();
         [SerializeField] private Rect m_rect = new(0, 0, 200, 100);
         [SerializeField] private List<DialogueEvent> m_onEnterEvents = new();
