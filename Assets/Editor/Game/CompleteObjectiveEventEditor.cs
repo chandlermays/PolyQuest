@@ -1,11 +1,11 @@
-using UnityEditor;
+﻿using UnityEditor;
 //---------------------------------
-using PolyQuest.Quests;
+using PolyQuest.Dialogues;
 
 namespace PolyQuest.Edit
 {
-    [CustomEditor(typeof(ObjectiveCompletion))]
-    public class ObjectiveCompletionEditor : Editor
+    [CustomEditor(typeof(CompleteObjectiveEvent))]
+    public class CompleteObjectiveEventEditor : Editor
     {
         private QuestObjectivePropertyDrawer m_selector;
 
@@ -20,7 +20,6 @@ namespace PolyQuest.Edit
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_questManager"));
             m_selector.OnInspectorGUI();
             serializedObject.ApplyModifiedProperties();
         }
