@@ -13,7 +13,7 @@ namespace PolyQuest.Abilities
     public class VisualEffectSpawner : EffectStrategy
     {
         [SerializeField] private GameObject m_spawnedPrefab;
-        [SerializeField] private float m_duration = -1;
+        [SerializeField] private float m_duration = 3f;
 
         /*------------------------------------------------------------------- 
         | --- StartEffect: Spawns the visual effect at the target point --- |

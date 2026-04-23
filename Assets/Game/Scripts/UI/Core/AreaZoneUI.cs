@@ -63,7 +63,9 @@ namespace PolyQuest.UI.Core
             m_zoneStack.Push(areaName);
 
             if (!m_isDialogueActive)
+            {
                 ShowZone(areaName);
+            }
         }
 
         /*-----------------------------------------------------------------------------------
@@ -72,15 +74,19 @@ namespace PolyQuest.UI.Core
         private void HandleAreaExited(string areaName)
         {
             if (m_zoneStack.Count > 0 && m_zoneStack.Peek() == areaName)
+            {
                 m_zoneStack.Pop();
+            }
 
             if (!m_isDialogueActive && m_zoneStack.Count > 0)
+            {
                 ShowZone(m_zoneStack.Peek());
+            }
         }
 
-        /*----------------------------------------------------------------------------------
+        /*-----------------------------------------------------------------------------------
         | --- HandleDialogueStarted: Cancel any active display and suppress future ones --- |
-        ----------------------------------------------------------------------------------*/
+        -----------------------------------------------------------------------------------*/
         private void HandleDialogueStarted()
         {
             m_isDialogueActive = true;
@@ -110,7 +116,9 @@ namespace PolyQuest.UI.Core
             m_areaNameText.text = areaName;
 
             if (m_displayCoroutine != null)
+            {
                 StopCoroutine(m_displayCoroutine);
+            }
 
             m_displayCoroutine = StartCoroutine(DisplayRoutine());
         }
