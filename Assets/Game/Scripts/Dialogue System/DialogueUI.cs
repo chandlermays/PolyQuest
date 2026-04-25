@@ -26,7 +26,7 @@ namespace PolyQuest.Dialogues
         [SerializeField] private PlayerDialogueHandler m_playerDialogueHandler;
         [SerializeField] private TextMeshProUGUI m_dialogueSpeaker;
         [SerializeField] private TextMeshProUGUI m_dialogueText;
-        [SerializeField] private Transform m_choiceRoot; // (better name?)
+        [SerializeField] private Transform m_choiceRoot;
         [SerializeField] private GameObject m_choicePrefab;
         [SerializeField] private Button m_nextButton;
         [SerializeField] private Button m_endButton;
@@ -82,39 +82,68 @@ namespace PolyQuest.Dialogues
         -----------------------------------------------------------------*/
         private void UpdateUI()
         {
-            // NOTE: In a dialogue, it moves node to node, and they're either player or NPC nodes. This is configured by a boolean checkbox via DialogueNode.cs
-            // As it currently stands, a dialogue asset only has nodes where it's the NPC speaking -- I did not mark any nodes as the player speaking.
-            // I know want to incorporate choices for the player, which means we'll need to be creating nodes and marking them as 'player' nodes.
-            // A representation of the dialogue UI I want to have is as follows:
-            // [NPC Name]
-            // [Dialogue Text]
-            //
-            // [Choice 1]
-            // [Choice 2]
-            // ...
-
-            // I want the choices to appear as buttons below the dialogue text and I want the player to be able to click on them to select their response.
-            // While the choices are visible, I want to ensure that the text of the dialogue is still visible of what the NPC had just said.
-
             if (!m_playerDialogueHandler.IsActive())
+            {
+                gameObject.SetActive(false);
                 return;
+            }
 
+            gameObject.SetActive(true);
+
+            // Always show the NPC's name and current dialogue text
             m_dialogueSpeaker.text = m_playerDialogueHandler.GetName();
             m_dialogueText.text = m_playerDialogueHandler.GetText();
-            m_nextButton.gameObject.SetActive(m_playerDialogueHandler.HasNextDialogueNode());
-            m_endButton.gameObject.SetActive(!m_playerDialogueHandler.HasNextDialogueNode());
 
+            // Clear existing choice buttons
             foreach (Transform choice in m_choiceRoot)
             {
                 Destroy(choice.gameObject);
             }
 
-            //        foreach (string choiceText in get the player choices from playerdialoguehandler)
-            //        {
-            //            GameObject choiceInstance = Instantiate(m_choicePrefab, m_choiceRoot);
-            //            var textComp = choiceInstance.GetComponentInChildren<TextMeshProUGUI>().text = choiceText;
-            //            textComp.text = choiceText;
-            //        }
+            // Check if player needs to make a choice
+            bool isPlayerChoosing = m_playerDialogueHandler.IsPlayerChoosing();
+
+            if (isPlayerChoosing)
+            {
+                // Hide Next/End buttons when showing player choices
+                m_nextButton.gameObject.SetActive(false);
+                m_endButton.gameObject.SetActive(false);
+
+                // Create choice buttons for each valid player option
+                foreach (DialogueNode choice in m_playerDialogueHandler.GetChoices())
+                {
+                    GameObject choiceInstance = Instantiate(m_choicePrefab, m_choiceRoot);
+                    TextMeshProUGUI textComp = choiceInstance.GetComponentInChildren<TextMeshProUGUI>();
+
+                    if (textComp != null)
+                    {
+                        textComp.text = choice.Text;
+                    }
+
+                    Button choiceButton = choiceInstance.GetComponent<Button>();
+                    if (choiceButton != null)
+                    {
+                        // Capture the choice node in a local variable for the lambda
+                        DialogueNode selectedChoice = choice;
+                        choiceButton.onClick.AddListener(() => OnChoiceSelected(selectedChoice));
+                    }
+                }
+            }
+            else
+            {
+                // Normal NPC dialogue flow - show Next or End button
+                bool hasNext = m_playerDialogueHandler.HasNextDialogueNode();
+                m_nextButton.gameObject.SetActive(hasNext);
+                m_endButton.gameObject.SetActive(!hasNext);
+            }
+        }
+
+        /*-----------------------------------------------------------------------------
+        | --- OnChoiceSelected: Handles when the player selects a dialogue choice --- |
+        -----------------------------------------------------------------------------*/
+        private void OnChoiceSelected(DialogueNode chosenNode)
+        {
+            m_playerDialogueHandler.SelectChoice(chosenNode);
         }
     }
 }

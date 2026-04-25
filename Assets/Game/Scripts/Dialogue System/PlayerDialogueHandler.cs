@@ -44,8 +44,6 @@ namespace PolyQuest.Dialogues
         private void TriggerEnterAction() => FireEvents(m_currentNode.OnEnterEvents);
         private void TriggerExitAction() => FireEvents(m_currentNode.OnExitEvents);
 
-        // Design: Do we need a state to determine when the player is choosing a dialogue option?
-
         /*---------------------------------------------------------------- 
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
@@ -145,7 +143,38 @@ namespace PolyQuest.Dialogues
             return "";
         }
 
-        // NOTE: public IEnumerable<string> GetChoices/GetResponses() (better name suggestions?) I suppose we'll need a method to get the options to choose from
+        /*---------------------------------------------------------------------------------------
+        | --- GetChoices: Returns a list of valid child nodes for the current Dialogue Node --- |
+        ---------------------------------------------------------------------------------------*/
+        public IEnumerable<DialogueNode> GetChoices()
+        {
+            return GetValidChildren();
+        }
+
+        /*-------------------------------------------------------------------------------------------------------
+        | --- IsPlayerChoosing: Returns whether the player is currently choosing a response in the Dialogue --- |
+        -------------------------------------------------------------------------------------------------------*/
+        public bool IsPlayerChoosing()
+        {
+            DialogueNode[] validChildren = GetValidChildren().ToArray();
+            return validChildren.Length > 0 && validChildren[0].IsPlayerSpeaking;
+        }
+
+        /*-------------------------------------------------------------------------------
+        | --- SelectChoice: Moves to the selected Dialogue Node and triggers events --- |
+        -------------------------------------------------------------------------------*/
+        public void SelectChoice(DialogueNode selectedNode)
+        {
+            TriggerExitAction();
+            m_currentNode = selectedNode;
+            TriggerEnterAction();
+            OnDialogueUpdated?.Invoke();
+
+            if (m_currentNode.IsPlayerSpeaking && HasNextDialogueNode())
+            {
+                NextDialogueNode();
+            }
+        }
 
         /*----------------------------------------------------------------------- 
         | --- NextDialogueNode: Moves to the next Dialogue Node in the tree --- |
@@ -156,6 +185,13 @@ namespace PolyQuest.Dialogues
             if (validChildren.Count == 0)
             {
                 EndDialogue();
+                return;
+            }
+
+            // if there are player choices, don't auto-advance to the next node
+            if (validChildren[0].IsPlayerSpeaking)
+            {
+                OnDialogueUpdated?.Invoke();
                 return;
             }
 

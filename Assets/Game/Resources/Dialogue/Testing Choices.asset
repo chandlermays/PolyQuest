@@ -1,0 +1,163 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-1442349750787532169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 5b227e4d-e7a3-4f0a-b31a-043707a9e55a
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_isPlayerSpeaking: 1
+  m_text: Not my problem.
+  m_children: []
+  m_rect:
+    serializedVersion: 2
+    x: 353
+    y: 351
+    width: 200
+    height: 100
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5c8d063cb8c3f4796d574b90d0cf64, type: 3}
+  m_Name: Testing Choices
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.Dialogue
+  m_nodes:
+  - {fileID: 7067669531882127940}
+  - {fileID: 2361729818489919797}
+  - {fileID: 763681591146074676}
+  - {fileID: 1595418700588663760}
+  - {fileID: -1442349750787532169}
+  m_newNodeOffset: {x: 300, y: 0}
+--- !u!114 &763681591146074676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 2a6a3335-8b97-407c-a62e-4a5ae13abb7a
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_isPlayerSpeaking: 1
+  m_text: Do you need help?
+  m_children: []
+  m_rect:
+    serializedVersion: 2
+    x: 350
+    y: 150
+    width: 200
+    height: 100
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &1595418700588663760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 07b6e8b5-8b04-4127-b1dd-66726c1d8f86
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_isPlayerSpeaking: 1
+  m_text: Tell me about Stonewick.
+  m_children: []
+  m_rect:
+    serializedVersion: 2
+    x: 350
+    y: 250
+    width: 200
+    height: 100
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &2361729818489919797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: bc6a735b-e6bf-401c-bb83-af9861dfdf90
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_isPlayerSpeaking: 1
+  m_text: What kind of trouble?
+  m_children: []
+  m_rect:
+    serializedVersion: 2
+    x: 350
+    y: 50
+    width: 200
+    height: 100
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &7067669531882127940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 3fc3e3e6-77f7-44e6-aac5-999a32d35645
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_isPlayerSpeaking: 0
+  m_text: Welcome to Stonewick. You look like you can handle yourself. We've got
+    trouble east of town.
+  m_children:
+  - bc6a735b-e6bf-401c-bb83-af9861dfdf90
+  - 2a6a3335-8b97-407c-a62e-4a5ae13abb7a
+  - 07b6e8b5-8b04-4127-b1dd-66726c1d8f86
+  - 5b227e4d-e7a3-4f0a-b31a-043707a9e55a
+  m_rect:
+    serializedVersion: 2
+    x: 50
+    y: 200
+    width: 200
+    height: 100
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND:
+    - m_OR:
+      - m_predicate: 2
+        m_parameters:
+        - Clear the Bandit Camp
+        - 
+        m_negate: 0
+    - m_OR:
+      - m_predicate: 4
+        m_parameters:
+        - Clear the Bandit Camp
+        - 
+        m_negate: 1
