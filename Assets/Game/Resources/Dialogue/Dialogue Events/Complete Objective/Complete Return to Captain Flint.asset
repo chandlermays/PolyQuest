@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba6624422d62d5846b2fa648e26c2ce9, type: 3}
-  m_Name: Clear the Bandit Camp
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.AssignQuestEvent
+  m_Script: {fileID: 11500000, guid: 27d8f593b72b7264e9517e800805d02c, type: 3}
+  m_Name: Complete Return to Captain Flint
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.CompleteObjectiveEvent
   m_quest: {fileID: 11400000, guid: 5b14a68c783e1f548826848aff6c19e6, type: 2}
+  m_objective: {fileID: 11400000, guid: a710067ce83c60148a0ce62146fe9b2b, type: 2}

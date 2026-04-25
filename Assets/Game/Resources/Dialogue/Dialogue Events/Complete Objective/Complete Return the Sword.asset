@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba6624422d62d5846b2fa648e26c2ce9, type: 3}
-  m_Name: A Family Heirloom
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.AssignQuestEvent
+  m_Script: {fileID: 11500000, guid: 27d8f593b72b7264e9517e800805d02c, type: 3}
+  m_Name: Complete Return the Sword
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.CompleteObjectiveEvent
   m_quest: {fileID: 11400000, guid: 123e00e8fb8391c4698ee2f6a07d8fc1, type: 2}
+  m_objective: {fileID: 11400000, guid: af44e699d05cced44837ce8920edacb7, type: 2}

@@ -25,18 +25,18 @@ namespace PolyQuest.Dialogues
      * ------------------------------------------------------------------------------------------- */
     public class DialogueNode : ScriptableObject
     {
-        [SerializeField] private bool m_isPlayerSpeaking = false;
-        [SerializeField, TextArea(3, 5)] private string m_text;
-        [SerializeField] private List<string> m_children = new();
         [SerializeField] private Rect m_rect = new(0, 0, 200, 100);
+        [SerializeField, TextArea(3, 5)] private string m_text;
+        [SerializeField] private bool m_isPlayerSpeaking = false;
+        [SerializeField] private List<string> m_children = new();
         [SerializeField] private List<DialogueEvent> m_onEnterEvents = new();
         [SerializeField] private List<DialogueEvent> m_onExitEvents = new();
         [SerializeField] private Condition m_condition;
 
-        public bool IsPlayerSpeaking                            =>       m_isPlayerSpeaking;
-        public string Text                                      =>       m_text;
-        public List<string> Children                            =>       m_children;
         public Rect Rect                                        =>       m_rect;
+        public string Text                                      =>       m_text;
+        public bool IsPlayerSpeaking                            =>       m_isPlayerSpeaking;
+        public List<string> Children                            =>       m_children;
         public IReadOnlyList<DialogueEvent> OnEnterEvents       =>       m_onEnterEvents;
         public IReadOnlyList<DialogueEvent> OnExitEvents        =>       m_onExitEvents;
 

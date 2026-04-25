@@ -3,6 +3,7 @@ File: DialogueEditorWindow.cs
 Author: Chandler Mays
 ----------------------------*/
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -19,8 +20,9 @@ namespace PolyQuest.Edit
      *      - Allows creation, deletion, linking, and editing of dialogue nodes via GUI.            *
      *      - Supports dragging nodes and panning the canvas for intuitive navigation.              *
      *      - Draws connections between parent and child nodes using Bezier curves.                 *
-     *      - Integrates with Unity’s selection and asset systems for seamless workflow.            *
+     *      - Integrates with Unity's selection and asset systems for seamless workflow.            *
      *      - Applies custom styles for NPC and player nodes for visual clarity.                    *
+     *      - Supports marquee (rubber-band) selection and group dragging of nodes.                 *
      * -------------------------------------------------------------------------------------------- */
     public class DialogueEditorWindow : EditorWindow
     {
@@ -33,6 +35,16 @@ namespace PolyQuest.Edit
         [NonSerialized] private Vector2 m_draggingOffset;
         [NonSerialized] private Vector2 m_draggingCanvasOffset;
         [NonSerialized] private bool m_draggingCanvas;
+
+        // Marquee selection
+        [NonSerialized] private bool m_isSelectionDragging;
+        [NonSerialized] private Vector2 m_selectionDragStart;
+        [NonSerialized] private Rect m_selectionRect;
+
+        // Group dragging
+        [NonSerialized] private HashSet<DialogueNode> m_selectedNodes = new();
+        [NonSerialized] private Dictionary<DialogueNode, Vector2> m_groupDragOffsets = new();
+        [NonSerialized] private bool m_isDraggingGroup;
 
         private Dialogue m_selectedDialogue;
         private Vector2 m_scrollPosition;
@@ -135,6 +147,9 @@ namespace PolyQuest.Edit
 
                 EditorGUILayout.EndScrollView();
 
+                // Draw the marquee selection box on top of everything (window space)
+                DrawSelectionBox();
+
                 // Handle the creation of a node
                 if (m_createdNode != null)
                 {
@@ -159,17 +174,40 @@ namespace PolyQuest.Edit
             // Handle mouse down events
             if (Event.current.type == EventType.MouseDown)
             {
-                // Left Mouse Button -> Select Node
+                // Left Mouse Button
                 if (Event.current.button == 0)
                 {
-                    m_draggingNode = GetNodeAtCursor(Event.current.mousePosition + m_scrollPosition);
-                    if (m_draggingNode != null)
+                    DialogueNode hitNode = GetNodeAtCursor(Event.current.mousePosition + m_scrollPosition);
+
+                    if (hitNode != null)
                     {
-                        m_draggingOffset = m_draggingNode.Rect.position - Event.current.mousePosition;
-                        Selection.activeObject = m_draggingNode;
+                        if (m_selectedNodes.Contains(hitNode))
+                        {
+                            // Clicked an already-selected node → start group drag
+                            m_isDraggingGroup = true;
+                            m_groupDragOffsets.Clear();
+                            foreach (DialogueNode selectedNode in m_selectedNodes)
+                            {
+                                m_groupDragOffsets[selectedNode] = selectedNode.Rect.position - Event.current.mousePosition;
+                            }
+                        }
+                        else
+                        {
+                            // Clicked an unselected node → single-node drag (clears any prior selection)
+                            m_selectedNodes.Clear();
+                            m_draggingNode = hitNode;
+                            m_draggingOffset = m_draggingNode.Rect.position - Event.current.mousePosition;
+                            Selection.activeObject = m_draggingNode;
+                        }
                     }
                     else
                     {
+                        // Clicked empty canvas → begin marquee selection
+                        m_selectedNodes.Clear();
+                        m_draggingNode = null;
+                        m_isSelectionDragging = true;
+                        m_selectionDragStart = Event.current.mousePosition;
+                        m_selectionRect = new Rect(m_selectionDragStart, Vector2.zero);
                         Selection.activeObject = m_selectedDialogue;
                     }
                 }
@@ -183,11 +221,30 @@ namespace PolyQuest.Edit
             // Handle mouse drag events
             else if (Event.current.type == EventType.MouseDrag)
             {
-                // Left Mouse Button -> Drag Node
-                if (Event.current.button == 0 && m_draggingNode != null)
+                // Left Mouse Button → update whichever drag mode is active
+                if (Event.current.button == 0)
                 {
-                    m_draggingNode.SetPosition(Event.current.mousePosition + m_draggingOffset);
-                    GUI.changed = true;
+                    if (m_isDraggingGroup)
+                    {
+                        // Move all nodes in the selection together
+                        foreach (DialogueNode selectedNode in m_selectedNodes)
+                        {
+                            selectedNode.SetPosition(Event.current.mousePosition + m_groupDragOffsets[selectedNode]);
+                        }
+                        GUI.changed = true;
+                    }
+                    else if (m_draggingNode != null)
+                    {
+                        // Move single node
+                        m_draggingNode.SetPosition(Event.current.mousePosition + m_draggingOffset);
+                        GUI.changed = true;
+                    }
+                    else if (m_isSelectionDragging)
+                    {
+                        // Expand the marquee rectangle as the mouse moves
+                        m_selectionRect = GetRectFromPoints(m_selectionDragStart, Event.current.mousePosition);
+                        GUI.changed = true;
+                    }
                 }
                 // Middle Mouse Button -> Drag Canvas
                 else if (Event.current.button == 2 && m_draggingCanvas)
@@ -199,10 +256,43 @@ namespace PolyQuest.Edit
             // Handle mouse up events
             else if (Event.current.type == EventType.MouseUp)
             {
-                // Left Mouse Button -> Stop Dragging Node
-                if (Event.current.button == 0 && m_draggingNode != null)
+                // Left Mouse Button
+                if (Event.current.button == 0)
                 {
-                    m_draggingNode = null;
+                    if (m_isDraggingGroup)
+                    {
+                        // Stop group drag
+                        m_isDraggingGroup = false;
+                        m_groupDragOffsets.Clear();
+                    }
+                    else if (m_draggingNode != null)
+                    {
+                        // Stop single-node drag
+                        m_draggingNode = null;
+                    }
+                    else if (m_isSelectionDragging)
+                    {
+                        // Finalise marquee — collect all nodes whose rects overlap the selection box
+                        m_isSelectionDragging = false;
+                        m_selectedNodes.Clear();
+
+                        // Convert the window-space selection rect to canvas (scroll) space
+                        Rect canvasSelectionRect = new Rect(
+                            m_selectionRect.position + m_scrollPosition,
+                            m_selectionRect.size
+                        );
+
+                        foreach (DialogueNode node in m_selectedDialogue.Nodes)
+                        {
+                            if (canvasSelectionRect.Overlaps(node.Rect))
+                            {
+                                m_selectedNodes.Add(node);
+                            }
+                        }
+
+                        m_selectionRect = default;
+                        GUI.changed = true;
+                    }
                 }
                 // Middle Mouse Button -> Stop Dragging Canvas
                 else if (Event.current.button == 2 && m_draggingCanvas)
@@ -210,6 +300,27 @@ namespace PolyQuest.Edit
                     m_draggingCanvas = false;
                 }
             }
+        }
+
+        /*-----------------------------------------------------------------
+        | --- DrawSelectionBox: Renders the Marquee Rectangle Overlay --- |
+        -----------------------------------------------------------------*/
+        private void DrawSelectionBox()
+        {
+            if (!m_isSelectionDragging || m_selectionRect.size == Vector2.zero) return;
+
+            // Semi-transparent fill
+            EditorGUI.DrawRect(m_selectionRect, new Color(0.2f, 0.6f, 1f, 0.15f));
+
+            // Solid border
+            Handles.color = new Color(0.2f, 0.6f, 1f, 0.8f);
+            Vector3 tl = new Vector3(m_selectionRect.xMin, m_selectionRect.yMin);
+            Vector3 tr = new Vector3(m_selectionRect.xMax, m_selectionRect.yMin);
+            Vector3 br = new Vector3(m_selectionRect.xMax, m_selectionRect.yMax);
+            Vector3 bl = new Vector3(m_selectionRect.xMin, m_selectionRect.yMax);
+            Handles.DrawLines(new Vector3[] { tl, tr, tr, br, br, bl, bl, tl });
+
+            GUI.changed = true;
         }
 
         /*------------------------------------------------------------------------
@@ -224,8 +335,16 @@ namespace PolyQuest.Edit
                 nodeStyle = m_playerNodeStyle;
             }
 
+            // Highlight selected nodes with a yellow tint
+            if (m_selectedNodes.Contains(node))
+            {
+                GUI.color = new Color(1f, 0.92f, 0.4f);
+            }
+
             // Begin a new area for the GUI layout
             GUILayout.BeginArea(node.Rect, nodeStyle);
+
+            GUI.color = Color.white;
 
             // Draw the node's text field for the current text
             node.SetText(EditorGUILayout.TextField(node.Text));
@@ -339,6 +458,19 @@ namespace PolyQuest.Edit
             }
 
             return foundNode;
+        }
+
+        /*--------------------------------------------------------------------------
+        | --- GetRectFromPoints: Builds a valid Rect from two arbitrary points --- |
+        --------------------------------------------------------------------------*/
+        private static Rect GetRectFromPoints(Vector2 a, Vector2 b)
+        {
+            return new Rect(
+                Mathf.Min(a.x, b.x),
+                Mathf.Min(a.y, b.y),
+                Mathf.Abs(a.x - b.x),
+                Mathf.Abs(a.y - b.y)
+            );
         }
     }
 }

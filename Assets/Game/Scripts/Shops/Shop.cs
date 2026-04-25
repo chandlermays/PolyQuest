@@ -171,9 +171,9 @@ namespace PolyQuest.Shops
             return m_purchase.Count > 0;
         }
 
-        /*--------------------------------------------------------------------------------------------
-        | --- HasSufficientFunds: Checks if the shopper has enough gold for the current purchase --- |
-        --------------------------------------------------------------------------------------------*/
+        /*----------------------------------------------------------------------------------------------
+        | --- HasSufficientFunds: Checks if the shopper has enough silver for the current purchase --- |
+        ----------------------------------------------------------------------------------------------*/
         public bool HasSufficientFunds()
         {
             return m_shopperWallet.CurrentSilver >= PurchaseTotal();

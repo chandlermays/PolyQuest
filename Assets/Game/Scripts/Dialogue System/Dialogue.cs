@@ -27,7 +27,7 @@ namespace PolyQuest.Dialogues
     public class Dialogue : ScriptableObject, ISerializationCallbackReceiver
     {
         [SerializeField] private List<DialogueNode> m_nodes = new();
-        [SerializeField] private Vector2 m_newNodeOffset = new(300, 0);
+        [SerializeField] private Vector2 m_newNodeOffset = new(250, 0);
 
         private readonly Dictionary<string, DialogueNode> m_nodeDictionary = new();
 
