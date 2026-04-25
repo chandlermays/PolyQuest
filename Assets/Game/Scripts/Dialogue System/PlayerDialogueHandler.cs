@@ -44,6 +44,8 @@ namespace PolyQuest.Dialogues
         private void TriggerEnterAction() => FireEvents(m_currentNode.OnEnterEvents);
         private void TriggerExitAction() => FireEvents(m_currentNode.OnExitEvents);
 
+        // Design: Do we need a state to determine when the player is choosing a dialogue option?
+
         /*---------------------------------------------------------------- 
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
@@ -142,6 +144,8 @@ namespace PolyQuest.Dialogues
 
             return "";
         }
+
+        // NOTE: public IEnumerable<string> GetChoices/GetResponses() (better name suggestions?) I suppose we'll need a method to get the options to choose from
 
         /*----------------------------------------------------------------------- 
         | --- NextDialogueNode: Moves to the next Dialogue Node in the tree --- |
