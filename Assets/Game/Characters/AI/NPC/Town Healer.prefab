@@ -54,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1909811517450575725, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
       propertyPath: m_uniqueIdentifier
-      value: a28e9381-a58d-43a8-8aa5-e46f1afa5bf1
+      value: b3c1343e-2edc-46a7-bfe5-689da17a4e68
       objectReference: {fileID: 0}
     - target: {fileID: 6788340497021815511, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
       propertyPath: m_Name
@@ -74,14 +74,14 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6788340497021815511, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 9012180374947789173}
+      addedObject: {fileID: 7756460597915296688}
   m_SourcePrefab: {fileID: 100100000, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
 --- !u!1 &4499889169776647051 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6788340497021815511, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}
   m_PrefabInstance: {fileID: 6937750062341050716}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &9012180374947789173
+--- !u!114 &7756460597915296688
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -90,7 +90,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4499889169776647051}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 232fd84dbfafa724cbf9676e2407faa4, type: 3}
+  m_Script: {fileID: 11500000, guid: 3cdbb9811b447354d91b27b8fd07c817, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Healing.Healer
-  m_healEffect: {fileID: 11400000, guid: e790be5010832274b9327580c9174422, type: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.AIDialogueHandler
+  m_dialogueCamera: {fileID: 0}
+  m_dialogue: {fileID: 11400000, guid: 005c1c1fe48a26f49bdd45a86c97010f, type: 2}
+  m_speakerName: Town Healer

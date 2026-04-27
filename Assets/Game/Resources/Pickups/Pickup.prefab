@@ -191,6 +191,7 @@ GameObject:
   - component: {fileID: 3714728132098454972}
   - component: {fileID: 4251764870681324784}
   - component: {fileID: 1704329252419452213}
+  - component: {fileID: 7031788853091648830}
   m_Layer: 0
   m_Name: Pickup
   m_TagString: Untagged
@@ -261,8 +262,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b60b0c5edca987f4e8afeb559a125bab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_itemLabel: {fileID: 5938014926357604788}
-  m_itemLabelText: {fileID: 8640111835018152652}
 --- !u!114 &1704329252419452213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -281,6 +280,20 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!114 &7031788853091648830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5701707653884172157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b478a1314dba057448d5bbe4144bc172, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.UI.WorldLabel
+  m_labelRoot: {fileID: 5938014926357604788}
+  m_labelText: {fileID: 8640111835018152652}
 --- !u!1 &5938014926357604788
 GameObject:
   m_ObjectHideFlags: 0

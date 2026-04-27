@@ -1366,5 +1366,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.AIDialogueHandler
   m_dialogueCamera: {fileID: 3567661180966138721}
-  m_dialogue: {fileID: 11400000, guid: 723affb108ebc664489c61ee721c8344, type: 2}
+  m_dialogue: {fileID: 11400000, guid: db3fd9283e65a104cbc1acb7093f2803, type: 2}
   m_speakerName: Cole the Guard

@@ -257,7 +257,11 @@ namespace PolyQuest.Player
                 return;
 
             LastHighlightedObject?.GetComponent<IRaycastable>()?.ToggleHighlight(false);
+            LastHighlightedObject?.GetComponent<IRaycastable>()?.ToggleLabel(false);
+
             newHighlight?.GetComponent<IRaycastable>()?.ToggleHighlight(true);
+            newHighlight?.GetComponent<IRaycastable>()?.ToggleLabel(true);
+
             LastHighlightedObject = newHighlight;
         }
 

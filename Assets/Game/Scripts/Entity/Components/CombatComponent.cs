@@ -11,6 +11,7 @@ using PolyQuest.Input;
 using PolyQuest.Inventories;
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
+using PolyQuest.UI;
 
 namespace PolyQuest.Components
 {
@@ -59,6 +60,7 @@ namespace PolyQuest.Components
         public LayerMask TargetLayers => m_targetLayers;
 
         private Outline m_outline;
+        private WorldLabel m_worldLabel;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -86,6 +88,7 @@ namespace PolyQuest.Components
             m_equipment = GetComponent<Equipment>();
 
             m_outline = GetComponent<Outline>();
+            m_worldLabel = GetComponent<WorldLabel>();
         }
 
         /*---------------------------------------------------------------------
@@ -307,6 +310,22 @@ namespace PolyQuest.Components
             return true;
         }
 
+        /*------------------------------------------------------------------------------------------
+        | --- ToggleHighlight: Enables or disables the highlight and item label for the entity --- |
+        ------------------------------------------------------------------------------------------*/
+        public void ToggleHighlight(bool highlight)
+        {
+            m_outline.enabled = highlight;
+        }
+
+        /*--------------------------------------------------------------------------------
+        | --- ToggleLabel: Controls the visibility of the world label for the entity --- |
+        --------------------------------------------------------------------------------*/
+        public void ToggleLabel(bool visible)
+        {
+            m_worldLabel.Toggle(visible);
+        }
+
         /*------------------------------------------------------------------------------
         | --- UpdateWeapon: Update the Equipped Weapon based on the Equipment Slot --- |
         ------------------------------------------------------------------------------*/
@@ -388,11 +407,6 @@ namespace PolyQuest.Components
         private void Shoot()
         {
             PerformAttack();
-        }
-
-        public void ToggleHighlight(bool highlight)
-        {
-            m_outline.enabled = highlight;
         }
     }
 }

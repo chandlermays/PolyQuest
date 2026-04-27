@@ -10,6 +10,7 @@ using PolyQuest.Input;
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
 using PolyQuest.Inventories;
+using PolyQuest.UI;
 
 namespace PolyQuest.Pickups
 {
@@ -24,11 +25,9 @@ namespace PolyQuest.Pickups
     [RequireComponent(typeof(Pickup))]
     public class ClickablePickup : MonoBehaviour, IRaycastable
     {
-        [SerializeField] private GameObject m_itemLabel;
-        [SerializeField] private TextMeshProUGUI m_itemLabelText;
-
         private Pickup m_pickup;
         private Outline m_outline;
+        private WorldLabel m_worldLabel;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -40,6 +39,9 @@ namespace PolyQuest.Pickups
 
             m_outline = GetComponent<Outline>();
             Utilities.CheckForNull(m_outline, nameof(m_outline));
+
+            m_worldLabel = GetComponent<WorldLabel>();
+            Utilities.CheckForNull(m_worldLabel, nameof(m_worldLabel));
         }
 
         /*--------------------------------------------------------------------------------
@@ -47,8 +49,7 @@ namespace PolyQuest.Pickups
         --------------------------------------------------------------------------------*/
         public void Initialize(InventoryItem item)
         {
-            m_itemLabelText.text = item.Name;
-            m_itemLabel.SetActive(false);
+            m_worldLabel.SetLabel(item.Name);
         }
 
         /*-------------------------------------------------------------
@@ -77,7 +78,14 @@ namespace PolyQuest.Pickups
         public void ToggleHighlight(bool highlight)
         {
             m_outline.enabled = highlight;
-            m_itemLabel.SetActive(highlight);
+        }
+
+        /*--------------------------------------------------------------------------------
+        | --- ToggleLabel: Controls the visibility of the world label for the pickup --- |
+        --------------------------------------------------------------------------------*/
+        public void ToggleLabel(bool visible)
+        {
+            m_worldLabel.Toggle(visible);
         }
     }
 }

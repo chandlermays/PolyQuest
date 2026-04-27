@@ -8,6 +8,7 @@ using PolyQuest.Core;
 using PolyQuest.Input;
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
+using PolyQuest.UI;
 
 namespace PolyQuest.SceneManagement
 {
@@ -25,6 +26,7 @@ namespace PolyQuest.SceneManagement
         private Stairs m_stairs;
 
         private Outline m_outline;
+        private WorldLabel m_worldLabel;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -58,9 +60,20 @@ namespace PolyQuest.SceneManagement
             return true;
         }
 
+        /*------------------------------------------------------------------------------------------
+        | --- ToggleHighlight: Enables or disables the highlight and item label for the stairs --- |
+        ------------------------------------------------------------------------------------------*/
         public void ToggleHighlight(bool highlight)
         {
             m_outline.enabled = highlight;
+        }
+
+        /*--------------------------------------------------------------------------------
+        | --- ToggleLabel: Controls the visibility of the world label for the stairs --- |
+        --------------------------------------------------------------------------------*/
+        public void ToggleLabel(bool visible)
+        {
+            m_worldLabel.Toggle(visible);
         }
     }
 }

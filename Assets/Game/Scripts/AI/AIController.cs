@@ -164,17 +164,17 @@ namespace PolyQuest.AI
             UpdateTimers();
         }
 
-        /*----------------------------------------------------------------------
+        /*-----------------------------------------------------------------------
         | --- Aggrevate: Alert this agent — resets the aggro cooldown timer --- |
-        ----------------------------------------------------------------------*/
+        -----------------------------------------------------------------------*/
         public void Aggrevate()
         {
             Aggrevate(null);
         }
 
-        /*----------------------------------------------------------------------------------
+        /*-----------------------------------------------------------------------------------
         | --- Aggrevate: Alert this agent and optionally force the instigator as target --- |
-        ----------------------------------------------------------------------------------*/
+        -----------------------------------------------------------------------------------*/
         public void Aggrevate(GameObject instigator)
         {
             TimeSinceAggrevated = 0f;
@@ -186,9 +186,9 @@ namespace PolyQuest.AI
             }
         }
 
-        /*-------------------------------------------------------------------
+        /*-----------------------------------------------------------------
         | --- Reset: Warp back to guard position and clear all timers --- |
-        -------------------------------------------------------------------*/
+        -----------------------------------------------------------------*/
         public void Reset()
         {
             GetComponent<NavMeshAgent>().Warp(GuardPosition);
@@ -199,9 +199,9 @@ namespace PolyQuest.AI
             StateMachine.SetState(new PatrolState());
         }
 
-        /*----------------------------------------------------
-        | --- IsAggrevated: True when the agent is alerted --- |
-        ----------------------------------------------------*/
+        /*----------------------------------------------------------------------------
+        | --- IsAggrevated: Returns true if the target is within detection range --- |
+        ----------------------------------------------------------------------------*/
         public bool IsAggrevated()
         {
             if (!IsValidTarget(Target))
@@ -211,21 +211,20 @@ namespace PolyQuest.AI
             return distanceToTarget <= m_detectionRange || TimeSinceAggrevated < m_agroCooldownTime;
         }
 
-        /*------------------------------------------------------------------
+        /*----------------------------------------------------------------
         | --- RefreshTarget: Keep or acquire the best hostile target --- |
-        ------------------------------------------------------------------*/
+        ----------------------------------------------------------------*/
         private void RefreshTarget()
         {
-            // Keep current target if it's still valid and we're still aggro'd
             if (IsValidTarget(Target) && IsAggrevated())
                 return;
 
             Target = FindBestTarget();
         }
 
-        /*---------------------------------------------------------------------
+        /*--------------------------------------------------------------------
         | --- FindBestTarget: Returns the nearest valid hostile in range --- |
-        ---------------------------------------------------------------------*/
+        --------------------------------------------------------------------*/
         private GameObject FindBestTarget()
         {
             GameObject bestTarget = null;
@@ -251,9 +250,9 @@ namespace PolyQuest.AI
             return bestTarget;
         }
 
-        /*-------------------------------------------------------------------
+        /*-----------------------------------------------------------------
         | --- IsValidTarget: Checks if a GameObject is a live hostile --- |
-        -------------------------------------------------------------------*/
+        -----------------------------------------------------------------*/
         private bool IsValidTarget(GameObject candidate)
         {
             if (candidate == null || candidate == gameObject)
@@ -271,18 +270,18 @@ namespace PolyQuest.AI
             return m_factionComponent.IsHostileTo(targetFaction);
         }
 
-        /*--------------------------------------------------------------------------
+        /*-------------------------------------------------------------
         | --- UpdateTimers: Advance all shared timers every frame --- |
-        --------------------------------------------------------------------------*/
+        -------------------------------------------------------------*/
         private void UpdateTimers()
         {
             TimeSinceLastSawTarget += Time.deltaTime;
             TimeSinceAggrevated += Time.deltaTime;
         }
 
-        /*---------------------------------------------------------------------
+        /*--------------------------------------------------------------------
         | --- OnDrawGizmosSelected: Visualize detection radius in editor --- |
-        ---------------------------------------------------------------------*/
+        --------------------------------------------------------------------*/
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.blue;

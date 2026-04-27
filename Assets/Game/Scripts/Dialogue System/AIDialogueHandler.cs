@@ -9,6 +9,7 @@ using PolyQuest.Core;
 using PolyQuest.Input;
 using PolyQuest.Player;
 using PolyQuest.UI.Core;
+using PolyQuest.UI;
 
 namespace PolyQuest.Dialogues
 {
@@ -30,6 +31,7 @@ namespace PolyQuest.Dialogues
         public CinemachineCamera DialogueCamera => m_dialogueCamera;
 
         private Outline m_outline;
+        private WorldLabel m_worldLabel;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -40,6 +42,11 @@ namespace PolyQuest.Dialogues
 
             m_outline = GetComponent<Outline>();
             Utilities.CheckForNull(m_outline, nameof(m_outline));
+
+            m_worldLabel = GetComponent<WorldLabel>();
+            Utilities.CheckForNull(m_worldLabel, nameof(m_worldLabel));
+
+            m_worldLabel.SetLabel(m_speakerName);
         }
 
         /*-------------------------------------------------------------
@@ -69,6 +76,14 @@ namespace PolyQuest.Dialogues
         public void ToggleHighlight(bool highlight)
         {
             m_outline.enabled = highlight;
+        }
+
+        /*-----------------------------------------------------------------------------
+        | --- ToggleLabel: Controls the visibility of the world label for the NPC --- |
+        -----------------------------------------------------------------------------*/
+        public void ToggleLabel(bool visible)
+        {
+            m_worldLabel.Toggle(visible);
         }
     }
 }

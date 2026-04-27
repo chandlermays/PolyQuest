@@ -13,6 +13,7 @@ using PolyQuest.Inventories;
 using PolyQuest.Player;
 using PolyQuest.Saving;
 using PolyQuest.UI.Core;
+using PolyQuest.UI;
 
 namespace PolyQuest.Shops
 {
@@ -23,6 +24,7 @@ namespace PolyQuest.Shops
         private Inventory m_shopperInventory;
         private Wallet m_shopperWallet;
         private Outline m_outline;
+        private WorldLabel m_worldLabel;
 
         private Dictionary<InventoryItem, int> m_purchase = new();
         private Dictionary<InventoryItem, int> m_currentStock = new();
@@ -40,9 +42,15 @@ namespace PolyQuest.Shops
         ----------------------------------------------------------------*/
         private void Awake()
         {
+            Utilities.CheckForNull(m_shopConfig, nameof(m_shopConfig));
+
             m_outline = GetComponent<Outline>();
             Utilities.CheckForNull(m_outline, nameof(m_outline));
-            Utilities.CheckForNull(m_shopConfig, nameof(m_shopConfig));
+
+            m_worldLabel = GetComponent<WorldLabel>();
+            Utilities.CheckForNull(m_worldLabel, nameof(m_worldLabel));
+
+            m_worldLabel.SetLabel(m_shopConfig.name);
 
             foreach (ShopConfig.ShopItemEntry entry in m_shopConfig.ShopInventory)
             {
@@ -67,14 +75,6 @@ namespace PolyQuest.Shops
             }
         }
 
-        /*----------------------------------------------------------------------------------------
-        | --- ToggleHighlight: Enables or disables the outline highlight for the shop vendor --- |
-        ----------------------------------------------------------------------------------------*/
-        public void ToggleHighlight(bool highlight)
-        {
-            m_outline.enabled = highlight;
-        }
-
         /*----------------------------------------------------------------------
         | --- GetCursorType: Returns the cursor type for shop interactions --- |
         ----------------------------------------------------------------------*/
@@ -93,6 +93,22 @@ namespace PolyQuest.Shops
                 playerController.GetComponent<ShopInteractor>().SetTargetShop(this);
             }
             return true;
+        }
+
+        /*----------------------------------------------------------------------------------------
+        | --- ToggleHighlight: Enables or disables the outline highlight for the shop vendor --- |
+        ----------------------------------------------------------------------------------------*/
+        public void ToggleHighlight(bool highlight)
+        {
+            m_outline.enabled = highlight;
+        }
+
+        /*-------------------------------------------------------------------------------------
+        | --- ToggleLabel: Controls the visibility of the world label for the shop vendor --- |
+        -------------------------------------------------------------------------------------*/
+        public void ToggleLabel(bool visible)
+        {
+            m_worldLabel.Toggle(visible);
         }
 
         /*-------------------------------------------------------------
