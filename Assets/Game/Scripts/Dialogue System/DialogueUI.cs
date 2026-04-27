@@ -88,8 +88,6 @@ namespace PolyQuest.Dialogues
                 return;
             }
 
-            gameObject.SetActive(true);
-
             // Always show the NPC's name and current dialogue text
             m_dialogueSpeaker.text = m_playerDialogueHandler.GetName();
             m_dialogueText.text = m_playerDialogueHandler.GetText();

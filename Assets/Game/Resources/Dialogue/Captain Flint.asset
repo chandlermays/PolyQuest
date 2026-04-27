@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8286136582653668342
+--- !u!114 &-8362254301854718762
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10,22 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
-  m_Name: 26aba06e-8185-4670-88e5-8b2262b7fad9
-  m_EditorClassIdentifier: 
-  m_isPlayerSpeaking: 0
-  m_text: You kill those bandits yet?
-  m_children: []
+  m_Name: d33c445e-2ee4-4954-a8b0-0debe3c66693
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
-    x: 300
-    y: 200
+    x: 1000
+    y: 400
     width: 200
     height: 100
+  m_text: Stonewick's a hard town full of harder people. We quarry stone, we cut
+    timber, we keep our roofs from collapsing--mostly.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - f2dba861-1db9-4a41-a8b7-771e22842981
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
     m_AND: []
---- !u!114 &-6964223987575199658
+--- !u!114 &-7821412008683028911
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -35,18 +37,1050 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
-  m_Name: d7b01302-6874-445b-9be5-c3d6bb8c857e
-  m_EditorClassIdentifier: 
-  m_isPlayerSpeaking: 0
-  m_text: Welcome to Stonewick!
-  m_children:
-  - 0c761e41-9011-463f-865c-923d8bfebc24
+  m_Name: 8c6352aa-e222-4012-b7d1-6774cd1a227d
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
-    x: 50
+    x: 249
+    y: 900
+    width: 200
+    height: 100
+  m_text: '[Give Sigil] Their gear was marked and it had this symbol. '
+  m_isPlayerSpeaking: 1
+  m_children:
+  - dcc92818-a42b-45e6-966a-5f4e3a963ea7
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND:
+    - m_OR:
+      - m_predicate: 3
+        m_parameters:
+        - Clear the Bandit Camp
+        - Kill the Bandits
+        m_negate: 0
+--- !u!114 &-7351855518353995445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 23968dfe-d5ab-4eea-aaba-17312d99d8f9
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 500
+    y: 800
+    width: 200
+    height: 100
+  m_text: Bandit camp, east of town. Find it, break it, and make sure they don't
+    come back.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 5f9645fa-6bcc-4f72-966e-d67ff120d7cf
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-7168110456445345355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: f23f4e12-2512-4c20-9c5d-1a32c30ea5ff
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1750
+    y: 350
+    width: 200
+    height: 100
+  m_text: On second thought, no.
+  m_isPlayerSpeaking: 1
+  m_children:
+  - 6d6ae18a-1482-4fef-8f10-7d6df040c8f5
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-7149674471996574359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 9cf64901-a08e-4af5-9f3e-c1fc02cd35ce
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 250
+    y: 700
+    width: 200
+    height: 100
+  m_text: Still working on it.
+  m_isPlayerSpeaking: 1
+  m_children:
+  - 5f9645fa-6bcc-4f72-966e-d67ff120d7cf
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND:
+    - m_OR:
+      - m_predicate: 3
+        m_parameters:
+        - Clear the Bandit Camp
+        - Kill the Bandits
+        m_negate: 1
+--- !u!114 &-7136922430895831142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 8091bfc6-bc3c-453f-804b-8f2688a7a526
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1000
+    y: 200
+    width: 200
+    height: 100
+  m_text: I need someone who can move fast and hit harder than my current lot.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - c88fa8ca-4548-4205-8702-972a353d1da8
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-6435475668796861218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: aa71c4b5-8848-4d44-b06c-1fd574cf575a
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 2000
     y: 50
     width: 200
     height: 100
+  m_text: Locals have started calling them "The Rust". Fitting name since everything
+    they touch falls apart.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 772c16d6-3b8c-4615-81bd-6748b4ed15c5
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-6177996625927001507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: c26e0616-659b-4ebc-a655-9c54d5de022f
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 250
+    y: 800
+    width: 200
+    height: 100
+  m_text: Remind me what I'm doing.
+  m_isPlayerSpeaking: 1
+  m_children:
+  - 23968dfe-d5ab-4eea-aaba-17312d99d8f9
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND:
+    - m_OR:
+      - m_predicate: 3
+        m_parameters:
+        - Clear the Bandit Camp
+        - Kill the Bandits
+        m_negate: 1
+--- !u!114 &-5518357506205028763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 9d4aa57d-f944-4f3e-bff1-4e6265577891
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1500
+    y: 200
+    width: 200
+    height: 100
+  m_text: And if you find out who's backing them -- I want to know.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - b56e4102-d3dd-41a3-8bad-1227b296ea79
+  - 8ab5243f-2596-4862-8691-21aba540e55b
+  - 5fbabb5d-9572-4688-bbe5-046c89c0a4dd
+  - f23f4e12-2512-4c20-9c5d-1a32c30ea5ff
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-5410783640644075454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: b13a5c25-f580-4a19-902a-34fca57a4350
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1000
+    y: 900
+    width: 200
+    height: 100
+  m_text: Keep your guard up, traveler. And keep this between us for now.
+  m_isPlayerSpeaking: 0
+  m_children: []
+  m_onEnterEvents: []
+  m_onExitEvents:
+  - {fileID: 11400000, guid: 07aa1a0c583d7ab41bca627df3e659b2, type: 2}
+  m_condition:
+    m_AND: []
+--- !u!114 &-5242865173382159784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 3253a5ac-357f-411f-8605-54d0b4a80716
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 250
+    y: 1000
+    width: 200
+    height: 100
+  m_text: '[Lie] I cleared it out, but it was just an ordinary bandit camp. Nothing
+    unusual.'
+  m_isPlayerSpeaking: 1
+  m_children:
+  - b4559145-6298-4e1f-a089-3152b53b14c3
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND:
+    - m_OR:
+      - m_predicate: 3
+        m_parameters:
+        - Clear the Bandit Camp
+        - Kill the Bandits
+        m_negate: 0
+--- !u!114 &-4831301492470962577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: b56e4102-d3dd-41a3-8bad-1227b296ea79
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1750
+    y: 50
+    width: 200
+    height: 100
+  m_text: Do you have any intel on them?
+  m_isPlayerSpeaking: 1
+  m_children:
+  - aa71c4b5-8848-4d44-b06c-1fd574cf575a
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-4458145501168764777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: a60340a8-2a50-4bde-b835-f6c4dac6e2a3
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 750
+    y: 1000
+    width: 200
+    height: 100
+  m_text: Either way, the job's done. I suppose that's what matters.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 80d74832-cf51-4b0d-8a58-bf0a24a3b7c5
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-3373652112198200702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 704e1caa-1682-4b5a-8b56-541ce9d0e7d8
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 0
+    y: 850
+    width: 200
+    height: 100
+  m_text: Back already? Either you work fast, or something went wrong.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 9cf64901-a08e-4af5-9f3e-c1fc02cd35ce
+  - c26e0616-659b-4ebc-a655-9c54d5de022f
+  - 8c6352aa-e222-4012-b7d1-6774cd1a227d
+  - 3253a5ac-357f-411f-8605-54d0b4a80716
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND:
+    - m_OR:
+      - m_predicate: 1
+        m_parameters:
+        - Clear the Bandit Camp
+        - Clear the Bandit Camp
+        m_negate: 0
+    - m_OR:
+      - m_predicate: 4
+        m_parameters:
+        - Clear the Bandit Camp
+        - Kill the Bandits
+        m_negate: 1
+--- !u!114 &-3313404035935606827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 95c078e0-90f7-428d-9f9a-1467c98a79be
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 500
+    y: 300
+    width: 200
+    height: 100
+  m_text: If you've got questions, ask. If not, I've got work to get back to.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - bc6a735b-e6bf-401c-bb83-af9861dfdf90
+  - 2a6a3335-8b97-407c-a62e-4a5ae13abb7a
+  - 07b6e8b5-8b04-4127-b1dd-66726c1d8f86
+  - 5b227e4d-e7a3-4f0a-b31a-043707a9e55a
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-3164931761875633181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 556967a1-7d80-4ef1-a222-8226776a5044
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 250
+    y: 300
+    width: 200
+    height: 100
+  m_text: You look like you can handle yourself. We've got trouble east of town.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 95c078e0-90f7-428d-9f9a-1467c98a79be
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-1442349750787532169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 5b227e4d-e7a3-4f0a-b31a-043707a9e55a
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 750
+    y: 550
+    width: 200
+    height: 100
+  m_text: Not my problem.
+  m_isPlayerSpeaking: 1
+  m_children:
+  - c8b80911-206d-4a7f-b6d3-e980a2deac86
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-1059721670580404777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: c721b465-00b5-4ab8-a804-7a071c1e2949
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 0
+    y: 1150
+    width: 200
+    height: 100
+  m_text: Thanks again for your help, traveler. Stonewick is in your debt.
+  m_isPlayerSpeaking: 0
+  m_children: []
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND:
+    - m_OR:
+      - m_predicate: 4
+        m_parameters:
+        - Clear the Bandit Camp
+        - 
+        m_negate: 0
+--- !u!114 &-665831232308553540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: c8b80911-206d-4a7f-b6d3-e980a2deac86
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1000
+    y: 550
+    width: 200
+    height: 100
+  m_text: Then move along. I've got enough on my plate.
+  m_isPlayerSpeaking: 0
+  m_children: []
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-435948119605022880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 89feab2f-3cab-4982-80fb-f61b0dc86900
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1000
+    y: 50
+    width: 200
+    height: 100
+  m_text: Bandits. But not the usual stragglers looking for an easy purse.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 4a121fc4-ed15-4fb4-a02e-dc8904bc7a5e
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5c8d063cb8c3f4796d574b90d0cf64, type: 3}
+  m_Name: Captain Flint
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.Dialogue
+  m_nodes:
+  - {fileID: 7067669531882127940}
+  - {fileID: 2361729818489919797}
+  - {fileID: 763681591146074676}
+  - {fileID: 1595418700588663760}
+  - {fileID: -1442349750787532169}
+  - {fileID: -435948119605022880}
+  - {fileID: -7136922430895831142}
+  - {fileID: -8362254301854718762}
+  - {fileID: -3313404035935606827}
+  - {fileID: 6785081378266468767}
+  - {fileID: -4831301492470962577}
+  - {fileID: 3606557143491732333}
+  - {fileID: 440063931066617384}
+  - {fileID: 6196048715864234325}
+  - {fileID: -5518357506205028763}
+  - {fileID: 5933031562245841858}
+  - {fileID: 6142969160763919591}
+  - {fileID: -7168110456445345355}
+  - {fileID: 8563779780281130519}
+  - {fileID: 7514160103966931123}
+  - {fileID: 1702882497094130371}
+  - {fileID: -665831232308553540}
+  - {fileID: -6435475668796861218}
+  - {fileID: 4082546977995420946}
+  - {fileID: -3164931761875633181}
+  - {fileID: -3373652112198200702}
+  - {fileID: -7149674471996574359}
+  - {fileID: -6177996625927001507}
+  - {fileID: -7351855518353995445}
+  - {fileID: 3826107577477986661}
+  - {fileID: -7821412008683028911}
+  - {fileID: -5242865173382159784}
+  - {fileID: 3751957944442651496}
+  - {fileID: 537519476282211121}
+  - {fileID: -1059721670580404777}
+  - {fileID: 3024743869710655086}
+  - {fileID: -5410783640644075454}
+  - {fileID: -4458145501168764777}
+  - {fileID: 927102588575684454}
+  m_newNodeOffset: {x: 300, y: 0}
+--- !u!114 &440063931066617384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 955c7c61-ab73-453b-8d80-51af8b42a43e
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1500
+    y: 400
+    width: 200
+    height: 100
+  m_text: Still, people here look after each other. That's gotta count for something.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 95c078e0-90f7-428d-9f9a-1467c98a79be
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &537519476282211121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: b4559145-6298-4e1f-a089-3152b53b14c3
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 500
+    y: 1000
+    width: 200
+    height: 100
+  m_text: Something about that doesn't sit right with me. But I guess they must've
+    just gotten lucky.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - a60340a8-2a50-4bde-b835-f6c4dac6e2a3
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &763681591146074676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 2a6a3335-8b97-407c-a62e-4a5ae13abb7a
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 750
+    y: 200
+    width: 200
+    height: 100
+  m_text: Do you need help?
+  m_isPlayerSpeaking: 1
+  m_children:
+  - 8091bfc6-bc3c-453f-804b-8f2688a7a526
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND:
+    - m_OR:
+      - m_predicate: 2
+        m_parameters:
+        - Clear the Bandit Camp
+        - 
+        m_negate: 0
+--- !u!114 &927102588575684454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 80d74832-cf51-4b0d-8a58-bf0a24a3b7c5
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1000
+    y: 1000
+    width: 200
+    height: 100
+  m_text: Thanks again for your help, traveler. Stonewick is in your debt.
+  m_isPlayerSpeaking: 0
+  m_children: []
+  m_onEnterEvents: []
+  m_onExitEvents:
+  - {fileID: 11400000, guid: 07aa1a0c583d7ab41bca627df3e659b2, type: 2}
+  m_condition:
+    m_AND: []
+--- !u!114 &1595418700588663760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 07b6e8b5-8b04-4127-b1dd-66726c1d8f86
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 750
+    y: 400
+    width: 200
+    height: 100
+  m_text: Tell me about Stonewick.
+  m_isPlayerSpeaking: 1
+  m_children:
+  - d33c445e-2ee4-4954-a8b0-0debe3c66693
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &1702882497094130371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 6d6ae18a-1482-4fef-8f10-7d6df040c8f5
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 2000
+    y: 350
+    width: 200
+    height: 100
+  m_text: Then we're done here.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 95c078e0-90f7-428d-9f9a-1467c98a79be
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &2361729818489919797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: bc6a735b-e6bf-401c-bb83-af9861dfdf90
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 750
+    y: 50
+    width: 200
+    height: 100
+  m_text: What kind of trouble?
+  m_isPlayerSpeaking: 1
+  m_children:
+  - 89feab2f-3cab-4982-80fb-f61b0dc86900
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &3024743869710655086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 6c9e4d91-7c77-4f51-acbe-fc0d91a3ea26
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 750
+    y: 900
+    width: 200
+    height: 100
+  m_text: I'll see what more I can find of this symbol. Whoever's backing these bandits,
+    they're not done yet.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - b13a5c25-f580-4a19-902a-34fca57a4350
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &3606557143491732333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: f2dba861-1db9-4a41-a8b7-771e22842981
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1250
+    y: 400
+    width: 200
+    height: 100
+  m_text: People here don't ask for much. Just a fair day's work and a quiet night
+    to enjoy it. But lately, they're not getting the second part.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 955c7c61-ab73-453b-8d80-51af8b42a43e
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &3751957944442651496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: dcc92818-a42b-45e6-966a-5f4e3a963ea7
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 500
+    y: 900
+    width: 200
+    height: 100
+  m_text: (sigh) This is just what I had worried. You did right by bringing this
+    to me.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 6c9e4d91-7c77-4f51-acbe-fc0d91a3ea26
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &3826107577477986661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 5f9645fa-6bcc-4f72-966e-d67ff120d7cf
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 750
+    y: 700
+    width: 200
+    height: 100
+  m_text: If you find anything that explains how they're staying this organized,
+    I want to hear it.
+  m_isPlayerSpeaking: 0
+  m_children: []
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &4082546977995420946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 772c16d6-3b8c-4615-81bd-6748b4ed15c5
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 2250
+    y: 50
+    width: 200
+    height: 100
+  m_text: And I don't believe for a second they put this together on their own.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - b56e4102-d3dd-41a3-8bad-1227b296ea79
+  - 8ab5243f-2596-4862-8691-21aba540e55b
+  - 5fbabb5d-9572-4688-bbe5-046c89c0a4dd
+  - f23f4e12-2512-4c20-9c5d-1a32c30ea5ff
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &5933031562245841858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 8ab5243f-2596-4862-8691-21aba540e55b
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1750
+    y: 150
+    width: 200
+    height: 100
+  m_text: I'll take care of it.
+  m_isPlayerSpeaking: 1
+  m_children:
+  - 9af8452c-f39d-4536-9a06-63aa4c87008d
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &6142969160763919591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 5fbabb5d-9572-4688-bbe5-046c89c0a4dd
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1750
+    y: 250
+    width: 200
+    height: 100
+  m_text: Sounds risky, what's in it for me?
+  m_isPlayerSpeaking: 1
+  m_children:
+  - 082db796-3820-44c4-91e8-0914ed7bd881
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &6196048715864234325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: c88fa8ca-4548-4205-8702-972a353d1da8
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1250
+    y: 200
+    width: 200
+    height: 100
+  m_text: Bandit camp's set up somewhere to the east. Find it and clear them out.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 9d4aa57d-f944-4f3e-bff1-4e6265577891
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &6785081378266468767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 4a121fc4-ed15-4fb4-a02e-dc8904bc7a5e
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1250
+    y: 50
+    width: 200
+    height: 100
+  m_text: These ones are organized. Armed better than they should be. They hit caravans
+    and vanished into the tree line before we can respond.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - b56e4102-d3dd-41a3-8bad-1227b296ea79
+  - 8ab5243f-2596-4862-8691-21aba540e55b
+  - 5fbabb5d-9572-4688-bbe5-046c89c0a4dd
+  - f23f4e12-2512-4c20-9c5d-1a32c30ea5ff
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &7067669531882127940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 3fc3e3e6-77f7-44e6-aac5-999a32d35645
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 0
+    y: 300
+    width: 200
+    height: 100
+  m_text: Welcome to Stonewick, traveler.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 556967a1-7d80-4ef1-a222-8226776a5044
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -63,7 +1097,7 @@ MonoBehaviour:
         - Clear the Bandit Camp
         - 
         m_negate: 1
---- !u!114 &-4430077980473154734
+--- !u!114 &7514160103966931123
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -73,66 +1107,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
-  m_Name: ebefb847-14a9-40e5-88f9-cb05e4d71cdd
-  m_EditorClassIdentifier: 
-  m_isPlayerSpeaking: 0
-  m_text: Oh, it's you again.
-  m_children:
-  - 26aba06e-8185-4670-88e5-8b2262b7fad9
-  m_rect:
-    serializedVersion: 2
-    x: 50
-    y: 200
-    width: 200
-    height: 100
-  m_onEnterEvents: []
-  m_onExitEvents: []
-  m_condition:
-    m_AND:
-    - m_OR:
-      - m_predicate: 1
-        m_parameters:
-        - Clear the Bandit Camp
-        - Clear the Bandit Camp
-        m_negate: 0
-    - m_OR:
-      - m_predicate: 4
-        m_parameters:
-        - Clear the Bandit Camp
-        - Kill the Bandits
-        m_negate: 1
---- !u!114 &-3825064345468559739
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
-  m_Name: e0838d88-303a-4feb-8b8c-84da7907ba76
+  m_Name: 082db796-3820-44c4-91e8-0914ed7bd881
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
-  m_isPlayerSpeaking: 0
-  m_text: Thanks again for your help, traveler. Stonewick is in your debt.
-  m_children: []
   m_rect:
     serializedVersion: 2
-    x: 37
-    y: 493
+    x: 2000
+    y: 250
     width: 200
     height: 100
+  m_text: You'll be paid fairly. And you'll have the town's trust. That carries further
+    than gold, whether you believe it or not.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - b56e4102-d3dd-41a3-8bad-1227b296ea79
+  - 8ab5243f-2596-4862-8691-21aba540e55b
+  - 5fbabb5d-9572-4688-bbe5-046c89c0a4dd
+  - f23f4e12-2512-4c20-9c5d-1a32c30ea5ff
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
-    m_AND:
-    - m_OR:
-      - m_predicate: 4
-        m_parameters:
-        - Clear the Bandit Camp
-        - 
-        m_negate: 0
---- !u!114 &-606129337982572048
+    m_AND: []
+--- !u!114 &8563779780281130519
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,158 +1137,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
-  m_Name: 31ccec43-d1ae-43d9-bcd9-8fad4cb24d08
-  m_EditorClassIdentifier: 
-  m_isPlayerSpeaking: 0
-  m_text: Kill them all.
-  m_children: []
+  m_Name: 9af8452c-f39d-4536-9a06-63aa4c87008d
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
-    x: 800
-    y: 50
+    x: 2000
+    y: 150
     width: 200
     height: 100
+  m_text: Good. I was hoping you'd say that. Come back when it's done.
+  m_isPlayerSpeaking: 0
+  m_children: []
   m_onEnterEvents: []
   m_onExitEvents:
   - {fileID: 11400000, guid: 679c9e3e354eb2f45ae13da3be47d323, type: 2}
-  m_condition:
-    m_AND: []
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a5c8d063cb8c3f4796d574b90d0cf64, type: 3}
-  m_Name: Captain Flint
-  m_EditorClassIdentifier: 
-  m_nodes:
-  - {fileID: -6964223987575199658}
-  - {fileID: 1547641241715060196}
-  - {fileID: 9192878735317720245}
-  - {fileID: -606129337982572048}
-  - {fileID: 3710213524180428403}
-  - {fileID: 8710286783924125001}
-  - {fileID: -4430077980473154734}
-  - {fileID: -8286136582653668342}
-  - {fileID: -3825064345468559739}
-  m_newNodeOffset: {x: 300, y: 0}
---- !u!114 &1547641241715060196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
-  m_Name: 0c761e41-9011-463f-865c-923d8bfebc24
-  m_EditorClassIdentifier: 
-  m_isPlayerSpeaking: 0
-  m_text: I could really use your help with something.
-  m_children:
-  - 746a8e37-9cc7-4204-b215-de4cc0838739
-  m_rect:
-    serializedVersion: 2
-    x: 300
-    y: 50
-    width: 200
-    height: 100
-  m_onEnterEvents: []
-  m_onExitEvents: []
-  m_condition:
-    m_AND: []
---- !u!114 &3710213524180428403
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
-  m_Name: de876385-307d-4c16-91f4-a4aa3044521d
-  m_EditorClassIdentifier: 
-  m_isPlayerSpeaking: 0
-  m_text: Sources tell me you've cleaned out the Camp. Well done.
-  m_children:
-  - 1a59dda5-0b66-47be-afb7-e4554acd084d
-  m_rect:
-    serializedVersion: 2
-    x: 50
-    y: 350
-    width: 200
-    height: 100
-  m_onEnterEvents: []
-  m_onExitEvents: []
-  m_condition:
-    m_AND:
-    - m_OR:
-      - m_predicate: 1
-        m_parameters:
-        - Clear the Bandit Camp
-        - 
-        m_negate: 0
-    - m_OR:
-      - m_predicate: 3
-        m_parameters:
-        - Clear the Bandit Camp
-        - Kill the Bandits
-        m_negate: 0
---- !u!114 &8710286783924125001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
-  m_Name: 1a59dda5-0b66-47be-afb7-e4554acd084d
-  m_EditorClassIdentifier: 
-  m_isPlayerSpeaking: 0
-  m_text: I think you'll fit in just fine here.
-  m_children: []
-  m_rect:
-    serializedVersion: 2
-    x: 300
-    y: 350
-    width: 200
-    height: 100
-  m_onEnterEvents: []
-  m_onExitEvents:
-  - {fileID: 11400000, guid: 07aa1a0c583d7ab41bca627df3e659b2, type: 2}
-  m_condition:
-    m_AND: []
---- !u!114 &9192878735317720245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
-  m_Name: 746a8e37-9cc7-4204-b215-de4cc0838739
-  m_EditorClassIdentifier: 
-  m_isPlayerSpeaking: 0
-  m_text: There's a bandit camp just outside to the East.
-  m_children:
-  - 31ccec43-d1ae-43d9-bcd9-8fad4cb24d08
-  m_rect:
-    serializedVersion: 2
-    x: 550
-    y: 50
-    width: 200
-    height: 100
-  m_onEnterEvents: []
-  m_onExitEvents: []
   m_condition:
     m_AND: []

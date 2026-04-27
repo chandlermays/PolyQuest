@@ -1357,7 +1357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_dialogueCamera: {fileID: 2966625698241564166}
-  m_dialogue: {fileID: 11400000, guid: 935c4076fe7074f4081fa53318d27d01, type: 2}
+  m_dialogue: {fileID: 11400000, guid: 2f3de1af4dc7e244abf6bcf54d77b36e, type: 2}
   m_speakerName: Captain Flint
 --- !u!4 &5305196070007443065 stripped
 Transform:

@@ -98,20 +98,13 @@ namespace PolyQuest.Core
             var fade = TransitionFade.Instance;
 
             if (fade != null)
-            {
                 yield return fade.FadeOut();
-            }
 
-            // Hide player after fade completes (when screen is black)
             if (toDialogue)
-            {
                 m_playerController.SetPlayerVisibility(false);
-            }
 
             if (!toDialogue)
-            {
                 SetDialogueUIVisibility(false);
-            }
 
             if (m_isDialogueCameraActive != toDialogue)
             {
@@ -128,7 +121,6 @@ namespace PolyQuest.Core
                     SetDialogueUIVisibility(true);
                 }
 
-                // Show player as fade begins coming back in
                 if (!toDialogue)
                 {
                     m_playerController.SetPlayerVisibility(true);
@@ -136,26 +128,31 @@ namespace PolyQuest.Core
                     InputGuard.Instance.UnlockInput();
                 }
 
+                // Clear the transitioning flag BEFORE the fade-in so that
+                // EndDialogue can trigger the exit routine if the player quits during fade.
+                m_isTransitioning = false;
+
+                // If dialogue ended while we were fading in, kick off the exit routine now.
+                if (toDialogue && !m_playerDialogueHandler.IsActive())
+                {
+                    StartCoroutine(SwitchCameraRoutine(toDialogue: false));
+                    yield break;
+                }
+
                 yield return fade.FadeIn();
             }
             else
             {
-                if (toDialogue)
-                {
-                    SetDialogueUIVisibility(true);
-                }
-                else
-                {
-                    m_playerController.SetPlayerVisibility(true);
-                }
-            }
+                m_isTransitioning = false;
 
-            m_isTransitioning = false;
+                if (toDialogue)
+                    SetDialogueUIVisibility(true);
+                else
+                    m_playerController.SetPlayerVisibility(true);
+            }
 
             if (!toDialogue)
-            {
                 m_questManager.FlushCompletionNotifs();
-            }
         }
 
         /*-------------------------------------------------------------------------- 

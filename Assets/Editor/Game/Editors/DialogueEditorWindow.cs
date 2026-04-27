@@ -35,6 +35,7 @@ namespace PolyQuest.Edit
         [NonSerialized] private Vector2 m_draggingOffset;
         [NonSerialized] private Vector2 m_draggingCanvasOffset;
         [NonSerialized] private bool m_draggingCanvas;
+        [NonSerialized] private bool m_isLocked;
 
         // Marquee selection
         [NonSerialized] private bool m_isSelectionDragging;
@@ -58,21 +59,52 @@ namespace PolyQuest.Edit
         [MenuItem("Window/Dialogue Editor")]
         public static void ShowEditorWindow()
         {
-            GetWindow(typeof(DialogueEditorWindow), false, "Dialogue Editor");
+            // Always spawn a brand-new, independent window instance
+            DialogueEditorWindow window = CreateWindow<DialogueEditorWindow>("Dialogue Editor");
+            window.Show();
         }
 
         /*----------------------------------------------
         | --- OnOpenAsset: Opens the Editor Window --- |
         ----------------------------------------------*/
-        [OnOpenAssetAttribute(1)]
+        [OnOpenAsset(1)]
         public static bool OnOpenAsset(int ID, int line)
         {
-            if (EditorUtility.EntityIdToObject(ID) is Dialogue dialogue)
+            if (EditorUtility.EntityIdToObject(ID) is not Dialogue dialogue)
+                return false;
+
+            // Try to find an existing unlocked window that has no dialogue loaded,
+            // or an unlocked window already showing this same asset — reuse it.
+            // Otherwise open a new window so each asset gets its own pane.
+            DialogueEditorWindow target = null;
+
+            foreach (DialogueEditorWindow existing in Resources.FindObjectsOfTypeAll<DialogueEditorWindow>())
             {
-                ShowEditorWindow();
-                return true;
+                if (existing.m_isLocked) continue;
+
+                if (existing.m_selectedDialogue == dialogue)
+                {
+                    // Already open in this window — just focus it
+                    existing.Focus();
+                    return true;
+                }
+
+                if (existing.m_selectedDialogue == null)
+                {
+                    target = existing;
+                    break;
+                }
             }
-            return false;
+
+            if (target == null)
+            {
+                target = CreateWindow<DialogueEditorWindow>("Dialogue Editor");
+            }
+
+            target.LoadDialogue(dialogue);
+            target.Show();
+            target.Focus();
+            return true;
         }
 
         /*----------------------------------------------------------------
@@ -97,15 +129,38 @@ namespace PolyQuest.Edit
             m_playerNodeStyle.border = new RectOffset(12, 12, 12, 12);
         }
 
+        /*-----------------------------------------------------------------
+        | --- ShowButton: Renders the Lock Button in the Window Header --- |
+        -----------------------------------------------------------------*/
+        private void ShowButton(Rect position)
+        {
+            bool newLocked = GUI.Toggle(position, m_isLocked, GUIContent.none, "IN LockButton");
+            if (newLocked != m_isLocked)
+            {
+                m_isLocked = newLocked;
+            }
+        }
+
+        /*-----------------------------------------------------------
+        | --- LoadDialogue: Assigns a Dialogue to this instance --- |
+        -----------------------------------------------------------*/
+        private void LoadDialogue(Dialogue dialogue)
+        {
+            m_selectedDialogue = dialogue;
+            titleContent = new GUIContent(dialogue != null ? $"Dialogue : {dialogue.name}" : "Dialogue Editor");
+            Repaint();
+        }
+
         /*---------------------------------------------------------------------------
         | --- OnSelectionChanged: Handles Selection Change of the Dialogue Node --- |
         ---------------------------------------------------------------------------*/
         private void OnSelectionChanged()
         {
+            if (m_isLocked) return;
+
             if (Selection.activeObject is Dialogue newDialogue)
             {
-                m_selectedDialogue = newDialogue;
-                Repaint();
+                LoadDialogue(newDialogue);
             }
         }
 

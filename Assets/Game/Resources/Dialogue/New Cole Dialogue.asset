@@ -1,0 +1,400 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8935987954557999649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 8129b95b-941b-4040-8cdd-56e255d58da1
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1250
+    y: 150
+    width: 200
+    height: 100
+  m_text: By the time I realized, it was gone.
+  m_isPlayerSpeaking: 0
+  m_children: []
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-8891349124880596695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 19ca39f0-2ab9-4d1d-9697-0726eaeb509c
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1250
+    y: 250
+    width: 200
+    height: 100
+  m_text: My grandfather used to say the Order made the world stronger, one tempered
+    soul at a time. They're gone now, but, I always wanted to be like them.
+  m_isPlayerSpeaking: 0
+  m_children: []
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-6553455302847918776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 1ff9d1f8-be84-4d7f-b6dc-ba80902cd43f
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1000
+    y: 50
+    width: 200
+    height: 100
+  m_text: Oh it's old. Like, really old. But he told me stories when I was young.
+    Probably half of them made up.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 83428bff-aca0-489e-9eea-a0a24f06684b
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-6189532582545626272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: ecd91032-d343-4d34-ad8c-dab41d59fdaa
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 0
+    y: 150
+    width: 200
+    height: 100
+  m_text: You there! Say, uh.. you haven't seen an old iron sword anywhere, have
+    you?
+  m_isPlayerSpeaking: 0
+  m_children:
+  - aaf1f2e2-f930-473b-97a8-622e9831cd6d
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-6081266683502774643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 47df7801-0104-44c7-b169-767cadaa760a
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 750
+    y: 350
+    width: 200
+    height: 100
+  m_text: Sorry, I haven't seen it.
+  m_isPlayerSpeaking: 1
+  m_children:
+  - 9cdd047c-af7b-4a05-bf62-9cbcc916bb27
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-4973363408616697254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: aaf1f2e2-f930-473b-97a8-622e9831cd6d
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 250
+    y: 150
+    width: 200
+    height: 100
+  m_text: Not just any sword, it's been in my family for generations. My grandfather
+    carried it when he served with the Order of the Anvil! Or, so he claimed, anyway.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 994c188e-4d29-4b38-b08b-c27c6b42847b
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-4965687540043012042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 17e039b1-b65c-464f-a297-4c99d9bfe0c7
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1000
+    y: 250
+    width: 200
+    height: 100
+  m_text: 'They were knights. Real ones. They protected the land, lived by a code:
+    honor, sacrifice, all of it.'
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 19ca39f0-2ab9-4d1d-9697-0726eaeb509c
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-4782700348680689242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 5e5da907-7179-47e1-9513-9d657cfbd7ea
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 750
+    y: 50
+    width: 200
+    height: 100
+  m_text: Tell me about this sword.
+  m_isPlayerSpeaking: 1
+  m_children:
+  - 1ff9d1f8-be84-4d7f-b6dc-ba80902cd43f
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-4529347064119630721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 994c188e-4d29-4b38-b08b-c27c6b42847b
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 500
+    y: 150
+    width: 200
+    height: 100
+  m_text: I know it sounds foolish, but.. it matters to me.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 5e5da907-7179-47e1-9513-9d657cfbd7ea
+  - 11db6863-cfe7-4f2e-9200-d0bc3c71ab2f
+  - a2650da3-1d90-4ce9-a0bb-6b100fbb127c
+  - 47df7801-0104-44c7-b169-767cadaa760a
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-3800382186347386014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 83428bff-aca0-489e-9eea-a0a24f06684b
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1250
+    y: 50
+    width: 200
+    height: 100
+  m_text: But the sword? That was real. And now I've gone and lost it.
+  m_isPlayerSpeaking: 0
+  m_children: []
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5c8d063cb8c3f4796d574b90d0cf64, type: 3}
+  m_Name: New Cole Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.Dialogue
+  m_nodes:
+  - {fileID: -6189532582545626272}
+  - {fileID: -4782700348680689242}
+  - {fileID: 7609142724381147542}
+  - {fileID: 4935193966697247719}
+  - {fileID: -4973363408616697254}
+  - {fileID: -4529347064119630721}
+  - {fileID: -6081266683502774643}
+  - {fileID: -6553455302847918776}
+  - {fileID: -3800382186347386014}
+  - {fileID: 7421339953532333764}
+  - {fileID: -8935987954557999649}
+  - {fileID: -4965687540043012042}
+  - {fileID: -8891349124880596695}
+  - {fileID: 2353606858889110313}
+  m_newNodeOffset: {x: 250, y: 0}
+--- !u!114 &2353606858889110313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 9cdd047c-af7b-4a05-bf62-9cbcc916bb27
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1000
+    y: 350
+    width: 200
+    height: 100
+  m_text: Oh. Well, if you happen to come across it, please let me know. It would
+    mean the world to me.
+  m_isPlayerSpeaking: 0
+  m_children: []
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &4935193966697247719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: a2650da3-1d90-4ce9-a0bb-6b100fbb127c
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 750
+    y: 250
+    width: 200
+    height: 100
+  m_text: Order of the Anvil?
+  m_isPlayerSpeaking: 1
+  m_children:
+  - 17e039b1-b65c-464f-a297-4c99d9bfe0c7
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &7421339953532333764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: d95006be-cb28-42d9-a02a-79e533b3107e
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1000
+    y: 150
+    width: 200
+    height: 100
+  m_text: I had it with me on patrol just north from here, near the old watchtower
+    ruins. I must've set it down when I stopped to check the perimeter.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 8129b95b-941b-4040-8cdd-56e255d58da1
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &7609142724381147542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 11db6863-cfe7-4f2e-9200-d0bc3c71ab2f
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 750
+    y: 150
+    width: 200
+    height: 100
+  m_text: Where did you lose it?
+  m_isPlayerSpeaking: 1
+  m_children:
+  - d95006be-cb28-42d9-a02a-79e533b3107e
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
