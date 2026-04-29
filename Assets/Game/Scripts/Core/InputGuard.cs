@@ -33,7 +33,7 @@ namespace PolyQuest.Core
         -----------------------------------------------*/
         public void LockInput()
         {
-            m_lockCount++;
+            ++m_lockCount;
         }
 
         /*------------------------------------------------- 

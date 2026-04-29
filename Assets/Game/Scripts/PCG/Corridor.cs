@@ -59,6 +59,9 @@ namespace PolyQuest.PCG
             set => m_endRoom = value;
         }
 
+        /*------------------------------------------------------------------------------------------------------------------
+        | --- Area: Computes the bounding rectangle that encompasses the corridor based on its start and end positions --- |
+        ------------------------------------------------------------------------------------------------------------------*/
         public RectInt Area
         {
             get
@@ -80,6 +83,9 @@ namespace PolyQuest.PCG
             }
         }
 
+        /*-------------------------------------------------------------------------------------------------------
+        | --- Corridor: Constructor to create a corridor with the specified starting direction and position --- |
+        -------------------------------------------------------------------------------------------------------*/
         public Corridor(Direction startDirection, Vector2Int startPosition, Room startRoom = null)
         {
             m_startDirection = startDirection;
@@ -87,7 +93,10 @@ namespace PolyQuest.PCG
             m_startRoom = startRoom;
         }
 
-        public Color GetColor(Direction direction)
+        /*----------------------------------------------------------------------------------------
+        | --- GetColor: Utility method to get a color based on the direction of the corridor --- |
+        ----------------------------------------------------------------------------------------*/
+        public static Color GetColor(Direction direction)
         {
             return direction switch
             {
@@ -100,7 +109,10 @@ namespace PolyQuest.PCG
             };
         }
 
-        public Direction GetOppositeDirection(Direction direction)
+        /*-------------------------------------------------------------------------------------------------
+        | --- GetOppositeDirection: Utility method to get the opposite direction of a given direction --- |
+        -------------------------------------------------------------------------------------------------*/
+        public static Direction GetOppositeDirection(Direction direction)
         {
             return direction switch
             {

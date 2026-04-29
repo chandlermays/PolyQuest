@@ -24,7 +24,7 @@ namespace PolyQuest.Components
      *      - Implements IRaycastable for player interaction and targeting via raycast.              *
      *      - Controls attack animations and cooldowns.                                              *
      * --------------------------------------------------------------------------------------------- */
-    public class CombatComponent : EntityComponent, IRaycastable, IAction
+    public class CombatComponent : EntityComponent, IInteractable, IAction
     {
         [Header("Weapon Settings")]
         [Tooltip("Weapon used when no weapon is equipped. Always set this.")]
@@ -294,7 +294,7 @@ namespace PolyQuest.Components
         /*--------------------------------------------------------------------------
         | --- HandleRaycast: The Behavior of the Raycast for Initiating Combat --- |
         --------------------------------------------------------------------------*/
-        public bool HandleRaycast(PlayerController playerController)
+        public bool HandleInteraction(PlayerController playerController)
         {
             if (!playerController.GetComponent<CombatComponent>().CanAttack(gameObject))
                 return false;

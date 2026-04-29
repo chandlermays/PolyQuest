@@ -13,23 +13,31 @@ using PolyQuest.UI;
 namespace PolyQuest.SceneManagement
 {
     [RequireComponent(typeof(EndDoor))]
-    public class ClickableEndDoor : MonoBehaviour, IRaycastable
+    public class ClickableEndDoor : MonoBehaviour, IInteractable
     {
-        private EndDoor m_endDoor;
+        [SerializeField] private Portal m_portal;
 
+        private EndDoor m_endDoor;
         private Outline m_outline;
         private WorldLabel m_worldLabel;
 
-        /*----------------------------------------------------------------
-        | --- Awake: Called when the script instance is being loaded --- |
-        ----------------------------------------------------------------*/
-        private void Awake()
+        /*-----------------------------------------------------
+        | --- Start: Called before the first frame update --- |
+        -----------------------------------------------------*/
+        private void Start()
         {
+            Utilities.CheckForNull(m_portal, nameof(m_portal));
+
             m_endDoor = GetComponent<EndDoor>();
             Utilities.CheckForNull(m_endDoor, nameof(m_endDoor));
 
             m_outline = GetComponent<Outline>();
             Utilities.CheckForNull(m_outline, nameof(m_outline));
+
+            m_worldLabel = GetComponent<WorldLabel>();
+            Utilities.CheckForNull(m_worldLabel, nameof(m_worldLabel));
+
+            m_worldLabel.SetLabel("Travel to: " + m_portal.SceneName);
         }
 
         /*-----------------------------------------------------------------
@@ -43,7 +51,7 @@ namespace PolyQuest.SceneManagement
         /*--------------------------------------------------------------------------
         | --- HandleRaycast: Handles the raycast interaction with the End Door --- |
         --------------------------------------------------------------------------*/
-        public bool HandleRaycast(PlayerController playerController)
+        public bool HandleInteraction(PlayerController playerController)
         {
             if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
             {

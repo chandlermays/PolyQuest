@@ -40,8 +40,12 @@ namespace PolyQuest.UI.Core
         {
             AreaTrigger.OnAreaEntered += HandleAreaEntered;
             AreaTrigger.OnAreaExited += HandleAreaExited;
-            m_playerDialogueHandler.OnDialogueStarted += HandleDialogueStarted;
-            m_playerDialogueHandler.OnDialogueEnded += HandleDialogueEnded;
+
+            if (m_playerDialogueHandler != null)
+            {
+                m_playerDialogueHandler.OnDialogueStarted += HandleDialogueStarted;
+                m_playerDialogueHandler.OnDialogueEnded += HandleDialogueEnded;
+            }
         }
 
         /*---------------------------------------------------------------------------
@@ -49,10 +53,20 @@ namespace PolyQuest.UI.Core
         ---------------------------------------------------------------------------*/
         private void OnDisable()
         {
+            if (m_displayCoroutine != null)
+            {
+                StopCoroutine(m_displayCoroutine);
+                m_displayCoroutine = null;
+            }
+
             AreaTrigger.OnAreaEntered -= HandleAreaEntered;
             AreaTrigger.OnAreaExited -= HandleAreaExited;
-            m_playerDialogueHandler.OnDialogueStarted -= HandleDialogueStarted;
-            m_playerDialogueHandler.OnDialogueEnded -= HandleDialogueEnded;
+
+            if (m_playerDialogueHandler != null)
+            {
+                m_playerDialogueHandler.OnDialogueStarted -= HandleDialogueStarted;
+                m_playerDialogueHandler.OnDialogueEnded -= HandleDialogueEnded;
+            }
         }
 
         /*-------------------------------------------------------------------------------

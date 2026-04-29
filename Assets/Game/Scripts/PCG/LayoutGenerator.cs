@@ -76,7 +76,7 @@ namespace PolyQuest.PCG
             RoomTemplate startRoomTemplate = GetRandomRoomTemplate();
             RectInt startRoomRect = GetStartRoomRect(startRoomTemplate);
             Room startRoom = CreateNewRoom(startRoomRect, startRoomTemplate);
-            List<Corridor> corridors = startRoom.GenerateCorridorCandidates(startRoom.Area.width, startRoom.Area.height, m_levelLayoutConfig.DoorDistanceFromEdge);
+            List<Corridor> corridors = startRoom.GenerateCorridorCandidates(m_levelLayoutConfig.DoorDistanceFromEdge);
             foreach (Corridor corridor in corridors)
             {
                 corridor.StartRoom = startRoom;
@@ -103,7 +103,7 @@ namespace PolyQuest.PCG
                 m_level.AddRoom(newRoom);
                 m_level.AddCorridor(entry);
                 entry.EndRoom = newRoom;
-                List<Corridor> newCorridors = newRoom.GenerateCorridorCandidates(newRoom.Area.width, newRoom.Area.height, m_levelLayoutConfig.DoorDistanceFromEdge);
+                List<Corridor> newCorridors = newRoom.GenerateCorridorCandidates(m_levelLayoutConfig.DoorDistanceFromEdge);
                 foreach (Corridor corridor in newCorridors)
                 {
                     corridor.StartRoom = newRoom;
@@ -118,19 +118,10 @@ namespace PolyQuest.PCG
         -----------------------------------------------------------------------------*/
         private void GenerateCorridors()
         {
-            foreach (Room room in m_level.Rooms)
+            foreach (Corridor corridor in m_level.Corridors)
             {
-                foreach (Corridor incomingCorridor in m_level.Corridors)
-                {
-                    if (incomingCorridor.StartRoom == room)
-                        room.AddCorridor(incomingCorridor);
-                }
-
-                foreach (Corridor outgoingCorridor in m_level.Corridors)
-                {
-                    if (outgoingCorridor.EndRoom == room)
-                        room.AddCorridor(outgoingCorridor);
-                }
+                corridor.StartRoom?.AddCorridor(corridor);
+                corridor.EndRoom?.AddCorridor(corridor);
             }
         }
 
@@ -153,9 +144,8 @@ namespace PolyQuest.PCG
             // Assign Start Room
             int startRoomIndex = m_rng.RandomRange(0, rooms.Count);
             Room startRoom = rooms[startRoomIndex];
-            m_level.StartRoom = startRoom;
-            startRoom.Type = RoomType.kStart;
-            rooms.Remove(startRoom);
+            rooms[startRoomIndex] = rooms[rooms.Count - 1];
+            rooms.RemoveAt(rooms.Count - 1);
 
             // Assign End Room (farthest from start)
             Room endRoom = null;
@@ -401,8 +391,8 @@ namespace PolyQuest.PCG
         private Corridor SelectCorridorCandidate(RectInt roomRect, RoomTemplate roomTemplate, Corridor entry)
         {
             Room room = CreateNewRoom(roomRect, roomTemplate, false);
-            List<Corridor> candidates = room.GenerateCorridorCandidates(room.Area.width, room.Area.height, m_levelLayoutConfig.DoorDistanceFromEdge);
-            Direction oppositeDirection = entry.GetOppositeDirection(entry.StartDirection);
+            List<Corridor> candidates = room.GenerateCorridorCandidates(m_levelLayoutConfig.DoorDistanceFromEdge);
+            Direction oppositeDirection = Corridor.GetOppositeDirection(entry.StartDirection);
             List<Corridor> filteredCandidates = new();
 
             foreach (Corridor candidate in candidates)
@@ -463,13 +453,12 @@ namespace PolyQuest.PCG
         ------------------------------------------------------------------------------------------------*/
         private bool DoesRoomOverlap(RectInt roomRect, IReadOnlyList<Room> rooms, IReadOnlyList<Corridor> corridors, int minRoomDistance)
         {
-            RectInt paddedRoomRect = new()
-            {
-                x = roomRect.x - minRoomDistance,
-                y = roomRect.y - minRoomDistance,
-                width = roomRect.width + (2 * minRoomDistance),
-                height = roomRect.height + (2 * minRoomDistance)
-            };
+            RectInt paddedRoomRect = new(
+                roomRect.x - minRoomDistance,
+                roomRect.y - minRoomDistance,
+                roomRect.width + (2 * minRoomDistance),
+                roomRect.height + (2 * minRoomDistance)
+            );
 
             foreach (Room room in rooms)
             {

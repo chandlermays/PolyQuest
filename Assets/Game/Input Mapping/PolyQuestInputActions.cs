@@ -490,6 +490,24 @@ namespace PolyQuest.Input
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Decrease Mana"",
+                    ""type"": ""Button"",
+                    ""id"": ""041bba4e-5d05-4314-a9e2-49fb417a64f4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Increase Mana"",
+                    ""type"": ""Button"",
+                    ""id"": ""d8bf8d5c-09c1-4f23-a0a9-5e99489a12e9"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Increase Experience"",
                     ""type"": ""Button"",
                     ""id"": ""e6be4f5c-b457-44b1-99c3-a57203ff293a"",
@@ -499,7 +517,7 @@ namespace PolyQuest.Input
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""AddItem"",
+                    ""name"": ""Add Item"",
                     ""type"": ""Button"",
                     ""id"": ""3fbc5aef-bbe0-4875-98dc-efa681e9e62a"",
                     ""expectedControlType"": """",
@@ -577,6 +595,72 @@ namespace PolyQuest.Input
                 },
                 {
                     ""name"": ""One Modifier"",
+                    ""id"": ""18cb6641-a3de-4ef5-b0b7-f223ef61023c"",
+                    ""path"": ""OneModifier(modifiersOrder=1)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Decrease Mana"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""c58bb157-a5eb-46a7-987d-bceaa6a47161"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Decrease Mana"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""b4bef72b-3708-452b-b8cf-8c8b1f44d43e"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Decrease Mana"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""43f83a0b-098f-4196-b7c4-224afb54afb2"",
+                    ""path"": ""OneModifier(modifiersOrder=1)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Increase Mana"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""f626b9d8-8b46-42bd-a0ba-d54a77c9edd5"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Increase Mana"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""127b2426-907d-4f3a-9e54-0db7cae2785a"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Increase Mana"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""One Modifier"",
                     ""id"": ""97834e4c-163d-4747-9901-4b1dc68c9e4e"",
                     ""path"": ""OneModifier(modifiersOrder=1)"",
                     ""interactions"": """",
@@ -600,7 +684,7 @@ namespace PolyQuest.Input
                 {
                     ""name"": ""binding"",
                     ""id"": ""38e61f57-2e4e-4ac7-8926-824d291fdb22"",
-                    ""path"": ""<Keyboard>/3"",
+                    ""path"": ""<Keyboard>/5"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -615,7 +699,7 @@ namespace PolyQuest.Input
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""AddItem"",
+                    ""action"": ""Add Item"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -626,18 +710,18 @@ namespace PolyQuest.Input
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""AddItem"",
+                    ""action"": ""Add Item"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""binding"",
                     ""id"": ""7d4b7886-e3a7-4548-8d9a-7ae2dce8631d"",
-                    ""path"": ""<Keyboard>/4"",
+                    ""path"": ""<Keyboard>/6"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""AddItem"",
+                    ""action"": ""Add Item"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 }
@@ -672,8 +756,10 @@ namespace PolyQuest.Input
             m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
             m_Debug_DecreaseHealth = m_Debug.FindAction("Decrease Health", throwIfNotFound: true);
             m_Debug_IncreaseHealth = m_Debug.FindAction("Increase Health", throwIfNotFound: true);
+            m_Debug_DecreaseMana = m_Debug.FindAction("Decrease Mana", throwIfNotFound: true);
+            m_Debug_IncreaseMana = m_Debug.FindAction("Increase Mana", throwIfNotFound: true);
             m_Debug_IncreaseExperience = m_Debug.FindAction("Increase Experience", throwIfNotFound: true);
-            m_Debug_AddItem = m_Debug.FindAction("AddItem", throwIfNotFound: true);
+            m_Debug_AddItem = m_Debug.FindAction("Add Item", throwIfNotFound: true);
         }
 
         ~@PolyQuestInputActions()
@@ -1190,6 +1276,8 @@ namespace PolyQuest.Input
         private List<IDebugActions> m_DebugActionsCallbackInterfaces = new List<IDebugActions>();
         private readonly InputAction m_Debug_DecreaseHealth;
         private readonly InputAction m_Debug_IncreaseHealth;
+        private readonly InputAction m_Debug_DecreaseMana;
+        private readonly InputAction m_Debug_IncreaseMana;
         private readonly InputAction m_Debug_IncreaseExperience;
         private readonly InputAction m_Debug_AddItem;
         /// <summary>
@@ -1211,6 +1299,14 @@ namespace PolyQuest.Input
             /// Provides access to the underlying input action "Debug/IncreaseHealth".
             /// </summary>
             public InputAction @IncreaseHealth => m_Wrapper.m_Debug_IncreaseHealth;
+            /// <summary>
+            /// Provides access to the underlying input action "Debug/DecreaseMana".
+            /// </summary>
+            public InputAction @DecreaseMana => m_Wrapper.m_Debug_DecreaseMana;
+            /// <summary>
+            /// Provides access to the underlying input action "Debug/IncreaseMana".
+            /// </summary>
+            public InputAction @IncreaseMana => m_Wrapper.m_Debug_IncreaseMana;
             /// <summary>
             /// Provides access to the underlying input action "Debug/IncreaseExperience".
             /// </summary>
@@ -1251,6 +1347,12 @@ namespace PolyQuest.Input
                 @IncreaseHealth.started += instance.OnIncreaseHealth;
                 @IncreaseHealth.performed += instance.OnIncreaseHealth;
                 @IncreaseHealth.canceled += instance.OnIncreaseHealth;
+                @DecreaseMana.started += instance.OnDecreaseMana;
+                @DecreaseMana.performed += instance.OnDecreaseMana;
+                @DecreaseMana.canceled += instance.OnDecreaseMana;
+                @IncreaseMana.started += instance.OnIncreaseMana;
+                @IncreaseMana.performed += instance.OnIncreaseMana;
+                @IncreaseMana.canceled += instance.OnIncreaseMana;
                 @IncreaseExperience.started += instance.OnIncreaseExperience;
                 @IncreaseExperience.performed += instance.OnIncreaseExperience;
                 @IncreaseExperience.canceled += instance.OnIncreaseExperience;
@@ -1274,6 +1376,12 @@ namespace PolyQuest.Input
                 @IncreaseHealth.started -= instance.OnIncreaseHealth;
                 @IncreaseHealth.performed -= instance.OnIncreaseHealth;
                 @IncreaseHealth.canceled -= instance.OnIncreaseHealth;
+                @DecreaseMana.started -= instance.OnDecreaseMana;
+                @DecreaseMana.performed -= instance.OnDecreaseMana;
+                @DecreaseMana.canceled -= instance.OnDecreaseMana;
+                @IncreaseMana.started -= instance.OnIncreaseMana;
+                @IncreaseMana.performed -= instance.OnIncreaseMana;
+                @IncreaseMana.canceled -= instance.OnIncreaseMana;
                 @IncreaseExperience.started -= instance.OnIncreaseExperience;
                 @IncreaseExperience.performed -= instance.OnIncreaseExperience;
                 @IncreaseExperience.canceled -= instance.OnIncreaseExperience;
@@ -1471,6 +1579,20 @@ namespace PolyQuest.Input
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnIncreaseHealth(InputAction.CallbackContext context);
             /// <summary>
+            /// Method invoked when associated input action "Decrease Mana" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnDecreaseMana(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Increase Mana" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnIncreaseMana(InputAction.CallbackContext context);
+            /// <summary>
             /// Method invoked when associated input action "Increase Experience" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
             /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -1478,7 +1600,7 @@ namespace PolyQuest.Input
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnIncreaseExperience(InputAction.CallbackContext context);
             /// <summary>
-            /// Method invoked when associated input action "AddItem" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// Method invoked when associated input action "Add Item" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
             /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />

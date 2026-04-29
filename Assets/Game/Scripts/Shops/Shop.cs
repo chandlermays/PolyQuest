@@ -17,7 +17,7 @@ using PolyQuest.UI;
 
 namespace PolyQuest.Shops
 {
-    public class Shop : MonoBehaviour, IRaycastable, ISaveable
+    public class Shop : MonoBehaviour, IInteractable, ISaveable
     {
         [SerializeField] private ShopConfig m_shopConfig;
 
@@ -86,7 +86,7 @@ namespace PolyQuest.Shops
         /*-------------------------------------------------------------------
         | --- HandleRaycast: Handles raycast interactions with the shop --- |
         -------------------------------------------------------------------*/
-        public bool HandleRaycast(PlayerController playerController)
+        public bool HandleInteraction(PlayerController playerController)
         {
             if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
             {

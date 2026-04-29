@@ -3,7 +3,6 @@ File: QuestStatus.cs
 Author: Chandler Mays
 ----------------------------*/
 using System.Collections.Generic;
-using System.Linq;  // April 20th: remove this
 using Newtonsoft.Json.Linq;
 //---------------------------------
 
@@ -22,8 +21,8 @@ namespace PolyQuest.Quests
      * ------------------------------------------------------------------------------------------- */
     public class QuestStatus
     {
-        private Quest m_quest;
-        private HashSet<QuestObjective> m_completedObjectives = new();
+        private readonly Quest m_quest;
+        private readonly HashSet<QuestObjective> m_completedObjectives = new();
 
         private const string kQuestNameKey = "QuestName";
         private const string kCompletedObjectivesKey = "CompletedObjectives";
@@ -55,8 +54,19 @@ namespace PolyQuest.Quests
                     foreach (JToken token in completedState)
                     {
                         string savedName = token.ToObject<string>();
-                        QuestObjective obj = m_quest.Objectives.FirstOrDefault(o => o.name == savedName);
-                        if (obj != null) m_completedObjectives.Add(obj);
+                        QuestObjective obj = null;
+                        foreach (QuestObjective objective in m_quest.Objectives)
+                        {
+                            if (objective.name == savedName)
+                            {
+                                obj = objective;
+                                break;
+                            }
+                        }
+                        if (obj != null)
+                        {
+                            m_completedObjectives.Add(obj);
+                        }
                     }
                 }
             }

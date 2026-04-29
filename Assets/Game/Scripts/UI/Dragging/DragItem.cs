@@ -173,7 +173,7 @@ namespace PolyQuest.UI.Dragging
         /*-------------------------------------------------------------------------------
         | --- ProcessItemTransfer: Transfers items from the source to a destination --- |
         -------------------------------------------------------------------------------*/
-        private bool ProcessItemTransfer(IDragDestination<T> destination)
+        private void ProcessItemTransfer(IDragDestination<T> destination)
         {
             T draggingItem = m_dragSource.GetItem();
             int draggingQuantity = m_dragSource.GetQuantity();
@@ -185,9 +185,7 @@ namespace PolyQuest.UI.Dragging
             {
                 m_dragSource.RemoveItems(itemsToTransfer);
                 destination.AddItems(draggingItem, itemsToTransfer);
-                return false;
             }
-            return true;
         }
 
         /*-------------------------------------------------------------------------------

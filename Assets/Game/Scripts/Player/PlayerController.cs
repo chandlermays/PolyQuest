@@ -201,7 +201,7 @@ namespace PolyQuest.Player
         {
             int hits = Physics.RaycastNonAlloc(GetCursorRay(), m_raycasts);
             GameObject newHighlight = null;
-            IRaycastable hoveredRaycastable = null;
+            IInteractable hoveredInteractable = null;
 
             for (int i = 0; i < hits; ++i)
             {
@@ -210,14 +210,14 @@ namespace PolyQuest.Player
                 if (hit.transform.gameObject == gameObject)
                     continue;
 
-                foreach (IRaycastable raycastable in hit.transform.GetComponents<IRaycastable>())
+                foreach (IInteractable interactable in hit.transform.GetComponents<IInteractable>())
                 {
-                    if (!raycastable.HandleRaycast(this))
+                    if (!interactable.HandleInteraction(this))
                         continue;
 
                     newHighlight = hit.transform.gameObject;
-                    hoveredRaycastable = raycastable;
-                    SetCursor(raycastable.GetCursorType());
+                    hoveredInteractable = interactable;
+                    SetCursor(interactable.GetCursorType());
                     break;
                 }
 
@@ -256,11 +256,11 @@ namespace PolyQuest.Player
             if (newHighlight == LastHighlightedObject)
                 return;
 
-            LastHighlightedObject?.GetComponent<IRaycastable>()?.ToggleHighlight(false);
-            LastHighlightedObject?.GetComponent<IRaycastable>()?.ToggleLabel(false);
+            LastHighlightedObject?.GetComponent<IInteractable>()?.ToggleHighlight(false);
+            LastHighlightedObject?.GetComponent<IInteractable>()?.ToggleLabel(false);
 
-            newHighlight?.GetComponent<IRaycastable>()?.ToggleHighlight(true);
-            newHighlight?.GetComponent<IRaycastable>()?.ToggleLabel(true);
+            newHighlight?.GetComponent<IInteractable>()?.ToggleHighlight(true);
+            newHighlight?.GetComponent<IInteractable>()?.ToggleLabel(true);
 
             LastHighlightedObject = newHighlight;
         }
@@ -333,7 +333,7 @@ namespace PolyQuest.Player
         -------------------------------------------------------------------------*/
         public void ClearHighlight()
         {
-            LastHighlightedObject?.GetComponent<IRaycastable>()?.ToggleHighlight(false);
+            LastHighlightedObject?.GetComponent<IInteractable>()?.ToggleHighlight(false);
             LastHighlightedObject = null;
         }
 

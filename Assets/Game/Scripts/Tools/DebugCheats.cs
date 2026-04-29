@@ -20,6 +20,11 @@ namespace PolyQuest.Tools
         [SerializeField] private float m_healthAmount = 20f;
         private HealthComponent m_healthComponent;
 
+        [Header("Mana Cheat Settings")]
+        [Tooltip("The amount of mana to add or remove when the cheat is activated.")]
+        [SerializeField] private float m_manaAmount = 20f;
+        private ManaComponent m_manaComponent;
+
         [Header("Experience Cheat Settings")]
         [Tooltip("The amount of experience to add when the cheat is activated.")]
         [SerializeField] private float m_experienceAmount = 20f;
@@ -44,6 +49,7 @@ namespace PolyQuest.Tools
 #endif
             Utilities.CheckForNull(m_player, nameof(m_player));
             m_healthComponent = m_player.GetComponent<HealthComponent>();
+            m_manaComponent = m_player.GetComponent<ManaComponent>();
             m_experience = m_player.GetComponent<Experience>();
             m_inventory = m_player.GetComponent<Inventory>();
         }
@@ -72,6 +78,19 @@ namespace PolyQuest.Tools
             {
                 m_healthComponent.ReplenishHealth(m_healthAmount);
                 Debug.Log($"Debug Cheat: Increased health by {m_healthAmount}. Current = {m_healthComponent.CurrentHealth}");
+            }
+
+            // --- Mana ---
+            if (m_inputActions.Debug.DecreaseMana.WasPerformedThisFrame())
+            {
+                m_manaComponent.UseMana(m_manaAmount);
+                Debug.Log($"Debug Cheat: Decreased mana by {m_manaAmount}. Current = {m_manaComponent.CurrentMana}");
+            }
+
+            if (m_inputActions.Debug.IncreaseMana.WasPerformedThisFrame())
+            {
+                m_manaComponent.ReplenishMana(m_manaAmount);
+                Debug.Log($"Debug Cheat: Increased mana by {m_manaAmount}. Current = {m_manaComponent.CurrentMana}");
             }
 
             // --- Experience ---

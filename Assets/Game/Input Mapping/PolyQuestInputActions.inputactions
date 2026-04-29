@@ -402,6 +402,24 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Decrease Mana",
+                    "type": "Button",
+                    "id": "041bba4e-5d05-4314-a9e2-49fb417a64f4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Increase Mana",
+                    "type": "Button",
+                    "id": "d8bf8d5c-09c1-4f23-a0a9-5e99489a12e9",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Increase Experience",
                     "type": "Button",
                     "id": "e6be4f5c-b457-44b1-99c3-a57203ff293a",
@@ -489,6 +507,72 @@
                 },
                 {
                     "name": "One Modifier",
+                    "id": "18cb6641-a3de-4ef5-b0b7-f223ef61023c",
+                    "path": "OneModifier(modifiersOrder=1)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Decrease Mana",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "c58bb157-a5eb-46a7-987d-bceaa6a47161",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Decrease Mana",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "b4bef72b-3708-452b-b8cf-8c8b1f44d43e",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Decrease Mana",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "One Modifier",
+                    "id": "43f83a0b-098f-4196-b7c4-224afb54afb2",
+                    "path": "OneModifier(modifiersOrder=1)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Increase Mana",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "f626b9d8-8b46-42bd-a0ba-d54a77c9edd5",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Increase Mana",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "127b2426-907d-4f3a-9e54-0db7cae2785a",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Increase Mana",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "One Modifier",
                     "id": "97834e4c-163d-4747-9901-4b1dc68c9e4e",
                     "path": "OneModifier(modifiersOrder=1)",
                     "interactions": "",
@@ -512,7 +596,7 @@
                 {
                     "name": "binding",
                     "id": "38e61f57-2e4e-4ac7-8926-824d291fdb22",
-                    "path": "<Keyboard>/3",
+                    "path": "<Keyboard>/5",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -545,7 +629,7 @@
                 {
                     "name": "binding",
                     "id": "7d4b7886-e3a7-4548-8d9a-7ae2dce8631d",
-                    "path": "<Keyboard>/4",
+                    "path": "<Keyboard>/6",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

@@ -21,7 +21,7 @@ namespace PolyQuest.Dialogues
      *      - Implements IRaycastable to allow the player to interact with the NPC via raycast.      *
      *      - Sets the cursor to the dialogue icon when hovered.                                     *
      * --------------------------------------------------------------------------------------------- */
-    public class AIDialogueHandler : MonoBehaviour, IRaycastable
+    public class AIDialogueHandler : MonoBehaviour, IInteractable
     {
         [SerializeField] private CinemachineCamera m_dialogueCamera;
         [SerializeField] private Dialogue m_dialogue;
@@ -60,7 +60,7 @@ namespace PolyQuest.Dialogues
         /*----------------------------------------------------------------------------
         | --- HandleRaycast: The Behavior of the Raycast for Initiating Dialogue --- |
         ----------------------------------------------------------------------------*/
-        public bool HandleRaycast(PlayerController playerController)
+        public bool HandleInteraction(PlayerController playerController)
         {
             if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
             {

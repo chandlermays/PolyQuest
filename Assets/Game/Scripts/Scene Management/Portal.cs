@@ -46,6 +46,8 @@ namespace PolyQuest.SceneManagement
         private GameObject m_player;
         private const string kPlayerTag = "Player";
 
+        public string SceneName => m_sceneField.SceneName;
+
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
@@ -180,9 +182,6 @@ namespace PolyQuest.SceneManagement
         -------------------------------------------------------------------------------------*/
         private void UpdatePlayer(Portal destination)
         {
-            Debug.LogError($"[Portal] Destination spawn point world position: {destination.m_spawnPoint.position}, " +
-              $"portal position: {destination.transform.position}");
-
             // Retrieve the player object again in the new scene
             m_player = GameObject.FindWithTag(kPlayerTag);
             if (m_player == null)

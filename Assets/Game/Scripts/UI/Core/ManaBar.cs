@@ -13,13 +13,12 @@ using PolyQuest.Components;
 namespace PolyQuest.UI.HUD
 {
     /* --------------------------------------------------------------------------------------------
-     * Role: Displays the player's or entity's current health as a UI bar.                         *
+     * Role: Displays the player's or entity's current mana as a UI bar.                          *
      *                                                                                             *
      * Responsibilities:                                                                           *
-     *      - Retrieves and displays the current and maximum health from the HealthComponent.      *
-     *      - Updates the health bar fill amount when health changes.                              *
-     *      - Destroys the health bar UI when the entity dies.                                     *
-     *      - Subscribes to and unsubscribes from health change events.                            *
+     *      - Retrieves and displays the current and maximum mana from the ManaComponent.          *
+     *      - Updates the mana bar fill amount when mana changes.                                  *
+     *      - Subscribes to and unsubscribes from mana change events.                              *
      * ------------------------------------------------------------------------------------------- */
     public class ManaBar : MonoBehaviour
     {
@@ -27,6 +26,7 @@ namespace PolyQuest.UI.HUD
         [SerializeField] private ManaComponent m_manaComponent;
         private Image m_manaBarFill;
 
+        private BaseStats m_baseStats;
         private float m_maxMana;
 
         /*----------------------------------------------------------------
@@ -37,6 +37,9 @@ namespace PolyQuest.UI.HUD
             m_manaBarFill = GetComponent<Image>();
             Utilities.CheckForNull(m_manaBarFill, nameof(m_manaBarFill));
             Utilities.CheckForNull(m_manaComponent, nameof(m_manaComponent));
+
+            m_baseStats = m_manaComponent.GetComponent<BaseStats>();
+            Utilities.CheckForNull(m_baseStats, nameof(m_baseStats));
         }
 
         /*---------------------------------------------------------------------
@@ -60,7 +63,7 @@ namespace PolyQuest.UI.HUD
         -----------------------------------------------------*/
         private void Start()
         {
-            m_maxMana = m_manaComponent.GetComponent<BaseStats>().GetMana();
+            m_maxMana = m_baseStats.GetMana();
         }
 
         /*---------------------------------------------------------------------------------
@@ -70,7 +73,7 @@ namespace PolyQuest.UI.HUD
         {
             if (m_maxMana == 0)
             {
-                m_maxMana = m_manaComponent.GetComponent<BaseStats>().GetMana();
+                m_maxMana = m_baseStats.GetMana();
             }
 
             float manaPercentage = Mathf.Clamp(m_manaComponent.CurrentMana / m_maxMana, 0f, 1f);

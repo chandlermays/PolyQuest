@@ -45,13 +45,13 @@ namespace PolyQuest.PCG
         /*--------------------------------------------------------------------------------------------
         | --- GenerateCorridorCandidates: Generates possible corridor candidates around the room --- |
         --------------------------------------------------------------------------------------------*/
-        public List<Corridor> GenerateCorridorCandidates(int width, int length, int minDistanceFromEdge)
+        public List<Corridor> GenerateCorridorCandidates(int minDistanceFromEdge)
         {
             List<Corridor> candidates = new();
 
-            int top = length - 1;
+            int top = m_area.height - 1;
             int minX = minDistanceFromEdge;
-            int maxX = width - minDistanceFromEdge;
+            int maxX = m_area.width - minDistanceFromEdge;
 
             for (int x = minX; x < maxX; ++x)
             {
@@ -59,9 +59,9 @@ namespace PolyQuest.PCG
                 candidates.Add(new Corridor(Direction.kNorth, new Vector2Int(x, top)));
             }
 
-            int right = width - 1;
+            int right = m_area.width - 1;
             int minY = minDistanceFromEdge;
-            int maxY = length - minDistanceFromEdge;
+            int maxY = m_area.height - minDistanceFromEdge;
 
             for (int y = minY; y < maxY; ++y)
             {

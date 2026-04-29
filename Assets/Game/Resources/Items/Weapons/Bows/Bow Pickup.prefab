@@ -130,6 +130,18 @@ PrefabInstance:
       propertyPath: m_Center.z
       value: 0.8
       objectReference: {fileID: 0}
+    - target: {fileID: 7866320777162675841, guid: cde833eb33c6792409394e033fc7c876, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 3cd57b48cb32aa2408ee0460d689be68, type: 2}
+    - target: {fileID: 7866320777162675841, guid: cde833eb33c6792409394e033fc7c876, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -7244873375232470608, guid: 3cd57b48cb32aa2408ee0460d689be68, type: 2}
+    - target: {fileID: 7866320777162675841, guid: cde833eb33c6792409394e033fc7c876, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

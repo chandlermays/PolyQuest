@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4b14229c92106c4ea73a5e66e0bf4e3, type: 3}
   m_Name: W End Door Level 1
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.PCG.PatternMatching
-  m_prefab: {fileID: 5238322419112640143, guid: 03442d2a5c63bb040b1a7dd2fae2822e, type: 3}
+  m_prefab: {fileID: 7328249097927768589, guid: 57b857c0bdf507143b70de16f1dd2b7c, type: 3}
   m_prefabRotation: 90
   m_targetPattern:
     m_array: 000000000100000000000000010000000000000001000000

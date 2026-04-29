@@ -23,7 +23,7 @@ namespace PolyQuest.Pickups
      *      - Handles mouse click input to collect the pickup and add it to the inventory.               *
      * ------------------------------------------------------------------------------------------------- */
     [RequireComponent(typeof(Pickup))]
-    public class ClickablePickup : MonoBehaviour, IRaycastable
+    public class ClickablePickup : MonoBehaviour, IInteractable
     {
         private Pickup m_pickup;
         private Outline m_outline;
@@ -63,7 +63,7 @@ namespace PolyQuest.Pickups
         /*------------------------------------------------------------------------
         | --- HandleRaycast: Handles the raycast interaction with the pickup --- |
         ------------------------------------------------------------------------*/
-        public bool HandleRaycast(PlayerController playerController)
+        public bool HandleInteraction(PlayerController playerController)
         {
             if (InputManager.Instance.InputActions.Gameplay.Interact.WasPressedThisFrame())
             {

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4b14229c92106c4ea73a5e66e0bf4e3, type: 3}
   m_Name: E Stairs Level 1
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.PCG.PatternMatching
-  m_prefab: {fileID: 5569912369142724100, guid: 4ad7a6077c485b14d9dc60cb30df20ad, type: 3}
+  m_prefab: {fileID: 1807125592850328930, guid: ddc848381bfc67941821f13c1a211f25, type: 3}
   m_prefabRotation: -90
   m_targetPattern:
     m_array: 010000000100000000000000010000000100000000000000010000000100000000000000010000000100000000000000

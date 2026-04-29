@@ -25,6 +25,14 @@ namespace PolyQuest.Inventories
 
         private Image m_iconImage;
 
+        /*----------------------------------------------------------------
+        | --- Awake: Called when the script instance is being loaded --- |
+        ----------------------------------------------------------------*/
+        private void Awake()
+        {
+            m_iconImage = GetComponent<Image>();
+        }
+
         /*---------------------------------------------------
         | --- SetItem: Set the icon of an InventoryItem --- |
         ---------------------------------------------------*/
@@ -38,15 +46,12 @@ namespace PolyQuest.Inventories
         --------------------------------------------------------------------------------*/
         public void SetItem(InventoryItem item, int quantity)
         {
-            m_iconImage = GetComponent<Image>();
-
             if (item == null)
             {
                 m_iconImage.enabled = false;
             }
             else
             {
-                // Icon image is null here. It shouldn't be.
                 m_iconImage.enabled = true;
                 m_iconImage.sprite = item.Icon;
             }
