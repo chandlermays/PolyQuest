@@ -10,7 +10,7 @@ using PolyQuest.Tools;
 
 namespace PolyQuest.Edit
 {
-    [CustomPropertyDrawer(typeof(Condition.Disjunction))]
+    [CustomPropertyDrawer(typeof(Conjunction.Disjunction))]
     public class DisjunctionPropertyDrawer : PropertyDrawer
     {
         /*-------------------------------------------------------------
@@ -84,7 +84,7 @@ namespace PolyQuest.Edit
                 or.MoveArrayElement(itemToMoveDown, itemToMoveDown + 1);
             }
 
-            if (GUI.Button(position, "Add Condition"))
+            if (GUI.Button(position, "Add Conjunction"))
             {
                 or.InsertArrayElementAtIndex(index);
             }

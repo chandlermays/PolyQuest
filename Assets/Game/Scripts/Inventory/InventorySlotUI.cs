@@ -26,7 +26,6 @@ namespace PolyQuest.Inventories
 
         private int m_index;
         private Inventory m_playerInventory;
-        private Equipment m_playerEquipment;
         private bool m_isCursorOver = false;
         private InputAction m_doubleClickAction;
 
@@ -74,13 +73,6 @@ namespace PolyQuest.Inventories
         {
             m_playerInventory = inventory;
             m_index = index;
-
-            if (m_playerEquipment == null)
-            {
-                m_playerEquipment = m_playerInventory.GetComponent<Equipment>();
-                Utilities.CheckForNull(m_playerEquipment, nameof(m_playerEquipment));
-            }
-
             m_itemIcon.SetItem(m_playerInventory.GetItemAtSlot(m_index), m_playerInventory.GetQuantityAtSlot(index));
         }
 
@@ -148,56 +140,7 @@ namespace PolyQuest.Inventories
         private void HandleDoubleClick()
         {
             InventoryItem item = GetItem();
-            if (item == null)
-                return;
-
-            if (item.Category == ItemCategory.kConsumables)
-            {
-                if (item is ActionItem actionItem)
-                {
-                    bool used = actionItem.Use(m_playerInventory.gameObject);
-                    if (used)
-                    {
-                        m_playerInventory.RemoveItemsFromSlot(m_index, 1);
-                    }
-                }
-            }
-            else if (item.Category == ItemCategory.kArmor || item.Category == ItemCategory.kWeapon)
-            {
-                if (item is EquipableItem equipableItem)
-                {
-                    EquipItem(equipableItem);
-                }
-            }
-        }
-
-        /*---------------------------------------------------------------------
-        | --- EquipItem: Equip the specified equipable item to the player --- |
-        ---------------------------------------------------------------------*/
-        private void EquipItem(EquipableItem equipableItem)
-        {
-            EquipmentSlot targetSlot = equipableItem.TargetEquipmentSlot;
-            if (targetSlot == EquipmentSlot.kNone)
-                return;
-
-            if (!equipableItem.CanEquip(targetSlot, m_playerEquipment))
-                return;
-
-            // Check if there's an item currently equipped in the target slot
-            EquipableItem currentlyEquipped = m_playerEquipment.GetItemInSlot(targetSlot);
-            m_playerInventory.RemoveItemsFromSlot(m_index, 1);
-
-            if (currentlyEquipped != null)
-            {
-                m_playerInventory.SuppressItemAddedNotif = true;
-                m_playerEquipment.AddItem(targetSlot, equipableItem);
-                m_playerInventory.TryAddItemToSlot(m_index, currentlyEquipped, 1);
-                m_playerInventory.SuppressItemAddedNotif = false;
-            }
-            else
-            {
-                m_playerEquipment.AddItem(targetSlot, equipableItem);
-            }
+            item?.OnUse(m_playerInventory, m_index);
         }
     }
 }

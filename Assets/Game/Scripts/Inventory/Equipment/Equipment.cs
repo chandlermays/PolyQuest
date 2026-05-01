@@ -26,7 +26,7 @@ namespace PolyQuest.Inventories
         kNone
     }
 
-    public class Equipment : MonoBehaviour, ISaveable, IConditionChecker
+    public class Equipment : MonoBehaviour, ISaveable, IConditionChecker, IStatModifier
     {
         private Dictionary<EquipmentSlot, EquipableItem> m_equippedItems = new();
         private BaseStats m_baseStats;
@@ -76,6 +76,40 @@ namespace PolyQuest.Inventories
             }
         }
 
+        /*------------------------------------------------------------------------------
+        | --- GetAdditiveModifiers: Get all additive modifiers from equipped items --- |
+        ------------------------------------------------------------------------------*/
+        public IEnumerable<float> GetAdditiveModifiers(Stat stat)
+        {
+            foreach (var slot in OccupiedSlots)
+            {
+                if (GetItemInSlot(slot) is not IStatModifier item)
+                    continue;
+
+                foreach (float modifier in item.GetAdditiveModifiers(stat))
+                {
+                    yield return modifier;
+                }
+            }
+        }
+
+        /*----------------------------------------------------------------------------------
+        | --- GetPercentageModifiers: Get all percentage modifiers from equipped items --- |
+        ----------------------------------------------------------------------------------*/
+        public IEnumerable<float> GetPercentageModifiers(Stat stat)
+        {
+            foreach (var slot in OccupiedSlots)
+            {
+                if (GetItemInSlot(slot) is not IStatModifier item)
+                    continue;
+
+                foreach (float modifier in item.GetPercentageModifiers(stat))
+                {
+                    yield return modifier;
+                }
+            }
+        }
+
         /*-------------------------------------------------------------------------------
         | --- CaptureState: Capture the current state of equipped items for saving --- |
         -------------------------------------------------------------------------------*/
@@ -120,14 +154,14 @@ namespace PolyQuest.Inventories
         /*----------------------------------------------------------------
         | --- Evaluate: Evaluate a condition based on equipped items --- |
         ----------------------------------------------------------------*/
-        public bool? Evaluate(PredicateType predicate, string[] parameters)
+        public bool? Evaluate(ConditionType predicate, string[] parameters)
         {
             if (parameters == null || parameters.Length == 0)
                 return null;
 
             switch (predicate)
             {
-                case PredicateType.kHasItemEquipped:
+                case ConditionType.kHasItemEquipped:
                     foreach (var item in m_equippedItems.Values)
                     {
                         if (item.ID == parameters[0])

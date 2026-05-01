@@ -18,8 +18,8 @@ MonoBehaviour:
     y: 400
     width: 200
     height: 100
-  m_text: Stonewick's a hard town full of harder people. We quarry stone, we cut
-    timber, we keep our roofs from collapsing--mostly.
+  m_text: Stonewick's built by hard hands and stubborn backs. Quarry stone, cut timber,
+    mend what breaks.
   m_isPlayerSpeaking: 0
   m_children:
   - f2dba861-1db9-4a41-a8b7-771e22842981
@@ -133,7 +133,7 @@ MonoBehaviour:
   m_text: Still working on it.
   m_isPlayerSpeaking: 1
   m_children:
-  - 5f9645fa-6bcc-4f72-966e-d67ff120d7cf
+  - 1e897553-1950-4a1a-ae12-cc05522b642f
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -162,7 +162,7 @@ MonoBehaviour:
     y: 200
     width: 200
     height: 100
-  m_text: I need someone who can move fast and hit harder than my current lot.
+  m_text: I need someone who can move fast and hit harder than the lot I've got.
   m_isPlayerSpeaking: 0
   m_children:
   - c88fa8ca-4548-4205-8702-972a353d1da8
@@ -189,7 +189,7 @@ MonoBehaviour:
     width: 200
     height: 100
   m_text: Locals have started calling them "The Rust". Fitting name since everything
-    they touch falls apart.
+    they touch rots.
   m_isPlayerSpeaking: 0
   m_children:
   - 772c16d6-3b8c-4615-81bd-6748b4ed15c5
@@ -247,7 +247,7 @@ MonoBehaviour:
     y: 200
     width: 200
     height: 100
-  m_text: And if you find out who's backing them -- I want to know.
+  m_text: And if you learn who's feeding them steel, I want names.
   m_isPlayerSpeaking: 0
   m_children:
   - b56e4102-d3dd-41a3-8bad-1227b296ea79
@@ -272,11 +272,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
-    x: 1000
+    x: 1500
     y: 900
     width: 200
     height: 100
-  m_text: Keep your guard up, traveler. And keep this between us for now.
+  m_text: Keep your guard up, traveler. And keep this quiet.
   m_isPlayerSpeaking: 0
   m_children: []
   m_onEnterEvents: []
@@ -361,10 +361,39 @@ MonoBehaviour:
     y: 1000
     width: 200
     height: 100
-  m_text: Either way, the job's done. I suppose that's what matters.
+  m_text: Either way, the job's done, and that counts for something.
   m_isPlayerSpeaking: 0
   m_children:
   - 80d74832-cf51-4b0d-8a58-bf0a24a3b7c5
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-4088161185528609356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 4997ca4c-90f0-4aa9-83e8-3714ecfcca38
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1500
+    y: 50
+    width: 200
+    height: 100
+  m_text: They strike caravans, then vanish into the trees before we can answer.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - b56e4102-d3dd-41a3-8bad-1227b296ea79
+  - 8ab5243f-2596-4862-8691-21aba540e55b
+  - 5fbabb5d-9572-4688-bbe5-046c89c0a4dd
+  - f23f4e12-2512-4c20-9c5d-1a32c30ea5ff
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -387,7 +416,7 @@ MonoBehaviour:
     y: 850
     width: 200
     height: 100
-  m_text: Back already? Either you work fast, or something went wrong.
+  m_text: Back already? Either your quick, or something's gone wrong.
   m_isPlayerSpeaking: 0
   m_children:
   - 9cf64901-a08e-4af5-9f3e-c1fc02cd35ce
@@ -428,7 +457,7 @@ MonoBehaviour:
     y: 300
     width: 200
     height: 100
-  m_text: If you've got questions, ask. If not, I've got work to get back to.
+  m_text: If you've got questions, ask them. If not, I've got work to get back to.
   m_isPlayerSpeaking: 0
   m_children:
   - bc6a735b-e6bf-401c-bb83-af9861dfdf90
@@ -461,6 +490,32 @@ MonoBehaviour:
   m_isPlayerSpeaking: 0
   m_children:
   - 95c078e0-90f7-428d-9f9a-1467c98a79be
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-1727954913174351989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 1e897553-1950-4a1a-ae12-cc05522b642f
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 500
+    y: 700
+    width: 200
+    height: 100
+  m_text: Then keep moving.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 5f9645fa-6bcc-4f72-966e-d67ff120d7cf
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -509,7 +564,7 @@ MonoBehaviour:
     y: 1150
     width: 200
     height: 100
-  m_text: Thanks again for your help, traveler. Stonewick is in your debt.
+  m_text: You've done Stonewick a service. Don't think we'll forget it.
   m_isPlayerSpeaking: 0
   m_children: []
   m_onEnterEvents: []
@@ -540,7 +595,7 @@ MonoBehaviour:
     y: 550
     width: 200
     height: 100
-  m_text: Then move along. I've got enough on my plate.
+  m_text: Then keep walking. I've no shortage of problems already.
   m_isPlayerSpeaking: 0
   m_children: []
   m_onEnterEvents: []
@@ -565,7 +620,7 @@ MonoBehaviour:
     y: 50
     width: 200
     height: 100
-  m_text: Bandits. But not the usual stragglers looking for an easy purse.
+  m_text: Bandits. But not the usual desperate fools chasing easy coin.
   m_isPlayerSpeaking: 0
   m_children:
   - 4a121fc4-ed15-4fb4-a02e-dc8904bc7a5e
@@ -625,6 +680,10 @@ MonoBehaviour:
   - {fileID: -5410783640644075454}
   - {fileID: -4458145501168764777}
   - {fileID: 927102588575684454}
+  - {fileID: -4088161185528609356}
+  - {fileID: -1727954913174351989}
+  - {fileID: 3112522229089971506}
+  - {fileID: 8567691327154205808}
   m_newNodeOffset: {x: 300, y: 0}
 --- !u!114 &440063931066617384
 MonoBehaviour:
@@ -644,7 +703,7 @@ MonoBehaviour:
     y: 400
     width: 200
     height: 100
-  m_text: Still, people here look after each other. That's gotta count for something.
+  m_text: Still, people here look after each other. That matters.
   m_isPlayerSpeaking: 0
   m_children:
   - 95c078e0-90f7-428d-9f9a-1467c98a79be
@@ -729,7 +788,7 @@ MonoBehaviour:
     y: 1000
     width: 200
     height: 100
-  m_text: Thanks again for your help, traveler. Stonewick is in your debt.
+  m_text: You've done Stonewick a service.
   m_isPlayerSpeaking: 0
   m_children: []
   m_onEnterEvents: []
@@ -781,7 +840,7 @@ MonoBehaviour:
     y: 350
     width: 200
     height: 100
-  m_text: Then we're done here.
+  m_text: Then we're finished here.
   m_isPlayerSpeaking: 0
   m_children:
   - 95c078e0-90f7-428d-9f9a-1467c98a79be
@@ -829,15 +888,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
+    x: 1250
+    y: 900
+    width: 200
+    height: 100
+  m_text: I'll learn what I can of this mark. Whoever stands behind them isn't finished
+    yet.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - b13a5c25-f580-4a19-902a-34fca57a4350
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &3112522229089971506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 33b95e86-7ecf-4620-bbbb-ae4b5f694392
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
     x: 750
     y: 900
     width: 200
     height: 100
-  m_text: I'll see what more I can find of this symbol. Whoever's backing these bandits,
-    they're not done yet.
+  m_text: This is what I feared.
   m_isPlayerSpeaking: 0
   m_children:
-  - b13a5c25-f580-4a19-902a-34fca57a4350
+  - ad711fa2-59b3-44fe-947c-8b721a5a94df
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -860,8 +945,8 @@ MonoBehaviour:
     y: 400
     width: 200
     height: 100
-  m_text: People here don't ask for much. Just a fair day's work and a quiet night
-    to enjoy it. But lately, they're not getting the second part.
+  m_text: Folks here ask little. Honest work. Quiet nights. Lately, they'd have less
+    of both.
   m_isPlayerSpeaking: 0
   m_children:
   - 955c7c61-ab73-453b-8d80-51af8b42a43e
@@ -887,11 +972,10 @@ MonoBehaviour:
     y: 900
     width: 200
     height: 100
-  m_text: (sigh) This is just what I had worried. You did right by bringing this
-    to me.
+  m_text: ...Damn it.
   m_isPlayerSpeaking: 0
   m_children:
-  - 6c9e4d91-7c77-4f51-acbe-fc0d91a3ea26
+  - 33b95e86-7ecf-4620-bbbb-ae4b5f694392
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -940,7 +1024,7 @@ MonoBehaviour:
     y: 50
     width: 200
     height: 100
-  m_text: And I don't believe for a second they put this together on their own.
+  m_text: And I'd wager my last coin they didn't build this alone.
   m_isPlayerSpeaking: 0
   m_children:
   - b56e4102-d3dd-41a3-8bad-1227b296ea79
@@ -1021,7 +1105,7 @@ MonoBehaviour:
     y: 200
     width: 200
     height: 100
-  m_text: Bandit camp's set up somewhere to the east. Find it and clear them out.
+  m_text: There's a camp somewhere east of town. Find it. Break it.
   m_isPlayerSpeaking: 0
   m_children:
   - 9d4aa57d-f944-4f3e-bff1-4e6265577891
@@ -1047,14 +1131,10 @@ MonoBehaviour:
     y: 50
     width: 200
     height: 100
-  m_text: These ones are organized. Armed better than they should be. They hit caravans
-    and vanished into the tree line before we can respond.
+  m_text: These ones are organized. Better armed than they've any right to be.
   m_isPlayerSpeaking: 0
   m_children:
-  - b56e4102-d3dd-41a3-8bad-1227b296ea79
-  - 8ab5243f-2596-4862-8691-21aba540e55b
-  - 5fbabb5d-9572-4688-bbe5-046c89c0a4dd
-  - f23f4e12-2512-4c20-9c5d-1a32c30ea5ff
+  - 4997ca4c-90f0-4aa9-83e8-3714ecfcca38
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -1115,8 +1195,8 @@ MonoBehaviour:
     y: 250
     width: 200
     height: 100
-  m_text: You'll be paid fairly. And you'll have the town's trust. That carries further
-    than gold, whether you believe it or not.
+  m_text: Fair pay. And Stonewick's trust. That reaches farther than gold, if you're
+    wise enough to know it.
   m_isPlayerSpeaking: 0
   m_children:
   - b56e4102-d3dd-41a3-8bad-1227b296ea79
@@ -1145,11 +1225,37 @@ MonoBehaviour:
     y: 150
     width: 200
     height: 100
-  m_text: Good. I was hoping you'd say that. Come back when it's done.
+  m_text: Good. I was hoping you had sense. Come back when it's done.
   m_isPlayerSpeaking: 0
   m_children: []
   m_onEnterEvents: []
   m_onExitEvents:
   - {fileID: 11400000, guid: 679c9e3e354eb2f45ae13da3be47d323, type: 2}
+  m_condition:
+    m_AND: []
+--- !u!114 &8567691327154205808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: ad711fa2-59b3-44fe-947c-8b721a5a94df
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1000
+    y: 900
+    width: 200
+    height: 100
+  m_text: You did right by bringing this to me.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 6c9e4d91-7c77-4f51-acbe-fc0d91a3ea26
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND: []

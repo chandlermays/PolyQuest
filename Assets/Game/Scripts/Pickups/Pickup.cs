@@ -124,24 +124,8 @@ namespace PolyQuest.Pickups
         --------------------------------------------------------------------------*/
         public void PickupItem()
         {
-            if (m_item is CurrencyItem)
-            {
-                Wallet wallet = m_inventory.GetComponent<Wallet>();
-                wallet.UpdateSilver(m_quantity);
-                Destroy(gameObject);
-                return;
-            }
-
-            bool slotAvailable = m_inventory.TryAddToAvailableSlot(m_item, m_quantity);
-            if (slotAvailable)
-            {
-                if (m_item is QuestItem questItem)
-                {
-                    QuestManager questManager = m_inventory.GetComponent<QuestManager>();
-                    questManager.CompleteObjective(questItem.Quest, questItem.Objective);
-                }
-                Destroy(gameObject);
-            }
+            m_item.OnPickup(m_inventory, m_quantity);
+            Destroy(gameObject);
         }
 
         /*---------------------------------------------------------------------------------------------

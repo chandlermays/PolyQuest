@@ -31,7 +31,7 @@ namespace PolyQuest.Dialogues
         [SerializeField] private List<string> m_children = new();
         [SerializeField] private List<DialogueEvent> m_onEnterEvents = new();
         [SerializeField] private List<DialogueEvent> m_onExitEvents = new();
-        [SerializeField] private Condition m_condition;
+        [SerializeField] private Conjunction m_condition;
 
         public Rect Rect                                        =>       m_rect;
         public string Text                                      =>       m_text;

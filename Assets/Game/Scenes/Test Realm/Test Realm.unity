@@ -3003,8 +3003,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Tools.DebugCheats
   m_player: {fileID: 1960663758}
   m_healthAmount: 20
+  m_manaAmount: 20
   m_experienceAmount: 20
-  m_inventoryItem: {fileID: 11400000, guid: 969a495089f91be4897ab1d54aa212bb, type: 2}
+  m_inventoryItem: {fileID: 0}
   m_itemQuantity: 1
 --- !u!4 &1021448869
 Transform:
@@ -7517,7 +7518,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6866855087299853756, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -114.99939
+      value: -114.999954
       objectReference: {fileID: 0}
     - target: {fileID: 6963727198884903383, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_IsActive

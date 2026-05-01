@@ -194,11 +194,11 @@ namespace PolyQuest.Quests
         /*-------------------------------------------------------------------
         | --- Evaluate: Check if the quest manager has a specific quest --- |
         -------------------------------------------------------------------*/
-        public bool? Evaluate(PredicateType predicate, string[] parameters)
+        public bool? Evaluate(ConditionType predicate, string[] parameters)
         {
             switch (predicate)
             {
-                case PredicateType.kCompletedObjective:
+                case ConditionType.kCompletedObjective:
                     QuestStatus questStatus = GetQuestStatus(Quest.GetByName(parameters[0]));
                     if (questStatus == null)
                         return false;
@@ -209,13 +209,13 @@ namespace PolyQuest.Quests
 
                     return questStatus.IsObjectiveComplete(objective);
 
-                case PredicateType.kHasQuest:
+                case ConditionType.kHasQuest:
                     return HasQuest(Quest.GetByName(parameters[0]));
 
-                case PredicateType.kDoesNotHaveQuest:
+                case ConditionType.kDoesNotHaveQuest:
                     return !HasQuest(Quest.GetByName(parameters[0]));
 
-                case PredicateType.kCompletedQuest:
+                case ConditionType.kCompletedQuest:
                     return IsQuestCompleted(Quest.GetByName(parameters[0]));
 
                 default:

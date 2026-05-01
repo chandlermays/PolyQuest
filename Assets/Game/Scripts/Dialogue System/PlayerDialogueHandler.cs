@@ -31,6 +31,7 @@ namespace PolyQuest.Dialogues
         private AIDialogueHandler m_activeNPC;
         private MovementComponent m_movementComponent;
         private ActionManager m_actionManager;
+        private DialogueHistory m_history;
 
         private const float kProximityThreshold = 3.0f;
         private bool m_inActiveDialogue = false;
@@ -54,6 +55,9 @@ namespace PolyQuest.Dialogues
 
             m_actionManager = GetComponent<ActionManager>();
             Utilities.CheckForNull(m_actionManager, nameof(ActionManager));
+
+            m_history = GetComponent<DialogueHistory>();
+            Utilities.CheckForNull(m_history, nameof(DialogueHistory));
         }
 
         /*----------------------------------------- 
@@ -105,6 +109,7 @@ namespace PolyQuest.Dialogues
         {
             m_inActiveDialogue = false;
             m_activeDialogue = null;
+            m_history.RecordConversation(m_activeNPC.SpeakerName);
             TriggerExitAction();
             m_currentNode = null;
             m_activeNPC = null;
@@ -246,7 +251,7 @@ namespace PolyQuest.Dialogues
         }
 
         /*------------------------------------------------------------------------- 
-        | --- GetEvaluators: Returns all Condition Checkers on the active NPC --- |
+        | --- GetEvaluators: Returns all Conjunction Checkers on the active NPC --- |
         -------------------------------------------------------------------------*/
         private IEnumerable<IConditionChecker> GetEvaluators()
         {

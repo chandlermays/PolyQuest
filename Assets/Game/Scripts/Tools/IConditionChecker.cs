@@ -4,7 +4,7 @@ Author: Chandler Mays
 ----------------------------*/
 namespace PolyQuest.Tools
 {
-    public enum PredicateType
+    public enum ConditionType
     {
         kSelect,
         kHasQuest,
@@ -15,11 +15,12 @@ namespace PolyQuest.Tools
         kHasItem,
         kHasItems,
         kHasItemEquipped,
+        kHasSpokenTo,
         //... add more as needed
     }
 
     public interface IConditionChecker
     {
-        bool? Evaluate(PredicateType predicate, string[] parameters);
+        bool? Evaluate(ConditionType condition, string[] parameters);
     }
 }

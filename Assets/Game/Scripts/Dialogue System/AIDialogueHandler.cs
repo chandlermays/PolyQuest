@@ -13,7 +13,7 @@ using PolyQuest.UI;
 
 namespace PolyQuest.Dialogues
 {
-    /* ----------------------------------------------------------------------------------------------
+    /* -----------------------------------------------------------------------------------------------
      * Role: Handles initiating and managing dialogue interactions for AI-controlled NPCs.           *
      *                                                                                               *
      * Responsibilities:                                                                             *

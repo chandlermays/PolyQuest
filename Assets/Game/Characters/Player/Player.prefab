@@ -2415,11 +2415,12 @@ GameObject:
   - component: {fileID: 1323104572251572160}
   - component: {fileID: 352099503163044681}
   - component: {fileID: 8064554031457095794}
-  - component: {fileID: 2228920064529085394}
   - component: {fileID: 6909978207057100477}
+  - component: {fileID: 2228920064529085394}
   - component: {fileID: 6674765643149275677}
   - component: {fileID: 7596575801378017501}
   - component: {fileID: 449716864117483759}
+  - component: {fileID: 8464933877287639611}
   - component: {fileID: 988986447363148554}
   - component: {fileID: -1471082835158277173}
   m_Layer: 6
@@ -2753,6 +2754,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_inventorySize: 20
+--- !u!114 &6909978207057100477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8136770854238850487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 550c88fc4ef72ac4cb568aa4ce60d254, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.StatsEquipment
 --- !u!114 &2228920064529085394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2765,18 +2778,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66731b7555f85044c85ba67384c7c4b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.Wallet
---- !u!114 &6909978207057100477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8136770854238850487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2b1a95a090c88144a6dfe27c553b4c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.StatsEquipment
 --- !u!114 &6674765643149275677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2813,6 +2814,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18d69f3a5022a3d4d95952e6a543ff52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8464933877287639611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8136770854238850487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a8c491080c6fd45902924f76ad9a9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueHistory
 --- !u!114 &988986447363148554
 MonoBehaviour:
   m_ObjectHideFlags: 0

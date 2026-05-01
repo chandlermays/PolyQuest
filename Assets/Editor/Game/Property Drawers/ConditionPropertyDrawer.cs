@@ -13,7 +13,7 @@ using PolyQuest.Tools;
 
 namespace PolyQuest.Edit
 {
-    [CustomPropertyDrawer(typeof(Condition.Predicate))]
+    [CustomPropertyDrawer(typeof(Conjunction.Condition))]
     public class ConditionPropertyDrawer : PropertyDrawer
     {
         private Dictionary<string, Quest> m_quests;
@@ -36,9 +36,9 @@ namespace PolyQuest.Edit
             position.height = propertyHeight;
             EditorGUI.PropertyField(position, predicate);
 
-            PredicateType selectedPredicate = (PredicateType)predicate.enumValueIndex;
+            ConditionType selectedPredicate = (ConditionType)predicate.enumValueIndex;
 
-            if (selectedPredicate == PredicateType.kSelect)
+            if (selectedPredicate == ConditionType.kSelect)
                 return;
 
             while (parameters.arraySize < 2)
@@ -48,15 +48,15 @@ namespace PolyQuest.Edit
             SerializedProperty param1 = parameters.GetArrayElementAtIndex(1);
 
             // ---- Quest / Objective predicates (unchanged) ----
-            if (selectedPredicate == PredicateType.kHasQuest ||
-                selectedPredicate == PredicateType.kDoesNotHaveQuest ||
-                selectedPredicate == PredicateType.kCompletedQuest ||
-                selectedPredicate == PredicateType.kCompletedObjective)
+            if (selectedPredicate == ConditionType.kHasQuest ||
+                selectedPredicate == ConditionType.kDoesNotHaveQuest ||
+                selectedPredicate == ConditionType.kCompletedQuest ||
+                selectedPredicate == ConditionType.kCompletedObjective)
             {
                 position.y += propertyHeight;
                 DrawQuest(position, param0);
 
-                if (selectedPredicate == PredicateType.kCompletedObjective)
+                if (selectedPredicate == ConditionType.kCompletedObjective)
                 {
                     position.y += propertyHeight;
                     DrawObjective(position, param1, param0);
@@ -64,12 +64,12 @@ namespace PolyQuest.Edit
             }
 
             // ---- Item predicates — quest-filtered item list ----
-            if (selectedPredicate == PredicateType.kHasItem ||
-                selectedPredicate == PredicateType.kHasItems ||
-                selectedPredicate == PredicateType.kHasItemEquipped)
+            if (selectedPredicate == ConditionType.kHasItem ||
+                selectedPredicate == ConditionType.kHasItems ||
+                selectedPredicate == ConditionType.kHasItemEquipped)
             {
-                bool stackable = selectedPredicate == PredicateType.kHasItems;
-                bool equipment = selectedPredicate == PredicateType.kHasItemEquipped;
+                bool stackable = selectedPredicate == ConditionType.kHasItems;
+                bool equipment = selectedPredicate == ConditionType.kHasItemEquipped;
                 string filterKey = property.propertyPath;
 
                 // Row 1: Optional quest scope (narrows item list to that quest's QuestItems)
@@ -87,7 +87,7 @@ namespace PolyQuest.Edit
                 }
             }
 
-            if (selectedPredicate == PredicateType.kHasLevel)
+            if (selectedPredicate == ConditionType.kHasLevel)
             {
                 position.y += propertyHeight;
                 DrawIntSlider(position, "Minimum Level:", param0, 1, 100);
@@ -104,31 +104,31 @@ namespace PolyQuest.Edit
         {
             SerializedProperty predicate = property.FindPropertyRelative("m_predicate");
             float propertyHeight = EditorGUI.GetPropertyHeight(predicate);
-            PredicateType selectedPredicate = (PredicateType)predicate.enumValueIndex;
+            ConditionType selectedPredicate = (ConditionType)predicate.enumValueIndex;
 
             switch (selectedPredicate)
             {
-                case PredicateType.kSelect:
+                case ConditionType.kSelect:
                     return propertyHeight;
 
-                // Predicate + Quest filter + Item + Negate
-                case PredicateType.kHasItem:
-                case PredicateType.kHasItemEquipped:
+                // Condition + Quest filter + Item + Negate
+                case ConditionType.kHasItem:
+                case ConditionType.kHasItemEquipped:
                     return propertyHeight * 4.0f;
 
-                // Predicate + Quest filter + Item + Quantity + Negate
-                case PredicateType.kHasItems:
+                // Condition + Quest filter + Item + Quantity + Negate
+                case ConditionType.kHasItems:
                     return propertyHeight * 5.0f;
 
-                // Predicate + Quest + Negate
-                case PredicateType.kHasQuest:
-                case PredicateType.kDoesNotHaveQuest:
-                case PredicateType.kCompletedQuest:
-                case PredicateType.kHasLevel:
+                // Condition + Quest + Negate
+                case ConditionType.kHasQuest:
+                case ConditionType.kDoesNotHaveQuest:
+                case ConditionType.kCompletedQuest:
+                case ConditionType.kHasLevel:
                     return propertyHeight * 3.0f;
 
-                // Predicate + Quest + Objective + Negate
-                case PredicateType.kCompletedObjective:
+                // Condition + Quest + Objective + Negate
+                case ConditionType.kCompletedObjective:
                     return propertyHeight * 4.0f;
             }
 

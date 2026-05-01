@@ -16,5 +16,15 @@ namespace PolyQuest.Inventories
 
         public Quest Quest => m_quest;
         public QuestObjective Objective => m_objective;
+
+        public override void OnPickup(Inventory inventory, int quantity)
+        {
+            bool added = inventory.TryAddToAvailableSlot(this, quantity);
+            if (added)
+            {
+                QuestManager questManager = inventory.GetComponent<QuestManager>();
+                questManager.CompleteObjective(m_quest, m_objective);
+            }
+        }
     }
 }

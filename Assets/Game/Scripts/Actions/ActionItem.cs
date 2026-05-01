@@ -26,5 +26,13 @@ namespace PolyQuest.Inventories
         {
             return true;
         }
+
+        public override void OnUse(Inventory inventory, int slotIndex)
+        {
+            if (Use(inventory.gameObject))
+            {
+                inventory.RemoveItemsFromSlot(slotIndex, 1);
+            }
+        }
     }
 }

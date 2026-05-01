@@ -1,0 +1,629 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7297284011515305039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 11cb0594-229f-4df6-b6ee-2740e49bbd9a
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 2250
+    y: 250
+    width: 200
+    height: 100
+  m_text: Both methods leave scars.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 84d9f66f-c089-4463-b75a-c71ade445d76
+  - 0dc5ef31-9bf2-4d76-8822-80afb1380f28
+  - 57b58d79-2826-4783-bd70-41eb9b4c1d84
+  - 6ac95059-7fb4-42ea-b785-04982d607896
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-7126710600714756225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 0dc5ef31-9bf2-4d76-8822-80afb1380f28
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1500
+    y: 150
+    width: 200
+    height: 100
+  m_text: Why stay here?
+  m_isPlayerSpeaking: 1
+  m_children:
+  - d52dd3be-28cc-462f-9e30-8fa7050291bf
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-7017873226292389188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 6bfb5bc7-a217-4eb2-988f-ecac5617d057
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1250
+    y: 150
+    width: 200
+    height: 100
+  m_text: But pain travels farther than roots. So here I remain.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 84d9f66f-c089-4463-b75a-c71ade445d76
+  - 0dc5ef31-9bf2-4d76-8822-80afb1380f28
+  - 57b58d79-2826-4783-bd70-41eb9b4c1d84
+  - 6ac95059-7fb4-42ea-b785-04982d607896
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-6721936470113364751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 176ac2de-5308-41ca-b895-7590ac4ff6c8
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1750
+    y: 250
+    width: 200
+    height: 100
+  m_text: The name of my people. Others shorten it to "elves," when they know of
+    us at all.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 47c95073-bafb-43c1-a92d-83ec68c9eba6
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-6605072927237867229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 57b58d79-2826-4783-bd70-41eb9b4c1d84
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1500
+    y: 250
+    width: 200
+    height: 100
+  m_text: Sylvarin?
+  m_isPlayerSpeaking: 1
+  m_children:
+  - 176ac2de-5308-41ca-b895-7590ac4ff6c8
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-5375054004756250328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: e391dd4e-7676-4de3-8edf-6e31b55fb35b
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 750
+    y: 50
+    width: 200
+    height: 100
+  m_text: Of course. Hold still.
+  m_isPlayerSpeaking: 0
+  m_children: []
+  m_onEnterEvents: []
+  m_onExitEvents:
+  - {fileID: 11400000, guid: f09926f1dbd8670479fff27c0c3e03a9, type: 2}
+  m_condition:
+    m_AND: []
+--- !u!114 &-4671864786479860157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 5b0bd84e-71c0-4719-b731-bc56ff4229a6
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 500
+    y: 150
+    width: 200
+    height: 100
+  m_text: You're not from Stonewick.
+  m_isPlayerSpeaking: 1
+  m_children:
+  - c0f22c1c-897a-44f7-a64a-40beb26e23dc
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-3278569332876694527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 98d1e15c-d671-44f3-80b3-4f73a49d67b8
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 250
+    y: 150
+    width: 200
+    height: 100
+  m_text: I am Elira. If you need healing, ask plainly. If you need peace, sit a
+    moment first.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 2bc8163e-1fe7-4230-b442-ee562e3570fd
+  - 5b0bd84e-71c0-4719-b731-bc56ff4229a6
+  - 2a6475d0-6024-4336-9e40-e23da0cb1402
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-1844967071166031497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 2a6475d0-6024-4336-9e40-e23da0cb1402
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 500
+    y: 250
+    width: 200
+    height: 100
+  m_text: Goodbye.
+  m_isPlayerSpeaking: 1
+  m_children:
+  - 707c354b-e5c2-451b-b714-8a2aaa8db2a3
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5c8d063cb8c3f4796d574b90d0cf64, type: 3}
+  m_Name: Elira the Healer
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.Dialogue
+  m_nodes:
+  - {fileID: 1548851650213216438}
+  - {fileID: -3278569332876694527}
+  - {fileID: 4003044737693487318}
+  - {fileID: -4671864786479860157}
+  - {fileID: -1844967071166031497}
+  - {fileID: 5368910751137664172}
+  - {fileID: -5375054004756250328}
+  - {fileID: 5254279950996361105}
+  - {fileID: -7017873226292389188}
+  - {fileID: 6126701640540023023}
+  - {fileID: -7126710600714756225}
+  - {fileID: -6605072927237867229}
+  - {fileID: 5121227026258535098}
+  - {fileID: 5804843982460076690}
+  - {fileID: 7932912369891691484}
+  - {fileID: 2857783022282843786}
+  - {fileID: -6721936470113364751}
+  - {fileID: 5015766281467114230}
+  - {fileID: 1400301547947880226}
+  - {fileID: 4234709385113921466}
+  - {fileID: 6960392085117398631}
+  - {fileID: -7297284011515305039}
+  m_newNodeOffset: {x: 250, y: 0}
+--- !u!114 &1400301547947880226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 6ac95059-7fb4-42ea-b785-04982d607896
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1500
+    y: 350
+    width: 200
+    height: 100
+  m_text: Let's speak of something else.
+  m_isPlayerSpeaking: 1
+  m_children:
+  - 43218503-f5a7-4f27-9f7e-bc54fcec54ab
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &1548851650213216438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 0c33cd01-9861-49ae-a5a4-ad6950b5a90c
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 0
+    y: 150
+    width: 200
+    height: 100
+  m_text: You look worn thin, traveler. Body, mind... or both.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 98d1e15c-d671-44f3-80b3-4f73a49d67b8
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &2857783022282843786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 5fe6ba92-965f-4ca2-a1ab-f5e64017c60b
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 2000
+    y: 149
+    width: 200
+    height: 100
+  m_text: Those are often the ones most in need of help.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 84d9f66f-c089-4463-b75a-c71ade445d76
+  - 0dc5ef31-9bf2-4d76-8822-80afb1380f28
+  - 57b58d79-2826-4783-bd70-41eb9b4c1d84
+  - 6ac95059-7fb4-42ea-b785-04982d607896
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &4003044737693487318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 2bc8163e-1fe7-4230-b442-ee562e3570fd
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 500
+    y: 50
+    width: 200
+    height: 100
+  m_text: Can you heal me?
+  m_isPlayerSpeaking: 1
+  m_children:
+  - e391dd4e-7676-4de3-8edf-6e31b55fb35b
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &4234709385113921466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 43218503-f5a7-4f27-9f7e-bc54fcec54ab
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1750
+    y: 350
+    width: 200
+    height: 100
+  m_text: As you wish. What else rests on your mind?
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 2bc8163e-1fe7-4230-b442-ee562e3570fd
+  - 5b0bd84e-71c0-4719-b731-bc56ff4229a6
+  - 2a6475d0-6024-4336-9e40-e23da0cb1402
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &5015766281467114230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 47c95073-bafb-43c1-a92d-83ec68c9eba6
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 2000
+    y: 250
+    width: 200
+    height: 100
+  m_text: Your people rush to shape the world. Mine prefer to listen before touching
+    it.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 11cb0594-229f-4df6-b6ee-2740e49bbd9a
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &5121227026258535098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 177cc880-b9c7-40c7-9fd8-b78764693b50
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1750
+    y: 50
+    width: 200
+    height: 100
+  m_text: From the Verdant Vale, where the rivers remember old songs and trees outlive
+    kingdoms.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 24749393-7e22-4c88-9ba3-6282c805d940
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &5254279950996361105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: c0f22c1c-897a-44f7-a64a-40beb26e23dc
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 750
+    y: 150
+    width: 200
+    height: 100
+  m_text: No. Stonewick is young and loud. I am neither.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 10561ad8-9103-4f99-a70e-014ebf05721a
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &5368910751137664172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 707c354b-e5c2-451b-b714-8a2aaa8db2a3
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 750
+    y: 250
+    width: 200
+    height: 100
+  m_text: Walk carefully.
+  m_isPlayerSpeaking: 0
+  m_children: []
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &5804843982460076690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 24749393-7e22-4c88-9ba3-6282c805d940
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 2000
+    y: 50
+    width: 200
+    height: 100
+  m_text: You would likely call it "far away."
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 84d9f66f-c089-4463-b75a-c71ade445d76
+  - 0dc5ef31-9bf2-4d76-8822-80afb1380f28
+  - 57b58d79-2826-4783-bd70-41eb9b4c1d84
+  - 6ac95059-7fb4-42ea-b785-04982d607896
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &6126701640540023023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 84d9f66f-c089-4463-b75a-c71ade445d76
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1500
+    y: 50
+    width: 200
+    height: 100
+  m_text: Where are you from?
+  m_isPlayerSpeaking: 1
+  m_children:
+  - 177cc880-b9c7-40c7-9fd8-b78764693b50
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &6960392085117398631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 10561ad8-9103-4f99-a70e-014ebf05721a
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1000
+    y: 150
+    width: 200
+    height: 100
+  m_text: I am Sylvarin. Few of my people wander this far north.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 6bfb5bc7-a217-4eb2-988f-ecac5617d057
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &7932912369891691484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: d52dd3be-28cc-462f-9e30-8fa7050291bf
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1750
+    y: 150
+    width: 200
+    height: 100
+  m_text: Because people here suffer quietly.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 5fe6ba92-965f-4ca2-a1ab-f5e64017c60b
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []

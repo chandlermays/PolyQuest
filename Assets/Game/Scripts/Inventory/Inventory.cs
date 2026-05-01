@@ -261,7 +261,7 @@ namespace PolyQuest.Inventories
         /*---------------------------------------------------------------------
         | --- Evaluate: Check if the inventory meets a specific condition --- |
         ---------------------------------------------------------------------*/
-        public bool? Evaluate(PredicateType predicate, string[] parameters)
+        public bool? Evaluate(ConditionType predicate, string[] parameters)
         {
             if (parameters == null || parameters.Length == 0)
                 return null;
@@ -269,11 +269,11 @@ namespace PolyQuest.Inventories
             switch (predicate)
             {
                 // single item
-                case PredicateType.kHasItem:
+                case ConditionType.kHasItem:
                     return ContainsItem(InventoryItem.FindByID(parameters[0]));
 
                 // stackable items only
-                case PredicateType.kHasItems:
+                case ConditionType.kHasItems:
                     InventoryItem item = InventoryItem.FindByID(parameters[0]);
                     if (item == null || !item.IsStackable)
                         return false;

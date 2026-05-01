@@ -1,5 +1,5 @@
 /*---------------------------
-File: Condition.cs
+File: Conjunction.cs
 Author: Chandler Mays
 ----------------------------*/
 using System.Collections.Generic;
@@ -13,17 +13,20 @@ namespace PolyQuest.Tools
      *       against collections of objects in the game.                                            *
      *                                                                                              *
      * Responsibilities:                                                                            *
-     *      - Stores and organizes predicates using AND/OR logic for condition evaluation.          *
-     *      - Evaluates conditions by querying IConditionChecker objects with specified predicates. *
-     *      - Supports negation and parameterization of individual predicates.                      *
+     *      - Stores and evaluates complex logical expressions composed of AND/OR conditions.       *
+     *      - Evaluates conditions by querying IConditionChecker objects with specified conditions. *
+     *      - Supports negation and parameterization of individual conditions.                      *
      *      - Enables designers to define reusable, data-driven conditions for quests, dialogue,    *
      *        inventory checks, and other systems.                                                  *
      * -------------------------------------------------------------------------------------------- */
     [System.Serializable]
-    public class Condition
+    public class Conjunction
     {
         [SerializeField] private Disjunction[] m_AND;
 
+        /*--------------------------------------------------------------------------
+        | --- Check: Evaluates the conjunction against a collection of objects --- |
+        --------------------------------------------------------------------------*/
         public bool Check(IEnumerable<IConditionChecker> objects)
         {
             foreach (Disjunction disjunction in m_AND)
@@ -37,13 +40,16 @@ namespace PolyQuest.Tools
         [System.Serializable]
         public class Disjunction
         {
-            [SerializeField] private Predicate[] m_OR;
+            [SerializeField] private Condition[] m_OR;
 
+            /*--------------------------------------------------------------------------
+            | --- Check: Evaluates the disjunction against a collection of objects --- |
+            --------------------------------------------------------------------------*/
             public bool Check(IEnumerable<IConditionChecker> objects)
             {
-                foreach (Predicate predicate in m_OR)
+                foreach (Condition condition in m_OR)
                 {
-                    if (predicate.Check(objects))
+                    if (condition.Check(objects))
                         return true;
                 }
                 return false;
@@ -51,9 +57,9 @@ namespace PolyQuest.Tools
         }
 
         [System.Serializable]
-        public class Predicate
+        public class Condition
         {
-            [SerializeField] private PredicateType m_predicate;
+            [SerializeField] private ConditionType m_condition;
             [SerializeField] private string[] m_parameters;
             [SerializeField] private bool m_negate = false;
 
@@ -64,7 +70,7 @@ namespace PolyQuest.Tools
             {
                 foreach (var obj in objects)
                 {
-                    bool? result = obj.Evaluate(m_predicate, m_parameters);
+                    bool? result = obj.Evaluate(m_condition, m_parameters);
 
                     if (result == null)
                         continue;

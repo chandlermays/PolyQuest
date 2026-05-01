@@ -75,6 +75,13 @@ namespace PolyQuest.Inventories
             return pickup;
         }
 
+        public virtual void OnPickup(Inventory inventory, int quantity)
+        {
+            inventory.TryAddToAvailableSlot(this, quantity);
+        }
+
+        public virtual void OnUse(Inventory inventory, int slotIndex) { }
+
         /*----------------------------------------------------------------------------------
         | --- OnBeforeSerialize: Receive a callback before Unity serializes the object --- |
         ----------------------------------------------------------------------------------*/

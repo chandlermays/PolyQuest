@@ -14,17 +14,46 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
-    x: 1250
+    x: 1500
     y: 650
     width: 200
     height: 100
-  m_text: "Please, take this. I don\u2019t know if it\u2019s worth much these days,
-    but consider it a token of my gratitude."
+  m_text: Please, take this. It may not be worth much now... but I'd like you to
+    have it.
   m_isPlayerSpeaking: 0
   m_children: []
   m_onEnterEvents: []
   m_onExitEvents:
   - {fileID: 11400000, guid: abd41e4c82bd0d9408d37bf29e1365b0, type: 2}
+  m_condition:
+    m_AND: []
+--- !u!114 &-9027272995924290315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 9439aa64-09e4-47e8-8b76-27683f6a6c8a
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1500
+    y: 250
+    width: 200
+    height: 100
+  m_text: "They\u2019re gone now\u2026 but I always wanted to be like them."
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 5e5da907-7179-47e1-9513-9d657cfbd7ea
+  - 11db6863-cfe7-4f2e-9200-d0bc3c71ab2f
+  - a2650da3-1d90-4ce9-a0bb-6b100fbb127c
+  - 47df7801-0104-44c7-b169-767cadaa760a
+  m_onEnterEvents: []
+  m_onExitEvents: []
   m_condition:
     m_AND: []
 --- !u!114 &-8935987954557999649
@@ -41,16 +70,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
-    x: 1251
+    x: 1250
     y: 150
     width: 200
     height: 100
-  m_text: By the time I realized, it was gone.
+  m_text: I must've set it down while checking the trail... or tightening my boot...
+    or...
   m_isPlayerSpeaking: 0
   m_children:
-  - 88dd4ef9-50bb-40de-9450-21bffa24ea2a
-  - 35d19188-8dc2-4d8e-bfe7-562f597d6d72
-  - 71743691-6a0e-4f18-b787-39163066607d
+  - e53066aa-f7d8-41f2-856f-f021305da9fa
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -73,14 +101,95 @@ MonoBehaviour:
     y: 250
     width: 200
     height: 100
-  m_text: "My grandfather used to say the Order made the world stronger, one tempered
-    soul at a time. They\u2019re gone now\u2026 but I always wanted to be like them."
+  m_text: "My grandfather used to say the Order made the world stronger\u2014one
+    tempered soul at a time."
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 9439aa64-09e4-47e8-8b76-27683f6a6c8a
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-8690658469336058732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 2a78fe35-0a29-4046-a117-9de1f3970770
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1500
+    y: 50
+    width: 200
+    height: 100
+  m_text: He carried it his whole life. Then he gave it to me.
   m_isPlayerSpeaking: 0
   m_children:
   - 5e5da907-7179-47e1-9513-9d657cfbd7ea
   - 11db6863-cfe7-4f2e-9200-d0bc3c71ab2f
   - a2650da3-1d90-4ce9-a0bb-6b100fbb127c
   - 47df7801-0104-44c7-b169-767cadaa760a
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-8453899438692249898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 6bccbd7f-adc0-4c56-983f-9b21f463d8e5
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 750
+    y: 1000
+    width: 200
+    height: 100
+  m_text: Captain Flint used to serve with them, you know.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - ae796f5e-d02e-4fa5-b043-e825b153929f
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-8121181475535456274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 0f6dd875-b7ac-423d-b725-91d1b75f5966
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1250
+    y: 550
+    width: 200
+    height: 100
+  m_text: Then I went and lost it like a fool.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 4990062c-243b-42c7-82e1-8762148cd4ba
+  - 9a60b90c-97c0-4572-a084-1cdda018d73b
+  - 4dd62734-f0b8-4341-8619-4959d346c8b0
+  - acc999fc-e780-472c-9d8e-0a092353dadf
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -103,7 +212,7 @@ MonoBehaviour:
     y: 650
     width: 200
     height: 100
-  m_text: Oh! That's it! My family's sword!
+  m_text: ...That's it! My family's sword!
   m_isPlayerSpeaking: 0
   m_children:
   - e8303ed2-706d-4371-9717-8104d713df8a
@@ -125,12 +234,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
-    x: 2000
+    x: 2250
     y: 50
     width: 200
     height: 100
-  m_text: Check near the old watchtower north of town. If you find it, please bring
-    it back to me.
+  m_text: Please check near the watchtower northeast of town. if you find it, bring
+    it back.
   m_isPlayerSpeaking: 0
   m_children: []
   m_onEnterEvents: []
@@ -156,11 +265,38 @@ MonoBehaviour:
     y: 50
     width: 200
     height: 100
-  m_text: Oh it's old. Like, really old. But he told me stories when I was young.
-    Probably half of them made up.
+  m_text: It's nothing fancy. Worn grip, chipped edge, too heavy by modern standards.
   m_isPlayerSpeaking: 0
   m_children:
   - 83428bff-aca0-489e-9eea-a0a24f06684b
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-6438453814693786037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 92687693-bda6-4226-9ea5-73dda4aa6d93
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 2500
+    y: 150
+    width: 200
+    height: 100
+  m_text: Without that sword... it feels like losing him twice.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 88dd4ef9-50bb-40de-9450-21bffa24ea2a
+  - 35d19188-8dc2-4d8e-bfe7-562f597d6d72
+  - 71743691-6a0e-4f18-b787-39163066607d
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -183,7 +319,7 @@ MonoBehaviour:
     y: 150
     width: 200
     height: 100
-  m_text: You there! Say, uh.. you haven't seen an old iron sword anywhere, have
+  m_text: You there! Say... you haven't seen an old iron sword lying around, have
     you?
   m_isPlayerSpeaking: 0
   m_children:
@@ -248,13 +384,36 @@ MonoBehaviour:
     y: 550
     width: 200
     height: 100
-  m_text: He made me promise I'd carry it with honor. And then I went and lost it
-    like a fool.
+  m_text: He said one day it would be mine.
   m_isPlayerSpeaking: 0
   m_children:
-  - 9a60b90c-97c0-4572-a084-1cdda018d73b
-  - 4990062c-243b-42c7-82e1-8762148cd4ba
-  - 4dd62734-f0b8-4341-8619-4959d346c8b0
+  - 21e4b266-1e36-4ea4-a56f-4babd895ef28
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-5414562952421460482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: c1b8ae38-8a59-47ca-a8b1-61ff9ec91ce9
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1250
+    y: 650
+    width: 200
+    height: 100
+  m_text: You didn't have to help. But you did.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 1111dd19-13e8-476b-9c9b-4261baad4acb
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -277,8 +436,8 @@ MonoBehaviour:
     y: 550
     width: 200
     height: 100
-  m_text: He never told me much about it. Just that it had been passed down through
-    our family, and that one day, it would be mine.
+  m_text: When I was a boy, he'd rest it across his knees and tell stories by the
+    fire.
   m_isPlayerSpeaking: 0
   m_children:
   - 890b423f-544f-462d-8fb8-c463844ade9c
@@ -305,7 +464,7 @@ MonoBehaviour:
     width: 200
     height: 100
   m_text: Not just any sword, it's been in my family for generations. My grandfather
-    carried it when he served with the Order of the Anvil! Or, so he claimed, anyway.
+    carried it when he served with the Order of the Anvil.
   m_isPlayerSpeaking: 0
   m_children:
   - 994c188e-4d29-4b38-b08b-c27c6b42847b
@@ -331,8 +490,8 @@ MonoBehaviour:
     y: 250
     width: 200
     height: 100
-  m_text: 'They were knights. Real ones. They protected the land, lived by a code:
-    honor, sacrifice, all of it.'
+  m_text: They were knights. Real ones. They protected the land, lived by honor,
+    sacrifice... all of it.
   m_isPlayerSpeaking: 0
   m_children:
   - 19ca39f0-2ab9-4d1d-9697-0726eaeb509c
@@ -410,7 +569,7 @@ MonoBehaviour:
   m_rect:
     serializedVersion: 2
     x: 250
-    y: 451
+    y: 350
     width: 200
     height: 100
   m_text: Still working on it.
@@ -435,12 +594,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
-    x: 1750
+    x: 2000
     y: 150
     width: 200
     height: 100
-  m_text: Well... it's all I have left of him. My granfather raised me. Told me stories
-    about the Order, about serving something bigger than yourself.
+  m_text: Maybe to you.
   m_isPlayerSpeaking: 0
   m_children:
   - eebb6e1a-d269-4435-ba84-30170b8f1d82
@@ -466,7 +624,7 @@ MonoBehaviour:
     y: 650
     width: 200
     height: 100
-  m_text: '[Give Sword] Actually, I think I found it. Is this your family''s sword?'
+  m_text: '[Give Sword] I think I found it. Is this it?'
   m_isPlayerSpeaking: 1
   m_children:
   - a536fc4b-ae63-4e09-8667-b475c632ca6f
@@ -486,7 +644,7 @@ MonoBehaviour:
         - 03bea15d-3acc-4f77-afda-ed14ab0807ad
         - 
         m_negate: 0
---- !u!114 &-3886343941178646681
+--- !u!114 &-4008955811774251898
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -496,21 +654,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
-  m_Name: 93bf9c69-9634-4904-b633-a3b3216b7150
+  m_Name: 2b6c38b0-7af4-4835-9d5c-e37a8f22055a
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
-    x: 1000
-    y: 800
+    x: 750
+    y: 450
     width: 200
     height: 100
-  m_text: I don't know how much of that was true, but... I believed him. Still do.
+  m_text: Please keep looking. It has to be there.
   m_isPlayerSpeaking: 0
-  m_children:
-  - 66c4b8c1-4335-4f71-ad9a-5240150ea292
-  - 147b359d-5122-4b4d-8693-0d22f69021c8
-  - 34be28b3-fca0-4bda-82fb-528eb56f5113
-  - 435d4d5d-dec3-41bc-9826-439394868ae5
+  m_children: []
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -533,13 +687,65 @@ MonoBehaviour:
     y: 50
     width: 200
     height: 100
-  m_text: But the sword? That was real. And now I've gone and lost it.
+  m_text: But my grandfather said honest steel doesn't need to shine.
   m_isPlayerSpeaking: 0
   m_children:
-  - 5e5da907-7179-47e1-9513-9d657cfbd7ea
-  - 11db6863-cfe7-4f2e-9200-d0bc3c71ab2f
-  - a2650da3-1d90-4ce9-a0bb-6b100fbb127c
-  - 47df7801-0104-44c7-b169-767cadaa760a
+  - 2a78fe35-0a29-4046-a117-9de1f3970770
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-3652557891886088997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 21e4b266-1e36-4ea4-a56f-4babd895ef28
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1000
+    y: 550
+    width: 200
+    height: 100
+  m_text: Made me promise I'd carry it with honor.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 0f6dd875-b7ac-423d-b725-91d1b75f5966
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-3265541250291459716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 92a2dcea-e834-4221-9033-bf57cd93870d
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1000
+    y: 900
+    width: 200
+    height: 100
+  m_text: Protect people. Do right when it's hard. That's enough for me.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 66c4b8c1-4335-4f71-ad9a-5240150ea292
+  - 147b359d-5122-4b4d-8693-0d22f69021c8
+  - 34be28b3-fca0-4bda-82fb-528eb56f5113
+  - 435d4d5d-dec3-41bc-9826-439394868ae5
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -585,13 +791,13 @@ MonoBehaviour:
   m_rect:
     serializedVersion: 2
     x: 500
-    y: 351
+    y: 450
     width: 200
     height: 100
-  m_text: North of town, near the old watchtower ruins. I left it somewhere around
-    there during my patrol. Please keep looking, it has to be there.
+  m_text: Northeast of town, near the watchtower. Somewhere along the patrol path.
   m_isPlayerSpeaking: 0
-  m_children: []
+  m_children:
+  - 2b6c38b0-7af4-4835-9d5c-e37a8f22055a
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -611,7 +817,7 @@ MonoBehaviour:
   m_rect:
     serializedVersion: 2
     x: 250
-    y: 1101
+    y: 1100
     width: 200
     height: 100
   m_text: Just checking in.
@@ -640,10 +846,36 @@ MonoBehaviour:
     y: 650
     width: 200
     height: 100
-  m_text: I don't know how to thank you. This... this means everything to me.
+  m_text: I don't know how to thank you. This means more than I can say.
   m_isPlayerSpeaking: 0
   m_children:
   - 6af103ed-416b-4d19-b906-f2b08db5e503
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
+--- !u!114 &-1314397373144686626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 0714e5be-57dd-4095-9f3d-8fb462c09537
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1250
+    y: 350
+    width: 200
+    height: 100
+  m_text: Well... if you happen across it, please tell me. It would mean a great
+    deal.
+  m_isPlayerSpeaking: 0
+  m_children: []
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -666,8 +898,8 @@ MonoBehaviour:
     y: 800
     width: 200
     height: 100
-  m_text: He was a guard, like me. Worked the northern road for 40 years. Never missed
-    a shift.
+  m_text: He was a guard, same as me. Worked the northern road forty years and never
+    missed a shift.
   m_isPlayerSpeaking: 0
   m_children:
   - c921e5b4-525a-4bbf-8720-9a6019ae8b5b
@@ -710,6 +942,34 @@ MonoBehaviour:
         - A Family Heirloom
         - 
         m_negate: 0
+--- !u!114 &-805270090781350499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: e53066aa-f7d8-41f2-856f-f021305da9fa
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1500
+    y: 150
+    width: 200
+    height: 100
+  m_text: By the time I noticed, it was gone.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 88dd4ef9-50bb-40de-9450-21bffa24ea2a
+  - 35d19188-8dc2-4d8e-bfe7-562f597d6d72
+  - 71743691-6a0e-4f18-b787-39163066607d
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
 --- !u!114 &-313003426535005053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -724,17 +984,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
-    x: 2000
+    x: 2250
     y: 150
     width: 200
     height: 100
-  m_text: That sword was proof it wasn't all just tales. Without it, I feel like
-    I've lost him all over again.
+  m_text: But it's all I have left of him. My grandfather raised me.
   m_isPlayerSpeaking: 0
   m_children:
-  - 88dd4ef9-50bb-40de-9450-21bffa24ea2a
-  - 35d19188-8dc2-4d8e-bfe7-562f597d6d72
-  - 71743691-6a0e-4f18-b787-39163066607d
+  - 92687693-bda6-4226-9ea5-73dda4aa6d93
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -753,7 +1010,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
-    x: 1500
+    x: 1750
     y: 250
     width: 200
     height: 100
@@ -820,11 +1077,52 @@ MonoBehaviour:
   - {fileID: -2206036384543752159}
   - {fileID: -1149968562205888997}
   - {fileID: 2853851121841078154}
-  - {fileID: -3886343941178646681}
   - {fileID: 5419365734795476165}
   - {fileID: 2970248990089083994}
   - {fileID: 526819624499314021}
+  - {fileID: -8690658469336058732}
+  - {fileID: -805270090781350499}
+  - {fileID: -9027272995924290315}
+  - {fileID: -1314397373144686626}
+  - {fileID: -6438453814693786037}
+  - {fileID: -4008955811774251898}
+  - {fileID: -3652557891886088997}
+  - {fileID: -8121181475535456274}
+  - {fileID: -5414562952421460482}
+  - {fileID: 5381218884607767112}
+  - {fileID: -3265541250291459716}
+  - {fileID: -8453899438692249898}
+  - {fileID: 448050672000160665}
   m_newNodeOffset: {x: 250, y: 0}
+--- !u!114 &448050672000160665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: ae796f5e-d02e-4fa5-b043-e825b153929f
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 1000
+    y: 1000
+    width: 200
+    height: 100
+  m_text: He doesn't talk about it much.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 66c4b8c1-4335-4f71-ad9a-5240150ea292
+  - 147b359d-5122-4b4d-8693-0d22f69021c8
+  - 34be28b3-fca0-4bda-82fb-528eb56f5113
+  - 435d4d5d-dec3-41bc-9826-439394868ae5
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
 --- !u!114 &526819624499314021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -840,7 +1138,7 @@ MonoBehaviour:
   m_rect:
     serializedVersion: 2
     x: 500
-    y: 1101
+    y: 1100
     width: 200
     height: 100
   m_text: Safe travels, my friend.
@@ -868,11 +1166,11 @@ MonoBehaviour:
     y: 650
     width: 200
     height: 100
-  m_text: You know, my grandfather used to say, "The Anvil favors those who act without
-    expecting reward." You didn't have to help. But you did.
+  m_text: My grandfather used to tell me, "The Anvil favors those who act without
+    expecting reward."
   m_isPlayerSpeaking: 0
   m_children:
-  - 1111dd19-13e8-476b-9c9b-4261baad4acb
+  - c1b8ae38-8a59-47ca-a8b1-61ff9ec91ce9
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -892,10 +1190,10 @@ MonoBehaviour:
   m_rect:
     serializedVersion: 2
     x: 500
-    y: 451
+    y: 350
     width: 200
     height: 100
-  m_text: I appreciate it, really. Take your time, I know you've got other things
+  m_text: I appreciate it, truly. Take your time, I'm sure you've got other things
     to do.
   m_isPlayerSpeaking: 0
   m_children: []
@@ -921,10 +1219,10 @@ MonoBehaviour:
     y: 350
     width: 200
     height: 100
-  m_text: Oh. Well, if you happen to come across it, please let me know. It would
-    mean the world to me.
+  m_text: Oh. Right.
   m_isPlayerSpeaking: 0
-  m_children: []
+  m_children:
+  - 0714e5be-57dd-4095-9f3d-8fb462c09537
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -943,7 +1241,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
-    x: 1500
+    x: 1750
     y: 50
     width: 200
     height: 100
@@ -973,11 +1271,14 @@ MonoBehaviour:
     y: 800
     width: 200
     height: 100
-  m_text: He'd tell me stories about the Order, how they'd forge their own weapons,
-    swear oaths under the stars.
+  m_text: Said duty isn't glory. It's showing up when it's cold and no one thanks
+    you.
   m_isPlayerSpeaking: 0
   m_children:
-  - 93bf9c69-9634-4904-b633-a3b3216b7150
+  - 66c4b8c1-4335-4f71-ad9a-5240150ea292
+  - 147b359d-5122-4b4d-8693-0d22f69021c8
+  - 34be28b3-fca0-4bda-82fb-528eb56f5113
+  - 435d4d5d-dec3-41bc-9826-439394868ae5
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -1000,15 +1301,11 @@ MonoBehaviour:
     y: 1000
     width: 200
     height: 100
-  m_text: It's the "Order of the Anvil". They believed that the world was forged
-    through trials, like metal on an anvil. Captain Flint used to be one of them,
-    you know. Before they disbanded.
+  m_text: The Order believed the world was forged through trial, like steel on an
+    anvil.
   m_isPlayerSpeaking: 0
   m_children:
-  - 66c4b8c1-4335-4f71-ad9a-5240150ea292
-  - 147b359d-5122-4b4d-8693-0d22f69021c8
-  - 34be28b3-fca0-4bda-82fb-528eb56f5113
-  - 435d4d5d-dec3-41bc-9826-439394868ae5
+  - 6bccbd7f-adc0-4c56-983f-9b21f463d8e5
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -1074,6 +1371,33 @@ MonoBehaviour:
   m_onExitEvents: []
   m_condition:
     m_AND: []
+--- !u!114 &5381218884607767112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ddea4018d2fd4fb68f1940165454c, type: 3}
+  m_Name: 1a9bbdbf-946d-4647-bb51-bd31c1b39730
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
+  m_rect:
+    serializedVersion: 2
+    x: 750
+    y: 900
+    width: 200
+    height: 100
+  m_text: I may not be a knight of the Order... but I can still live by what they
+    stood for.
+  m_isPlayerSpeaking: 0
+  m_children:
+  - 92a2dcea-e834-4221-9033-bf57cd93870d
+  m_onEnterEvents: []
+  m_onExitEvents: []
+  m_condition:
+    m_AND: []
 --- !u!114 &5419365734795476165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1092,15 +1416,10 @@ MonoBehaviour:
     y: 900
     width: 200
     height: 100
-  m_text: I'll carry it. Like he did. I may not be a knight of the Order, but I can
-    still live by their ideals. Protect people. Do what's right. That's enough for
-    me.
+  m_text: I'll carry it, like he did.
   m_isPlayerSpeaking: 0
   m_children:
-  - 66c4b8c1-4335-4f71-ad9a-5240150ea292
-  - 147b359d-5122-4b4d-8693-0d22f69021c8
-  - 34be28b3-fca0-4bda-82fb-528eb56f5113
-  - 435d4d5d-dec3-41bc-9826-439394868ae5
+  - 1a9bbdbf-946d-4647-bb51-bd31c1b39730
   m_onEnterEvents: []
   m_onExitEvents: []
   m_condition:
@@ -1119,11 +1438,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
-    x: 1750
+    x: 1999
     y: 50
     width: 200
     height: 100
-  m_text: Really? You'd do that? Thank you! I mean it.
+  m_text: Really? You would? Thank you!
   m_isPlayerSpeaking: 0
   m_children:
   - 6a34770c-e833-430c-8cf3-f570643fff6e
@@ -1145,7 +1464,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
-    x: 1500
+    x: 1749
     y: 150
     width: 200
     height: 100
@@ -1172,7 +1491,7 @@ MonoBehaviour:
   m_rect:
     serializedVersion: 2
     x: 250
-    y: 351
+    y: 450
     width: 200
     height: 100
   m_text: Not yet. Where did you say I should look?
@@ -1253,8 +1572,7 @@ MonoBehaviour:
     y: 150
     width: 200
     height: 100
-  m_text: I had it with me on patrol just north from here, near the old watchtower
-    ruins. I must've set it down when I stopped to check the perimeter.
+  m_text: I had it during patrol northeast of town, near the watchtower.
   m_isPlayerSpeaking: 0
   m_children:
   - 8129b95b-941b-4040-8cdd-56e255d58da1
@@ -1302,11 +1620,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
-    x: 1750
+    x: 2000
     y: 250
     width: 200
     height: 100
-  m_text: I understand. I'll keep looking on my own, then.
+  m_text: I understand. I'll keep looking myself.
   m_isPlayerSpeaking: 0
   m_children: []
   m_onEnterEvents: []
