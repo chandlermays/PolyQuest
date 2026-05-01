@@ -25,34 +25,28 @@ namespace PolyQuest.Combat
         [SerializeField] private GameObject m_equippedPrefab;
         [SerializeField] private Projectile m_projectile;
         [SerializeField] private AnimatorOverrideController m_weaponAOC;
-        [SerializeField] private float m_weaponDamage = 5f;
+        [SerializeField] private float m_baseDamage = 5f;
         [SerializeField] private float m_weaponRange = 2f;
-        [SerializeField] private float m_percentageBonus = 0f;
         [SerializeField] private bool m_isRightHanded = true;
-
-        /* --- References --- */
-        private GameObject m_weaponInstance;
 
         private const string kWeaponName = "Weapon";
 
-        /* --- Getter Methods --- */
         public bool HasProjectile() => m_projectile != null;
-        public float GetDamage() => m_weaponDamage;
-        public float GetRange() => m_weaponRange;
-        public float GetPercentageBonus() => m_percentageBonus;
+        public float Range => m_weaponRange;
 
         /*---------------------------------------------------------------------------------
         | --- Spawn: Instantiate a Weapon Prefab at the Position of the Entity's Hand --- |
         ---------------------------------------------------------------------------------*/
-        public void Spawn(Transform leftHand, Transform rightHand, Animator animator)
+        public GameObject Spawn(Transform leftHand, Transform rightHand, Animator animator)
         {
             DestroyPreviousWeapon(leftHand, rightHand);
 
+            GameObject weaponInstance = null;
             if (m_equippedPrefab != null)
             {
                 var chosenHand = GetHandPlacement(leftHand, rightHand);
-                m_weaponInstance = Instantiate(m_equippedPrefab, chosenHand);
-                m_weaponInstance.name = kWeaponName;
+                weaponInstance = Instantiate(m_equippedPrefab, chosenHand);
+                weaponInstance.name = kWeaponName;
             }
 
             var overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
@@ -64,6 +58,8 @@ namespace PolyQuest.Combat
             {
                 animator.runtimeAnimatorController = overrideController.runtimeAnimatorController;
             }
+
+            return weaponInstance;
         }
 
         /*---------------------------------------------------------------------------------------
@@ -95,14 +91,6 @@ namespace PolyQuest.Combat
             newProjectile.SetTarget(target, instigator, damage);
         }
 
-        /*---------------------------------------------------------------------
-        | --- Remove: Destroy the Currently Equipped Instance of a Weapon --- |
-        ---------------------------------------------------------------------*/
-        public void Remove()
-        {
-            Destroy(m_weaponInstance);
-        }
-
         /*------------------------------------------------------------------------
         | --- GetHandPlacement: Returns which Hand the Weapon is Equipped in --- |
         ------------------------------------------------------------------------*/
@@ -114,23 +102,13 @@ namespace PolyQuest.Combat
         /*---------------------------------------------------------------------------
         | --- GetAdditiveModifiers: Get all additive modifiers from this weapon --- |
         ---------------------------------------------------------------------------*/
-        public IEnumerable<float> GetAdditiveModifiers(Stat stat)
+        public override IEnumerable<float> GetAdditiveModifiers(Stat stat)
         {
             if (stat == Stat.kDamage)
-            {
-                yield return m_weaponDamage;
-            }
-        }
+                yield return m_baseDamage;
 
-        /*-------------------------------------------------------------------------------
-        | --- GetPercentageModifiers: Get all percentage modifiers from this weapon --- |
-        -------------------------------------------------------------------------------*/
-        public IEnumerable<float> GetPercentageModifiers(Stat stat)
-        {
-            if (stat == Stat.kDamage)
-            {
-                yield return m_percentageBonus;
-            }
+            foreach (var mod in base.GetAdditiveModifiers(stat))
+                yield return mod;
         }
     }
 }

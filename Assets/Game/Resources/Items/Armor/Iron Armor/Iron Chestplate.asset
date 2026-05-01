@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b6ac3799ecbb9442a22a032684838df, type: 3}
+  m_Script: {fileID: 11500000, guid: d7669cb9dd307eb458f26ea9cea69463, type: 3}
   m_Name: Iron Chestplate
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.EquipableItem
-  m_itemID: 92ce7f3d-d187-414b-b3c7-18cee4ea1249
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.Armor
+  m_itemID: 207a4291-1935-44e1-a1a6-4c8199ad9045
   m_itemName: Iron Chestplate
   m_itemDescription: Offers solid protection for your torso, and absolutely no apologies
     for the back pain it will cause.
@@ -24,3 +24,6 @@ MonoBehaviour:
   m_targetEquipmentSlot: 2
   m_equipCondition:
     m_AND: []
+  m_additiveModifiers: []
+  m_percentageModifiers: []
+  m_baseDefense: 0

@@ -40,11 +40,11 @@ namespace PolyQuest.Components
 
         private float m_timeSinceLastAttack = Mathf.Infinity;
 
-        /* --- References --- */
         private MovementComponent m_movementComponent;
         private HealthComponent m_healthComponent;
         private ActionManager m_actionManager;
         private Weapon m_currentWeapon;
+        private GameObject m_weaponInstance;
         private BaseStats m_baseStats;
         private Equipment m_equipment;
 
@@ -52,7 +52,6 @@ namespace PolyQuest.Components
         private HealthComponent m_targetHealth;
         private Transform m_targetTransform;
 
-        /* --- Animation Parameters --- */
         private static readonly int kAttack = Animator.StringToHash("Attack");
         private static readonly int kStopAttacking = Animator.StringToHash("StopAttacking");
 
@@ -158,7 +157,7 @@ namespace PolyQuest.Components
         {
             float distanceToTarget = Vector3.Distance(Transform.position, m_targetTransform.position);
 
-            if (distanceToTarget >= m_currentWeapon.GetRange())
+            if (distanceToTarget >= m_currentWeapon.Range)
             {
                 StopAttack();
                 m_movementComponent.MoveTo(m_targetTransform.position);
@@ -270,9 +269,16 @@ namespace PolyQuest.Components
         --------------------------------------------------------------------------*/
         public void EquipWeapon(Weapon weapon)
         {
-            m_currentWeapon?.Remove();
+            if (m_weaponInstance != null)
+            {
+                Destroy(m_weaponInstance);
+                m_weaponInstance = null;
+            }
             m_currentWeapon = weapon;
-            weapon.Spawn(m_leftHand, m_rightHand, Animator);
+            if (weapon != null)
+            {
+                m_weaponInstance = weapon.Spawn(m_leftHand, m_rightHand, Animator);
+            }
         }
 
         /*---------------------------------------------------------------------------------------
@@ -332,7 +338,7 @@ namespace PolyQuest.Components
         private void UpdateWeapon()
         {
             Weapon weapon = m_equipment.GetItemInSlot(EquipmentSlot.kWeapon) as Weapon;
-            EquipWeapon(weapon ?? m_unarmedWeapon);
+            EquipWeapon(weapon != null ? weapon : m_unarmedWeapon);
         }
 
         /*--------------------------------------------------------------------
@@ -352,6 +358,11 @@ namespace PolyQuest.Components
             else
             {
                 m_targetHealth.TakeDamage(gameObject, damage);
+            }
+
+            if (Owner.gameObject.CompareTag("Player"))
+            {
+                Debug.Log($"The Player attacked {m_target.name} for {damage} damage.");
             }
         }
 

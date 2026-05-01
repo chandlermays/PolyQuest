@@ -10,7 +10,6 @@ using PolyQuest.Tools;
 
 namespace PolyQuest.Inventories
 {
-    [CreateAssetMenu(menuName = "PolyQuest/Items/Equipable Item", fileName = "New Equipable Item")]
     public class EquipableItem : InventoryItem, IStatModifier
     {
         [System.Serializable]
@@ -74,7 +73,7 @@ namespace PolyQuest.Inventories
         /*-----------------------------------------------------------------------------------
         | --- GetAdditiveModifiers: Get all additive modifiers from this equipable item --- |
         -----------------------------------------------------------------------------------*/
-        public IEnumerable<float> GetAdditiveModifiers(Stat stat)
+        public virtual IEnumerable<float> GetAdditiveModifiers(Stat stat)
         {
             foreach (var modifier in m_additiveModifiers)
             {
@@ -86,7 +85,7 @@ namespace PolyQuest.Inventories
         /*---------------------------------------------------------------------------------------
         | --- GetPercentageModifiers: Get all percentage modifiers from this equipable item --- |
         ---------------------------------------------------------------------------------------*/
-        public IEnumerable<float> GetPercentageModifiers(Stat stat)
+        public virtual IEnumerable<float> GetPercentageModifiers(Stat stat)
         {
             foreach (var modifier in m_percentageModifiers)
             {
