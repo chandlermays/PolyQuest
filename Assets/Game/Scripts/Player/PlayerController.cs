@@ -130,10 +130,13 @@ namespace PolyQuest.Player
                     if (HandleAbilities())
                         return;
 
+                    if (HandleWASD())
+                        return;
+
                     if (HandleInteractable())
                         return;
 
-                    if (HandleMovement())
+                    if (HandleClickToMove())
                         return;
                 }
             }
@@ -164,6 +167,35 @@ namespace PolyQuest.Player
             }
 
             return false;
+        }
+
+        /*----------------------------------------------------------------------------
+        | --- HandleWASD: Perform the action associated with WASD movement input --- |
+        ----------------------------------------------------------------------------*/
+        private bool HandleWASD()
+        {
+            Vector2 input = m_inputActions.Gameplay.WASD.ReadValue<Vector2>();
+
+            if (input.sqrMagnitude < 0.01f)
+            {
+                m_movement.StopWASD();
+                return false;
+            }
+
+            // Cancel any active click-to-move
+            if (!m_movement.IsWASDMoving)
+            {
+                m_movement.Cancel();
+            }
+
+            // Build camera-relative world direction
+            Vector3 forward = Vector3.ProjectOnPlane(m_mainCamera.transform.forward, Vector3.up).normalized;
+            Vector3 right = Vector3.ProjectOnPlane(m_mainCamera.transform.right, Vector3.up).normalized;
+            Vector3 direction = (forward * input.y + right * input.x).normalized;
+
+            m_movement.MoveInDirection(direction);
+            SetCursor(CursorSettings.CursorType.kNone);
+            return true;
         }
 
         /*---------------------------------------------------------
@@ -241,7 +273,7 @@ namespace PolyQuest.Player
 
                 // Return true only if something is highlighted — keeps movement
                 // blocked while hovering a valid target, but falls through to
-                // HandleMovement() on open ground so the cursor still updates.
+                // HandleClickToMove() on open ground so the cursor still updates.
                 return newHighlight != null;
             }
 
@@ -265,10 +297,10 @@ namespace PolyQuest.Player
             LastHighlightedObject = newHighlight;
         }
 
-        /*--------------------------------------------------------------------- 
-        | --- HandleMovement: Perform the action associated with Movement --- |
-        ---------------------------------------------------------------------*/
-        private bool HandleMovement()
+        /*-----------------------------------------------------------------------------------------------
+        | --- HandleClickToMove: Perform the action associated with clicking to move on the NavMesh --- |
+        -----------------------------------------------------------------------------------------------*/
+        private bool HandleClickToMove()
         {
             if (!m_inputActions.Gameplay.Interact.IsPressed())
                 return false;

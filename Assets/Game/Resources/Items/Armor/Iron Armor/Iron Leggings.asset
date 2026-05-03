@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b6ac3799ecbb9442a22a032684838df, type: 3}
+  m_Script: {fileID: 11500000, guid: d7669cb9dd307eb458f26ea9cea69463, type: 3}
   m_Name: Iron Leggings
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.EquipableItem
-  m_itemID: d9f2aa4d-ccf9-450b-84d9-f0310a0e0f22
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.Armor
+  m_itemID: 66361bec-9d68-40a6-8e47-9757888b80a9
   m_itemName: Iron Leggings
   m_itemDescription: Designed to protect your legs from everything except chafing.
   m_itemIcon: {fileID: 21300000, guid: b8fb302c5768e334ca82005f50e58121, type: 3}
@@ -23,3 +23,6 @@ MonoBehaviour:
   m_targetEquipmentSlot: 4
   m_equipCondition:
     m_AND: []
+  m_additiveModifiers: []
+  m_percentageModifiers: []
+  m_baseDefense: 20

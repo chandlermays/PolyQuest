@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b6ac3799ecbb9442a22a032684838df, type: 3}
+  m_Script: {fileID: 11500000, guid: d7669cb9dd307eb458f26ea9cea69463, type: 3}
   m_Name: Iron Helmet
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.EquipableItem
-  m_itemID: 28d2d912-4366-4e22-b653-a64b51600b4f
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.Armor
+  m_itemID: 44ece2b0-f7cb-4078-a71d-ba52d02458d9
   m_itemName: Iron Helmet
-  m_itemDescription: Sturdy, dependable, and absolutely determined to ruin your hairstyle.
+  m_itemDescription: 
   m_itemIcon: {fileID: 21300000, guid: fd6e4fc32c78509458fc45ea4a478ba8, type: 3}
   m_pickup: {fileID: 3714728132098454972, guid: ce734acb24202304793d0fc60816bfdf, type: 3}
   m_isStackable: 0
@@ -23,3 +23,6 @@ MonoBehaviour:
   m_targetEquipmentSlot: 0
   m_equipCondition:
     m_AND: []
+  m_additiveModifiers: []
+  m_percentageModifiers: []
+  m_baseDefense: 25

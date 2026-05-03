@@ -23,18 +23,24 @@ namespace PolyQuest.Components
      * ------------------------------------------------------------------------------------------- */
     public class MovementComponent : EntityComponent, ISaveable, IAction
     {
-        /* --- Navigation --- */
+        private enum MovementMode
+        {
+            kNone,
+            kClickToMove,
+            kWASD
+        }
+
+        private MovementMode m_movementMode = MovementMode.kNone;
         private float m_maxPathLength = 20f;
 
-        /* --- References --- */
         private CombatComponent m_combatComponent;
         private HealthComponent m_healthComponent;
         private ActionManager m_actionManager;
 
-        /* --- Animation Parameters --- */
         private static readonly int kSpeed = Animator.StringToHash("Speed");
 
         private bool IsAlive() => m_healthComponent == null || !m_healthComponent.IsDead;
+        public bool IsWASDMoving => m_movementMode == MovementMode.kWASD;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -73,6 +79,7 @@ namespace PolyQuest.Components
             if (!IsAlive())
                 return;
 
+            m_movementMode = MovementMode.kClickToMove;
             m_actionManager.StartAction(this);
             MoveTo(destination);
         }
@@ -126,6 +133,7 @@ namespace PolyQuest.Components
         ---------------------------------------------------*/
         public void Cancel()
         {
+            m_movementMode = MovementMode.kNone;
             Stop();
             NavMeshAgent.ResetPath();
         }
@@ -139,6 +147,30 @@ namespace PolyQuest.Components
             {
                 NavMeshAgent.isStopped = true;
             }
+        }
+
+        public void MoveInDirection(Vector3 worldDirection)
+        {
+            if (!IsAlive())
+                return;
+
+            if (!NavMeshAgent.isOnNavMesh)
+                return;
+
+            m_movementMode = MovementMode.kWASD;
+            NavMeshAgent.ResetPath();
+            NavMeshAgent.isStopped = false;
+            NavMeshAgent.velocity = worldDirection * NavMeshAgent.speed;
+        }
+
+        public void StopWASD()
+        {
+            if (m_movementMode != MovementMode.kWASD)
+                return;
+
+            m_movementMode = MovementMode.kNone;
+            NavMeshAgent.velocity = Vector3.zero;
+            Stop();
         }
 
         /*-------------------------------------------------------------------------- 

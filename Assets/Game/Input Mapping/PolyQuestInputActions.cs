@@ -119,7 +119,7 @@ namespace PolyQuest.Input
                 {
                     ""name"": ""negative"",
                     ""id"": ""579ff259-2f8a-4272-8052-0480831cd2d2"",
-                    ""path"": ""<Keyboard>/a"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -130,7 +130,7 @@ namespace PolyQuest.Input
                 {
                     ""name"": ""positive"",
                     ""id"": ""f74815fc-e811-4177-b765-1a962e3ba210"",
-                    ""path"": ""<Keyboard>/d"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -217,42 +217,6 @@ namespace PolyQuest.Input
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Open Inventory Tab"",
-                    ""type"": ""Button"",
-                    ""id"": ""052e7620-b15f-4458-9a71-172bfee494fd"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Open Quest Tab"",
-                    ""type"": ""Button"",
-                    ""id"": ""a28326ac-63db-4640-bc99-680b72cb2c72"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Open Pause Menu"",
-                    ""type"": ""Button"",
-                    ""id"": ""053978b4-2071-4078-8b29-c02b832ea66a"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Open Attributes Tab"",
-                    ""type"": ""Button"",
-                    ""id"": ""2a51b0dd-0143-4a8e-a647-14977e66a88f"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Cancel"",
                     ""type"": ""Button"",
                     ""id"": ""d32d099b-ee9f-42b0-8403-3b0e6897d98c"",
@@ -260,6 +224,15 @@ namespace PolyQuest.Input
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""WASD"",
+                    ""type"": ""Value"",
+                    ""id"": ""50060670-7e9c-4ca8-b898-3f5c0a7997cf"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -353,39 +326,6 @@ namespace PolyQuest.Input
                 },
                 {
                     ""name"": """",
-                    ""id"": ""a8f57b74-1033-43bd-a8ac-fe800b8aae03"",
-                    ""path"": ""<Keyboard>/i"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Open Inventory Tab"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0730d014-e07c-47b7-af9d-f6648d5e3545"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Open Quest Tab"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c0337c58-1377-4184-906c-99fbb26dcd13"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Open Pause Menu"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""c2ad9132-ea40-4b14-896a-944eaed75da7"",
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
@@ -396,15 +336,59 @@ namespace PolyQuest.Input
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""0d4ad6b4-ce22-48c3-a932-3b2644275a06"",
-                    ""path"": ""<Keyboard>/c"",
+                    ""name"": ""2D Vector"",
+                    ""id"": ""f406cf08-4cc0-45f2-8da3-05196b7f6d65"",
+                    ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Open Attributes Tab"",
-                    ""isComposite"": false,
+                    ""action"": ""WASD"",
+                    ""isComposite"": true,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""a4843587-d220-48bd-bf4b-3a555968af81"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WASD"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""d9ca9dbf-3234-42fa-91a6-70e09d007f45"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WASD"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""f7f5c97b-83d1-4f3b-b615-0acc6648e1d2"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WASD"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""87553f90-b977-4df8-8acf-c426d4dd69a6"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WASD"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -425,6 +409,42 @@ namespace PolyQuest.Input
                     ""name"": ""Split Modifier"",
                     ""type"": ""Button"",
                     ""id"": ""b8d2ff67-00c4-46c3-bfa5-a741e39daf8d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Open Inventory Tab"",
+                    ""type"": ""Button"",
+                    ""id"": ""4bbc02ff-cc6d-4f73-bbd3-7b63002bbf4c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Open Quest Tab"",
+                    ""type"": ""Button"",
+                    ""id"": ""4e2f277f-556e-4646-be43-38cc5aa31f89"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Open Pause Menu"",
+                    ""type"": ""Button"",
+                    ""id"": ""7b112bb5-206f-4191-9a43-e3d5649eafa3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Open Attributes Tab"",
+                    ""type"": ""Button"",
+                    ""id"": ""1a10119a-7e7f-4224-8841-14410f2057e1"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -462,6 +482,50 @@ namespace PolyQuest.Input
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Split Modifier"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""48a9a05b-a6f4-4b3f-ba34-a0f6e821aa5b"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Open Inventory Tab"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""92259c29-fa7c-4c8b-aa9f-be9360d2714c"",
+                    ""path"": ""<Keyboard>/j"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Open Quest Tab"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3ab01b2f-a8fd-4beb-888e-60f5b92429fd"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Open Pause Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""09d5ff2d-4be2-4f55-916a-a195282b45c0"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Open Attributes Tab"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -743,15 +807,16 @@ namespace PolyQuest.Input
             m_Gameplay_ActionSlot5 = m_Gameplay.FindAction("ActionSlot5", throwIfNotFound: true);
             m_Gameplay_ActionSlot6 = m_Gameplay.FindAction("ActionSlot6", throwIfNotFound: true);
             m_Gameplay_MousePosition = m_Gameplay.FindAction("Mouse Position", throwIfNotFound: true);
-            m_Gameplay_OpenInventoryTab = m_Gameplay.FindAction("Open Inventory Tab", throwIfNotFound: true);
-            m_Gameplay_OpenQuestTab = m_Gameplay.FindAction("Open Quest Tab", throwIfNotFound: true);
-            m_Gameplay_OpenPauseMenu = m_Gameplay.FindAction("Open Pause Menu", throwIfNotFound: true);
-            m_Gameplay_OpenAttributesTab = m_Gameplay.FindAction("Open Attributes Tab", throwIfNotFound: true);
             m_Gameplay_Cancel = m_Gameplay.FindAction("Cancel", throwIfNotFound: true);
+            m_Gameplay_WASD = m_Gameplay.FindAction("WASD", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_DoubleClick = m_UI.FindAction("Double Click", throwIfNotFound: true);
             m_UI_SplitModifier = m_UI.FindAction("Split Modifier", throwIfNotFound: true);
+            m_UI_OpenInventoryTab = m_UI.FindAction("Open Inventory Tab", throwIfNotFound: true);
+            m_UI_OpenQuestTab = m_UI.FindAction("Open Quest Tab", throwIfNotFound: true);
+            m_UI_OpenPauseMenu = m_UI.FindAction("Open Pause Menu", throwIfNotFound: true);
+            m_UI_OpenAttributesTab = m_UI.FindAction("Open Attributes Tab", throwIfNotFound: true);
             // Debug
             m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
             m_Debug_DecreaseHealth = m_Debug.FindAction("Decrease Health", throwIfNotFound: true);
@@ -947,11 +1012,8 @@ namespace PolyQuest.Input
         private readonly InputAction m_Gameplay_ActionSlot5;
         private readonly InputAction m_Gameplay_ActionSlot6;
         private readonly InputAction m_Gameplay_MousePosition;
-        private readonly InputAction m_Gameplay_OpenInventoryTab;
-        private readonly InputAction m_Gameplay_OpenQuestTab;
-        private readonly InputAction m_Gameplay_OpenPauseMenu;
-        private readonly InputAction m_Gameplay_OpenAttributesTab;
         private readonly InputAction m_Gameplay_Cancel;
+        private readonly InputAction m_Gameplay_WASD;
         /// <summary>
         /// Provides access to input actions defined in input action map "Gameplay".
         /// </summary>
@@ -996,25 +1058,13 @@ namespace PolyQuest.Input
             /// </summary>
             public InputAction @MousePosition => m_Wrapper.m_Gameplay_MousePosition;
             /// <summary>
-            /// Provides access to the underlying input action "Gameplay/OpenInventoryTab".
-            /// </summary>
-            public InputAction @OpenInventoryTab => m_Wrapper.m_Gameplay_OpenInventoryTab;
-            /// <summary>
-            /// Provides access to the underlying input action "Gameplay/OpenQuestTab".
-            /// </summary>
-            public InputAction @OpenQuestTab => m_Wrapper.m_Gameplay_OpenQuestTab;
-            /// <summary>
-            /// Provides access to the underlying input action "Gameplay/OpenPauseMenu".
-            /// </summary>
-            public InputAction @OpenPauseMenu => m_Wrapper.m_Gameplay_OpenPauseMenu;
-            /// <summary>
-            /// Provides access to the underlying input action "Gameplay/OpenAttributesTab".
-            /// </summary>
-            public InputAction @OpenAttributesTab => m_Wrapper.m_Gameplay_OpenAttributesTab;
-            /// <summary>
             /// Provides access to the underlying input action "Gameplay/Cancel".
             /// </summary>
             public InputAction @Cancel => m_Wrapper.m_Gameplay_Cancel;
+            /// <summary>
+            /// Provides access to the underlying input action "Gameplay/WASD".
+            /// </summary>
+            public InputAction @WASD => m_Wrapper.m_Gameplay_WASD;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1065,21 +1115,12 @@ namespace PolyQuest.Input
                 @MousePosition.started += instance.OnMousePosition;
                 @MousePosition.performed += instance.OnMousePosition;
                 @MousePosition.canceled += instance.OnMousePosition;
-                @OpenInventoryTab.started += instance.OnOpenInventoryTab;
-                @OpenInventoryTab.performed += instance.OnOpenInventoryTab;
-                @OpenInventoryTab.canceled += instance.OnOpenInventoryTab;
-                @OpenQuestTab.started += instance.OnOpenQuestTab;
-                @OpenQuestTab.performed += instance.OnOpenQuestTab;
-                @OpenQuestTab.canceled += instance.OnOpenQuestTab;
-                @OpenPauseMenu.started += instance.OnOpenPauseMenu;
-                @OpenPauseMenu.performed += instance.OnOpenPauseMenu;
-                @OpenPauseMenu.canceled += instance.OnOpenPauseMenu;
-                @OpenAttributesTab.started += instance.OnOpenAttributesTab;
-                @OpenAttributesTab.performed += instance.OnOpenAttributesTab;
-                @OpenAttributesTab.canceled += instance.OnOpenAttributesTab;
                 @Cancel.started += instance.OnCancel;
                 @Cancel.performed += instance.OnCancel;
                 @Cancel.canceled += instance.OnCancel;
+                @WASD.started += instance.OnWASD;
+                @WASD.performed += instance.OnWASD;
+                @WASD.canceled += instance.OnWASD;
             }
 
             /// <summary>
@@ -1115,21 +1156,12 @@ namespace PolyQuest.Input
                 @MousePosition.started -= instance.OnMousePosition;
                 @MousePosition.performed -= instance.OnMousePosition;
                 @MousePosition.canceled -= instance.OnMousePosition;
-                @OpenInventoryTab.started -= instance.OnOpenInventoryTab;
-                @OpenInventoryTab.performed -= instance.OnOpenInventoryTab;
-                @OpenInventoryTab.canceled -= instance.OnOpenInventoryTab;
-                @OpenQuestTab.started -= instance.OnOpenQuestTab;
-                @OpenQuestTab.performed -= instance.OnOpenQuestTab;
-                @OpenQuestTab.canceled -= instance.OnOpenQuestTab;
-                @OpenPauseMenu.started -= instance.OnOpenPauseMenu;
-                @OpenPauseMenu.performed -= instance.OnOpenPauseMenu;
-                @OpenPauseMenu.canceled -= instance.OnOpenPauseMenu;
-                @OpenAttributesTab.started -= instance.OnOpenAttributesTab;
-                @OpenAttributesTab.performed -= instance.OnOpenAttributesTab;
-                @OpenAttributesTab.canceled -= instance.OnOpenAttributesTab;
                 @Cancel.started -= instance.OnCancel;
                 @Cancel.performed -= instance.OnCancel;
                 @Cancel.canceled -= instance.OnCancel;
+                @WASD.started -= instance.OnWASD;
+                @WASD.performed -= instance.OnWASD;
+                @WASD.canceled -= instance.OnWASD;
             }
 
             /// <summary>
@@ -1169,6 +1201,10 @@ namespace PolyQuest.Input
         private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
         private readonly InputAction m_UI_DoubleClick;
         private readonly InputAction m_UI_SplitModifier;
+        private readonly InputAction m_UI_OpenInventoryTab;
+        private readonly InputAction m_UI_OpenQuestTab;
+        private readonly InputAction m_UI_OpenPauseMenu;
+        private readonly InputAction m_UI_OpenAttributesTab;
         /// <summary>
         /// Provides access to input actions defined in input action map "UI".
         /// </summary>
@@ -1188,6 +1224,22 @@ namespace PolyQuest.Input
             /// Provides access to the underlying input action "UI/SplitModifier".
             /// </summary>
             public InputAction @SplitModifier => m_Wrapper.m_UI_SplitModifier;
+            /// <summary>
+            /// Provides access to the underlying input action "UI/OpenInventoryTab".
+            /// </summary>
+            public InputAction @OpenInventoryTab => m_Wrapper.m_UI_OpenInventoryTab;
+            /// <summary>
+            /// Provides access to the underlying input action "UI/OpenQuestTab".
+            /// </summary>
+            public InputAction @OpenQuestTab => m_Wrapper.m_UI_OpenQuestTab;
+            /// <summary>
+            /// Provides access to the underlying input action "UI/OpenPauseMenu".
+            /// </summary>
+            public InputAction @OpenPauseMenu => m_Wrapper.m_UI_OpenPauseMenu;
+            /// <summary>
+            /// Provides access to the underlying input action "UI/OpenAttributesTab".
+            /// </summary>
+            public InputAction @OpenAttributesTab => m_Wrapper.m_UI_OpenAttributesTab;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1220,6 +1272,18 @@ namespace PolyQuest.Input
                 @SplitModifier.started += instance.OnSplitModifier;
                 @SplitModifier.performed += instance.OnSplitModifier;
                 @SplitModifier.canceled += instance.OnSplitModifier;
+                @OpenInventoryTab.started += instance.OnOpenInventoryTab;
+                @OpenInventoryTab.performed += instance.OnOpenInventoryTab;
+                @OpenInventoryTab.canceled += instance.OnOpenInventoryTab;
+                @OpenQuestTab.started += instance.OnOpenQuestTab;
+                @OpenQuestTab.performed += instance.OnOpenQuestTab;
+                @OpenQuestTab.canceled += instance.OnOpenQuestTab;
+                @OpenPauseMenu.started += instance.OnOpenPauseMenu;
+                @OpenPauseMenu.performed += instance.OnOpenPauseMenu;
+                @OpenPauseMenu.canceled += instance.OnOpenPauseMenu;
+                @OpenAttributesTab.started += instance.OnOpenAttributesTab;
+                @OpenAttributesTab.performed += instance.OnOpenAttributesTab;
+                @OpenAttributesTab.canceled += instance.OnOpenAttributesTab;
             }
 
             /// <summary>
@@ -1237,6 +1301,18 @@ namespace PolyQuest.Input
                 @SplitModifier.started -= instance.OnSplitModifier;
                 @SplitModifier.performed -= instance.OnSplitModifier;
                 @SplitModifier.canceled -= instance.OnSplitModifier;
+                @OpenInventoryTab.started -= instance.OnOpenInventoryTab;
+                @OpenInventoryTab.performed -= instance.OnOpenInventoryTab;
+                @OpenInventoryTab.canceled -= instance.OnOpenInventoryTab;
+                @OpenQuestTab.started -= instance.OnOpenQuestTab;
+                @OpenQuestTab.performed -= instance.OnOpenQuestTab;
+                @OpenQuestTab.canceled -= instance.OnOpenQuestTab;
+                @OpenPauseMenu.started -= instance.OnOpenPauseMenu;
+                @OpenPauseMenu.performed -= instance.OnOpenPauseMenu;
+                @OpenPauseMenu.canceled -= instance.OnOpenPauseMenu;
+                @OpenAttributesTab.started -= instance.OnOpenAttributesTab;
+                @OpenAttributesTab.performed -= instance.OnOpenAttributesTab;
+                @OpenAttributesTab.canceled -= instance.OnOpenAttributesTab;
             }
 
             /// <summary>
@@ -1500,6 +1576,42 @@ namespace PolyQuest.Input
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnMousePosition(InputAction.CallbackContext context);
             /// <summary>
+            /// Method invoked when associated input action "Cancel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnCancel(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "WASD" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnWASD(InputAction.CallbackContext context);
+        }
+        /// <summary>
+        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
+        /// </summary>
+        /// <seealso cref="UIActions.AddCallbacks(IUIActions)" />
+        /// <seealso cref="UIActions.RemoveCallbacks(IUIActions)" />
+        public interface IUIActions
+        {
+            /// <summary>
+            /// Method invoked when associated input action "Double Click" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnDoubleClick(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Split Modifier" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnSplitModifier(InputAction.CallbackContext context);
+            /// <summary>
             /// Method invoked when associated input action "Open Inventory Tab" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
             /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -1527,35 +1639,6 @@ namespace PolyQuest.Input
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnOpenAttributesTab(InputAction.CallbackContext context);
-            /// <summary>
-            /// Method invoked when associated input action "Cancel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-            /// </summary>
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnCancel(InputAction.CallbackContext context);
-        }
-        /// <summary>
-        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
-        /// </summary>
-        /// <seealso cref="UIActions.AddCallbacks(IUIActions)" />
-        /// <seealso cref="UIActions.RemoveCallbacks(IUIActions)" />
-        public interface IUIActions
-        {
-            /// <summary>
-            /// Method invoked when associated input action "Double Click" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-            /// </summary>
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnDoubleClick(InputAction.CallbackContext context);
-            /// <summary>
-            /// Method invoked when associated input action "Split Modifier" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-            /// </summary>
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnSplitModifier(InputAction.CallbackContext context);
         }
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Debug" which allows adding and removing callbacks.

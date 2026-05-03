@@ -121,12 +121,14 @@ namespace PolyQuest.SceneManagement
             }
 
             Portal destination = GetDestination();
+#if UNITY_EDITOR
             if (destination == null)
             {
                 Debug.LogError($"Portal: No destination found matching PortalID '{m_portalID}' in scene '{m_sceneField.SceneName}'.");
                 Destroy(gameObject);
                 yield break;
             }
+#endif
             UpdatePlayer(destination);
             
             // Checkpoint after scene transition
@@ -184,12 +186,13 @@ namespace PolyQuest.SceneManagement
         {
             // Retrieve the player object again in the new scene
             m_player = GameObject.FindWithTag(kPlayerTag);
+#if UNITY_EDITOR
             if (m_player == null)
             {
                 Debug.LogError("Player object not found in the new scene!");
                 return;
             }
-
+#endif
             NavMeshAgent agent = m_player.GetComponent<NavMeshAgent>();
             agent.enabled = false;
             m_player.transform.SetPositionAndRotation(destination.m_spawnPoint.position, destination.m_spawnPoint.rotation);

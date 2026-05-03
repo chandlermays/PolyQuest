@@ -27,7 +27,7 @@ namespace PolyQuest.Abilities
                 }
             }
 
-            onComplete();
+            onComplete?.Invoke();
         }
     }
 }

@@ -45,6 +45,7 @@ namespace PolyQuest.PCG
             GenerateLevel();
         }
 
+#if UNITY_EDITOR
         /*----------------------------------------------------------------------------------------
         | --- RegenerateDecorations: Generates a new arrangement of decorations in the level --- |
         ----------------------------------------------------------------------------------------*/
@@ -56,9 +57,9 @@ namespace PolyQuest.PCG
                 Debug.LogWarning("[LevelBuilder] Regenerate Decorations: Must generate a level before placing decorations.");
                 return;
             }
-
             m_roomDecorator.Initialize(m_level, DateTime.Now.Ticks);
         }
+#endif
 
         /*---------------------------------------------------------------------------------------------
         | --- GenerateLevel: Generates the level geometry and navmesh based on the current layout --- |
@@ -68,11 +69,13 @@ namespace PolyQuest.PCG
             IsGenerated = false;
 
             m_level = m_layoutGenerator.GenerateLayout();
+#if UNITY_EDITOR
             if (m_level == null)
             {
                 Debug.LogError("[LevelBuilder] Generate Level: Failed to generate level layout.");
                 return;
             }
+#endif
             m_levelGeometry.CreateLevelGeometry();
             m_roomDecorator.Initialize(m_level, m_layoutGenerator.Seed);
             m_navMeshSurface.BuildNavMesh();

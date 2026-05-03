@@ -31,7 +31,7 @@
                 {
                     "name": "negative",
                     "id": "579ff259-2f8a-4272-8052-0480831cd2d2",
-                    "path": "<Keyboard>/a",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -42,7 +42,7 @@
                 {
                     "name": "positive",
                     "id": "f74815fc-e811-4177-b765-1a962e3ba210",
-                    "path": "<Keyboard>/d",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -129,42 +129,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Open Inventory Tab",
-                    "type": "Button",
-                    "id": "052e7620-b15f-4458-9a71-172bfee494fd",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Open Quest Tab",
-                    "type": "Button",
-                    "id": "a28326ac-63db-4640-bc99-680b72cb2c72",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Open Pause Menu",
-                    "type": "Button",
-                    "id": "053978b4-2071-4078-8b29-c02b832ea66a",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Open Attributes Tab",
-                    "type": "Button",
-                    "id": "2a51b0dd-0143-4a8e-a647-14977e66a88f",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Cancel",
                     "type": "Button",
                     "id": "d32d099b-ee9f-42b0-8403-3b0e6897d98c",
@@ -172,6 +136,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "WASD",
+                    "type": "Value",
+                    "id": "50060670-7e9c-4ca8-b898-3f5c0a7997cf",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -265,39 +238,6 @@
                 },
                 {
                     "name": "",
-                    "id": "a8f57b74-1033-43bd-a8ac-fe800b8aae03",
-                    "path": "<Keyboard>/i",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Open Inventory Tab",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "0730d014-e07c-47b7-af9d-f6648d5e3545",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Open Quest Tab",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c0337c58-1377-4184-906c-99fbb26dcd13",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Open Pause Menu",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "c2ad9132-ea40-4b14-896a-944eaed75da7",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
@@ -308,15 +248,59 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "0d4ad6b4-ce22-48c3-a932-3b2644275a06",
-                    "path": "<Keyboard>/c",
+                    "name": "2D Vector",
+                    "id": "f406cf08-4cc0-45f2-8da3-05196b7f6d65",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Open Attributes Tab",
-                    "isComposite": false,
+                    "action": "WASD",
+                    "isComposite": true,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "a4843587-d220-48bd-bf4b-3a555968af81",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "WASD",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "d9ca9dbf-3234-42fa-91a6-70e09d007f45",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "WASD",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "f7f5c97b-83d1-4f3b-b615-0acc6648e1d2",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "WASD",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "87553f90-b977-4df8-8acf-c426d4dd69a6",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "WASD",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },
@@ -337,6 +321,42 @@
                     "name": "Split Modifier",
                     "type": "Button",
                     "id": "b8d2ff67-00c4-46c3-bfa5-a741e39daf8d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Open Inventory Tab",
+                    "type": "Button",
+                    "id": "4bbc02ff-cc6d-4f73-bbd3-7b63002bbf4c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Open Quest Tab",
+                    "type": "Button",
+                    "id": "4e2f277f-556e-4646-be43-38cc5aa31f89",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Open Pause Menu",
+                    "type": "Button",
+                    "id": "7b112bb5-206f-4191-9a43-e3d5649eafa3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Open Attributes Tab",
+                    "type": "Button",
+                    "id": "1a10119a-7e7f-4224-8841-14410f2057e1",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -374,6 +394,50 @@
                     "processors": "",
                     "groups": "",
                     "action": "Split Modifier",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "48a9a05b-a6f4-4b3f-ba34-a0f6e821aa5b",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Open Inventory Tab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "92259c29-fa7c-4c8b-aa9f-be9360d2714c",
+                    "path": "<Keyboard>/j",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Open Quest Tab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3ab01b2f-a8fd-4beb-888e-60f5b92429fd",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Open Pause Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "09d5ff2d-4be2-4f55-916a-a195282b45c0",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Open Attributes Tab",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b6ac3799ecbb9442a22a032684838df, type: 3}
+  m_Script: {fileID: 11500000, guid: d7669cb9dd307eb458f26ea9cea69463, type: 3}
   m_Name: Iron Gauntlets
-  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.EquipableItem
-  m_itemID: 9d043263-2de3-43d8-9b39-0e2de492e090
+  m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Inventories.Armor
+  m_itemID: aec63922-347f-4075-aa2e-240e24826dee
   m_itemName: Iron Gauntlets
   m_itemDescription: Improves your defense but severly reduces your ability to do...
     well, anything delicate.
@@ -24,3 +24,6 @@ MonoBehaviour:
   m_targetEquipmentSlot: 3
   m_equipCondition:
     m_AND: []
+  m_additiveModifiers: []
+  m_percentageModifiers: []
+  m_baseDefense: 10

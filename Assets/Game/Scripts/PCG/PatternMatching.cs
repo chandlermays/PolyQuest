@@ -84,12 +84,21 @@ namespace PolyQuest.PCG
         --------------------------------------------------------------------------------------------------*/
         private bool IsPositionValid(TileType[,] decoratedLevel, Array2D<TileType> pattern, int startX, int startY)
         {
+            int levelWidth = decoratedLevel.GetLength(0);
+            int levelHeight = decoratedLevel.GetLength(1);
+
             for (int y = 0; y < pattern.Height; ++y)
             {
                 for (int x = 0; x < pattern.Width; ++x)
                 {
+                    int lx = startX + x;
+                    int ly = startY + y;
+
+                    if (lx < 0 || lx >= levelWidth || ly < 0 || ly >= levelHeight)
+                        return false;
+
                     TileType patternTile = pattern[x, y];
-                    TileType levelTile = decoratedLevel[startX + x, startY + y];
+                    TileType levelTile = decoratedLevel[lx, ly];
 
                     if (!TilesMatch(patternTile, levelTile))
                         return false;

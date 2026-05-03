@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.UI.Core.UIToggler
   m_uiPrefab: {fileID: 8863079065009796841}
-  m_toggleAction: {fileID: 8672975306198036132, guid: b72a72ec29b84e74c920c1c2c45f34cf, type: 3}
+  m_toggleAction: {fileID: 5702983735935334638, guid: b72a72ec29b84e74c920c1c2c45f34cf, type: 3}
 --- !u!114 &2336226203001060670
 MonoBehaviour:
   m_ObjectHideFlags: 0

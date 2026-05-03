@@ -25,4 +25,4 @@ MonoBehaviour:
     m_AND: []
   m_additiveModifiers: []
   m_percentageModifiers: []
-  m_baseDefense: 0
+  m_baseDefense: 10
