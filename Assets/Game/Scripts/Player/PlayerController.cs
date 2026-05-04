@@ -102,7 +102,7 @@ namespace PolyQuest.Player
             // Do nothing if you're dead
             if (m_healthComponent.IsDead)
             {
-                ClearHighlight();
+                ClearHighlightAndLabel();
                 return;
             }
 
@@ -363,10 +363,15 @@ namespace PolyQuest.Player
         /*-------------------------------------------------------------------------
         | --- ClearHighlight: Remove the highlight from the last known target --- |
         -------------------------------------------------------------------------*/
-        public void ClearHighlight()
+        public void ClearHighlightAndLabel()
         {
-            LastHighlightedObject?.GetComponent<IInteractable>()?.ToggleHighlight(false);
-            LastHighlightedObject = null;
+            if (LastHighlightedObject != null)
+            {
+                var interactable = LastHighlightedObject.GetComponent<IInteractable>();
+                interactable?.ToggleHighlight(false);
+                interactable?.ToggleLabel(false);
+                LastHighlightedObject = null;
+            }
         }
 
         /*--------------------------------------------------------------------- 

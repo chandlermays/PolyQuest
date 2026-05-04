@@ -28,17 +28,17 @@ namespace PolyQuest.Edit
         -------------------------------------------------------------*/
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            SerializedProperty predicate = property.FindPropertyRelative("m_predicate");
+            SerializedProperty condition = property.FindPropertyRelative("m_condition");
             SerializedProperty parameters = property.FindPropertyRelative("m_parameters");
             SerializedProperty negate = property.FindPropertyRelative("m_negate");
 
-            float propertyHeight = EditorGUI.GetPropertyHeight(predicate);
+            float propertyHeight = EditorGUI.GetPropertyHeight(condition);
             position.height = propertyHeight;
-            EditorGUI.PropertyField(position, predicate);
+            EditorGUI.PropertyField(position, condition);
 
-            ConditionType selectedPredicate = (ConditionType)predicate.enumValueIndex;
+            ConditionType selectedCondition = (ConditionType)condition.enumValueIndex;
 
-            if (selectedPredicate == ConditionType.kSelect)
+            if (selectedCondition == ConditionType.kSelect)
                 return;
 
             while (parameters.arraySize < 2)
@@ -47,29 +47,28 @@ namespace PolyQuest.Edit
             SerializedProperty param0 = parameters.GetArrayElementAtIndex(0);
             SerializedProperty param1 = parameters.GetArrayElementAtIndex(1);
 
-            // ---- Quest / Objective predicates (unchanged) ----
-            if (selectedPredicate == ConditionType.kHasQuest ||
-                selectedPredicate == ConditionType.kDoesNotHaveQuest ||
-                selectedPredicate == ConditionType.kCompletedQuest ||
-                selectedPredicate == ConditionType.kCompletedObjective)
+            // ---- Quest / Objective conditions ----
+            if (selectedCondition == ConditionType.kHasQuest ||
+                selectedCondition == ConditionType.kCompletedQuest ||
+                selectedCondition == ConditionType.kCompletedObjective)
             {
                 position.y += propertyHeight;
                 DrawQuest(position, param0);
 
-                if (selectedPredicate == ConditionType.kCompletedObjective)
+                if (selectedCondition == ConditionType.kCompletedObjective)
                 {
                     position.y += propertyHeight;
                     DrawObjective(position, param1, param0);
                 }
             }
 
-            // ---- Item predicates — quest-filtered item list ----
-            if (selectedPredicate == ConditionType.kHasItem ||
-                selectedPredicate == ConditionType.kHasItems ||
-                selectedPredicate == ConditionType.kHasItemEquipped)
+            // ---- Item conditions — quest-filtered item list ----
+            if (selectedCondition == ConditionType.kHasItem ||
+                selectedCondition == ConditionType.kHasItems ||
+                selectedCondition == ConditionType.kHasItemEquipped)
             {
-                bool stackable = selectedPredicate == ConditionType.kHasItems;
-                bool equipment = selectedPredicate == ConditionType.kHasItemEquipped;
+                bool stackable = selectedCondition == ConditionType.kHasItems;
+                bool equipment = selectedCondition == ConditionType.kHasItemEquipped;
                 string filterKey = property.propertyPath;
 
                 // Row 1: Optional quest scope (narrows item list to that quest's QuestItems)
@@ -87,10 +86,16 @@ namespace PolyQuest.Edit
                 }
             }
 
-            if (selectedPredicate == ConditionType.kHasLevel)
+            if (selectedCondition == ConditionType.kHasLevel)
             {
                 position.y += propertyHeight;
                 DrawIntSlider(position, "Minimum Level:", param0, 1, 100);
+            }
+
+            if (selectedCondition == ConditionType.kHasSpokenTo)
+            {
+                position.y += propertyHeight;
+                DrawNpcIdField(position, param0);
             }
 
             position.y += propertyHeight;
@@ -102,34 +107,37 @@ namespace PolyQuest.Edit
         ------------------------------------------------------------------------*/
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            SerializedProperty predicate = property.FindPropertyRelative("m_predicate");
-            float propertyHeight = EditorGUI.GetPropertyHeight(predicate);
-            ConditionType selectedPredicate = (ConditionType)predicate.enumValueIndex;
+            SerializedProperty condition = property.FindPropertyRelative("m_condition");
+            float propertyHeight = EditorGUI.GetPropertyHeight(condition);
+            ConditionType selectedCondition = (ConditionType)condition.enumValueIndex;
 
-            switch (selectedPredicate)
+            switch (selectedCondition)
             {
                 case ConditionType.kSelect:
                     return propertyHeight;
 
-                // Condition + Quest filter + Item + Negate
+                // Condition + Quest filter + Item
                 case ConditionType.kHasItem:
                 case ConditionType.kHasItemEquipped:
                     return propertyHeight * 4.0f;
 
-                // Condition + Quest filter + Item + Quantity + Negate
+                // Condition + Quest filter + Item + Quantity
                 case ConditionType.kHasItems:
                     return propertyHeight * 5.0f;
 
-                // Condition + Quest + Negate
+                // Condition + Quest
                 case ConditionType.kHasQuest:
-                case ConditionType.kDoesNotHaveQuest:
                 case ConditionType.kCompletedQuest:
                 case ConditionType.kHasLevel:
                     return propertyHeight * 3.0f;
 
-                // Condition + Quest + Objective + Negate
+                // Condition + Quest + Objective
                 case ConditionType.kCompletedObjective:
                     return propertyHeight * 4.0f;
+
+                // Condition + Text Field (NPC ID)
+                case ConditionType.kHasSpokenTo:
+                    return propertyHeight * 3.0f;
             }
 
             return propertyHeight * 2;
@@ -305,6 +313,16 @@ namespace PolyQuest.Edit
             if (EditorGUI.EndChangeCheck())
                 intParam.stringValue = $"{result}";
 
+            EditorGUI.EndProperty();
+        }
+
+        private void DrawNpcIdField(Rect position, SerializedProperty element)
+        {
+            EditorGUI.BeginProperty(position, new GUIContent("NPC ID:"), element);
+            EditorGUI.BeginChangeCheck();
+            string newValue = EditorGUI.TextField(position, "NPC ID:", element.stringValue);
+            if (EditorGUI.EndChangeCheck())
+                element.stringValue = newValue;
             EditorGUI.EndProperty();
         }
     }

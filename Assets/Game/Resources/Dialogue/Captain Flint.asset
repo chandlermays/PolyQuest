@@ -54,7 +54,7 @@ MonoBehaviour:
   m_condition:
     m_AND:
     - m_OR:
-      - m_predicate: 3
+      - m_condition: 2
         m_parameters:
         - Clear the Bandit Camp
         - Kill the Bandits
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_condition:
     m_AND:
     - m_OR:
-      - m_predicate: 3
+      - m_condition: 2
         m_parameters:
         - Clear the Bandit Camp
         - Kill the Bandits
@@ -224,7 +224,7 @@ MonoBehaviour:
   m_condition:
     m_AND:
     - m_OR:
-      - m_predicate: 3
+      - m_condition: 2
         m_parameters:
         - Clear the Bandit Camp
         - Kill the Bandits
@@ -312,7 +312,7 @@ MonoBehaviour:
   m_condition:
     m_AND:
     - m_OR:
-      - m_predicate: 3
+      - m_condition: 2
         m_parameters:
         - Clear the Bandit Camp
         - Kill the Bandits
@@ -428,17 +428,11 @@ MonoBehaviour:
   m_condition:
     m_AND:
     - m_OR:
-      - m_predicate: 1
+      - m_condition: 1
         m_parameters:
         - Clear the Bandit Camp
-        - Clear the Bandit Camp
+        - 
         m_negate: 0
-    - m_OR:
-      - m_predicate: 4
-        m_parameters:
-        - Clear the Bandit Camp
-        - Kill the Bandits
-        m_negate: 1
 --- !u!114 &-3313404035935606827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -572,7 +566,7 @@ MonoBehaviour:
   m_condition:
     m_AND:
     - m_OR:
-      - m_predicate: 4
+      - m_condition: 3
         m_parameters:
         - Clear the Bandit Camp
         - 
@@ -765,7 +759,7 @@ MonoBehaviour:
   m_condition:
     m_AND:
     - m_OR:
-      - m_predicate: 2
+      - m_condition: 0
         m_parameters:
         - Clear the Bandit Camp
         - 
@@ -1166,13 +1160,13 @@ MonoBehaviour:
   m_condition:
     m_AND:
     - m_OR:
-      - m_predicate: 2
+      - m_condition: 1
         m_parameters:
         - Clear the Bandit Camp
         - 
-        m_negate: 0
+        m_negate: 1
     - m_OR:
-      - m_predicate: 4
+      - m_condition: 3
         m_parameters:
         - Clear the Bandit Camp
         - 

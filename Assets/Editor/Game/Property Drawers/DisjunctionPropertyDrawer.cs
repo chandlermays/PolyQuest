@@ -84,7 +84,7 @@ namespace PolyQuest.Edit
                 or.MoveArrayElement(itemToMoveDown, itemToMoveDown + 1);
             }
 
-            if (GUI.Button(position, "Add Conjunction"))
+            if (GUI.Button(position, "Add Condition"))
             {
                 or.InsertArrayElementAtIndex(index);
             }

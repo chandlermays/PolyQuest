@@ -16,9 +16,9 @@ MonoBehaviour:
   m_shopInventory:
   - m_item: {fileID: 11400000, guid: 8020f99054b9f0c408d6ad5c146a25ac, type: 2}
     m_initialStock: 2
-  - m_item: {fileID: 11400000, guid: 5914364a84e39864e92936ecaede2cdb, type: 2}
+  - m_item: {fileID: 11400000, guid: c2d8c07effaa6fa4ebcb313f40e8e4eb, type: 2}
     m_initialStock: 3
-  - m_item: {fileID: 11400000, guid: 4b5b24ee76f90654fa108fc436daa003, type: 2}
+  - m_item: {fileID: 11400000, guid: be7eb837a29e5c447b3c014261cf2c5d, type: 2}
     m_initialStock: 3
   - m_item: {fileID: 11400000, guid: ad99bf7cafdc1f841bc7753d73a5118b, type: 2}
     m_initialStock: 5

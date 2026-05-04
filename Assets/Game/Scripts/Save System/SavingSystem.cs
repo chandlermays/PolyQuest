@@ -43,9 +43,9 @@ namespace PolyQuest.Saving
         ---------------------------------------------------------------*/
         public void Save(string saveFile)
         {
-            JObject state = LoadJsonFromFile(saveFile);
-            CaptureAsToken(state);
-            SaveFileAsJson(saveFile, state);
+            JObject state = LoadFromFile(saveFile);
+            CaptureEntities(state);
+            SaveFile(saveFile, state);
         }
 
         /*-----------------------------------------------------
@@ -62,7 +62,7 @@ namespace PolyQuest.Saving
         ---------------------------------------------------*/
         public void Load(string fileName)
         {
-            RestoreFromToken(LoadJsonFromFile(fileName));
+            RestoreEntities(LoadFromFile(fileName));
         }
 
         /*-----------------------------------------------
@@ -78,7 +78,7 @@ namespace PolyQuest.Saving
         ----------------------------------------------------------------*/
         public IEnumerator LoadLastScene(string saveFile)
         {
-            JObject state = LoadJsonFromFile(saveFile);
+            JObject state = LoadFromFile(saveFile);
             SaveState stateDict = state;
             int buildIndex = SceneManager.GetActiveScene().buildIndex;
             if (stateDict.ContainsKey(kLastActiveSceneKey))
@@ -86,7 +86,7 @@ namespace PolyQuest.Saving
                 buildIndex = stateDict[kLastActiveSceneKey].ToObject<int>();
             }
             yield return SceneManager.LoadSceneAsync(buildIndex);
-            RestoreFromToken(state);
+            RestoreEntities(state);
         }
 
         /*-------------------------------------------------------------
@@ -103,10 +103,10 @@ namespace PolyQuest.Saving
             }
         }
 
-        /*-----------------------------------------------------------
-        | --- LoadFile: Deserialize the state from a saved file --- |
-        -----------------------------------------------------------*/
-        private JObject LoadJsonFromFile(string saveFile)
+        /*----------------------------------------------------------------
+        | --- LoadFromFile: Load the state from a file and return it --- |
+        ----------------------------------------------------------------*/
+        private JObject LoadFromFile(string saveFile)
         {
             string path = GetPathFromSaveFile(saveFile);
 
@@ -122,7 +122,7 @@ namespace PolyQuest.Saving
         /*-------------------------------------------------------------
         | --- SaveFile: Serialize the state and save it to a file --- |
         -------------------------------------------------------------*/
-        private void SaveFileAsJson(string saveFile, JObject state)
+        private void SaveFile(string saveFile, JObject state)
         {
             string path = GetPathFromSaveFile(saveFile);
 
@@ -132,29 +132,29 @@ namespace PolyQuest.Saving
             state.WriteTo(writer);
         }
 
-        /*------------------------------------------------------------------
-        | --- CaptureState: Capture the state of all saveable entities --- |
-        ------------------------------------------------------------------*/
-        private void CaptureAsToken(SaveState state)
+        /*---------------------------------------------------------------------
+        | --- CaptureEntities: Capture the state of all saveable entities --- |
+        ---------------------------------------------------------------------*/
+        private void CaptureEntities(SaveState state)
         {
             foreach (SaveableEntity saveable in m_registeredEntities)
             {
-                state[saveable.UID] = saveable.CaptureAsJToken();
+                state[saveable.UID] = saveable.Capture();
             }
             state[kLastActiveSceneKey] = SceneManager.GetActiveScene().buildIndex;
         }
 
-        /*------------------------------------------------------------------
-        | --- RestoreState: Restore the state of all saveable entities --- |
-        ------------------------------------------------------------------*/
-        private void RestoreFromToken(SaveState state)
+        /*---------------------------------------------------------------------
+        | --- RestoreEntities: Restore the state of all saveable entities --- |
+        ---------------------------------------------------------------------*/
+        private void RestoreEntities(SaveState state)
         {
             foreach (SaveableEntity saveable in m_registeredEntities)
             {
                 string ID = saveable.UID;
                 if (state.ContainsKey(ID))
                 {
-                    saveable.RestoreFromJToken(state[ID]);
+                    saveable.Restore(state[ID]);
                 }
             }
         }

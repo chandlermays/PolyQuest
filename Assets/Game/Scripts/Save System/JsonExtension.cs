@@ -13,6 +13,9 @@ namespace PolyQuest.Saving
 
     public static class JsonExtension
     {
+        /*------------------------------------------------------------
+        | --- ToToken: Converts a Vector3 to a JToken for saving --- |
+        ------------------------------------------------------------*/
         public static JToken ToToken(this Vector3 vector)
         {
             JObject state = new();
@@ -23,6 +26,9 @@ namespace PolyQuest.Saving
             return state;
         }
 
+        /*--------------------------------------------------------------------
+        | --- ToVector3: Converts a JToken back to a Vector3 for loading --- |
+        --------------------------------------------------------------------*/
         public static Vector3 ToVector3(this JToken state)
         {
             Vector3 vector = new();

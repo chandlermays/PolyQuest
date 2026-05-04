@@ -110,7 +110,7 @@ namespace PolyQuest.Core
             {
                 m_isDialogueCameraActive = toDialogue;
                 ApplyCameraState();
-                m_playerController.ClearHighlight();
+                m_playerController.ClearHighlightAndLabel();
             }
 
             if (fade != null)

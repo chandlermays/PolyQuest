@@ -8,7 +8,6 @@ namespace PolyQuest.Tools
     {
         kSelect,
         kHasQuest,
-        kDoesNotHaveQuest,
         kCompletedObjective,
         kCompletedQuest,
         kHasLevel,

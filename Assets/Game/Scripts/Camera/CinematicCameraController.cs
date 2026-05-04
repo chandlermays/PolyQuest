@@ -87,7 +87,7 @@ namespace PolyQuest.Core
 
             // Hide the player and clear highlights to prevent them from showing up in the cinematic
             m_playerController.SetPlayerVisibility(false);
-            m_playerController.ClearHighlight();
+            m_playerController.ClearHighlightAndLabel();
 
             m_isCinematicActive = true;
             ApplyCameraState();

@@ -149,6 +149,9 @@ namespace PolyQuest.Components
             }
         }
 
+        /*--------------------------------------------------------------------------------------------- 
+        | --- MoveInDirection: Moves the Entity in the specified world direction (for WASD input) --- |
+        ---------------------------------------------------------------------------------------------*/
         public void MoveInDirection(Vector3 worldDirection)
         {
             if (!IsAlive())
@@ -157,12 +160,17 @@ namespace PolyQuest.Components
             if (!NavMeshAgent.isOnNavMesh)
                 return;
 
+            m_actionManager.CancelCurrentAction();
+
             m_movementMode = MovementMode.kWASD;
             NavMeshAgent.ResetPath();
             NavMeshAgent.isStopped = false;
             NavMeshAgent.velocity = worldDirection * NavMeshAgent.speed;
         }
 
+        /*--------------------------------------------------------- 
+        | --- StopWASD: Stops the WASD movement of the Entity --- |
+        ---------------------------------------------------------*/
         public void StopWASD()
         {
             if (m_movementMode != MovementMode.kWASD)

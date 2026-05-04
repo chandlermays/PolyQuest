@@ -329,13 +329,13 @@ MonoBehaviour:
   m_condition:
     m_AND:
     - m_OR:
-      - m_predicate: 2
+      - m_condition: 1
         m_parameters:
         - A Family Heirloom
         - 
-        m_negate: 0
+        m_negate: 1
     - m_OR:
-      - m_predicate: 4
+      - m_condition: 3
         m_parameters:
         - A Family Heirloom
         - 
@@ -633,13 +633,7 @@ MonoBehaviour:
   m_condition:
     m_AND:
     - m_OR:
-      - m_predicate: 1
-        m_parameters:
-        - A Family Heirloom
-        - 
-        m_negate: 0
-    - m_OR:
-      - m_predicate: 6
+      - m_condition: 5
         m_parameters:
         - 03bea15d-3acc-4f77-afda-ed14ab0807ad
         - 
@@ -937,7 +931,7 @@ MonoBehaviour:
   m_condition:
     m_AND:
     - m_OR:
-      - m_predicate: 4
+      - m_condition: 3
         m_parameters:
         - A Family Heirloom
         - 
@@ -1340,7 +1334,7 @@ MonoBehaviour:
   m_condition:
     m_AND:
     - m_OR:
-      - m_predicate: 1
+      - m_condition: 1
         m_parameters:
         - A Family Heirloom
         - 

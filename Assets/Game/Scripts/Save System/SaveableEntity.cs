@@ -49,12 +49,11 @@ namespace PolyQuest.Saving
             SavingSystem.UnregisterSaveableEntity(this);
         }
 
-        /*----------------------------------------------------------------
-        | --- CaptureState: Captures the current State of the Entity --- |
-        ----------------------------------------------------------------*/
-        public JToken CaptureAsJToken()
+        /*---------------------------------------------------------------------------
+        | --- Capture: Captures the Entity's State into a JToken and returns it --- |
+        ---------------------------------------------------------------------------*/
+        public JToken Capture()
         {
-            // early exit if there are no saveables
             if (m_saveables == null || m_saveables.Length == 0)
                 return null;
 
@@ -69,10 +68,10 @@ namespace PolyQuest.Saving
             return state;
         }
 
-        /*---------------------------------------------------------------
-        | --- RestoreState: Restores the Entity to a previous State --- |
-        ---------------------------------------------------------------*/
-        public void RestoreFromJToken(JToken s)
+        /*------------------------------------------------------------------
+        | --- Restore: Restores the Entity's State from a given JToken --- |
+        ------------------------------------------------------------------*/
+        public void Restore(JToken s)
         {
             JObject state = s.ToObject<JObject>();
             SaveState stateDict = state;

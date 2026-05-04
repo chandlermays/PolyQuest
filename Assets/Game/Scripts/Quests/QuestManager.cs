@@ -212,9 +212,6 @@ namespace PolyQuest.Quests
                 case ConditionType.kHasQuest:
                     return HasQuest(Quest.GetByName(parameters[0]));
 
-                case ConditionType.kDoesNotHaveQuest:
-                    return !HasQuest(Quest.GetByName(parameters[0]));
-
                 case ConditionType.kCompletedQuest:
                     return IsQuestCompleted(Quest.GetByName(parameters[0]));
 
