@@ -60,7 +60,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1.8
     - serializedVersion: 16
-      name: Character Strafe Right
+      name: Character Strafe Walk Right
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0

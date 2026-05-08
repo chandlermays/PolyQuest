@@ -233,6 +233,15 @@ namespace PolyQuest.Input
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SetWalking"",
+                    ""type"": ""Button"",
+                    ""id"": ""a056df9a-0002-4265-9c2c-41a1aea950b1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -389,6 +398,17 @@ namespace PolyQuest.Input
                     ""action"": ""WASD"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5b4293a7-3f13-4c3b-a8b8-de50078b38fe"",
+                    ""path"": ""<Keyboard>/numpadMinus"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SetWalking"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -809,6 +829,7 @@ namespace PolyQuest.Input
             m_Gameplay_MousePosition = m_Gameplay.FindAction("Mouse Position", throwIfNotFound: true);
             m_Gameplay_Cancel = m_Gameplay.FindAction("Cancel", throwIfNotFound: true);
             m_Gameplay_WASD = m_Gameplay.FindAction("WASD", throwIfNotFound: true);
+            m_Gameplay_SetWalking = m_Gameplay.FindAction("SetWalking", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_DoubleClick = m_UI.FindAction("Double Click", throwIfNotFound: true);
@@ -1014,6 +1035,7 @@ namespace PolyQuest.Input
         private readonly InputAction m_Gameplay_MousePosition;
         private readonly InputAction m_Gameplay_Cancel;
         private readonly InputAction m_Gameplay_WASD;
+        private readonly InputAction m_Gameplay_SetWalking;
         /// <summary>
         /// Provides access to input actions defined in input action map "Gameplay".
         /// </summary>
@@ -1065,6 +1087,10 @@ namespace PolyQuest.Input
             /// Provides access to the underlying input action "Gameplay/WASD".
             /// </summary>
             public InputAction @WASD => m_Wrapper.m_Gameplay_WASD;
+            /// <summary>
+            /// Provides access to the underlying input action "Gameplay/SetWalking".
+            /// </summary>
+            public InputAction @SetWalking => m_Wrapper.m_Gameplay_SetWalking;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1121,6 +1147,9 @@ namespace PolyQuest.Input
                 @WASD.started += instance.OnWASD;
                 @WASD.performed += instance.OnWASD;
                 @WASD.canceled += instance.OnWASD;
+                @SetWalking.started += instance.OnSetWalking;
+                @SetWalking.performed += instance.OnSetWalking;
+                @SetWalking.canceled += instance.OnSetWalking;
             }
 
             /// <summary>
@@ -1162,6 +1191,9 @@ namespace PolyQuest.Input
                 @WASD.started -= instance.OnWASD;
                 @WASD.performed -= instance.OnWASD;
                 @WASD.canceled -= instance.OnWASD;
+                @SetWalking.started -= instance.OnSetWalking;
+                @SetWalking.performed -= instance.OnSetWalking;
+                @SetWalking.canceled -= instance.OnSetWalking;
             }
 
             /// <summary>
@@ -1589,6 +1621,13 @@ namespace PolyQuest.Input
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnWASD(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "SetWalking" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnSetWalking(InputAction.CallbackContext context);
         }
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

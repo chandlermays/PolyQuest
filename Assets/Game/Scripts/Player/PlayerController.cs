@@ -92,6 +92,8 @@ namespace PolyQuest.Player
         private void Start()
         {
             m_inputActions = InputManager.Instance.InputActions;
+
+            m_inputActions.Gameplay.SetWalking.performed += _ => m_movement.ToggleWalkMode();
         }
 
         /*----------------------------------------- 

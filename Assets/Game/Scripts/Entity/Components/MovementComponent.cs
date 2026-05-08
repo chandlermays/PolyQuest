@@ -30,6 +30,8 @@ namespace PolyQuest.Components
             kWASD
         }
 
+        [SerializeField] private float m_walkSpeedFraction = 0.5f;
+        private bool m_isWalking = false;
         private MovementMode m_movementMode = MovementMode.kNone;
         private float m_maxPathLength = 20f;
 
@@ -38,9 +40,13 @@ namespace PolyQuest.Components
         private ActionManager m_actionManager;
 
         private static readonly int kSpeed = Animator.StringToHash("Speed");
+        private static readonly int kMoveX = Animator.StringToHash("MoveX");
+        private static readonly int kMoveY = Animator.StringToHash("MoveY");
+        private static readonly int kIsWalking = Animator.StringToHash("IsWalking");
 
         private bool IsAlive() => m_healthComponent == null || !m_healthComponent.IsDead;
         public bool IsWASDMoving => m_movementMode == MovementMode.kWASD;
+        public bool IsWalking => m_isWalking;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -165,7 +171,9 @@ namespace PolyQuest.Components
             m_movementMode = MovementMode.kWASD;
             NavMeshAgent.ResetPath();
             NavMeshAgent.isStopped = false;
-            NavMeshAgent.velocity = worldDirection * NavMeshAgent.speed;
+
+            float speed = m_isWalking ? NavMeshAgent.speed * m_walkSpeedFraction : NavMeshAgent.speed;
+            NavMeshAgent.velocity = worldDirection * speed;
         }
 
         /*--------------------------------------------------------- 
@@ -179,6 +187,15 @@ namespace PolyQuest.Components
             m_movementMode = MovementMode.kNone;
             NavMeshAgent.velocity = Vector3.zero;
             Stop();
+        }
+
+        /*---------------------------------------------------------------- 
+        | --- ToggleWalkMode: Toggles the walking mode of the Entity --- |
+        ----------------------------------------------------------------*/
+        public void ToggleWalkMode()
+        {
+            m_isWalking = !m_isWalking;
+            Animator.SetBool(kIsWalking, m_isWalking);
         }
 
         /*-------------------------------------------------------------------------- 
@@ -207,8 +224,11 @@ namespace PolyQuest.Components
         {
             Vector3 velocity = NavMeshAgent.velocity;
             Vector3 localVelocity = Transform.InverseTransformDirection(velocity);
-            float speed = localVelocity.z;
+
+            float speed = localVelocity.magnitude;
             Animator.SetFloat(kSpeed, speed);
+            Animator.SetFloat(kMoveX, localVelocity.x);
+            Animator.SetFloat(kMoveY, localVelocity.z);
         }
 
         /*-------------------------------------------------------------------------- 
