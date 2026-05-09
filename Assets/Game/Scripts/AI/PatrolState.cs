@@ -37,15 +37,14 @@ namespace PolyQuest.AI
         {
             m_currentWaypointIndex = 0;
             m_timeSinceArrivedAtWaypoint = Mathf.Infinity;
-            m_owner.Movement.ToggleWalkMode();
+            m_owner.Movement.SetWalkMode(true);
         }
 
-        /*-------------------------------------------------
+        /*----------------------------------------------
         | --- Tick: Called each frame while active --- |
-        -------------------------------------------------*/
+        ----------------------------------------------*/
         public void Tick()
         {
-            // Evaluate transitions first
             if (m_owner.IsAggrevated() && m_owner.Combat.CanAttack(m_owner.Target))
             {
                 m_owner.StateMachine.SetState(new AttackState());
@@ -65,14 +64,17 @@ namespace PolyQuest.AI
         /*--------------------------------------------------
         | --- Exit: Called once when leaving the state --- |
         --------------------------------------------------*/
-        public void Exit() { }
+        public void Exit()
+        {
+            m_owner.Movement.SetWalkMode(false);
+        }
 
-        /*----------------------------------------------------------------------
-        | --- PatrolBehaviour: Move along the path or return to guard pos --- |
-        ----------------------------------------------------------------------*/
+        /*-----------------------------------------------------------------------------
+        | --- PatrolBehaviour: Move along the path or return to original position --- |
+        -----------------------------------------------------------------------------*/
         private void PatrolBehaviour()
         {
-            Vector3 nextPosition = m_owner.GuardPosition;
+            Vector3 nextPosition = m_owner.HomePosition;
 
             if (m_owner.PatrolPath != null)
             {

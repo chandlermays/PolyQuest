@@ -61,7 +61,6 @@ namespace PolyQuest.Player
         private bool m_canMove = true;
 
         public bool IsTargeting => m_isTargeting;
-        public void ToggleInput(bool enabled) => m_canMove = enabled;
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -423,6 +422,18 @@ namespace PolyQuest.Player
             if (mapping.m_texture != null)
             {
                 Cursor.SetCursor(mapping.m_texture, mapping.m_hotspot, CursorMode.Auto);
+            }
+        }
+
+        /*----------------------------------------------------------------------------------
+        | --- ToggleInput: Enable or disable player input and optionally stop movement --- |
+        ----------------------------------------------------------------------------------*/
+        public void ToggleInput(bool enabled)
+        {
+            m_canMove = enabled;
+            if (!enabled)
+            {
+                m_movement.SetWalkMode(false);
             }
         }
     }

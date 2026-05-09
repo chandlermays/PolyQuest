@@ -39,8 +39,6 @@ namespace PolyQuest.AI
         [SerializeField] private NavigationPath m_patrolPath;
         [SerializeField] private float m_waypointTolerance = 1f;
         [SerializeField] private float m_waypointDwellTime = 3f;
-        [Range(0, 1)]
-        [SerializeField] private float m_patrolSpeedFraction = 0.2f;
 
         /* --- Exposed Properties (read by states) --- */
         public float DetectionRange => m_detectionRange;
@@ -50,7 +48,6 @@ namespace PolyQuest.AI
         public NavigationPath PatrolPath => m_patrolPath;
         public float WaypointTolerance => m_waypointTolerance;
         public float WaypointDwellTime => m_waypointDwellTime;
-        public float PatrolSpeedFraction => m_patrolSpeedFraction;
 
         /* --- Shared Mutable State (read/written by states) --- */
         public float TimeSinceLastSawTarget { get; set; } = Mathf.Infinity;
@@ -64,8 +61,8 @@ namespace PolyQuest.AI
         public RandomDropper Dropper { get; private set; }
         public GameObject Target { get; private set; }
 
-        /* --- Guard Position --- */
-        public Vector3 GuardPosition { get; private set; }
+        /* --- Home (Original) Position --- */
+        public Vector3 HomePosition { get; private set; }
 
         private FactionComponent m_factionComponent;
 
@@ -96,7 +93,7 @@ namespace PolyQuest.AI
             Utilities.CheckForNull(StateMachine, nameof(AIStateMachine));
             Utilities.CheckForNull(m_factionComponent, nameof(FactionComponent));
 
-            GuardPosition = transform.position;
+            HomePosition = transform.position;
 
             if (m_enemyTracker != null)
             {
@@ -186,12 +183,12 @@ namespace PolyQuest.AI
             }
         }
 
-        /*-----------------------------------------------------------------
-        | --- Reset: Warp back to guard position and clear all timers --- |
-        -----------------------------------------------------------------*/
+        /*--------------------------------------------------------------------
+        | --- Reset: Warp back to original position and clear all timers --- |
+        --------------------------------------------------------------------*/
         public void Reset()
         {
-            GetComponent<NavMeshAgent>().Warp(GuardPosition);
+            GetComponent<NavMeshAgent>().Warp(HomePosition);
             Combat.Cancel();
             Target = null;
             TimeSinceLastSawTarget = Mathf.Infinity;

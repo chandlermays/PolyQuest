@@ -30,9 +30,11 @@ namespace PolyQuest.Components
             kWASD
         }
 
+        [Range(0, 1)]
         [SerializeField] private float m_walkSpeedFraction = 0.5f;
         private bool m_isWalking = false;
         private MovementMode m_movementMode = MovementMode.kNone;
+        private float m_baseSpeed;
         private float m_maxPathLength = 20f;
 
         private CombatComponent m_combatComponent;
@@ -62,6 +64,8 @@ namespace PolyQuest.Components
 
             m_actionManager = GetComponent<ActionManager>();
             Utilities.CheckForNull(m_actionManager, nameof(ActionManager));
+
+            m_baseSpeed = NavMeshAgent.speed;
         }
 
         /*----------------------------------------- 
@@ -171,9 +175,7 @@ namespace PolyQuest.Components
             m_movementMode = MovementMode.kWASD;
             NavMeshAgent.ResetPath();
             NavMeshAgent.isStopped = false;
-
-            float speed = m_isWalking ? NavMeshAgent.speed * m_walkSpeedFraction : NavMeshAgent.speed;
-            NavMeshAgent.velocity = worldDirection * speed;
+            NavMeshAgent.velocity = worldDirection * NavMeshAgent.speed;
         }
 
         /*--------------------------------------------------------- 
@@ -189,13 +191,22 @@ namespace PolyQuest.Components
             Stop();
         }
 
-        /*---------------------------------------------------------------- 
-        | --- ToggleWalkMode: Toggles the walking mode of the Entity --- |
-        ----------------------------------------------------------------*/
+        /*--------------------------------------------------------------------------- 
+        | --- ToggleWalkMode: Toggles between Walk and Run modes for the Entity --- |
+        ---------------------------------------------------------------------------*/
         public void ToggleWalkMode()
         {
-            m_isWalking = !m_isWalking;
+            SetWalkMode(!m_isWalking);
+        }
+
+        /*-------------------------------------------------------------- 
+        | --- SetWalkMode: Sets whether the Entity is in Walk Mode --- |
+        --------------------------------------------------------------*/
+        public void SetWalkMode(bool walk)
+        {
+            m_isWalking = walk;
             Animator.SetBool(kIsWalking, m_isWalking);
+            NavMeshAgent.speed = m_isWalking ? m_baseSpeed * m_walkSpeedFraction : m_baseSpeed;
         }
 
         /*-------------------------------------------------------------------------- 
