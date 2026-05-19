@@ -7,7 +7,7 @@ using UnityEngine.UI;
 //---------------------------------
 using PolyQuest.Attributes;
 
-// April 20th: Consolidate Experience and Health bar to be a single, parameteried class, or extract repeated functionality to parent class
+// NOTE: Consolidate Experience and Health bar to be a single, parameteried class, or extract repeated functionality to parent class
 
 namespace PolyQuest.UI.HUD
 {

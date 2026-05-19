@@ -11,13 +11,7 @@ namespace PolyQuest.Abilities
 {
     public class Cooldowns : MonoBehaviour
     {
-        // NOTE: Should I just use ActionItem instead of InventoryItem?
-        // InventoryItem is the base class of ActionItem, so it works,
-        // but ActionItems would be more explicitly clear as it handles cooldown timers
-        // whereas generic InventoryItems do not, like weapons, armor, resources, etc.
-
-        // April 20th: Note to self to address this concern in Milestone #4. I don't remember if I decided to move forward
-        // with the current system, or if I do want to change what's being used.
+        // NOTE: InventoryItem -> ActionItem vs. Ability
 
         private Dictionary<InventoryItem, float> m_cooldownDurations = new();
         private Dictionary<InventoryItem, float> m_initialCooldownDurations = new();

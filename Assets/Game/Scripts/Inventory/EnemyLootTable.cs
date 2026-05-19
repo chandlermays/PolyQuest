@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace PolyQuest.Inventories
 {
-    // April 20th: Integrate XorShift128Plus.cs with this class
+    // NOTE: Integrate XorShift128Plus.cs with this class
 
     [CreateAssetMenu(menuName = "PolyQuest/Inventory/EnemyLootTable", fileName = "New Enemy Loot Table")]
     public class EnemyLootTable : ScriptableObject
