@@ -1,4 +1,7 @@
 ﻿<Solution>
-  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="PolyQuest.Game.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="PolyQuest.Tests.PlayMode.csproj" />
+  <Project Path="QuickOutline.csproj" />
 </Solution>

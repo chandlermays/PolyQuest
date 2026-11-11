@@ -26,9 +26,21 @@ namespace PolyQuest.Tests
             Apply(target, field, p => p.boolValue = value);
         }
 
+        public static void SetString(Object target, string field, string value)
+        {
+            Apply(target, field, p => p.stringValue = value);
+        }
+
         public static void SetObject(Object target, string field, Object value)
         {
             Apply(target, field, p => p.objectReferenceValue = value);
+        }
+
+        public static void SetEnum<T>(Object target, string field, T value) where T : System.Enum
+        {
+            int index = System.Array.IndexOf(System.Enum.GetValues(typeof(T)), value);
+
+            Apply(target, field, p => p.enumValueIndex = index);
         }
 
         public static void SetIntArray(Object target, string field, params int[] values)
@@ -39,6 +51,11 @@ namespace PolyQuest.Tests
                 for (int i = 0; i < values.Length; ++i)
                     p.GetArrayElementAtIndex(i).intValue = values[i];
             });
+        }
+
+        public static void SetArraySize(Object target, string field, int size)
+        {
+            Apply(target, field, p => p.arraySize = size);
         }
 
         private static void Apply(Object target, string field, System.Action<SerializedProperty> set)

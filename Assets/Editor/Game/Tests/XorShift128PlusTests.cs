@@ -13,8 +13,6 @@ namespace PolyQuest.Tests
     {
         private const ulong kSeed = 12345UL;
 
-        /* --- Determinism --- */
-
         [Test]
         public void SameSeed_ProducesIdenticalSequence()
         {
