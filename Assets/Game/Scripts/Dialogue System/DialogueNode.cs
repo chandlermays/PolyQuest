@@ -1,6 +1,6 @@
 /*---------------------------
-File: DialogueNode.cs
-Author: Chandler Mays
+| File: DialogueNode.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System.Collections.Generic;
 using UnityEngine;

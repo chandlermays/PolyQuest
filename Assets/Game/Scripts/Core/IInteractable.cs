@@ -1,6 +1,6 @@
 /*---------------------------
-File: IInteractable.cs
-Author: Chandler Mays
+| File: IInteractable.cs
+| Author: Chandler Mays
 ----------------------------*/
 using PolyQuest.Player;
 using PolyQuest.UI.Core;

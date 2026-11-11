@@ -1,6 +1,6 @@
 /*---------------------------
-File: Inventory.cs
-Author: Chandler Mays
+| File: Inventory.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using System.Collections.Generic;

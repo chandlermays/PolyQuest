@@ -1,6 +1,6 @@
 /*---------------------------
-File: InputGuard.cs
-Author: Chandler Mays
+| File: InputGuard.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 

@@ -1,6 +1,6 @@
 /*---------------------------
-File: Weapon.cs
-Author: Chandler Mays
+| File: Weapon.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System.Collections.Generic;
 using UnityEngine;

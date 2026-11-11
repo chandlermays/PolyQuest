@@ -1,6 +1,6 @@
 ﻿/*---------------------------
-File: SpawnProjectileEffect.cs
-Author: Chandler Mays
+| File: SpawnProjectileEffect.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using UnityEngine;

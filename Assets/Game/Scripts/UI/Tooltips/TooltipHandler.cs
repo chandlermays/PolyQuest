@@ -1,6 +1,6 @@
 /*---------------------------
-File: TooltipHandler.cs
-Author: Chandler Mays
+| File: TooltipHandler.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 using UnityEngine.EventSystems;

@@ -1,6 +1,6 @@
 /*---------------------------
-File: ItemDropper.cs
-Author: Chandler Mays
+| File: ItemDropper.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;

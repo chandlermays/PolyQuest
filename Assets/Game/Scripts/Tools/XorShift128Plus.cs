@@ -1,6 +1,6 @@
 /*---------------------------
-File: XorShift128Plus.cs
-Author: Chandler Mays
+| File: XorShift128Plus.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 //---------------------------------

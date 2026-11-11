@@ -1,6 +1,6 @@
 /*---------------------------
-File: FactionComponent.cs
-Author: Chandler Mays
+| File: FactionComponent.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

@@ -1,6 +1,6 @@
 /*---------------------------
-File: AreaTrigger.cs
-Author: Chandler Mays
+| File: AreaTrigger.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using UnityEngine;

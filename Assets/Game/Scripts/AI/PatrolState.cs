@@ -1,6 +1,6 @@
 /*---------------------------
-File: PatrolState.cs
-Author: Chandler Mays
+| File: PatrolState.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

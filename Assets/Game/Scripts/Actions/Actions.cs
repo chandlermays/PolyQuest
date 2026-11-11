@@ -1,6 +1,6 @@
 /*---------------------------
-File: Actions.cs
-Author: Chandler Mays
+| File: Actions.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using System.Collections.Generic;

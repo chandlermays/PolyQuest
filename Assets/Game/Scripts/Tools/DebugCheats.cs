@@ -1,6 +1,6 @@
 /*---------------------------
-File: DebugCheats.cs
-Author: Chandler Mays
+| File: DebugCheats.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

@@ -1,6 +1,6 @@
 /*---------------------------
-File: Pickup.cs
-Author: Chandler Mays
+| File: Pickup.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

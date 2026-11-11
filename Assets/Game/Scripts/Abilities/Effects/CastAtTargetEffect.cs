@@ -1,6 +1,6 @@
 /*---------------------------
-File: CastAtTargetEffect.cs
-Author: Chandler Mays
+| File: CastAtTargetEffect.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using UnityEngine;

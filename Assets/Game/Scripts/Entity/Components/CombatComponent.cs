@@ -1,6 +1,6 @@
 /*---------------------------
-File: CombatComponent.cs
-Author: Chandler Mays
+| File: CombatComponent.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

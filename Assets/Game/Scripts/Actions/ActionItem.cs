@@ -1,6 +1,6 @@
 /*---------------------------
-File: ActionItem.cs
-Author: Chandler Mays
+| File: ActionItem.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

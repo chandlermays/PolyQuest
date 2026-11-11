@@ -1,6 +1,6 @@
 /*---------------------------
-File: QuestListUI.cs
-Author: Chandler Mays
+| File: QuestListUI.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

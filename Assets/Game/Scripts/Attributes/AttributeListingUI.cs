@@ -1,6 +1,6 @@
 /*---------------------------
-File: AttributeListingUI.cs
-Author: Chandler Mays
+| File: AttributeListingUI.cs
+| Author: Chandler Mays
 ----------------------------*/
 using TMPro;
 using UnityEngine;

@@ -1,6 +1,6 @@
 /*---------------------------
-File: QuestTooltipUI.cs
-Author: Chandler Mays
+| File: QuestTooltipUI.cs
+| Author: Chandler Mays
 ----------------------------*/
 using TMPro;
 using UnityEngine;

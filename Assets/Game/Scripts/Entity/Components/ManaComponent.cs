@@ -1,6 +1,6 @@
 /*---------------------------
-File: ManaComponent.cs
-Author: Chandler Mays
+| File: ManaComponent.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using Newtonsoft.Json.Linq;

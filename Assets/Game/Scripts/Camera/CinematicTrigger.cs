@@ -1,6 +1,6 @@
 /*---------------------------
-File: CinematicTrigger.cs
-Author: Chandler Mays
+| File: CinematicTrigger.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using Unity.Cinemachine;

@@ -1,6 +1,6 @@
 /*---------------------------
-File: ItemTooltipHandler.cs
-Author: Chandler Mays
+| File: ItemTooltipHandler.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

@@ -1,6 +1,6 @@
 /*---------------------------
-File: IConditionChecker.cs
-Author: Chandler Mays
+| File: IConditionChecker.cs
+| Author: Chandler Mays
 ----------------------------*/
 namespace PolyQuest.Tools
 {

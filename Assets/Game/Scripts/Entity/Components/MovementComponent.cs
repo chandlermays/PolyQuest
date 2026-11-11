@@ -1,6 +1,6 @@
 /*---------------------------
-File: MovementComponent.cs
-Author: Chandler Mays
+| File: MovementComponent.cs
+| Author: Chandler Mays
 ----------------------------*/
 using Newtonsoft.Json.Linq;
 using UnityEngine;

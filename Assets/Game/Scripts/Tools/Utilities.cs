@@ -1,6 +1,6 @@
 /*---------------------------
-File: Uilities.cs
-Author: Chandler Mays
+| File: Uilities.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

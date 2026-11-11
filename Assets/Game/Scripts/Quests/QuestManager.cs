@@ -1,6 +1,6 @@
 /*---------------------------
-File: QuestManager.cs
-Author: Chandler Mays
+| File: QuestManager.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using System.Collections.Generic;

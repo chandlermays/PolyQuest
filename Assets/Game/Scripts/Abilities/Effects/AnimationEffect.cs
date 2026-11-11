@@ -1,6 +1,6 @@
 /*---------------------------
-File: AnimationEffect.cs
-Author: Chandler Mays
+| File: AnimationEffect.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using UnityEngine;

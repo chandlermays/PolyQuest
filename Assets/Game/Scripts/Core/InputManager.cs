@@ -1,6 +1,6 @@
 /*---------------------------
-File: InputManager.cs
-Author: Chandler Mays
+| File: InputManager.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

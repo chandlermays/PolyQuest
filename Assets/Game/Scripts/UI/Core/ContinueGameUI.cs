@@ -1,6 +1,6 @@
 /*---------------------------
-File: ContinueGameUI.cs
-Author: Chandler Mays
+| File: ContinueGameUI.cs
+| Author: Chandler Mays
 ----------------------------*/
 using TMPro;
 using UnityEngine;

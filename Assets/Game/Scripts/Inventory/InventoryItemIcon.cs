@@ -1,6 +1,6 @@
 /*---------------------------
-File: InventoryItemIcon.cs
-Author: Chandler Mays
+| File: InventoryItemIcon.cs
+| Author: Chandler Mays
 ----------------------------*/
 using TMPro;
 using UnityEngine;

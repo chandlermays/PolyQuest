@@ -1,6 +1,6 @@
 /*---------------------------
-File: ISaveable.cs
-Author: Chandler Mays
+| File: ISaveable.cs
+| Author: Chandler Mays
 ----------------------------*/
 using Newtonsoft.Json.Linq;
 //---------------------------------

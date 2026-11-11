@@ -1,6 +1,6 @@
 /*---------------------------
-File: ItemCategory.cs
-Author: Chandler Mays
+| File: ItemCategory.cs
+| Author: Chandler Mays
 ----------------------------*/
 namespace PolyQuest.Inventories
 {

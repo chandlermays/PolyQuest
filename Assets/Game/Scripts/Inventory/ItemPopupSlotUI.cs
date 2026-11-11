@@ -1,6 +1,6 @@
 /*---------------------------
-File: ItemPopupSlotUI.cs
-Author: Chandler Mays
+| File: ItemPopupSlotUI.cs
+| Author: Chandler Mays
 ----------------------------*/
 using TMPro;
 using UnityEngine;

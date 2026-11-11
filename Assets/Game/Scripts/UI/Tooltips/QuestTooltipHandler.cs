@@ -1,6 +1,6 @@
 /*---------------------------
-File: QuestTooltipHandler.cs
-Author: Chandler Mays
+| File: QuestTooltipHandler.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

@@ -1,6 +1,6 @@
 /*---------------------------
-File: ManaBar.cs
-Author: Chandler Mays
+| File: ManaBar.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 using UnityEngine.UI;

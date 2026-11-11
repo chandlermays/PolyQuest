@@ -1,6 +1,6 @@
 ﻿/*---------------------------
-File: CompleteObjectiveEvent.cs
-Author: Chandler Mays
+| File: CompleteObjectiveEvent.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

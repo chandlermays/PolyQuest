@@ -1,6 +1,6 @@
 /*---------------------------
-File: IItemHolder.cs
-Author: Chandler Mays
+| File: IItemHolder.cs
+| Author: Chandler Mays
 ----------------------------*/
 namespace PolyQuest.Inventories
 {

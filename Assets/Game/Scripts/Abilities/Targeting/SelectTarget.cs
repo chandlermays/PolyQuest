@@ -1,6 +1,6 @@
 ﻿/*---------------------------
-File: SelectTarget.cs
-Author: Chandler Mays
+| File: SelectTarget.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using System.Collections;

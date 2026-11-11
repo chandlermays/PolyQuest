@@ -1,6 +1,6 @@
 /*---------------------------
-File: RespawnComponent.cs
-Author: Chandler Mays
+| File: RespawnComponent.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 using System.Collections;

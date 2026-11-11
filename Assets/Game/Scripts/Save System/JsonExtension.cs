@@ -1,6 +1,6 @@
 /*---------------------------
-File: JsonExtension.cs
-Author: Chandler Mays
+| File: JsonExtension.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;

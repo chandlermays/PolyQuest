@@ -1,6 +1,6 @@
 /*---------------------------
-File: AttackState.cs
-Author: Chandler Mays
+| File: AttackState.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

@@ -1,6 +1,6 @@
 /*---------------------------
-File: ItemGiver.cs
-Author: Chandler Mays
+| File: ItemGiver.cs
+| Author: Chandler Mays
 ----------------------------*/
 using Newtonsoft.Json.Linq;
 using UnityEngine;

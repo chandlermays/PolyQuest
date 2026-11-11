@@ -1,6 +1,6 @@
 /*---------------------------
-File: HealthBar.cs
-Author: Chandler Mays
+| File: HealthBar.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 using UnityEngine.UI;

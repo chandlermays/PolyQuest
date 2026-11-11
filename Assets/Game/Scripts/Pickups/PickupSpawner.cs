@@ -1,6 +1,6 @@
 /*---------------------------
-File: PickupSpawner.cs
-Author: Chandler Mays
+| File: PickupSpawner.cs
+| Author: Chandler Mays
 ----------------------------*/
 using Newtonsoft.Json.Linq;
 using UnityEngine;

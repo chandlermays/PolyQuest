@@ -1,6 +1,6 @@
 /*---------------------------
-File: SuspicionState.cs
-Author: Chandler Mays
+| File: SuspicionState.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

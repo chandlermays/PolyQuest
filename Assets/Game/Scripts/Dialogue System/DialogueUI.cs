@@ -1,6 +1,6 @@
 /*---------------------------
-File: DialogueUI.cs
-Author: Chandler Mays
+| File: DialogueUI.cs
+| Author: Chandler Mays
 ----------------------------*/
 using TMPro;
 using UnityEngine;

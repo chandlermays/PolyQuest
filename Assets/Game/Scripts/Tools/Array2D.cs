@@ -1,6 +1,6 @@
 /*---------------------------
-File: Array2D.cs
-Author: Chandler Mays
+| File: Array2D.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using UnityEngine;

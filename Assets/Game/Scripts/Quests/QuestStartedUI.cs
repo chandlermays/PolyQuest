@@ -1,6 +1,6 @@
 /*---------------------------
-File: QuestStartedUI.cs
-Author: Chandler Mays
+| File: QuestStartedUI.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System.Collections;
 using UnityEngine;

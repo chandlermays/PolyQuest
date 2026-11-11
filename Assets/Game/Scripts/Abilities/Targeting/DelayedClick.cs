@@ -1,6 +1,6 @@
 /*---------------------------
-File: DelayedClick.cs
-Author: Chandler Mays
+| File: DelayedClick.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using System.Collections;

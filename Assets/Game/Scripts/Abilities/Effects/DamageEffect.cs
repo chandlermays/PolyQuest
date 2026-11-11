@@ -1,6 +1,6 @@
 /*---------------------------
-File: DamageEffect.cs
-Author: Chandler Mays
+| File: DamageEffect.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using UnityEngine;

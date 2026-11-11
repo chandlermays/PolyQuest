@@ -1,6 +1,6 @@
 ﻿/*---------------------------
-File: QuestRegion.cs
-Author: Chandler Mays
+| File: QuestRegion.cs
+| Author: Chandler Mays
 ----------------------------*/
 namespace PolyQuest.Quests
 {

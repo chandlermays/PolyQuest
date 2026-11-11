@@ -1,6 +1,6 @@
 /*---------------------------
-File: ManaEffect.cs
-Author: Chandler Mays
+| File: ManaEffect.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using UnityEngine;

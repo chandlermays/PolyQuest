@@ -1,6 +1,6 @@
 /*---------------------------
-File: ShopItem.cs
-Author: Chandler Mays
+| File: ShopItem.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

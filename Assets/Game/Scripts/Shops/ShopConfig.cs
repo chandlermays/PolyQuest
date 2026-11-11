@@ -1,6 +1,6 @@
 /*---------------------------
-File: ShopConfig.cs
-Author: Chandler Mays
+| File: ShopConfig.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

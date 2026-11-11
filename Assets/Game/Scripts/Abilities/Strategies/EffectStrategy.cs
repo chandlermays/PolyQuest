@@ -1,6 +1,6 @@
 /*---------------------------
-File: EffectStrategy.cs
-Author: Chandler Mays
+| File: EffectStrategy.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using UnityEngine;

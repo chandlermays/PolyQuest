@@ -1,6 +1,6 @@
 /*---------------------------
-File: PlayerController.cs
-Author: Chandler Mays
+| File: PlayerController.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using UnityEngine;

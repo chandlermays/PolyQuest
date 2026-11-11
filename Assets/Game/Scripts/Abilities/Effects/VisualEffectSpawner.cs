@@ -1,6 +1,6 @@
 /*---------------------------
-File: VisualEffectSpawner.cs
-Author: Chandler Mays
+| File: VisualEffectSpawner.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using System.Collections;

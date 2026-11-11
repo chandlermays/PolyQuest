@@ -1,6 +1,6 @@
 /*---------------------------
-File: PlayerLevelIndicator.cs
-Author: Chandler Mays
+| File: PlayerLevelIndicator.cs
+| Author: Chandler Mays
 ----------------------------*/
 using TMPro;
 using UnityEngine;

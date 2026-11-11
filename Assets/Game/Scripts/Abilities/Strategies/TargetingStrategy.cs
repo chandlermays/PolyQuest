@@ -1,6 +1,6 @@
 /*---------------------------
-File: TargetingStrategy.cs
-Author: Chandler Mays
+| File: TargetingStrategy.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using UnityEngine;

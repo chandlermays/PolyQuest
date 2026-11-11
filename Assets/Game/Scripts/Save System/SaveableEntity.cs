@@ -1,6 +1,6 @@
 /*---------------------------
-File: SaveableEntity.cs
-Author: Chandler Mays
+| File: SaveableEntity.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;

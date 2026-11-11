@@ -1,6 +1,6 @@
 /*---------------------------
-File: ExperienceBar.cs
-Author: Chandler Mays
+| File: ExperienceBar.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 using UnityEngine.UI;

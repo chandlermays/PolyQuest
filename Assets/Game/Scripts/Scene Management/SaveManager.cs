@@ -1,6 +1,6 @@
 /*---------------------------
-File: SaveManager.cs
-Author: Chandler Mays
+| File: SaveManager.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using System.Collections;

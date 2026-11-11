@@ -1,6 +1,6 @@
 ﻿/*---------------------------
-File: ActionManager.cs
-Author: Chandler Mays
+| File: ActionManager.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

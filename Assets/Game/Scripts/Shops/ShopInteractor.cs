@@ -1,6 +1,6 @@
 /*---------------------------
-File: ShopInteractor.cs
-Author: Chandler Mays
+| File: ShopInteractor.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using UnityEngine;

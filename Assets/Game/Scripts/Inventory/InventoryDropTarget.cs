@@ -1,6 +1,6 @@
 /*---------------------------
-File: InventoryDropTarget.cs
-Author: Chandler Mays
+| File: InventoryDropTarget.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

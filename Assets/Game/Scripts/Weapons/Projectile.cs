@@ -1,6 +1,6 @@
 /*---------------------------
-File: Projectile.cs
-Author: Chandler Mays
+| File: Projectile.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

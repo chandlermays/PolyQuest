@@ -1,6 +1,6 @@
 /*---------------------------
-File: Ability.cs
-Author: Chandler Mays
+| File: Ability.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

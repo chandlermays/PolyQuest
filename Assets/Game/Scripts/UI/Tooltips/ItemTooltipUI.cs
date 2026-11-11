@@ -1,6 +1,6 @@
 /*---------------------------
-File: ItemTooltipUI.cs
-Author: Chandler Mays
+| File: ItemTooltipUI.cs
+| Author: Chandler Mays
 ----------------------------*/
 using TMPro;
 using UnityEngine;

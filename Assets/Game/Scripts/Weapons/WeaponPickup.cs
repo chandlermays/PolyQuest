@@ -1,6 +1,6 @@
 /*---------------------------
-File: WeaponPickup.cs
-Author: Chandler Mays
+| File: WeaponPickup.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

@@ -1,6 +1,6 @@
 /*---------------------------
-File: AIProgression.cs
-Author: Chandler Mays
+| File: AIProgression.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

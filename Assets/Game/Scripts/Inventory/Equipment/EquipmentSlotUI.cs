@@ -1,6 +1,6 @@
 /*---------------------------
-File: EquipmentSlotUI.cs
-Author: Chandler Mays
+| File: EquipmentSlotUI.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 using UnityEngine.EventSystems;

@@ -1,6 +1,6 @@
 ﻿/*---------------------------
-File: DialogueEvent.cs
-Author: Chandler Mays
+| File: DialogueEvent.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

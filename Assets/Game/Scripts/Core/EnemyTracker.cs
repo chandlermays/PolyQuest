@@ -1,6 +1,6 @@
 /*---------------------------
-File: EnemyTracker.cs
-Author: Chandler Mays
+| File: EnemyTracker.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System.Collections.Generic;
 using UnityEngine;

@@ -1,6 +1,6 @@
 /*---------------------------
-File: BaseProgression.cs
-Author: Chandler Mays
+| File: BaseProgression.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

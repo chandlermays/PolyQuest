@@ -1,6 +1,6 @@
 /*---------------------------
-File: HealthComponent.cs
-Author: Chandler Mays
+| File: HealthComponent.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using Newtonsoft.Json.Linq;

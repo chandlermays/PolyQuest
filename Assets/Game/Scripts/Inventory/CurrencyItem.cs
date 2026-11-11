@@ -1,6 +1,6 @@
 /*---------------------------
-File: CurrencyItem.cs
-Author: Chandler Mays
+| File: CurrencyItem.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

@@ -1,6 +1,6 @@
 /*---------------------------
-File: IAction.cs
-Author: Chandler Mays
+| File: IAction.cs
+| Author: Chandler Mays
 ----------------------------*/
 namespace PolyQuest.Core
 {

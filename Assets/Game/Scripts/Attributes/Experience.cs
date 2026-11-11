@@ -1,6 +1,6 @@
 /*---------------------------
-File: Experience.cs
-Author: Chandler Mays
+| File: Experience.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System;
 using Newtonsoft.Json.Linq;

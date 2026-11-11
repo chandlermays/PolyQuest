@@ -1,6 +1,6 @@
 /*---------------------------
-File: EquipableItem.cs
-Author: Chandler Mays
+| File: EquipableItem.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System.Collections.Generic;
 using UnityEngine;

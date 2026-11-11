@@ -1,6 +1,6 @@
 ﻿/*---------------------------
-File: HealPlayerEvent.cs
-Author: Chandler Mays
+| File: HealPlayerEvent.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

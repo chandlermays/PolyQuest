@@ -1,6 +1,6 @@
 /*---------------------------
-File: EnemyLootTable.cs
-Author: Chandler Mays
+| File: EnemyLootTable.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System.Collections.Generic;
 using UnityEngine;

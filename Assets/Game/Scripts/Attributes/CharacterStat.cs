@@ -1,6 +1,6 @@
 /*---------------------------
-File: CharacterStat.cs
-Author: Chandler Mays
+| File: CharacterStat.cs
+| Author: Chandler Mays
 ----------------------------*/
 namespace PolyQuest.Attributes
 {

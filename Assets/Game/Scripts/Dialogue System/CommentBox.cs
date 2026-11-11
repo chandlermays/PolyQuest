@@ -1,6 +1,6 @@
 ﻿/*---------------------------
-File: CommentBox.cs
-Author: Chandler Mays
+| File: CommentBox.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 #if UNITY_EDITOR

@@ -1,6 +1,6 @@
 /*---------------------------
-File: BillboardUI.cs
-Author: Chandler Mays
+| File: BillboardUI.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 

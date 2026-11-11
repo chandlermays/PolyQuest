@@ -1,6 +1,6 @@
 /*---------------------------
-File: IAIState.cs
-Author: Chandler Mays
+| File: IAIState.cs
+| Author: Chandler Mays
 ----------------------------*/
 namespace PolyQuest.AI
 {

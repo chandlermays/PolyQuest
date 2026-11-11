@@ -1,6 +1,6 @@
 /*---------------------------
-File: ActionSlotUI.cs
-Author: Chandler Mays
+| File: ActionSlotUI.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 using UnityEngine.EventSystems;

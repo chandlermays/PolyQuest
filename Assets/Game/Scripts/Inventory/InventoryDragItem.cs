@@ -1,6 +1,6 @@
 /*---------------------------
-File: InventoryDragItem.cs
-Author: Chandler Mays
+| File: InventoryDragItem.cs
+| Author: Chandler Mays
 ----------------------------*/
 using PolyQuest.UI.Dragging;
 

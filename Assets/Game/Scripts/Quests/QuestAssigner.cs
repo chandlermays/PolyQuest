@@ -1,6 +1,6 @@
 /*---------------------------
-File: QuestAssigner.cs
-Author: Chandler Mays
+| File: QuestAssigner.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

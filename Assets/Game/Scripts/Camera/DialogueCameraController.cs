@@ -1,6 +1,6 @@
 /*---------------------------
-File: DialogueCameraController.cs
-Author: Chandler Mays
+| File: DialogueCameraController.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System.Collections;
 using Unity.Cinemachine;

@@ -1,6 +1,6 @@
 /*---------------------------
-File: IDragContainer.cs
-Author: Chandler Mays
+| File: IDragContainer.cs
+| Author: Chandler Mays
 ----------------------------*/
 namespace PolyQuest.UI.Dragging
 {

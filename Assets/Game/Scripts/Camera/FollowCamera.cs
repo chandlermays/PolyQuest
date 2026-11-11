@@ -1,6 +1,6 @@
 /*---------------------------
-File: FollowCamera.cs
-Author: Chandler Mays
+| File: FollowCamera.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 //---------------------------------

@@ -1,6 +1,6 @@
 /*---------------------------
-File: RandomDropper.cs
-Author: Chandler Mays
+| File: RandomDropper.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEngine;
 using UnityEngine.AI;
