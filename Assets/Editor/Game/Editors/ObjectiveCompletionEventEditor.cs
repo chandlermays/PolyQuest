@@ -1,6 +1,6 @@
 /*---------------------------
-File: ObjectiveCompletionEditor.cs
-Author: Chandler Mays
+| File: ObjectiveCompletionEditor.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEditor;
 //---------------------------------

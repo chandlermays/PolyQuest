@@ -1,6 +1,6 @@
 /*---------------------------
-File: RenameChildren.cs
-Author: Chandler Mays
+| File: RenameChildren.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEditor;
 using UnityEngine;

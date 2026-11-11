@@ -1,6 +1,6 @@
 ﻿/*---------------------------
-File: CompleteObjectiveEventEditor.cs
-Author: Chandler Mays
+| File: CompleteObjectiveEventEditor.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEditor;
 //---------------------------------

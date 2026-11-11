@@ -1,6 +1,6 @@
 ﻿/*---------------------------
-File: MissingScriptReferences.cs
-Author: Chandler Mays
+| File: MissingScriptReferences.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System.Collections.Generic;
 using UnityEditor;

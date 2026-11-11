@@ -1,6 +1,6 @@
 /*---------------------------
-File: SceneFieldPropertyDrawer.cs
-Author: Chandler Mays
+| File: SceneFieldPropertyDrawer.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEditor;
 using UnityEngine;

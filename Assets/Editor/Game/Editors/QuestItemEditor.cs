@@ -1,6 +1,6 @@
 /*---------------------------
-File: QuestItemEditor.cs
-Author: Chandler Mays
+| File: QuestItemEditor.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System.Collections.Generic;
 using System.Linq;

@@ -1,6 +1,6 @@
 ﻿/*---------------------------
-File: DisjunctionPropertyDrawer.cs
-Author: Chandler Mays
+| File: DisjunctionPropertyDrawer.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System.Collections;
 using UnityEditor;

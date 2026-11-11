@@ -10,7 +10,6 @@ using UnityEngine.SceneManagement;
 //---------------------------------
 using PolyQuest.Player;
 using PolyQuest.Saving;
-using PolyQuest.PCG;
 
 namespace PolyQuest.SceneManagement
 {
@@ -113,13 +112,6 @@ namespace PolyQuest.SceneManagement
 
             SaveManager.Instance.Load();
 
-            // If the scene has a LevelBuilder, wait until the level is fully generated before trying to find the destination portal
-            LevelBuilder levelBuilder = FindFirstObjectByType<LevelBuilder>();
-            if (levelBuilder != null)
-            {
-                yield return WaitForLevelReady(levelBuilder);
-            }
-
             Portal destination = GetDestination();
 #if UNITY_EDITOR
             if (destination == null)
@@ -139,20 +131,6 @@ namespace PolyQuest.SceneManagement
 
             newPlayerController.enabled = true;
             Destroy(gameObject);
-        }
-
-        /*----------------------------------------------------------------------------------------------------
-        | --- WaitForLevelReady: Coroutine to wait for the LevelBuilder to complete generating the level --- | 
-        ----------------------------------------------------------------------------------------------------*/
-        private IEnumerator WaitForLevelReady(LevelBuilder levelBuilder)
-        {
-            bool levelReady = false;
-            levelBuilder.OnLevelGenerated += () => levelReady = true;
-
-            if (!levelBuilder.IsGenerated)
-            {
-                yield return new WaitUntil(() => levelReady);
-            }
         }
 
         /*--------------------------------------------------------------------

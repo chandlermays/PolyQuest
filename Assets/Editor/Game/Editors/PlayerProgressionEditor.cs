@@ -1,6 +1,6 @@
 /*---------------------------
-File: PlayerProgressionEditor.cs
-Author: Chandler Mays
+| File: PlayerProgressionEditor.cs
+| Author: Chandler Mays
 ----------------------------*/
 using UnityEditor;
 using UnityEngine;

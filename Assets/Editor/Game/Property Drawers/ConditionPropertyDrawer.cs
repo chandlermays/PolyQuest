@@ -1,6 +1,6 @@
 /*---------------------------
-File: ConditionPropertyDrawer.cs
-Author: Chandler Mays
+| File: ConditionPropertyDrawer.cs
+| Author: Chandler Mays
 ----------------------------*/
 using System.Collections.Generic;
 using System.Linq;
