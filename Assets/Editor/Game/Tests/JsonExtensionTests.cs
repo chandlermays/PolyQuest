@@ -60,6 +60,24 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A JSON array token reads as Vector3.zero since it is not a JObject.")]
+        public void ToVector3_ArrayToken_IsZero()
+        {
+            JToken token = new JArray(1f, 2f, 3f);
+
+            Assert.That(token.ToVector3(), Is.EqualTo(Vector3.zero));
+        }
+
+        [Test]
+        [Description("A non-numeric value for a key throws a serialization exception during float conversion.")]
+        public void ToVector3_InvalidType_ThrowsException()
+        {
+            JToken token = new JObject { ["x"] = "not-a-number" };
+
+            Assert.That(() => token.ToVector3(), Throws.Exception);
+        }
+
+        [Test]
         [Description("Keys other than x, y and z are ignored.")]
         public void ToVector3_IgnoresUnrelatedKeys()
         {

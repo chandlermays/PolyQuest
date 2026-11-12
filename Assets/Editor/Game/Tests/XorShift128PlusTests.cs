@@ -47,7 +47,18 @@ namespace PolyQuest.Tests
             Assert.That(rng.RandomUInt64(), Is.EqualTo(first));
         }
 
-        /* --- Golden values --- */
+        [Test]
+        [Description("Passing a seed of 0 does not throw and initializes a valid non-zero generator state.")]
+        public void Seed_Zero_InitializesWithoutError()
+        {
+            Assert.DoesNotThrow(() =>
+            {
+                XorShift128Plus rng = new(0UL);
+                Assert.That(rng.RandomUInt64(), Is.Not.EqualTo(0UL));
+            });
+        }
+
+        ///* --- Golden values --- *///
 
         [Test]
         [Description("Golden values: the first five 64-bit draws for seed 12345 never change.")]
@@ -100,7 +111,7 @@ namespace PolyQuest.Tests
                 Assert.That(rng.RandomRange(-5, 5), Is.EqualTo(expected[i]), $"draw {i}");
         }
 
-        /* --- Ranges and bounds --- */
+        ///* --- Ranges and bounds --- *///
 
         [Test]
         [Description("Integer RandomRange is half-open [min, max) and produces every value in the range.")]
@@ -117,6 +128,19 @@ namespace PolyQuest.Tests
             }
 
             Assert.That(seen.Count, Is.EqualTo(5));
+        }
+
+        [Test]
+        [Description("Large-span integer ranges execute successfully through rejection sampling without hanging.")]
+        public void RandomRangeInt_LargeSpan_ExecutesSafely()
+        {
+            XorShift128Plus rng = new(kSeed);
+
+            for (int i = 0; i < 100; ++i)
+            {
+                int value = rng.RandomRange(-1000000, 1000000);
+                Assert.That(value, Is.InRange(-1000000, 999999));
+            }
         }
 
         [TestCase(5, 5)]
@@ -152,6 +176,15 @@ namespace PolyQuest.Tests
                 Assert.That(rng.RandomRange(-1.0, 1.0), Is.InRange(-1.0, 1.0));
 
             Assert.That(rng.RandomRange(7.0, 7.0), Is.EqualTo(7.0));
+        }
+
+        [Test]
+        [Description("Inverted double range (min > max) returns min.")]
+        public void RandomRangeDouble_InvertedRange_ReturnsMin()
+        {
+            XorShift128Plus rng = new(kSeed);
+
+            Assert.That(rng.RandomRange(5.0, 2.0), Is.EqualTo(5.0));
         }
 
         [Test]

@@ -29,7 +29,7 @@ namespace PolyQuest.Tests
             Object.DestroyImmediate(m_ai);
         }
 
-        /* --- Fresh instance --- */
+        ///* --- Fresh instance --- *///
 
         [Test]
         [Description("A new progression asset has exactly one level, seeded from the initial values (0 by default).")]
@@ -42,7 +42,7 @@ namespace PolyQuest.Tests
             Assert.That(m_player.GetHealth(2), Is.EqualTo(0f));
         }
 
-        /* --- Recalculate: compounding growth --- */
+        ///* --- Recalculate: compounding growth --- *///
 
         [Test]
         [Description("Health grows by its percentage each level, rounding from the previous level's already-rounded value.")]
@@ -119,7 +119,7 @@ namespace PolyQuest.Tests
                 Assert.That(m_player.GetManaRegenRate(level), Is.EqualTo(1f), $"level {level}");
         }
 
-        /* --- Out of range --- */
+        ///* --- Out of range --- *///
 
         [TestCase(0)]
         [TestCase(-3)]
@@ -134,7 +134,7 @@ namespace PolyQuest.Tests
             Assert.That(m_player.GetHealth(level), Is.EqualTo(0f));
         }
 
-        /* --- PlayerProgression: experience table --- */
+        ///* --- PlayerProgression: experience table --- *///
 
         [Test]
         [Description("The XP table is cumulative: each level adds round(initial * growth^i), using Mathf.RoundToInt's half-to-even rounding.")]
@@ -174,7 +174,7 @@ namespace PolyQuest.Tests
             Assert.That(m_player.GetExperience(2), Is.EqualTo(250f));
         }
 
-        /* --- AIProgression: experience reward --- */
+        ///* --- AIProgression: experience reward --- *///
 
         [Test]
         [Description("The XP reward compounds by its percentage per level, rounding from the previous rounded value.")]

@@ -58,6 +58,7 @@ namespace PolyQuest.Tests
         /* ============================== Every prefab (static checks) ============================== */
 
         [TestCaseSource(nameof(GamePrefabs))]
+        [Description("No GameObject in any prefab under Assets/Game has a component whose MonoBehaviour script was deleted or renamed.")]
         public void Prefab_HasNoMissingScripts(string path)
         {
 #if UNITY_EDITOR
@@ -76,6 +77,7 @@ namespace PolyQuest.Tests
         }
 
         [TestCaseSource(nameof(GamePrefabs))]
+        [Description("No serialized object reference in any prefab under Assets/Game points to an asset that has since been deleted.")]
         public void Prefab_HasNoBrokenObjectReferences(string path)
         {
 #if UNITY_EDITOR
@@ -108,6 +110,7 @@ namespace PolyQuest.Tests
         /* ============================== The Player prefab ============================== */
 
         [UnityTest]
+        [Description("The real Player prefab spawns and runs three frames without any logged error or exception from Awake, OnEnable, Start or Update.")]
         public IEnumerator Player_SpawnsAndRunsAFewFrames_WithoutLoggingErrors()
         {
             // Any Debug.LogError / exception (including Utilities.CheckForNull) in Awake, OnEnable, Start or Update fails this test
@@ -121,6 +124,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("The Player has a SaveableEntity with a non-empty UID, so its state is never saved under a blank key.")]
         public void Player_HasAStableSaveIdentifier()
         {
             m_rig = new PlayerRig();
@@ -132,6 +136,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("No two ISaveable components on the Player share a type, since SaveableEntity keys each component's state by its type name.")]
         public void Player_EverySaveableComponent_IsOfADistinctType()
         {
             // SaveableEntity keys each component's state by its type name; two of the same type would overwrite each other
@@ -144,6 +149,7 @@ namespace PolyQuest.Tests
         }
 
         [UnityTest]
+        [Description("After Start, a new Player's current health equals its max health from BaseStats, and it is alive.")]
         public IEnumerator Player_StartsAtFullHealth()
         {
             m_rig = new PlayerRig();
@@ -155,6 +161,7 @@ namespace PolyQuest.Tests
         }
 
         [UnityTest]
+        [Description("A new Player starts at level 1 with 0 silver and 0 experience.")]
         public IEnumerator Player_StartsAtLevelOne_WithAnEmptyWallet()
         {
             m_rig = new PlayerRig();
@@ -169,6 +176,7 @@ namespace PolyQuest.Tests
         /* ============================== Every scene in Build Settings ============================== */
 
         [UnityTest]
+        [Description("Each scene in Build Settings loads without logged errors, and every SaveableEntity in it (inactive included) has a non-blank UID that no other entity shares.")]
         public IEnumerator Scene_LoadsWithoutErrors_AndEverySaveableEntityHasAUniqueIdentifier([ValueSource(nameof(BuildScenes))] int buildIndex)
         {
             PlayerRig.DestroyPersistentObjects();

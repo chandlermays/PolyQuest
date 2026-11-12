@@ -46,6 +46,7 @@ namespace PolyQuest.Tests
         /* ============================== Same Player ============================== */
 
         [UnityTest]
+        [Description("Save, then change silver, inventory and health, then Load: silver, item quantity, level, experience and health return to their saved values on the same Player.")]
         public IEnumerator SaveThenLoad_RestoresWhatWasChangedAfterTheSave()
         {
             yield return null;
@@ -70,6 +71,7 @@ namespace PolyQuest.Tests
         }
 
         [UnityTest]
+        [Description("The save file holds an entry under the Player's UID with a key for every ISaveable component on the Player.")]
         public IEnumerator Save_CapturesEverySaveableComponentOnThePlayer()
         {
             yield return null;
@@ -87,6 +89,7 @@ namespace PolyQuest.Tests
         /* ============================== A fresh Player (what a scene reload / Continue does) ============================== */
 
         [UnityTest]
+        [Description("Loading into a newly spawned Player (as a scene reload or Continue does) restores silver, items, the equipped item, level and experience.")]
         public IEnumerator Load_IntoAFreshPlayer_RestoresInventoryEquipmentWalletAndProgression()
         {
             yield return null;
@@ -113,6 +116,7 @@ namespace PolyQuest.Tests
         }
 
         [UnityTest]
+        [Description("Loading a damaged level-3 save into a fresh level-1 Player restores exactly the saved health. Guards the restore order: Experience restoring the level after HealthComponent fires RecalculateMaxHealth, which adds the max-health difference on top.")]
         public IEnumerator Load_IntoAFreshPlayer_DoesNotChangeTheSavedHealth()
         {
             // On the Player prefab HealthComponent is restored BEFORE Experience. Experience.RestoreState then sets the level,
@@ -136,6 +140,7 @@ namespace PolyQuest.Tests
         /* ============================== Bad or missing files ============================== */
 
         [UnityTest]
+        [Description("Load with no save file on disk does not throw and leaves the current game state unchanged.")]
         public IEnumerator Load_WithNoSaveFile_ChangesNothing()
         {
             yield return null;
@@ -148,6 +153,7 @@ namespace PolyQuest.Tests
         }
 
         [UnityTest]
+        [Description("Loading a save file that is not valid JSON throws, and the current game state is left as it was.")]
         public IEnumerator Load_CorruptSaveFile_Throws_AndLeavesTheGameUntouched()
         {
             yield return null;
@@ -162,6 +168,7 @@ namespace PolyQuest.Tests
         /* ============================== Slots and auto-saves ============================== */
 
         [UnityTest]
+        [Description("AutoSave writes to its own _autosave slot and does not modify the main save file.")]
         public IEnumerator AutoSave_WritesItsOwnSlot_AndLeavesTheMainSaveAlone()
         {
             yield return null;
@@ -178,6 +185,7 @@ namespace PolyQuest.Tests
         }
 
         [UnityTest]
+        [Description("Gaining a level writes the save file for the current slot when none existed before.")]
         public IEnumerator LevelingUp_AutoSavesTheGame()
         {
             yield return null;
@@ -189,6 +197,7 @@ namespace PolyQuest.Tests
         }
 
         [UnityTest]
+        [Description("Save merges into the existing file rather than replacing it, so entries for entities that no longer exist are kept.")]
         public IEnumerator Save_KeepsEntriesOfEntitiesThatNoLongerExist()
         {
             // Save() loads the existing file and merges into it, so nothing removes an entity's old entry

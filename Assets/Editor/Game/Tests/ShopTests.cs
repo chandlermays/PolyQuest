@@ -597,19 +597,6 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("Without a SaveManager, CompletePurchase applies the purchase and then throws NullReferenceException on the autosave.")]
-        public void Buy_Complete_WithoutASaveManager_ThrowsAfterApplyingThePurchase()
-        {
-            InventoryTestKit.ClearSaveManager();
-            m_shop.AddToPurchase(m_potion, 1);
-
-            Assert.That(() => m_shop.CompletePurchase(), Throws.TypeOf<NullReferenceException>());
-
-            Assert.That(Owned(m_potion), Is.EqualTo(1));
-            Assert.That(m_wallet.CurrentSilver, Is.EqualTo(90));
-        }
-
-        [Test]
         [Description("Without a SaveManager, CompletePurchase applies the purchase and skips the autosave without throwing.")]
         public void Buy_Complete_WithoutASaveManager_DoesNotThrow()
         {
