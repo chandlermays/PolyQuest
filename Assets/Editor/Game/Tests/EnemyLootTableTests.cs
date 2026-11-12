@@ -101,6 +101,7 @@ namespace PolyQuest.Tests
         /* --- Weapon --- */
 
         [Test]
+        [Description("The enemy's equipped weapon always drops (quantity 1), even when the loot table is empty.")]
         public void EquippedWeapon_AlwaysDrops_EvenWithAnEmptyTable()
         {
             m_equipment.AddItem(EquipmentSlot.kWeapon, m_sword);
@@ -113,19 +114,21 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("With no weapon equipped and an empty table, nothing drops.")]
         public void NoWeapon_EmptyTable_DropsNothing()
         {
             Assert.That(Roll(1), Is.Empty);
         }
 
         [Test]
+        [Description("Enumerating drops with a null Equipment throws.")]
         public void NullEquipment_Throws()
         {
             Assert.That(() => m_table.GetRandomDrops(1, null).ToArray(), Throws.Exception);
         }
 
         [Test]
-        [Description("[Characterizes quirk] GetRandomDrops is a lazy iterator: a null Equipment is not detected until enumeration.")]
+        [Description("GetRandomDrops is a lazy iterator: calling it with null Equipment doesn't throw until it is enumerated.")]
         public void GetRandomDrops_IsLazy_NothingRunsUntilEnumerated()
         {
             Assert.DoesNotThrow(() => m_table.GetRandomDrops(1, null));
@@ -134,6 +137,7 @@ namespace PolyQuest.Tests
         /* --- Guaranteed drops --- */
 
         [Test]
+        [Description("A stackable guaranteed drop takes its quantity from the min/max range for the level.")]
         public void GuaranteedDrop_StackableItem_UsesQuantityRangeForTheLevel()
         {
             Configure("m_guaranteedDrops", E(m_gold, min: new[] { 3 }, max: new[] { 3 }));
@@ -146,6 +150,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A non-stackable guaranteed drop always has quantity 1, whatever its configured range.")]
         public void GuaranteedDrop_NonStackableItem_AlwaysQuantityOne()
         {
             Configure("m_guaranteedDrops", E(m_trinket, min: new[] { 5 }, max: new[] { 9 }));
@@ -154,6 +159,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Guaranteed entries with a null item are skipped; the rest still drop.")]
         public void GuaranteedDrop_NullItem_IsSkipped()
         {
             Configure("m_guaranteedDrops", E(null), E(m_gold, min: new[] { 1 }, max: new[] { 1 }));
@@ -165,7 +171,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] Guaranteed drops are yielded even when the enemy's drop chance is 0.")]
+        [Description("Guaranteed drops are not subject to the drop-chance roll; they drop at 0% chance.")]
         public void GuaranteedDrop_IgnoresDropChance()
         {
             Configure("m_guaranteedDrops", E(m_gold, min: new[] { 2 }, max: new[] { 2 }));
@@ -175,6 +181,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Drop order is: equipped weapon, then guaranteed drops, then random drops.")]
         public void Guaranteed_ComesAfterWeapon_BeforeRandomDrops()
         {
             m_equipment.AddItem(EquipmentSlot.kWeapon, m_sword);
@@ -188,7 +195,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] A stackable guaranteed drop with no quantity data at this level yields Quantity 0 (Random.Range(0, 1)).")]
+        [Description("A stackable guaranteed drop with empty min/max arrays still drops, with quantity 0.")]
         public void GuaranteedDrop_StackableWithoutQuantityArrays_YieldsZeroQuantity()
         {
             Configure("m_guaranteedDrops", E(m_gold));
@@ -202,6 +209,7 @@ namespace PolyQuest.Tests
         /* --- Random drops --- */
 
         [Test]
+        [Description("At 0% drop chance, no random drops are rolled.")]
         public void DropChanceZero_NoRandomDrops()
         {
             Configure("m_possibleDrops", E(m_gem, chance: new[] { 1f }, min: new[] { 1 }, max: new[] { 1 }));
@@ -211,6 +219,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("At 100% drop chance, the drop count comes from the min/max drops range and each drop uses the entry's quantity range.")]
         public void DropChance100_YieldsMinMaxManyDrops()
         {
             Configure("m_possibleDrops", E(m_gem, chance: new[] { 1f }, min: new[] { 2 }, max: new[] { 2 }));
@@ -223,6 +232,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A zero-weight entry is effectively never selected; only a roll of exactly 0.0 could pick it.")]
         public void SelectRandomItem_ZeroWeightEntryIsNeverChosen()
         {
             Configure("m_possibleDrops",
@@ -238,7 +248,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] With no weights configured, the first possible drop is always chosen.")]
+        [Description("When no entry has a weight, the first entry is always selected.")]
         public void SelectRandomItem_NoWeights_FallsBackToFirstEntry()
         {
             Configure("m_possibleDrops",
@@ -250,7 +260,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] With no possible drops configured, each roll yields default(Dropped) (null item, quantity 0) and logs a warning, instead of yielding nothing.")]
+        [Description("Rolling with no possible drops yields empty (null item, quantity 0) drops and warns once per roll.")]
         public void NoPossibleDrops_YieldsEmptyDroppedStructs_AndWarns()
         {
             ConfigureRolls(new[] { 100f }, new[] { 2 }, new[] { 2 });
@@ -265,7 +275,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] A possible-drop entry whose Item is null is selectable and produces default(Dropped), which downstream droppers must handle.")]
+        [Description("A possible-drop entry with a null item yields an empty drop and warns.")]
         public void PossibleDrop_WithNullItem_YieldsDefaultDropped()
         {
             Configure("m_possibleDrops", E(null, chance: new[] { 1f }));
@@ -281,6 +291,7 @@ namespace PolyQuest.Tests
         /* --- GetByLevel behaviour (observed through the public API) --- */
 
         [Test]
+        [Description("Per-level arrays are read at index level - 1.")]
         public void Level_SelectsArrayIndexLevelMinusOne()
         {
             Configure("m_guaranteedDrops", E(m_gold, min: new[] { 1, 2, 3 }, max: new[] { 1, 2, 3 }));
@@ -291,6 +302,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A level past the end of a per-level array uses the array's last entry.")]
         public void Level_BeyondArrayLength_UsesLastEntry()
         {
             Configure("m_guaranteedDrops", E(m_gold, min: new[] { 1, 7 }, max: new[] { 1, 7 }));
@@ -299,7 +311,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] Level 0 (or negative) reads default(T): quantity 0 and a 0% drop chance, rather than clamping to level 1.")]
+        [Description("Level 0 reads default values (0 quantity, 0% chance) rather than the first entry.")]
         public void Level_Zero_ReadsDefaults_NotFirstEntry()
         {
             Configure("m_guaranteedDrops", E(m_gold, min: new[] { 4 }, max: new[] { 4 }));
@@ -313,6 +325,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A negative level behaves the same as level 0 and reads defaults.")]
         public void Level_Negative_BehavesLikeZero()
         {
             Configure("m_guaranteedDrops", E(m_gold, min: new[] { 4 }, max: new[] { 4 }));
@@ -321,6 +334,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Empty per-level arrays read as their default value, so an empty drop-chance array means 0% chance.")]
         public void EmptyOrNullArrays_ReadAsDefault()
         {
             ConfigureRolls(new float[0], new int[0], new int[0]);

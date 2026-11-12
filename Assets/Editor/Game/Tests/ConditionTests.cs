@@ -69,6 +69,7 @@ namespace PolyQuest.Tests
         [TestCase(false, false, false)]
         [TestCase(true, true, false)]
         [TestCase(false, true, true)]
+        [Description("A condition returns the checker's answer, inverted when m_negate is set.")]
         public void Condition_TruthTable_WithNegate(bool checkerResult, bool negate, bool expected)
         {
             var condition = Cond(ConditionType.kHasQuest, negate);
@@ -78,7 +79,7 @@ namespace PolyQuest.Tests
 
         [TestCase(false)]
         [TestCase(true)]
-        [Description("[Characterizes quirk] A condition no checker recognizes (null) PASSES - even when negated. A typo'd or unimplemented ConditionType silently succeeds.")]
+        [Description("When every checker returns null (unhandled), the condition passes, even when negated.")]
         public void Condition_NoCheckerHandlesIt_Passes(bool negate)
         {
             var condition = Cond(ConditionType.kHasSpokenTo, negate);
@@ -87,13 +88,14 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] With no checkers at all, every condition passes.")]
+        [Description("A condition checked against an empty checker list passes.")]
         public void Condition_NoCheckers_Passes()
         {
             Assert.That(Cond(ConditionType.kHasQuest).Check(Checkers()), Is.True);
         }
 
         [Test]
+        [Description("Checkers receive the condition's type and its parameter array unchanged.")]
         public void Condition_PassesTypeAndParametersToCheckers()
         {
             var checker = StubChecker.Always(true);
@@ -106,6 +108,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Null answers are skipped; any checker that answers false fails the condition, even if another answers true.")]
         public void Condition_AcrossCheckers_IgnoresNulls_AndAnyMismatchFails()
         {
             var condition = Cond(ConditionType.kHasQuest);
@@ -116,6 +119,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A condition short-circuits: checkers after the first failing one are never called.")]
         public void Condition_StopsAtFirstFailingChecker()
         {
             var failing = StubChecker.Always(false);
@@ -130,6 +134,7 @@ namespace PolyQuest.Tests
         /* ============================= Disjunction ============================= */
 
         [Test]
+        [Description("A disjunction (OR) is true when at least one of its conditions is true.")]
         public void Disjunction_IsTrue_WhenAnyConditionIsTrue()
         {
             var disjunction = Or(CondJson(ConditionType.kHasItem, false), CondJson(ConditionType.kHasQuest, false));
@@ -138,6 +143,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A disjunction is false when none of its conditions is true.")]
         public void Disjunction_IsFalse_WhenNoConditionIsTrue()
         {
             var disjunction = Or(CondJson(ConditionType.kHasItem, false), CondJson(ConditionType.kHasItem, false, "x"));
@@ -146,13 +152,14 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] An OR with zero conditions is false (so an AND containing one can never pass).")]
+        [Description("A disjunction with no conditions is false.")]
         public void Disjunction_Empty_IsFalse()
         {
             Assert.That(Or().Check(Checkers(TypeKeyed())), Is.False);
         }
 
         [Test]
+        [Description("A disjunction short-circuits: it stops evaluating at the first true condition.")]
         public void Disjunction_StopsAtFirstTrueCondition()
         {
             var checker = TypeKeyed();
@@ -166,6 +173,7 @@ namespace PolyQuest.Tests
         /* ============================== Conjunction ============================== */
 
         [Test]
+        [Description("A conjunction (AND) is true when every one of its disjunctions is true.")]
         public void Conjunction_IsTrue_WhenEveryDisjunctionIsTrue()
         {
             var conjunction = And(
@@ -176,6 +184,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A conjunction is false when any one of its disjunctions is false.")]
         public void Conjunction_IsFalse_WhenAnyDisjunctionIsFalse()
         {
             var conjunction = And(
@@ -186,6 +195,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Negating a failing condition inside a conjunction makes the whole conjunction pass.")]
         public void Conjunction_Negation_FlipsOneCondition()
         {
             var conjunction = And(
@@ -196,6 +206,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A conjunction short-circuits: it stops evaluating at the first false disjunction.")]
         public void Conjunction_StopsAtFirstFalseDisjunction()
         {
             var checker = TypeKeyed();
@@ -209,18 +220,21 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A conjunction with no disjunctions is true.")]
         public void Conjunction_WithNoDisjunctions_IsTrue()
         {
             Assert.That(And().Check(Checkers(TypeKeyed())), Is.True);
         }
 
         [Test]
+        [Description("A conjunction containing an empty disjunction is false, because the empty disjunction is false.")]
         public void Conjunction_ContainingAnEmptyDisjunction_IsFalse()
         {
             Assert.That(And(OrJson()).Check(Checkers(TypeKeyed())), Is.False);
         }
 
         [Test]
+        [Description("A conjunction whose conditions no checker handles passes.")]
         public void Conjunction_WithUnhandledConditions_Passes()
         {
             var conjunction = And(OrJson(CondJson(ConditionType.kHasLevel, false, "10")));

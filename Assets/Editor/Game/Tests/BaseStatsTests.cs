@@ -58,12 +58,14 @@ namespace PolyQuest.Tests
         /* --- Base stats --- */
 
         [Test]
+        [Description("A freshly added BaseStats starts at level 1.")]
         public void Level_DefaultsToOne()
         {
             Assert.That(m_stats.Level, Is.EqualTo(1));
         }
 
         [Test]
+        [Description("GetHealth returns the progression table's entry for the current level (index level - 1).")]
         public void GetHealth_ReadsProgressionAtCurrentLevel()
         {
             SetLevel(3);
@@ -72,6 +74,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A level past the end of the progression table returns 0 and logs 'Level out of range'.")]
         public void GetStat_BeyondProgressionTable_ReturnsZeroAndWarns()
         {
             SetLevel(6);
@@ -84,6 +87,7 @@ namespace PolyQuest.Tests
         /* --- Experience-related stats depend on the progression TYPE --- */
 
         [Test]
+        [Description("With a PlayerProgression, GetExperienceToLevelUp reads the XP table at the current level.")]
         public void ExperienceToLevelUp_OnPlayerProgression_ReadsXpTable()
         {
             SetLevel(2);
@@ -92,12 +96,14 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A PlayerProgression has no reward table, so GetExperienceReward returns 0.")]
         public void ExperienceReward_OnPlayerProgression_IsZero()
         {
             Assert.That(m_stats.GetExperienceReward(), Is.EqualTo(0f));
         }
 
         [Test]
+        [Description("With an AIProgression, GetExperienceReward reads the reward table at the current level.")]
         public void ExperienceReward_OnAIProgression_ReadsRewardTable()
         {
             SerializedTestUtil.SetObject(m_stats, "m_baseProgression", m_ai);
@@ -107,6 +113,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("An AIProgression has no XP table, so GetExperienceToLevelUp returns 0.")]
         public void ExperienceToLevelUp_OnAIProgression_IsZero()
         {
             SerializedTestUtil.SetObject(m_stats, "m_baseProgression", m_ai);
@@ -115,6 +122,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A Stat value with no case in GetBaseStat returns 0 and logs a 'not implemented' warning.")]
         public void UnimplementedStat_ReturnsZeroAndWarns()
         {
             LogAssert.Expect(LogType.Warning, new Regex("not implemented in GetBaseStat"));
@@ -125,6 +133,7 @@ namespace PolyQuest.Tests
         /* --- Modifiers --- */
 
         [Test]
+        [Description("With m_useStatModifiers off, modifier components have no effect on the stat.")]
         public void Modifiers_AreIgnored_WhenFlagIsOff()
         {
             AddModifier(Stat.kHealth, additive: 50f, percentage: 100f);
@@ -133,6 +142,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A modified stat is (base + additive) * (1 + percentage / 100).")]
         public void Modifiers_Formula_IsAdditiveThenPercentage()
         {
             UseModifiers(true);
@@ -144,6 +154,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Additive and percentage values from multiple modifier components are each summed, not compounded.")]
         public void Modifiers_FromMultipleComponents_AreSummed_NotMultiplied()
         {
             UseModifiers(true);
@@ -155,6 +166,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A modifier targeting one stat leaves every other stat unchanged.")]
         public void Modifiers_OnlyAffectTheirOwnStat()
         {
             UseModifiers(true);
@@ -165,6 +177,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A negative additive modifier lowers the stat.")]
         public void Modifiers_NegativeValues_ReduceTheStat()
         {
             UseModifiers(true);
@@ -176,6 +189,7 @@ namespace PolyQuest.Tests
         /* --- Leveling --- */
 
         [Test]
+        [Description("LevelUp increases the level by one and raises OnStatModified once.")]
         public void LevelUp_IncrementsLevel_AndNotifies()
         {
             int notifications = 0;
@@ -192,6 +206,7 @@ namespace PolyQuest.Tests
         [TestCase(7, 7)]
         [TestCase(99, 99)]
         [TestCase(500, 99)]
+        [Description("SetLevel clamps the requested level to [1, 99] and raises OnStatModified once.")]
         public void SetLevel_ClampsToValidRange_AndNotifies(int requested, int expected)
         {
             int notifications = 0;
@@ -204,7 +219,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] SetLevel clamps to 99 but LevelUp does not.")]
+        [Description("SetLevel clamps to 99 but LevelUp does not.")]
         public void LevelUp_AtMaxLevel_IsNotClamped()
         {
             m_stats.SetLevel(99);
@@ -215,6 +230,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("NotifyStatModified raises OnStatModified once.")]
         public void NotifyStatModified_RaisesEvent()
         {
             int notifications = 0;

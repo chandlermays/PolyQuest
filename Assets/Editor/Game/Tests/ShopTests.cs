@@ -130,6 +130,7 @@ namespace PolyQuest.Tests
         /* --- Awake / listing --- */
 
         [Test]
+        [Description("Awake seeds stock from the config and lists every entry in config order, with base prices and nothing in the purchase.")]
         public void Awake_SeedsStockFromConfig_AndListsEveryEntry()
         {
             var listed = m_shop.GetFilteredItems().ToArray();
@@ -141,6 +142,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Awake sets the world label text to the config's name, and ShopName matches it.")]
         public void Awake_SetsTheWorldLabelToTheConfigName_AndShopNameMatches()
         {
             Assert.That(m_labelText.text, Is.EqualTo("TestShop"));
@@ -148,6 +150,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A new shop starts in buy mode with no category filter and an empty purchase.")]
         public void NewShop_StartsInBuyMode_WithNoFilter()
         {
             Assert.That(m_shop.InBuyMode, Is.True);
@@ -156,6 +159,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A config entry with a null item makes Awake throw.")]
         public void Awake_ConfigEntryWithNullItem_Throws()
         {
             SetStock((null, 1));
@@ -164,7 +168,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] Duplicate config entries share one stock slot (last wins) but are listed twice, so the purchase total counts the item twice.")]
+        [Description("Duplicate config entries for one item are listed twice and double-count the purchase total.")]
         public void DuplicateConfigEntries_DoubleCountThePurchaseTotal()
         {
             SetStock((m_potion, 5), (m_potion, 8));
@@ -180,6 +184,7 @@ namespace PolyQuest.Tests
         /* --- Filter / mode --- */
 
         [Test]
+        [Description("SortByFilter lists only items in that category and raises OnShopUpdated.")]
         public void SortByFilter_ShowsOnlyThatCategory_AndRaisesTheEvent()
         {
             m_shop.SortByFilter(ItemCategory.kConsumables);
@@ -189,6 +194,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Filtering by kNone lists every item again.")]
         public void SortByFilter_None_ShowsEverything()
         {
             m_shop.SortByFilter(ItemCategory.kWeapon);
@@ -198,6 +204,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Filtering by a category the shop doesn't stock lists nothing.")]
         public void SortByFilter_CategoryWithNoItems_ShowsNothing()
         {
             m_shop.SortByFilter(ItemCategory.kQuestItem);
@@ -206,6 +213,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Switching mode clears the current purchase and raises OnShopUpdated.")]
         public void SelectMode_ClearsThePurchase_RaisesTheEvent()
         {
             m_shop.AddToPurchase(m_potion, 2);
@@ -219,6 +227,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Switching mode keeps the active category filter.")]
         public void SelectMode_KeepsTheCurrentFilter()
         {
             m_shop.SortByFilter(ItemCategory.kWeapon);
@@ -231,6 +240,7 @@ namespace PolyQuest.Tests
         /* --- AddToPurchase --- */
 
         [Test]
+        [Description("Repeated AddToPurchase calls accumulate the quantity and raise OnShopUpdated each time.")]
         public void AddToPurchase_Buying_AccumulatesAndRaisesTheEvent()
         {
             m_shop.AddToPurchase(m_potion, 2);
@@ -242,6 +252,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("When buying, the purchase quantity is clamped to the shop's stock.")]
         public void AddToPurchase_Buying_ClampsToStock()
         {
             m_shop.AddToPurchase(m_potion, 99);
@@ -250,6 +261,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A negative quantity reduces the purchase; reaching zero removes the item from the purchase.")]
         public void AddToPurchase_Negative_ReducesAndRemovesAtZero()
         {
             m_shop.AddToPurchase(m_potion, 2);
@@ -263,6 +275,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Adding an item with zero stock leaves the purchase empty.")]
         public void AddToPurchase_OutOfStockItem_IsNotKept()
         {
             SetStock((m_potion, 0));
@@ -275,7 +288,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] AddToPurchase inserts the item BEFORE looking up stock, so an item the shop doesn't sell throws KeyNotFound but leaves a phantom entry behind.")]
+        [Description("Buying an item the shop doesn't stock throws KeyNotFoundException and leaves a zero-quantity phantom entry in the purchase.")]
         public void AddToPurchase_ItemNotInShop_Throws_AndLeavesAPhantomEntry()
         {
             Assert.That(() => m_shop.AddToPurchase(m_junk, 1), Throws.TypeOf<KeyNotFoundException>());
@@ -285,7 +298,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] The phantom entry makes CanAffordPurchase true for a purchase of nothing (if funds and space allow).")]
+        [Description("The phantom entry makes CanAffordPurchase true for a purchase worth nothing.")]
         public void PhantomEntry_EnablesAnEmptyPurchase()
         {
             Assert.That(() => m_shop.AddToPurchase(m_junk, 1), Throws.TypeOf<KeyNotFoundException>());
@@ -296,6 +309,7 @@ namespace PolyQuest.Tests
         /* --- Totals / affordability --- */
 
         [Test]
+        [Description("PurchaseTotal is the sum of price * quantity across the purchase.")]
         public void PurchaseTotal_SumsPriceTimesQuantity()
         {
             m_shop.AddToPurchase(m_sword, 2);       // 40
@@ -305,12 +319,14 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("An empty purchase can't be completed.")]
         public void CanAffordPurchase_EmptyPurchase_False()
         {
             Assert.That(m_shop.CanAffordPurchase(), Is.False);
         }
 
         [Test]
+        [Description("A purchase within the wallet balance and inventory space can be completed.")]
         public void CanAffordPurchase_EnoughFundsAndSpace_True()
         {
             m_shop.AddToPurchase(m_sword, 1);
@@ -319,6 +335,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A total above the wallet balance means insufficient funds, so the purchase can't be completed.")]
         public void CanAffordPurchase_TotalExceedsWallet_False()
         {
             m_shop.AddToPurchase(m_sword, 2);       // 40
@@ -329,6 +346,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A wallet balance exactly equal to the total counts as sufficient funds.")]
         public void CanAffordPurchase_ExactFunds_True()
         {
             m_shop.AddToPurchase(m_sword, 1);       // 20
@@ -338,6 +356,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A full inventory means no space, so the purchase can't be completed.")]
         public void CanAffordPurchase_InventoryFull_False()
         {
             for (int i = 0; i < 6; ++i)
@@ -349,6 +368,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Several units of one stackable item need only one free slot.")]
         public void HasInventorySpace_StackablePurchase_NeedsOneSlot_NotOnePerUnit()
         {
             for (int i = 0; i < 5; ++i)
@@ -359,6 +379,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Each unit of a non-stackable item needs its own free slot.")]
         public void HasInventorySpace_NonStackablePurchase_NeedsOneSlotPerUnit()
         {
             for (int i = 0; i < 5; ++i)
@@ -369,7 +390,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] Funds/space checks dereference the shopper without a null guard (unlike GetQuantityFromInventory), so they throw until SetShopInteractor is called.")]
+        [Description("Without a ShopInteractor, HasSufficientFunds and HasInventorySpace throw NullReferenceException.")]
         public void HasSufficientFunds_WithoutAShopper_Throws()
         {
             Shop orphan = BuildShop("Orphan");
@@ -379,6 +400,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Setting the ShopInteractor to null clears the shopper, so sell mode lists nothing.")]
         public void SetShopInteractor_Null_ClearsTheShopper_SellModeListsNothing()
         {
             m_inventory.TryAddToAvailableSlot(m_ore, 2);
@@ -393,6 +415,7 @@ namespace PolyQuest.Tests
         /* --- Selling mode --- */
 
         [Test]
+        [Description("Sell mode lists only items the shopper owns, with the owned count shown as available stock.")]
         public void SellMode_ListsOnlyItemsTheShopperOwns()
         {
             m_inventory.TryAddToAvailableSlot(m_ore, 4);
@@ -406,6 +429,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Sell price is the base price times the sell percentage, rounded up.")]
         public void SellMode_PriceIsPercentageOfBasePrice_RoundedUp()
         {
             m_inventory.TryAddToAvailableSlot(m_ore, 1);        // 15 * 50% = 7.5
@@ -415,6 +439,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A 0% sell percentage makes items sell for nothing.")]
         public void SellMode_ZeroPercent_SellsForNothing()
         {
             SetSellPercentage(0f);
@@ -425,6 +450,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("When selling, the quantity is clamped to how many the shopper owns.")]
         public void SellMode_AddToPurchase_ClampsToOwned()
         {
             m_inventory.TryAddToAvailableSlot(m_ore, 3);
@@ -436,6 +462,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("When selling, CanAffordPurchase ignores the wallet balance and inventory space.")]
         public void SellMode_CanAffordPurchase_IgnoresWalletAndSpace()
         {
             m_wallet.UpdateSilver(-100);
@@ -447,6 +474,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Completing a sale removes the items, pays the sell price, adds them to the shop's stock, and clears the purchase.")]
         public void SellMode_Complete_RemovesItems_PaysSilver_RestocksShop()
         {
             m_inventory.TryAddToAvailableSlot(m_ore, 5);
@@ -462,6 +490,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Selling every unit the shopper owns empties both their stack and the purchase.")]
         public void SellMode_Complete_SellingEverything_LeavesNoPurchase()
         {
             m_inventory.TryAddToAvailableSlot(m_ore, 3);
@@ -475,7 +504,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] An item the shop doesn't stock can be added to a sell purchase; it never lists, never totals, and is never sold, but keeps HasItemsInPurchase/CanAffordPurchase true.")]
+        [Description("An owned item the shop doesn't stock can be added to a sale but is never sold, and its phantom entry survives completion.")]
         public void SellMode_ItemNotInShop_IsAcceptedButNeverSold()
         {
             m_inventory.TryAddToAvailableSlot(m_junk, 2);
@@ -497,6 +526,7 @@ namespace PolyQuest.Tests
         /* --- Buying: CompletePurchase --- */
 
         [Test]
+        [Description("Completing a buy adds the items, charges the total, reduces the shop's stock, and clears the purchase.")]
         public void Buy_Complete_AddsItems_ChargesSilver_ReducesStock_ClearsPurchase()
         {
             m_shop.AddToPurchase(m_potion, 3);
@@ -513,6 +543,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Completing a buy raises OnShopUpdated at least once.")]
         public void Buy_Complete_RaisesShopUpdated()
         {
             m_shop.AddToPurchase(m_potion, 1);
@@ -524,6 +555,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Completing a buy autosaves through the SaveManager, writing the (isolated) save file.")]
         public void Buy_Complete_WritesTheSaveFile()
         {
             m_shop.AddToPurchase(m_potion, 1);
@@ -534,7 +566,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] CompletePurchase does not check funds up front: with too little silver it buys what it can afford, item by item, and leaves the rest in the purchase.")]
+        [Description("With too little silver for the whole purchase, completing buys as many units as the wallet covers and leaves the rest in the purchase.")]
         public void Buy_Complete_WithPartialFunds_BuysWhatItCanAfford()
         {
             m_wallet.UpdateSilver(-75);             // 25 left
@@ -549,6 +581,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("With a full inventory, completing a buy charges nothing, keeps stock, and keeps the purchase.")]
         public void Buy_Complete_InventoryFull_ChargesNothing_KeepsPurchase()
         {
             for (int i = 0; i < 6; ++i)
@@ -564,7 +597,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] CompletePurchase saves via SaveManager.Instance with no null check, so with no SaveManager it throws AFTER the purchase has already been applied.")]
+        [Description("Without a SaveManager, CompletePurchase applies the purchase and then throws NullReferenceException on the autosave.")]
         public void Buy_Complete_WithoutASaveManager_ThrowsAfterApplyingThePurchase()
         {
             InventoryTestKit.ClearSaveManager();
@@ -576,9 +609,23 @@ namespace PolyQuest.Tests
             Assert.That(m_wallet.CurrentSilver, Is.EqualTo(90));
         }
 
+        [Test]
+        [Description("Without a SaveManager, CompletePurchase applies the purchase and skips the autosave without throwing.")]
+        public void Buy_Complete_WithoutASaveManager_DoesNotThrow()
+        {
+            InventoryTestKit.ClearSaveManager();
+            m_shop.AddToPurchase(m_potion, 1);
+
+            Assert.DoesNotThrow(() => m_shop.CompletePurchase(), "CompletePurchase threw without a SaveManager");
+
+            Assert.That(Owned(m_potion), Is.EqualTo(1));
+            Assert.That(m_wallet.CurrentSilver, Is.EqualTo(90));
+        }
+
         /* --- Save / restore --- */
 
         [Test]
+        [Description("CaptureState stores one stock count per stocked item, keyed by item ID.")]
         public void CaptureState_StoresStockKeyedByItemID()
         {
             JObject state = (JObject)m_shop.CaptureState();
@@ -590,6 +637,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("RestoreState overrides stock for the saved items; items missing from the save are re-seeded from the config.")]
         public void RestoreState_OverridesStock()
         {
             m_shop.RestoreState(new JObject { ["potion"] = 1, ["sword"] = 0 });
@@ -600,6 +648,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Saved IDs that are unknown, or that the shop doesn't stock, are ignored.")]
         public void RestoreState_UnknownOrUnstockedItems_AreIgnored()
         {
             m_shop.RestoreState(new JObject { ["nope"] = 9, ["junk"] = 9 });
@@ -608,6 +657,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A non-object state resets stock to the config's initial values.")]
         public void RestoreState_NonObjectState_JustReseedsFromConfig()
         {
             m_shop.AddToPurchase(m_potion, 1);
@@ -620,6 +670,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Stock captured from one shop restores correctly into another shop with the same config.")]
         public void CaptureThenRestore_RoundTripsStock()
         {
             m_shop.AddToPurchase(m_potion, 2);
@@ -633,7 +684,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] RestoreState doesn't clear the in-progress purchase, so a purchase can exceed the restored stock; CompletePurchase then over-sells and drives stock negative.")]
+        [Description("RestoreState doesn't re-clamp a pending purchase, so completing it can buy more than the stock and drive stock negative.")]
         public void RestoreState_LeavesPurchaseAlone_AndOverBuyMakesStockNegative()
         {
             m_shop.AddToPurchase(m_potion, 3);
@@ -651,6 +702,7 @@ namespace PolyQuest.Tests
         /* --- Scene presentation --- */
 
         [Test]
+        [Description("ToggleHighlight enables and disables the shop's Outline component.")]
         public void ToggleHighlight_EnablesAndDisablesTheOutline()
         {
             Outline outline = m_shop.GetComponent<Outline>();
@@ -663,6 +715,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("ToggleLabel activates and deactivates the world label's root object.")]
         public void ToggleLabel_ShowsAndHidesTheLabelRoot()
         {
             m_shop.ToggleLabel(false);
@@ -673,6 +726,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Hovering a shop shows the targeting cursor.")]
         public void GetCursorType_IsTargeting()
         {
             Assert.That(m_shop.GetCursorType(), Is.EqualTo(PolyQuest.UI.Core.CursorSettings.CursorType.kTargeting));

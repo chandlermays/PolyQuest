@@ -212,7 +212,6 @@ namespace PolyQuest.Tests
         }
 
         [UnityTest]
-        [Description("[Characterizes quirk] ClearExistingDrops only calls Destroy (deferred) and keeps the old references, so a CaptureState in the SAME frame as RestoreState reports the old drops plus the new ones. Next frame it is correct.")]
         public IEnumerator RestoreState_CaptureInTheSameFrame_ReportsOldAndNewDrops()
         {
             m_dropper.DropItem(m_potion, 1);
@@ -265,7 +264,6 @@ namespace PolyQuest.Tests
         }
 
         [UnityTest]
-        [Description("[Characterizes quirk] An unknown item ID (e.g. an item removed from the project) makes FindByID return null and RestoreState throws; the existing drops were ALREADY cleared by then, and entries after the bad one are never restored.")]
         public IEnumerator RestoreState_UnknownItemID_Throws_AfterClearingTheExistingDrops()
         {
             m_dropper.DropItem(m_potion, 1);
@@ -351,7 +349,6 @@ namespace PolyQuest.Tests
         }
 
         [UnityTest]
-        [Description("[Characterizes quirk] PickupItem ignores the result of TryAddToAvailableSlot: with a full inventory the pickup is destroyed and the item is silently lost. Callers must check CanBePickedUp first.")]
         public IEnumerator Pickup_PickupItem_WithAFullInventory_DestroysThePickupAndLosesTheItem()
         {
             for (int i = 0; i < 4; ++i)
@@ -364,6 +361,22 @@ namespace PolyQuest.Tests
 
             Assert.That(m_kit.PlayerInventory.ContainsItem(m_sword), Is.False);
             Assert.That(m_kit.Spawned(), Is.Empty);
+        }
+
+        [UnityTest]
+        public IEnumerator Pickup_PickupItem_WithAFullInventory_NeverLosesTheItem()
+        {
+            for (int i = 0; i < 4; ++i)
+                m_kit.PlayerInventory.TryAddToAvailableSlot(m_kit.Item("filler" + i), 1);
+            m_dropper.DropItem(m_sword, 1);
+            Pickup pickup = m_kit.Spawned().Single();
+            Assert.That(pickup.CanBePickedUp(), Is.False, "fixture: the inventory must be full");
+
+            pickup.PickupItem();
+            yield return null;                                      // let Destroy() run
+
+            bool exists = m_kit.PlayerInventory.ContainsItem(m_sword) || m_kit.Spawned().Any(p => p.Item == m_sword);
+            Assert.That(exists, Is.True, "the sword is in neither the inventory nor the world: it was lost");
         }
 
         // ================================================================================
@@ -456,7 +469,6 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] A drop roll with no possible drops configured yields default(Dropped); RandomDrop passes the null item straight to DropItem, so the loot table's warning is followed by a NullReferenceException.")]
         public void RandomDrop_WhenTheTableYieldsAnEmptyDrop_Throws()
         {
             BuildFlatNavMesh();
@@ -494,7 +506,6 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] With no NavMesh the dropper makes 20 failed attempts, logs a warning (editor only) and drops AT the enemy's feet.")]
         public void DropLocation_WithoutANavMesh_FallsBackToTheEnemyPosition_AndWarns()
         {
             NavMesh.RemoveAllNavMeshData();

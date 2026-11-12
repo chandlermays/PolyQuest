@@ -4,9 +4,11 @@
 ----------------------------*/
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 //---------------------------------
 using PolyQuest.Inventories;
 using PolyQuest.Pickups;
@@ -101,6 +103,7 @@ namespace PolyQuest.Tests
         /* ============================== Adding ============================== */
 
         [Test]
+        [Description("A new inventory has the configured size, and every slot is empty with quantity 0.")]
         public void NewInventory_IsEmpty()
         {
             Assert.That(m_inventory.Size, Is.EqualTo(kSlots));
@@ -110,6 +113,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Non-stackable items fill the lowest-index empty slot first, with quantity 1.")]
         public void TryAdd_NonStackable_FillsLowestEmptySlotFirst()
         {
             Assert.That(m_inventory.TryAddToAvailableSlot(m_sword), Is.True);
@@ -122,6 +126,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Adding the same non-stackable item twice uses two separate slots.")]
         public void TryAdd_SameNonStackableTwice_UsesTwoSlots()
         {
             m_inventory.TryAddToAvailableSlot(m_sword);
@@ -133,6 +138,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Adding a stackable item that's already held merges into the existing stack.")]
         public void TryAdd_Stackable_MergesIntoExistingStack()
         {
             m_inventory.TryAddToAvailableSlot(m_potion, 3);
@@ -144,7 +150,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] Stacks have no maximum size, and the quantity is an unchecked int: it wraps negative on overflow.")]
+        [Description("Stacks have no size cap, so adding past int.MaxValue overflows to a negative quantity.")]
         public void TryAdd_Stackable_HasNoCap_AndOverflowsToNegative()
         {
             m_inventory.TryAddToAvailableSlot(m_potion, int.MaxValue);
@@ -154,6 +160,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Adding a non-stackable item to a full inventory returns false and changes nothing, raising no events.")]
         public void TryAdd_FullInventory_NonStackable_ReturnsFalse_AndChangesNothing()
         {
             FillWithDistinctItems();
@@ -167,6 +174,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("In a full inventory, a stackable item that's already held still merges into its stack.")]
         public void TryAdd_FullInventory_StackableAlreadyHeld_StillMerges()
         {
             m_inventory.TryAddToAvailableSlot(m_potion);
@@ -180,7 +188,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] A non-stackable item added with quantity > 1 occupies ONE slot holding that quantity.")]
+        [Description("A non-stackable item added with quantity > 1 occupies one slot holding that quantity.")]
         public void TryAdd_NonStackable_WithQuantityAboveOne_OccupiesSingleSlot()
         {
             m_inventory.TryAddToAvailableSlot(m_sword, 3);
@@ -190,7 +198,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] Quantity is never validated. Adding 0 succeeds and leaves an occupied slot holding a quantity of 0.")]
+        [Description("Adding with quantity 0 succeeds, occupies a slot with quantity 0, and raises OnItemAdded.")]
         public void TryAdd_ZeroQuantity_CreatesAnOccupiedZeroQuantitySlot()
         {
             Assert.That(m_inventory.TryAddToAvailableSlot(m_potion, 0), Is.True);
@@ -203,7 +211,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] A negative quantity is accepted by Add and subtracts from the stack (and raises OnItemAdded with the negative number).")]
+        [Description("Adding a negative quantity subtracts from the stack and reports the negative amount through OnItemAdded.")]
         public void TryAdd_NegativeQuantity_SubtractsFromStack()
         {
             m_inventory.TryAddToAvailableSlot(m_potion, 5);
@@ -217,7 +225,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] A null item is not guarded; it throws a NullReferenceException.")]
+        [Description("Adding a null item throws NullReferenceException.")]
         public void TryAdd_NullItem_ThrowsNullReference()
         {
             Assert.Throws<System.NullReferenceException>(() => m_inventory.TryAddToAvailableSlot(null));
@@ -226,6 +234,7 @@ namespace PolyQuest.Tests
         /* --- Events on Add --- */
 
         [Test]
+        [Description("A successful add raises OnItemAdded (with the item and quantity) and OnInventoryChanged once each.")]
         public void TryAdd_RaisesItemAdded_AndInventoryChanged_OnceEach()
         {
             m_inventory.TryAddToAvailableSlot(m_sword);
@@ -237,6 +246,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("SuppressItemAddedNotif silences OnItemAdded but not OnInventoryChanged.")]
         public void SuppressItemAddedNotif_SilencesItemAdded_ButNotInventoryChanged()
         {
             m_inventory.SuppressItemAddedNotif = true;
@@ -248,7 +258,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] When OnBeforeAddItem consumes a stackable item, the slots are untouched and OnInventoryChanged is NOT raised.")]
+        [Description("When OnBeforeAddItem consumes a stackable add, no slot is used and OnInventoryChanged doesn't fire, but OnItemAdded still does.")]
         public void OnBeforeAddItem_ConsumingAStackable_SkipsSlotsAndInventoryChanged()
         {
             m_inventory.OnBeforeAddItem = (item, quantity) => true;
@@ -263,6 +273,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("OnBeforeAddItem is only consulted for stackable items; non-stackables go straight into a slot.")]
         public void OnBeforeAddItem_IsNeverAskedAboutNonStackables()
         {
             int calls = 0;
@@ -275,6 +286,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("When OnBeforeAddItem returns false, the add proceeds normally into a slot.")]
         public void OnBeforeAddItem_ReturningFalse_FallsThroughToNormalAdd()
         {
             int calls = 0;
@@ -290,6 +302,7 @@ namespace PolyQuest.Tests
         /* ============================ TryAddItemToSlot ============================ */
 
         [Test]
+        [Description("TryAddItemToSlot places the item in the requested empty slot, and later adds still fill the lowest free slot.")]
         public void TryAddItemToSlot_EmptySlot_PlacesItemThere()
         {
             Assert.That(m_inventory.TryAddItemToSlot(2, m_sword, 1), Is.True);
@@ -303,6 +316,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("If the requested slot holds a different item, the item goes to the first available slot instead.")]
         public void TryAddItemToSlot_OccupiedByDifferentItem_FallsBackToFirstAvailableSlot()
         {
             m_inventory.TryAddToAvailableSlot(m_sword);
@@ -314,6 +328,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("If the requested slot holds a different item and the inventory is full, TryAddItemToSlot returns false.")]
         public void TryAddItemToSlot_OccupiedByDifferentItem_WhenFull_ReturnsFalse()
         {
             FillWithDistinctItems();
@@ -324,6 +339,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Adding a stackable item to a slot already holding it stacks in that slot.")]
         public void TryAddItemToSlot_SameStackable_StacksInThatSlot()
         {
             m_inventory.TryAddToAvailableSlot(m_potion, 2);
@@ -334,7 +350,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] Placing a non-stackable item onto a slot that already holds the same item bumps that slot's quantity to 2.")]
+        [Description("Adding a non-stackable item to a slot already holding it increases that slot's quantity instead of rejecting.")]
         public void TryAddItemToSlot_SameNonStackable_BumpsQuantityInsteadOfRejecting()
         {
             m_inventory.TryAddToAvailableSlot(m_sword);
@@ -346,7 +362,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] Placing a stackable into an EMPTY slot while a stack of it exists elsewhere creates a second stack (drag-and-drop rearrangement).")]
+        [Description("Placing a held stackable item in a different empty slot creates a second stack of it.")]
         public void TryAddItemToSlot_StackableIntoEmptySlot_CreatesSecondStack()
         {
             m_inventory.TryAddToAvailableSlot(m_potion, 2);
@@ -359,7 +375,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] TryAddItemToSlot never consults OnBeforeAddItem.")]
+        [Description("TryAddItemToSlot doesn't consult OnBeforeAddItem.")]
         public void TryAddItemToSlot_BypassesOnBeforeAddItem()
         {
             int calls = 0;
@@ -374,14 +390,14 @@ namespace PolyQuest.Tests
 
         [TestCase(kSlots)]
         [TestCase(-1)]
-        [Description("[Characterizes quirk] Slot indices are not bounds-checked; they throw IndexOutOfRangeException.")]
+        [Description("A slot index outside the inventory throws IndexOutOfRangeException.")]
         public void TryAddItemToSlot_InvalidSlot_Throws(int slot)
         {
             Assert.Throws<System.IndexOutOfRangeException>(() => m_inventory.TryAddItemToSlot(slot, m_sword, 1));
         }
 
         [Test]
-        [Description("[Characterizes quirk] Merging goes to the stack REGISTERED first (insertion order), not the lowest slot index.")]
+        [Description("With two stacks of an item, new units merge into the stack created first, not the lowest-index one.")]
         public void StackMerge_GoesToFirstRegisteredStack_NotLowestIndex()
         {
             m_inventory.TryAddItemToSlot(3, m_potion, 1);
@@ -396,6 +412,7 @@ namespace PolyQuest.Tests
         /* ============================== Removal ============================== */
 
         [Test]
+        [Description("Removing part of a stack leaves the remainder and raises OnInventoryChanged once.")]
         public void RemoveItemsFromSlot_Partial_LeavesTheRemainder()
         {
             m_inventory.TryAddToAvailableSlot(m_potion, 5);
@@ -409,6 +426,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Removing the exact stack size empties the slot and the item is no longer held.")]
         public void RemoveItemsFromSlot_ExactAmount_EmptiesTheSlot()
         {
             m_inventory.TryAddToAvailableSlot(m_potion, 3);
@@ -423,7 +441,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] Removing more than a stack holds silently removes the whole stack. There is no failure signal.")]
+        [Description("Removing more than the stack holds is clamped silently and empties the slot.")]
         public void RemoveItemsFromSlot_MoreThanHeld_SilentlyClampsToTheStack()
         {
             m_inventory.TryAddToAvailableSlot(m_potion, 2);
@@ -435,6 +453,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Removing from an empty slot changes nothing and raises no event.")]
         public void RemoveItemsFromSlot_EmptySlot_DoesNothing_AndRaisesNoEvent()
         {
             m_inventory.RemoveItemsFromSlot(2, 1);
@@ -444,7 +463,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] A negative removal quantity ADDS to the stack, and raises OnInventoryChanged but not OnItemAdded.")]
+        [Description("Removing a negative quantity adds to the stack, raising OnInventoryChanged but not OnItemAdded.")]
         public void RemoveItemsFromSlot_NegativeQuantity_AddsToTheStack()
         {
             m_inventory.TryAddToAvailableSlot(m_potion, 2);
@@ -458,6 +477,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Emptying one of two stacks keeps the item tracked, and new units merge into the remaining stack.")]
         public void RemoveItemsFromSlot_EmptyingOneOfTwoStacks_KeepsTheItemTracked()
         {
             m_inventory.TryAddToAvailableSlot(m_potion, 1);
@@ -473,6 +493,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A slot freed by removal is the next one filled.")]
         public void RemovedSlot_IsTheNextOneReused()
         {
             m_inventory.TryAddToAvailableSlot(m_sword);
@@ -485,7 +506,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] RemoveItemsFromSlot does not bounds-check the slot index.")]
+        [Description("Removing from a slot index outside the inventory throws IndexOutOfRangeException.")]
         public void RemoveItemsFromSlot_InvalidSlot_Throws()
         {
             Assert.Throws<System.IndexOutOfRangeException>(() => m_inventory.RemoveItemsFromSlot(kSlots, 1));
@@ -494,12 +515,14 @@ namespace PolyQuest.Tests
         /* ============================== HasSpaceFor ============================== */
 
         [Test]
+        [Description("An empty inventory has space for any single item.")]
         public void HasSpaceFor_Single_EmptyInventory_IsTrue()
         {
             Assert.That(m_inventory.HasSpaceFor(m_sword), Is.True);
         }
 
         [Test]
+        [Description("A full inventory has no space for a non-stackable item, even one it already holds.")]
         public void HasSpaceFor_Single_FullInventory_NonStackable_IsFalse_EvenIfHeld()
         {
             FillWithDistinctItems();
@@ -509,6 +532,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("A full inventory has space for a stackable item only if it already holds a stack of it.")]
         public void HasSpaceFor_Single_FullInventory_Stackable_OnlyIfAlreadyHeld()
         {
             m_inventory.TryAddToAvailableSlot(m_potion);
@@ -521,6 +545,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("For a set of items, each non-stackable entry (duplicates included) needs its own empty slot.")]
         public void HasSpaceFor_Many_CountsEachNonStackableSeparately()
         {
             m_inventory.TryAddToAvailableSlot(m_sword);
@@ -533,6 +558,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("For a set of items, each distinct new stackable needs one slot, and stackables already held need none.")]
         public void HasSpaceFor_Many_CountsEachNewStackableOnce_AndHeldStackablesNotAtAll()
         {
             m_inventory.TryAddToAvailableSlot(m_sword);
@@ -547,7 +573,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] HasSpaceFor(null) is not guarded; it throws a NullReferenceException.")]
+        [Description("HasSpaceFor with a null item throws NullReferenceException.")]
         public void HasSpaceFor_NullItem_ThrowsNullReference()
         {
             Assert.Throws<System.NullReferenceException>(() => m_inventory.HasSpaceFor((InventoryItem)null));
@@ -556,6 +582,7 @@ namespace PolyQuest.Tests
         /* ============================== Evaluate ============================== */
 
         [Test]
+        [Description("Evaluate returns null (unhandled) for null or empty parameters.")]
         public void Evaluate_NullOrEmptyParameters_ReturnsNull()
         {
             Assert.That(m_inventory.Evaluate(ConditionType.kHasItem, null), Is.Null);
@@ -563,12 +590,14 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Evaluate returns null for predicates the inventory doesn't handle.")]
         public void Evaluate_UnhandledPredicate_ReturnsNull()
         {
             Assert.That(m_inventory.Evaluate(ConditionType.kHasQuest, new[] { "anything" }), Is.Null);
         }
 
         [Test]
+        [Description("kHasItem is true for a held item's ID and false for a registered item that isn't held.")]
         public void HasItem_ReflectsWhetherTheItemIsHeld()
         {
             m_inventory.TryAddToAvailableSlot(m_sword);
@@ -578,13 +607,26 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] kHasItem with an ID that matches no item THROWS (ArgumentNullException) instead of returning false. A deleted/renamed item referenced by a dialogue or quest condition crashes the check.")]
+        [Description("kHasItem with an unregistered item ID throws ArgumentNullException.")]
         public void HasItem_UnknownItemId_Throws()
         {
             Assert.Throws<System.ArgumentNullException>(() => m_inventory.Evaluate(ConditionType.kHasItem, new[] { "missing" }));
         }
 
         [Test]
+        [Description("kHasItem with an unregistered item ID returns false instead of throwing.")]
+        public void HasItem_UnknownItemId_IsFalse_NotAnException()
+        {
+            bool? result = null;
+
+            Assert.DoesNotThrow(() => result = m_inventory.Evaluate(ConditionType.kHasItem, new[] { "missing" }),
+                                "kHasItem threw on an unknown item ID");
+
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
+        [Description("kHasItems sums the quantity across every stack of the item and compares it to the required amount.")]
         public void HasItems_SumsQuantityAcrossStacks()
         {
             m_inventory.TryAddToAvailableSlot(m_potion, 2);
@@ -596,13 +638,14 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("kHasItems is false for an item that isn't held.")]
         public void HasItems_ItemNotHeld_IsFalse()
         {
             Assert.That(m_inventory.Evaluate(ConditionType.kHasItems, new[] { m_potion.ID, "1" }), Is.False);
         }
 
         [Test]
-        [Description("[Characterizes quirk] kHasItems is stackable-only. A non-stackable item that IS held still returns false.")]
+        [Description("kHasItems is always false for non-stackable items, even when held.")]
         public void HasItems_NonStackable_IsAlwaysFalse()
         {
             m_inventory.TryAddToAvailableSlot(m_sword);
@@ -611,7 +654,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] Unlike kHasItem, kHasItems returns false (no exception) for an unknown item ID.")]
+        [Description("kHasItems with an unregistered item ID returns false.")]
         public void HasItems_UnknownItemId_IsFalse()
         {
             Assert.That(m_inventory.Evaluate(ConditionType.kHasItems, new[] { "missing", "1" }), Is.False);
@@ -621,7 +664,7 @@ namespace PolyQuest.Tests
         [TestCase("-1")]
         [TestCase("abc")]
         [TestCase("")]
-        [Description("[Characterizes quirk] A required quantity <= 0 or non-numeric is false, even when the item is held (0 is trivially satisfiable but fails).")]
+        [Description("kHasItems is false when the required quantity is zero, negative, or not a number.")]
         public void HasItems_InvalidRequiredQuantity_IsFalse(string quantity)
         {
             m_inventory.TryAddToAvailableSlot(m_potion, 5);
@@ -630,7 +673,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] kHasItems with only the item ID (no quantity parameter) throws IndexOutOfRangeException.")]
+        [Description("kHasItems without a quantity parameter throws IndexOutOfRangeException.")]
         public void HasItems_MissingQuantityParameter_Throws()
         {
             m_inventory.TryAddToAvailableSlot(m_potion, 5);
@@ -638,9 +681,23 @@ namespace PolyQuest.Tests
             Assert.Throws<System.IndexOutOfRangeException>(() => m_inventory.Evaluate(ConditionType.kHasItems, new[] { m_potion.ID }));
         }
 
+        [Test]
+        [Description("kHasItems without a quantity parameter returns false instead of throwing.")]
+        public void HasItems_MissingQuantityParameter_IsFalse_NotAnException()
+        {
+            m_inventory.TryAddToAvailableSlot(m_potion, 5);
+            bool? result = null;
+
+            Assert.DoesNotThrow(() => result = m_inventory.Evaluate(ConditionType.kHasItems, new[] { m_potion.ID }),
+                                "kHasItems threw when the quantity parameter was missing");
+
+            Assert.That(result, Is.False);
+        }
+
         /* ============================== Save / Restore ============================== */
 
         [Test]
+        [Description("Capturing an empty inventory produces an empty JSON object.")]
         public void CaptureState_EmptyInventory_IsAnEmptyObject()
         {
             JObject state = (JObject)m_inventory.CaptureState();
@@ -649,6 +706,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("CaptureState stores only occupied slots, keyed by slot index, each with item ID and quantity.")]
         public void CaptureState_OnlyOccupiedSlots_KeyedBySlotIndex()
         {
             m_inventory.TryAddToAvailableSlot(m_sword);
@@ -663,6 +721,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Capture and restore through JSON text preserves each item, its slot, its quantity, and the empty-slot count.")]
         public void RoundTrip_ThroughJsonText_PreservesSlotsAndQuantities()
         {
             m_inventory.TryAddToAvailableSlot(m_sword);
@@ -680,6 +739,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("RestoreState raises OnInventoryChanged once and never raises OnItemAdded.")]
         public void RestoreState_RaisesInventoryChanged_ButNotItemAdded()
         {
             m_inventory.RestoreState(new JObject { ["1"] = Entry(m_sword.ID, 1) });
@@ -691,6 +751,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("RestoreState replaces the current contents rather than merging with them.")]
         public void RestoreState_ReplacesExistingContents()
         {
             m_inventory.TryAddToAvailableSlot(m_sword);
@@ -703,7 +764,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] A state that is not a JObject (null, a number...) is silently ignored: no change and no event.")]
+        [Description("A null or non-object state is ignored: contents are kept and no event fires.")]
         public void RestoreState_NonObject_IsIgnored()
         {
             m_inventory.TryAddToAvailableSlot(m_sword);
@@ -717,7 +778,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] Saved slots at or beyond the current inventory size are silently dropped (shrinking the inventory loses items).")]
+        [Description("A saved slot index beyond the inventory's size is silently dropped.")]
         public void RestoreState_SlotBeyondInventorySize_IsSilentlyDropped()
         {
             m_inventory.RestoreState(new JObject { [kSlots.ToString()] = Entry(m_sword.ID, 1) });
@@ -727,7 +788,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] Restoring an item ID that no longer exists leaves the slot empty but KEEPS its saved quantity; the next item placed there inherits it.")]
+        [Description("An unknown item ID leaves its quantity in the empty slot, and the next item placed there inherits it.")]
         public void RestoreState_UnknownItemId_LeavesGhostQuantityInTheEmptySlot()
         {
             m_inventory.RestoreState(new JObject { ["0"] = Entry("gone", 7) });
@@ -743,7 +804,30 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] A malformed slot entry (no 'item') throws part-way through, AFTER the existing inventory was already wiped, and OnInventoryChanged is never raised.")]
+        [Description("An unknown item ID leaves the slot truly empty (quantity 0), so the next item placed there gets its own quantity.")]
+        public void RestoreState_UnknownItemId_LeavesNoGhostQuantity()
+        {
+            m_inventory.RestoreState(new JObject { ["0"] = Entry("gone", 7) });
+
+            Assert.That(m_inventory.GetQuantityAtSlot(0), Is.EqualTo(0), "the empty slot holds a ghost quantity");
+            Assert.That(m_inventory.GetItemAtSlot(0), Is.Null);
+
+            m_inventory.TryAddToAvailableSlot(m_sword);
+
+            Assert.That(m_inventory.GetQuantityAtSlot(0), Is.EqualTo(1), "the next item inherited the ghost quantity");
+        }
+
+        [Test]
+        [Description("Restoring an unknown item ID logs a warning that names the missing ID.")]
+        public void RestoreState_UnknownItemId_LogsAWarningNamingIt()
+        {
+            LogAssert.Expect(LogType.Warning, new Regex("gone"));
+
+            m_inventory.RestoreState(new JObject { ["0"] = Entry("gone", 3) });
+        }
+
+        [Test]
+        [Description("A malformed entry (no item key) throws after the inventory has already been wiped, and no change event fires.")]
         public void RestoreState_MalformedEntry_Throws_AfterWipingTheInventory()
         {
             m_inventory.TryAddToAvailableSlot(m_sword);
@@ -758,7 +842,26 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] Which stack a merge targets depends on registration order. Save/load rebuilds that order by slot index, so the same sequence of calls behaves differently after a reload.")]
+        [Description("A malformed entry is skipped without throwing; valid entries still load and listeners are notified.")]
+        public void RestoreState_MalformedEntry_DoesNotThrow_AndLoadsTheRest()
+        {
+            m_inventory.TryAddToAvailableSlot(m_sword);
+            ResetEventCounts();
+            JObject state = new JObject
+            {
+                ["0"] = new JObject { ["quantity"] = 1 },          // malformed: no "item"
+                ["1"] = Entry(m_potion.ID, 2)                      // valid
+            };
+
+            Assert.DoesNotThrow(() => m_inventory.RestoreState(state), "a malformed entry aborted the restore");
+
+            Assert.That(m_inventory.GetItemAtSlot(1), Is.SameAs(m_potion));
+            Assert.That(m_inventory.GetQuantityAtSlot(1), Is.EqualTo(2));
+            Assert.That(m_changedCount, Is.GreaterThan(0), "listeners were never told the inventory changed");
+        }
+
+        [Test]
+        [Description("After save and load, the stack that receives merges changes from first-created to lowest-index.")]
         public void StackMergeTarget_ChangesAfterSaveAndLoad()
         {
             m_inventory.TryAddItemToSlot(3, m_potion, 1);
@@ -776,12 +879,14 @@ namespace PolyQuest.Tests
         /* ============================== Wallet / CurrencyItem ============================== */
 
         [Test]
+        [Description("A new wallet holds 0 silver.")]
         public void Wallet_StartsAtZero()
         {
             Assert.That(m_wallet.CurrentSilver, Is.EqualTo(0));
         }
 
         [Test]
+        [Description("UpdateSilver adds to the balance and raises OnWalletUpdated once.")]
         public void Wallet_UpdateSilver_Adds_AndNotifies()
         {
             int notifications = 0;
@@ -794,7 +899,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] The wallet has no floor: spending more than you have goes negative.")]
+        [Description("UpdateSilver lets the balance go negative.")]
         public void Wallet_UpdateSilver_AllowsANegativeBalance()
         {
             m_wallet.UpdateSilver(-10);
@@ -803,6 +908,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Capturing and restoring a wallet preserves the balance and raises OnWalletUpdated once.")]
         public void Wallet_RoundTrip_RestoresBalance_AndNotifies()
         {
             m_wallet.UpdateSilver(40);
@@ -817,6 +923,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Picking up currency adds to the wallet, not to an inventory slot, and raises no OnItemAdded.")]
         public void CurrencyItem_OnPickup_GoesToTheWallet_NotTheSlots()
         {
             CurrencyItem coin = m_kit.Item<CurrencyItem>("coin", stackable: true);
@@ -829,6 +936,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Currency can be picked up even when the inventory is full.")]
         public void CurrencyItem_OnPickup_WorksOnAFullInventory()
         {
             CurrencyItem coin = m_kit.Item<CurrencyItem>("coin", stackable: true);
@@ -842,6 +950,7 @@ namespace PolyQuest.Tests
         /* ============================== InventoryItem ============================== */
 
         [Test]
+        [Description("An item's default OnPickup adds it to the inventory.")]
         public void ItemOnPickup_Default_AddsToTheInventory()
         {
             m_sword.OnPickup(m_inventory, 1);
@@ -850,7 +959,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("[Characterizes quirk] OnPickup returns void: on a full inventory the item is dropped on the floor of the method with no signal. Callers must check HasSpaceFor first.")]
+        [Description("Picking up an item with a full inventory silently does nothing: no error, no event.")]
         public void ItemOnPickup_FullInventory_SilentlyDoesNothing()
         {
             FillWithDistinctItems();
@@ -864,18 +973,21 @@ namespace PolyQuest.Tests
         [TestCase(null)]
         [TestCase("")]
         [TestCase("missing")]
+        [Description("FindByID returns null for a null, empty, or unregistered ID.")]
         public void FindByID_NullEmptyOrUnknown_ReturnsNull(string id)
         {
             Assert.That(InventoryItem.FindByID(id), Is.Null);
         }
 
         [Test]
+        [Description("FindByID returns the same registered instance for a known ID.")]
         public void FindByID_KnownId_ReturnsTheSameInstance()
         {
             Assert.That(InventoryItem.FindByID(m_potion.ID), Is.SameAs(m_potion));
         }
 
         [Test]
+        [Description("A blank item ID is replaced with a GUID on serialization, and that GUID stays the same on later serializations.")]
         public void ItemID_BlankIdIsReplacedWithAGuid_WhenSerialized_AndThenStaysStable()
         {
             EquipableItem item = m_kit.Track(ScriptableObject.CreateInstance<EquipableItem>());
@@ -892,7 +1004,7 @@ namespace PolyQuest.Tests
         /* ============================== ActionItem.OnUse ============================== */
 
         [Test]
-        [Description("[Characterizes quirk] ActionItem.OnUse (inventory use) consumes one item even when IsConsumable is false. Only the action-bar path (Actions.cs) checks IsConsumable.")]
+        [Description("Using an ActionItem consumes one even when it is not marked consumable.")]
         public void ActionItem_OnUse_ConsumesOne_EvenWhenNotConsumable()
         {
             m_inventory.TryAddToAvailableSlot(m_potion, 3);
@@ -904,6 +1016,32 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Description("Using a non-consumable ActionItem leaves its stack unchanged.")]
+        public void ActionItem_OnUse_NonConsumable_IsNotConsumed()
+        {
+            m_inventory.TryAddToAvailableSlot(m_potion, 3);
+            Assert.That(m_potion.IsConsumable, Is.False, "fixture: the potion must be non-consumable");
+
+            m_potion.OnUse(m_inventory, 0);
+
+            Assert.That(m_inventory.GetQuantityAtSlot(0), Is.EqualTo(3), "a non-consumable item was consumed");
+        }
+
+        [Test]
+        [Description("Using a consumable ActionItem removes one from its stack.")]
+        public void ActionItem_OnUse_Consumable_ConsumesOne()
+        {
+            ActionItem elixir = m_kit.Item<ActionItem>("elixir", stackable: true);
+            SerializedTestUtil.SetBool(elixir, "m_isConsumable", true);
+            m_inventory.TryAddToAvailableSlot(elixir, 3);
+
+            elixir.OnUse(m_inventory, 0);
+
+            Assert.That(m_inventory.GetQuantityAtSlot(0), Is.EqualTo(2));
+        }
+
+        [Test]
+        [Description("Using the last unit of an ActionItem empties the slot.")]
         public void ActionItem_OnUse_LastItem_EmptiesTheSlot()
         {
             m_inventory.TryAddToAvailableSlot(m_potion, 1);

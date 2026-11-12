@@ -1,0 +1,204 @@
+﻿/*---------------------------
+| File: SaveLoadIntegrationTests.cs
+| Author: Chandler Mays
+----------------------------*/
+using System.Collections;
+using System.IO;
+using System.Linq;
+using Newtonsoft.Json.Linq;
+using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
+//---------------------------------
+using PolyQuest.Saving;
+
+namespace PolyQuest.Tests
+{
+    // The real Player prefab, the real SavingSystem and a real save file on disk (a throwaway slot, never the player's own saves).
+    public class SaveLoadIntegrationTests
+    {
+        private PlayerRig m_rig;
+
+        [SetUp]
+        public void SetUp()
+        {
+            m_rig = new PlayerRig();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            m_rig.Dispose();
+        }
+
+        /* --- Helpers --- */
+
+        // Gives the Player something to lose: items, silver, XP/levels and some damage. Returns the damaged health.
+        private float Seed()
+        {
+            m_rig.Inventory.TryAddToAvailableSlot(m_rig.StackableItem, 5);
+            m_rig.Wallet.UpdateSilver(120);
+            m_rig.LevelUpTo(3);
+            m_rig.Damage(10f);
+            return m_rig.Health.CurrentHealth;
+        }
+
+        /* ============================== Same Player ============================== */
+
+        [UnityTest]
+        public IEnumerator SaveThenLoad_RestoresWhatWasChangedAfterTheSave()
+        {
+            yield return null;
+            float savedHealth = Seed();
+            int savedSilver = m_rig.Wallet.CurrentSilver;
+            int savedQuantity = m_rig.QuantityOf(m_rig.StackableItem);
+            int savedLevel = m_rig.Stats.Level;
+            float savedXp = m_rig.Experience.ExperiencePoints;
+            SaveManager.Instance.Save();
+
+            m_rig.Wallet.UpdateSilver(-50);
+            m_rig.ClearInventory();
+            m_rig.Health.Heal(1000f);
+
+            SaveManager.Instance.Load();
+
+            Assert.That(m_rig.Wallet.CurrentSilver, Is.EqualTo(savedSilver));
+            Assert.That(m_rig.QuantityOf(m_rig.StackableItem), Is.EqualTo(savedQuantity));
+            Assert.That(m_rig.Stats.Level, Is.EqualTo(savedLevel));
+            Assert.That(m_rig.Experience.ExperiencePoints, Is.EqualTo(savedXp));
+            Assert.That(m_rig.Health.CurrentHealth, Is.EqualTo(savedHealth).Within(1e-3f));
+        }
+
+        [UnityTest]
+        public IEnumerator Save_CapturesEverySaveableComponentOnThePlayer()
+        {
+            yield return null;
+            SaveManager.Instance.Save();
+
+            JObject file = JObject.Parse(File.ReadAllText(PlayerRig.SavePath));
+            string uid = m_rig.Player.GetComponent<SaveableEntity>().UID;
+
+            Assert.That(file.ContainsKey(uid), Is.True, "the Player's UID is missing from the save file");
+            JObject player = (JObject)file[uid];
+            foreach (ISaveable saveable in m_rig.Player.GetComponents<ISaveable>())
+                Assert.That(player.ContainsKey(saveable.GetType().ToString()), Is.True, saveable.GetType().Name);
+        }
+
+        /* ============================== A fresh Player (what a scene reload / Continue does) ============================== */
+
+        [UnityTest]
+        public IEnumerator Load_IntoAFreshPlayer_RestoresInventoryEquipmentWalletAndProgression()
+        {
+            yield return null;
+            Seed();
+            m_rig.Equipment.AddItem(m_rig.Equipable.TargetEquipmentSlot, m_rig.Equipable);
+            int silver = m_rig.Wallet.CurrentSilver;
+            int quantity = m_rig.QuantityOf(m_rig.StackableItem);
+            int level = m_rig.Stats.Level;
+            float xp = m_rig.Experience.ExperiencePoints;
+            SaveManager.Instance.Save();
+
+            m_rig.SpawnPlayer();
+            yield return null;
+            Assert.That(m_rig.Stats.Level, Is.EqualTo(1), "fixture: a new Player should start at level 1");
+            Assert.That(m_rig.Wallet.CurrentSilver, Is.EqualTo(0), "fixture: a new Player should start with an empty wallet");
+
+            SaveManager.Instance.Load();
+
+            Assert.That(m_rig.Wallet.CurrentSilver, Is.EqualTo(silver));
+            Assert.That(m_rig.QuantityOf(m_rig.StackableItem), Is.EqualTo(quantity));
+            Assert.That(m_rig.Equipment.GetItemInSlot(m_rig.Equipable.TargetEquipmentSlot), Is.SameAs(m_rig.Equipable));
+            Assert.That(m_rig.Stats.Level, Is.EqualTo(level));
+            Assert.That(m_rig.Experience.ExperiencePoints, Is.EqualTo(xp));
+        }
+
+        [UnityTest]
+        public IEnumerator Load_IntoAFreshPlayer_DoesNotChangeTheSavedHealth()
+        {
+            // On the Player prefab HealthComponent is restored BEFORE Experience. Experience.RestoreState then sets the level,
+            // which raises OnStatModified and HealthComponent.RecalculateMaxHealth adds the max-health difference to current health.
+            yield return null;
+            float savedHealth = Seed();
+            float savedMax = m_rig.Stats.GetHealth();
+            Assert.That(savedHealth, Is.LessThan(savedMax), "fixture: the Player must be damaged when saved");
+            SaveManager.Instance.Save();
+
+            m_rig.SpawnPlayer();
+            yield return null;
+            Assume.That(m_rig.Stats.GetHealth(), Is.LessThan(savedMax), "fixture: level 1 must have less max health than level 3");
+
+            SaveManager.Instance.Load();
+
+            Assert.That(m_rig.Health.CurrentHealth, Is.EqualTo(savedHealth).Within(1e-3f),
+                        $"saved {savedHealth}/{savedMax}, loaded {m_rig.Health.CurrentHealth}");
+        }
+
+        /* ============================== Bad or missing files ============================== */
+
+        [UnityTest]
+        public IEnumerator Load_WithNoSaveFile_ChangesNothing()
+        {
+            yield return null;
+            m_rig.Wallet.UpdateSilver(75);
+            Assert.That(File.Exists(PlayerRig.SavePath), Is.False, "fixture: no save file should exist");
+
+            Assert.DoesNotThrow(() => SaveManager.Instance.Load());
+
+            Assert.That(m_rig.Wallet.CurrentSilver, Is.EqualTo(75));
+        }
+
+        [UnityTest]
+        public IEnumerator Load_CorruptSaveFile_Throws_AndLeavesTheGameUntouched()
+        {
+            yield return null;
+            m_rig.Wallet.UpdateSilver(75);
+            File.WriteAllText(PlayerRig.SavePath, "{ this is not json");
+
+            Assert.That(() => SaveManager.Instance.Load(), Throws.Exception);
+
+            Assert.That(m_rig.Wallet.CurrentSilver, Is.EqualTo(75));
+        }
+
+        /* ============================== Slots and auto-saves ============================== */
+
+        [UnityTest]
+        public IEnumerator AutoSave_WritesItsOwnSlot_AndLeavesTheMainSaveAlone()
+        {
+            yield return null;
+            m_rig.Wallet.UpdateSilver(10);
+            SaveManager.Instance.Save();
+            string mainBefore = File.ReadAllText(PlayerRig.SavePath);
+            m_rig.Wallet.UpdateSilver(500);
+
+            SaveManager.Instance.AutoSave();
+
+            Assert.That(File.Exists(PlayerRig.AutoSavePath), Is.True);
+            Assert.That(File.ReadAllText(PlayerRig.SavePath), Is.EqualTo(mainBefore));
+            Assert.That(File.ReadAllText(PlayerRig.AutoSavePath), Is.Not.EqualTo(mainBefore));
+        }
+
+        [UnityTest]
+        public IEnumerator LevelingUp_AutoSavesTheGame()
+        {
+            yield return null;
+            Assert.That(File.Exists(PlayerRig.SavePath), Is.False, "fixture: no save file should exist yet");
+
+            m_rig.LevelUpTo(2);
+
+            Assert.That(File.Exists(PlayerRig.SavePath), Is.True);
+        }
+
+        [UnityTest]
+        public IEnumerator Save_KeepsEntriesOfEntitiesThatNoLongerExist()
+        {
+            // Save() loads the existing file and merges into it, so nothing removes an entity's old entry
+            yield return null;
+            File.WriteAllText(PlayerRig.SavePath, "{ \"removed-entity-uid\": { \"Some.Component\": 1 } }");
+
+            SaveManager.Instance.Save();
+
+            JObject file = JObject.Parse(File.ReadAllText(PlayerRig.SavePath));
+            Assert.That(file.ContainsKey("removed-entity-uid"), Is.True);
+        }
+    }
+}
