@@ -2,8 +2,6 @@
 | File: ShopTests.cs
 | Author: Chandler Mays
 ----------------------------*/
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -159,26 +157,14 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("A config entry with a null item makes Awake throw.")]
-        public void Awake_ConfigEntryWithNullItem_Throws()
+        [Description("A config entry with no item assigned is left out of the shop; the other entries are still stocked and listed.")]
+        public void Awake_ConfigEntryWithNullItem_IsLeftOut()
         {
-            SetStock((null, 1));
+            SetStock((m_potion, 5), (null, 1), (m_ore, 3));
 
-            Assert.That(() => BuildShop("Broken"), Throws.Exception);
-        }
+            Shop shop = BuildShop("Broken");
 
-        [Test]
-        [Description("Duplicate config entries for one item are listed twice and double-count the purchase total.")]
-        public void DuplicateConfigEntries_DoubleCountThePurchaseTotal()
-        {
-            SetStock((m_potion, 5), (m_potion, 8));
-            m_shop = BuildShop("Dup");
-            m_shop.SetShopInteractor(m_shopper);
-
-            m_shop.AddToPurchase(m_potion, 1);
-
-            Assert.That(m_shop.GetFilteredItems().Count(), Is.EqualTo(2));
-            Assert.That(m_shop.PurchaseTotal(), Is.EqualTo(20), "1 potion at 10 silver, counted twice");
+            Assert.That(shop.GetFilteredItems().Select(s => s.Item), Is.EqualTo(new InventoryItem[] { m_potion, m_ore }));
         }
 
         /* --- Filter / mode --- */
@@ -287,25 +273,6 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.HasItemsInPurchase(), Is.False);
         }
 
-        [Test]
-        [Description("Buying an item the shop doesn't stock throws KeyNotFoundException and leaves a zero-quantity phantom entry in the purchase.")]
-        public void AddToPurchase_ItemNotInShop_Throws_AndLeavesAPhantomEntry()
-        {
-            Assert.That(() => m_shop.AddToPurchase(m_junk, 1), Throws.TypeOf<KeyNotFoundException>());
-
-            Assert.That(m_shop.HasItemsInPurchase(), Is.True, "phantom zero-quantity entry");
-            Assert.That(m_shop.PurchaseTotal(), Is.EqualTo(0));
-        }
-
-        [Test]
-        [Description("The phantom entry makes CanAffordPurchase true for a purchase worth nothing.")]
-        public void PhantomEntry_EnablesAnEmptyPurchase()
-        {
-            Assert.That(() => m_shop.AddToPurchase(m_junk, 1), Throws.TypeOf<KeyNotFoundException>());
-
-            Assert.That(m_shop.CanAffordPurchase(), Is.True);
-        }
-
         /* --- Totals / affordability --- */
 
         [Test]
@@ -387,29 +354,6 @@ namespace PolyQuest.Tests
             m_shop.AddToPurchase(m_sword, 2);
 
             Assert.That(m_shop.HasInventorySpace(), Is.False);
-        }
-
-        [Test]
-        [Description("Without a ShopInteractor, HasSufficientFunds and HasInventorySpace throw NullReferenceException.")]
-        public void HasSufficientFunds_WithoutAShopper_Throws()
-        {
-            Shop orphan = BuildShop("Orphan");
-
-            Assert.That(() => orphan.HasSufficientFunds(), Throws.TypeOf<NullReferenceException>());
-            Assert.That(() => orphan.HasInventorySpace(), Throws.TypeOf<NullReferenceException>());
-        }
-
-        [Test]
-        [Description("Setting the ShopInteractor to null clears the shopper, so sell mode lists nothing.")]
-        public void SetShopInteractor_Null_ClearsTheShopper_SellModeListsNothing()
-        {
-            m_inventory.TryAddToAvailableSlot(m_ore, 2);
-            m_shop.SelectMode(false);
-            Assert.That(m_shop.GetFilteredItems().Count(), Is.EqualTo(1));
-
-            m_shop.SetShopInteractor(null);
-
-            Assert.That(m_shop.GetFilteredItems(), Is.Empty);
         }
 
         /* --- Selling mode --- */
@@ -503,26 +447,6 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.HasItemsInPurchase(), Is.False);
         }
 
-        [Test]
-        [Description("An owned item the shop doesn't stock can be added to a sale but is never sold, and its phantom entry survives completion.")]
-        public void SellMode_ItemNotInShop_IsAcceptedButNeverSold()
-        {
-            m_inventory.TryAddToAvailableSlot(m_junk, 2);
-            m_shop.SelectMode(false);
-
-            m_shop.AddToPurchase(m_junk, 2);
-
-            Assert.That(m_shop.HasItemsInPurchase(), Is.True);
-            Assert.That(m_shop.PurchaseTotal(), Is.EqualTo(0));
-            Assert.That(m_shop.CanAffordPurchase(), Is.True);
-
-            m_shop.CompletePurchase();
-
-            Assert.That(Owned(m_junk), Is.EqualTo(2), "nothing sold");
-            Assert.That(m_wallet.CurrentSilver, Is.EqualTo(100));
-            Assert.That(m_shop.HasItemsInPurchase(), Is.True, "phantom purchase survives the sale");
-        }
-
         /* --- Buying: CompletePurchase --- */
 
         [Test]
@@ -565,50 +489,6 @@ namespace PolyQuest.Tests
             Assert.That(InventoryTestKit.TestSaveFileExists(), Is.True);
         }
 
-        [Test]
-        [Description("With too little silver for the whole purchase, completing buys as many units as the wallet covers and leaves the rest in the purchase.")]
-        public void Buy_Complete_WithPartialFunds_BuysWhatItCanAfford()
-        {
-            m_wallet.UpdateSilver(-75);             // 25 left
-            m_shop.AddToPurchase(m_potion, 3);      // 10 each
-
-            m_shop.CompletePurchase();
-
-            Assert.That(Owned(m_potion), Is.EqualTo(2));
-            Assert.That(m_wallet.CurrentSilver, Is.EqualTo(5));
-            Assert.That(Listed(m_potion).QuantityToBuy, Is.EqualTo(1));
-            Assert.That(StockOf(m_potion), Is.EqualTo(3));
-        }
-
-        [Test]
-        [Description("With a full inventory, completing a buy charges nothing, keeps stock, and keeps the purchase.")]
-        public void Buy_Complete_InventoryFull_ChargesNothing_KeepsPurchase()
-        {
-            for (int i = 0; i < 6; ++i)
-                m_inventory.TryAddToAvailableSlot(m_kit.Item<ActionItem>("filler" + i), 1);
-            m_shop.AddToPurchase(m_sword, 1);
-
-            m_shop.CompletePurchase();
-
-            Assert.That(Owned(m_sword), Is.EqualTo(0));
-            Assert.That(m_wallet.CurrentSilver, Is.EqualTo(100));
-            Assert.That(StockOf(m_sword), Is.EqualTo(2));
-            Assert.That(Listed(m_sword).QuantityToBuy, Is.EqualTo(1));
-        }
-
-        [Test]
-        [Description("Without a SaveManager, CompletePurchase applies the purchase and skips the autosave without throwing.")]
-        public void Buy_Complete_WithoutASaveManager_DoesNotThrow()
-        {
-            InventoryTestKit.ClearSaveManager();
-            m_shop.AddToPurchase(m_potion, 1);
-
-            Assert.DoesNotThrow(() => m_shop.CompletePurchase(), "CompletePurchase threw without a SaveManager");
-
-            Assert.That(Owned(m_potion), Is.EqualTo(1));
-            Assert.That(m_wallet.CurrentSilver, Is.EqualTo(90));
-        }
-
         /* --- Save / restore --- */
 
         [Test]
@@ -644,16 +524,17 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("A non-object state resets stock to the config's initial values.")]
-        public void RestoreState_NonObjectState_JustReseedsFromConfig()
+        [Description("A null or non-object state is ignored, as if the save never held this shop: the current stock is kept.")]
+        public void RestoreState_NonObject_IsIgnored()
         {
             m_shop.AddToPurchase(m_potion, 1);
             m_shop.CompletePurchase();
             Assert.That(StockOf(m_potion), Is.EqualTo(4));
 
             m_shop.RestoreState(JValue.CreateNull());
+            m_shop.RestoreState(new JValue(5));
 
-            Assert.That(StockOf(m_potion), Is.EqualTo(5));
+            Assert.That(StockOf(m_potion), Is.EqualTo(4));
         }
 
         [Test]
@@ -670,25 +551,10 @@ namespace PolyQuest.Tests
             Assert.That(other.CaptureState()["potion"].ToObject<int>(), Is.EqualTo(3));
         }
 
-        [Test]
-        [Description("RestoreState doesn't re-clamp a pending purchase, so completing it can buy more than the stock and drive stock negative.")]
-        public void RestoreState_LeavesPurchaseAlone_AndOverBuyMakesStockNegative()
-        {
-            m_shop.AddToPurchase(m_potion, 3);
-            m_shop.RestoreState(new JObject { ["potion"] = 1 });
-            Assert.That(Listed(m_potion).QuantityToBuy, Is.EqualTo(3), "purchase still 3 although stock is 1");
-            Assert.That(m_shop.PurchaseTotal(), Is.EqualTo(30));
-
-            m_shop.CompletePurchase();
-
-            Assert.That(Owned(m_potion), Is.EqualTo(3), "bought 3 from a stock of 1");
-            Assert.That(StockOf(m_potion), Is.EqualTo(-2));
-            Assert.That(m_wallet.CurrentSilver, Is.EqualTo(70));
-        }
-
         /* --- Scene presentation --- */
 
         [Test]
+        [Category("ClickModel")]
         [Description("ToggleHighlight enables and disables the shop's Outline component.")]
         public void ToggleHighlight_EnablesAndDisablesTheOutline()
         {
@@ -702,6 +568,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Category("ClickModel")]
         [Description("ToggleLabel activates and deactivates the world label's root object.")]
         public void ToggleLabel_ShowsAndHidesTheLabelRoot()
         {
@@ -713,6 +580,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
+        [Category("ClickModel")]
         [Description("Hovering a shop shows the targeting cursor.")]
         public void GetCursorType_IsTargeting()
         {

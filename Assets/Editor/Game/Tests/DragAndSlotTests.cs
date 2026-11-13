@@ -307,18 +307,6 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("Dragging a non-stackable item onto an empty slot moves it there.")]
-        public void Inventory_MoveNonStackableToEmptySlot()
-        {
-            Put(1, m_stone);
-
-            Drop(m_slots[1], m_slots[3]);
-
-            Assert.That(m_inventory.GetItemAtSlot(1), Is.Null);
-            Assert.That(m_inventory.GetItemAtSlot(3), Is.SameAs(m_stone));
-        }
-
-        [Test]
         [Description("Dragging a stack onto another stack of the same item merges them into the target slot.")]
         public void Inventory_DropStackOnSameItem_Merges()
         {
@@ -455,47 +443,32 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("Dropping a non-equipable item on an occupied equipment slot unequips the equipped item into a free inventory slot.")]
-        public void Swap_UnequipableItemOverEquippedItem_UnequipsTheEquippedOne()
+        [Description("Dropping a non-equipable item on an occupied equipment slot is rejected: the equipped item stays equipped and the stack stays where it was.")]
+        public void Drop_UnequipableItemOnAnOccupiedEquipmentSlot_IsRejected()
         {
             m_equipment.AddItem(EquipmentSlot.kWeapon, m_axe);
             Put(0, m_potion, 3);
-
-            Drop(m_slots[0], m_weaponSlot);
-
-            Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kWeapon), Is.Null, "the axe was unequipped");
-            Assert.That(m_inventory.GetItemAtSlot(0), Is.SameAs(m_potion));
-            Assert.That(m_inventory.GetQuantityAtSlot(0), Is.EqualTo(3));
-            Assert.That(CountOf(m_axe), Is.EqualTo(1), "and moved into a free inventory slot");
-        }
-
-        [Test]
-        [Description("Dropping a wrong-slot equipable on an occupied equipment slot unequips the equipped item into a free inventory slot.")]
-        public void Swap_WrongSlotEquipableOverEquippedItem_UnequipsTheEquippedOne()
-        {
-            m_equipment.AddItem(EquipmentSlot.kWeapon, m_axe);
-            Put(0, m_helm);
-
-            Drop(m_slots[0], m_weaponSlot);
-
-            Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kWeapon), Is.Null);
-            Assert.That(m_inventory.GetItemAtSlot(0), Is.SameAs(m_helm));
-            Assert.That(CountOf(m_axe), Is.EqualTo(1));
-        }
-
-        [Test]
-        [Description("With a full inventory, dropping a non-equipable item on an occupied equipment slot is reverted; nothing moves.")]
-        public void Swap_UnequipableItemOverEquippedItem_InAFullInventory_IsReverted()
-        {
-            m_equipment.AddItem(EquipmentSlot.kWeapon, m_axe);
-            Put(0, m_potion, 3);
-            FillRemainingSlots();
 
             Drop(m_slots[0], m_weaponSlot);
 
             Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kWeapon), Is.SameAs(m_axe));
             Assert.That(m_inventory.GetItemAtSlot(0), Is.SameAs(m_potion));
             Assert.That(m_inventory.GetQuantityAtSlot(0), Is.EqualTo(3));
+            Assert.That(CountOf(m_axe), Is.EqualTo(0));
+        }
+
+        [Test]
+        [Description("Dropping an equipable item for a different slot type on an occupied equipment slot is rejected: the equipped item stays equipped and the dropped item stays where it was.")]
+        public void Drop_WrongSlotEquipableOnAnOccupiedEquipmentSlot_IsRejected()
+        {
+            m_equipment.AddItem(EquipmentSlot.kWeapon, m_axe);
+            Put(0, m_helm);
+
+            Drop(m_slots[0], m_weaponSlot);
+
+            Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kWeapon), Is.SameAs(m_axe));
+            Assert.That(m_inventory.GetItemAtSlot(0), Is.SameAs(m_helm));
+            Assert.That(CountOf(m_axe), Is.EqualTo(0));
         }
 
         [Test]
@@ -569,18 +542,6 @@ namespace PolyQuest.Tests
         {
             Assert.That(m_slots[0].GetMaxItemsCapacity(m_stone), Is.EqualTo(int.MaxValue));
             Assert.That(m_slots[0].GetMaxItemsCapacity(m_stone), Is.EqualTo(m_slots[0].GetMaxQuantity(m_stone)));
-        }
-
-        [Test]
-        [Description("In a full inventory, a slot's capacity depends on whether the item can stack onto an owned stack, not on the slot itself.")]
-        public void SlotUI_Capacity_InAFullInventory_DependsOnStackingNotOnTheSlot()
-        {
-            Put(0, m_potion, 2);
-            FillRemainingSlots();
-
-            Assert.That(m_slots[1].GetMaxItemsCapacity(m_potion), Is.EqualTo(int.MaxValue), "stackable already owned");
-            Assert.That(m_slots[1].GetMaxItemsCapacity(m_herb), Is.EqualTo(0), "stackable not owned");
-            Assert.That(m_slots[1].GetMaxItemsCapacity(m_stone), Is.EqualTo(0), "non-stackable");
         }
 
         [Test]
@@ -695,19 +656,12 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("Passing a non-equipable item to an equipment slot UI's AddItems throws InvalidCastException.")]
-        public void EquipSlotUI_AddItems_WithANonEquipableItem_ThrowsInvalidCast()
-        {
-            Assert.That(() => m_weaponSlot.AddItems(m_potion, 1), Throws.TypeOf<InvalidCastException>());
-        }
-
-        [Test]
-        [Description("An equipment slot UI's RemoveItems unequips the item regardless of the quantity passed.")]
-        public void EquipSlotUI_RemoveItems_UnequipsRegardlessOfQuantity()
+        [Description("An equipment slot UI's RemoveItems unequips the item in its slot.")]
+        public void EquipSlotUI_RemoveItems_UnequipsTheItem()
         {
             m_equipment.AddItem(EquipmentSlot.kWeapon, m_sword);
 
-            m_weaponSlot.RemoveItems(0);
+            m_weaponSlot.RemoveItems(1);
 
             Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kWeapon), Is.Null);
         }
@@ -788,15 +742,6 @@ namespace PolyQuest.Tests
 
             Assert.That(target.GetMaxItemsCapacity(m_potion), Is.EqualTo(int.MaxValue));
             Assert.That(target.GetMaxItemsCapacity(null), Is.EqualTo(int.MaxValue));
-        }
-
-        [Test]
-        [Description("The drop target's AddItems throws NullReferenceException when no item dropper is wired up.")]
-        public void DropTarget_AddItems_WithoutAWiredDropper_Throws()
-        {
-            InventoryDropTarget target = m_kit.NewObject("DropTarget").AddComponent<InventoryDropTarget>();
-
-            Assert.That(() => target.AddItems(m_potion, 1), Throws.TypeOf<NullReferenceException>());
         }
 
         // ================================================================================

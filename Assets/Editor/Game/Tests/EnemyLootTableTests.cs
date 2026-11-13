@@ -6,7 +6,6 @@ using System.Linq;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.TestTools;
 //---------------------------------
 using PolyQuest.Attributes;
 using PolyQuest.Inventories;
@@ -120,20 +119,6 @@ namespace PolyQuest.Tests
             Assert.That(Roll(1), Is.Empty);
         }
 
-        [Test]
-        [Description("Enumerating drops with a null Equipment throws.")]
-        public void NullEquipment_Throws()
-        {
-            Assert.That(() => m_table.GetRandomDrops(1, null).ToArray(), Throws.Exception);
-        }
-
-        [Test]
-        [Description("GetRandomDrops is a lazy iterator: calling it with null Equipment doesn't throw until it is enumerated.")]
-        public void GetRandomDrops_IsLazy_NothingRunsUntilEnumerated()
-        {
-            Assert.DoesNotThrow(() => m_table.GetRandomDrops(1, null));
-        }
-
         /* --- Guaranteed drops --- */
 
         [Test]
@@ -181,8 +166,8 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("Drop order is: equipped weapon, then guaranteed drops, then random drops.")]
-        public void Guaranteed_ComesAfterWeapon_BeforeRandomDrops()
+        [Description("The equipped weapon, the guaranteed drops and the random drops all drop together from one roll.")]
+        public void Weapon_Guaranteed_AndRandomDrops_AllDropTogether()
         {
             m_equipment.AddItem(EquipmentSlot.kWeapon, m_sword);
             Configure("m_guaranteedDrops", E(m_gold, min: new[] { 1 }, max: new[] { 1 }));
@@ -191,19 +176,29 @@ namespace PolyQuest.Tests
 
             var items = Roll(1).Select(d => d.Item).ToArray();
 
-            Assert.That(items, Is.EqualTo(new InventoryItem[] { m_sword, m_gold, m_gem }));
+            Assert.That(items, Is.EquivalentTo(new InventoryItem[] { m_sword, m_gold, m_gem }));
         }
 
         [Test]
-        [Description("A stackable guaranteed drop with empty min/max arrays still drops, with quantity 0.")]
-        public void GuaranteedDrop_StackableWithoutQuantityArrays_YieldsZeroQuantity()
+        [Description("A stackable guaranteed drop whose quantity rolls 0 drops nothing; no drop ever has quantity 0.")]
+        public void GuaranteedDrop_StackableRollingZero_DropsNothing()
         {
-            Configure("m_guaranteedDrops", E(m_gold));
+            Configure("m_guaranteedDrops", E(m_gold, min: new[] { 0 }, max: new[] { 0 }));
+
+            Assert.That(Roll(1), Is.Empty);
+        }
+
+        [Test]
+        [Description("A random drop of a stackable whose quantity rolls 0 is left out; the other drops of the roll still drop.")]
+        public void RandomDrop_StackableRollingZero_IsLeftOut()
+        {
+            Configure("m_guaranteedDrops", E(m_gem, min: new[] { 2 }, max: new[] { 2 }));
+            Configure("m_possibleDrops", E(m_gold, chance: new[] { 1f }, min: new[] { 0 }, max: new[] { 0 }));
+            ConfigureRolls(new[] { 100f }, new[] { 3 }, new[] { 3 });
 
             var drops = Roll(1);
 
-            Assert.That(drops.Length, Is.EqualTo(1));
-            Assert.That(drops[0].Quantity, Is.EqualTo(0));
+            Assert.That(drops.Select(d => d.Item), Is.EqualTo(new InventoryItem[] { m_gem }));
         }
 
         /* --- Random drops --- */
@@ -232,7 +227,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("A zero-weight entry is effectively never selected; only a roll of exactly 0.0 could pick it.")]
+        [Description("An entry with a relative chance of 0 is never selected.")]
         public void SelectRandomItem_ZeroWeightEntryIsNeverChosen()
         {
             Configure("m_possibleDrops",
@@ -240,52 +235,29 @@ namespace PolyQuest.Tests
                 E(m_gold, chance: new[] { 5f }, min: new[] { 1 }, max: new[] { 1 }));
             ConfigureRolls(new[] { 100f }, new[] { 50 }, new[] { 50 });
 
-            // A roll of exactly 0 would pick the zero-weight entry first (roll <= 0). Pin that edge separately.
             var drops = Roll(1);
 
-            Assert.That(drops.Count(d => d.Item == m_gold), Is.GreaterThanOrEqualTo(48),
-                "Only a roll of exactly 0.0 can select the zero-weight entry.");
+            Assert.That(drops.Length, Is.EqualTo(50));
+            Assert.That(drops.All(d => d.Item == m_gold));
         }
 
         [Test]
-        [Description("When no entry has a weight, the first entry is always selected.")]
-        public void SelectRandomItem_NoWeights_FallsBackToFirstEntry()
-        {
-            Configure("m_possibleDrops",
-                E(m_gem, min: new[] { 1 }, max: new[] { 1 }),
-                E(m_gold, min: new[] { 1 }, max: new[] { 1 }));
-            ConfigureRolls(new[] { 100f }, new[] { 5 }, new[] { 5 });
-
-            Assert.That(Roll(1).All(d => d.Item == m_gem));
-        }
-
-        [Test]
-        [Description("Rolling with no possible drops yields empty (null item, quantity 0) drops and warns once per roll.")]
-        public void NoPossibleDrops_YieldsEmptyDroppedStructs_AndWarns()
+        [Description("A table that rolls random drops but has no possible drops to pick from drops nothing.")]
+        public void NoPossibleDrops_DropsNothing()
         {
             ConfigureRolls(new[] { 100f }, new[] { 2 }, new[] { 2 });
-            LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex("no drop selected"));
-            LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex("no drop selected"));
 
-            var drops = Roll(1);
-
-            Assert.That(drops.Length, Is.EqualTo(2));
-            Assert.That(drops[0].Item == null);
-            Assert.That(drops[0].Quantity, Is.EqualTo(0));
+            Assert.That(Roll(1), Is.Empty);
         }
 
         [Test]
-        [Description("A possible-drop entry with a null item yields an empty drop and warns.")]
-        public void PossibleDrop_WithNullItem_YieldsDefaultDropped()
+        [Description("A possible-drop entry with no item assigned drops nothing when it is selected.")]
+        public void PossibleDrop_WithNullItem_DropsNothing()
         {
             Configure("m_possibleDrops", E(null, chance: new[] { 1f }));
             ConfigureRolls(new[] { 100f }, new[] { 1 }, new[] { 1 });
-            LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex("no drop selected"));
 
-            var drops = Roll(1);
-
-            Assert.That(drops.Length, Is.EqualTo(1));
-            Assert.That(drops[0].Item == null);
+            Assert.That(Roll(1), Is.Empty);
         }
 
         /* --- GetByLevel behaviour (observed through the public API) --- */
@@ -302,35 +274,12 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("A level past the end of a per-level array uses the array's last entry.")]
+        [Description("An enemy level past the end of a per-level array uses the array's last entry.")]
         public void Level_BeyondArrayLength_UsesLastEntry()
         {
             Configure("m_guaranteedDrops", E(m_gold, min: new[] { 1, 7 }, max: new[] { 1, 7 }));
 
-            Assert.That(Roll(99)[0].Quantity, Is.EqualTo(7));
-        }
-
-        [Test]
-        [Description("Level 0 reads default values (0 quantity, 0% chance) rather than the first entry.")]
-        public void Level_Zero_ReadsDefaults_NotFirstEntry()
-        {
-            Configure("m_guaranteedDrops", E(m_gold, min: new[] { 4 }, max: new[] { 4 }));
-            Configure("m_possibleDrops", E(m_gem, chance: new[] { 1f }, min: new[] { 1 }, max: new[] { 1 }));
-            ConfigureRolls(new[] { 100f }, new[] { 1 }, new[] { 1 });
-
-            var drops = Roll(0);
-
-            Assert.That(drops.Length, Is.EqualTo(1), "Only the guaranteed drop; the random roll sees a 0% chance.");
-            Assert.That(drops[0].Quantity, Is.EqualTo(0));
-        }
-
-        [Test]
-        [Description("A negative level behaves the same as level 0 and reads defaults.")]
-        public void Level_Negative_BehavesLikeZero()
-        {
-            Configure("m_guaranteedDrops", E(m_gold, min: new[] { 4 }, max: new[] { 4 }));
-
-            Assert.That(Roll(-5)[0].Quantity, Is.EqualTo(0));
+            Assert.That(Roll(3)[0].Quantity, Is.EqualTo(7));
         }
 
         [Test]

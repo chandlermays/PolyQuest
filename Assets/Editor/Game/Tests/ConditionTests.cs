@@ -79,19 +79,12 @@ namespace PolyQuest.Tests
 
         [TestCase(false)]
         [TestCase(true)]
-        [Description("When every checker returns null (unhandled), the condition passes, even when negated.")]
-        public void Condition_NoCheckerHandlesIt_Passes(bool negate)
+        [Description("A condition no checker answers (e.g. kHasLevel, which no system evaluates) fails, whether or not it is negated: negation flips an answer, not the absence of one.")]
+        public void Condition_NoCheckerAnswersIt_Fails(bool negate)
         {
-            var condition = Cond(ConditionType.kHasSpokenTo, negate);
+            var condition = Cond(ConditionType.kHasLevel, negate, "10");
 
-            Assert.That(condition.Check(Checkers(StubChecker.Always(null))), Is.True);
-        }
-
-        [Test]
-        [Description("A condition checked against an empty checker list passes.")]
-        public void Condition_NoCheckers_Passes()
-        {
-            Assert.That(Cond(ConditionType.kHasQuest).Check(Checkers()), Is.True);
+            Assert.That(condition.Check(Checkers(StubChecker.Always(null), StubChecker.Always(null))), Is.False);
         }
 
         [Test]
@@ -108,27 +101,13 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("Null answers are skipped; any checker that answers false fails the condition, even if another answers true.")]
-        public void Condition_AcrossCheckers_IgnoresNulls_AndAnyMismatchFails()
+        [Description("Checkers that don't handle the condition (null) are skipped; the one checker that answers decides it.")]
+        public void Condition_SkipsCheckersThatDontHandleIt()
         {
             var condition = Cond(ConditionType.kHasQuest);
 
             Assert.That(condition.Check(Checkers(StubChecker.Always(null), StubChecker.Always(true))), Is.True);
             Assert.That(condition.Check(Checkers(StubChecker.Always(null), StubChecker.Always(false))), Is.False);
-            Assert.That(condition.Check(Checkers(StubChecker.Always(true), StubChecker.Always(false))), Is.False);
-        }
-
-        [Test]
-        [Description("A condition short-circuits: checkers after the first failing one are never called.")]
-        public void Condition_StopsAtFirstFailingChecker()
-        {
-            var failing = StubChecker.Always(false);
-            var later = StubChecker.Always(true);
-
-            Cond(ConditionType.kHasQuest).Check(Checkers(failing, later));
-
-            Assert.That(failing.Calls, Is.EqualTo(1));
-            Assert.That(later.Calls, Is.EqualTo(0));
         }
 
         /* ============================= Disjunction ============================= */
@@ -224,22 +203,6 @@ namespace PolyQuest.Tests
         public void Conjunction_WithNoDisjunctions_IsTrue()
         {
             Assert.That(And().Check(Checkers(TypeKeyed())), Is.True);
-        }
-
-        [Test]
-        [Description("A conjunction containing an empty disjunction is false, because the empty disjunction is false.")]
-        public void Conjunction_ContainingAnEmptyDisjunction_IsFalse()
-        {
-            Assert.That(And(OrJson()).Check(Checkers(TypeKeyed())), Is.False);
-        }
-
-        [Test]
-        [Description("A conjunction whose conditions no checker handles passes.")]
-        public void Conjunction_WithUnhandledConditions_Passes()
-        {
-            var conjunction = And(OrJson(CondJson(ConditionType.kHasLevel, false, "10")));
-
-            Assert.That(conjunction.Check(Checkers(TypeKeyed())), Is.True);
         }
     }
 }

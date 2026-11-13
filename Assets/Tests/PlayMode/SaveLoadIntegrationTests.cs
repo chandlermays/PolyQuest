@@ -8,8 +8,11 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.TestTools;
+using UnityEngine.TestTools.Utils;
 //---------------------------------
+using PolyQuest.Components;
 using PolyQuest.Saving;
 
 namespace PolyQuest.Tests
@@ -116,11 +119,9 @@ namespace PolyQuest.Tests
         }
 
         [UnityTest]
-        [Description("Loading a damaged level-3 save into a fresh level-1 Player restores exactly the saved health. Guards the restore order: Experience restoring the level after HealthComponent fires RecalculateMaxHealth, which adds the max-health difference on top.")]
+        [Description("Loading a damaged level-3 save into a fresh level-1 Player restores exactly the saved health, whatever order the Player's components restore in.")]
         public IEnumerator Load_IntoAFreshPlayer_DoesNotChangeTheSavedHealth()
         {
-            // On the Player prefab HealthComponent is restored BEFORE Experience. Experience.RestoreState then sets the level,
-            // which raises OnStatModified and HealthComponent.RecalculateMaxHealth adds the max-health difference to current health.
             yield return null;
             float savedHealth = Seed();
             float savedMax = m_rig.Stats.GetHealth();
@@ -153,16 +154,47 @@ namespace PolyQuest.Tests
         }
 
         [UnityTest]
-        [Description("Loading a save file that is not valid JSON throws, and the current game state is left as it was.")]
-        public IEnumerator Load_CorruptSaveFile_Throws_AndLeavesTheGameUntouched()
+        [Description("Loading a save file that is not valid JSON, with nothing to fall back to, does not throw and leaves the current game state as it was.")]
+        public IEnumerator Load_CorruptSaveFile_DoesNotThrow_AndLeavesTheGameUntouched()
         {
             yield return null;
             m_rig.Wallet.UpdateSilver(75);
             File.WriteAllText(PlayerRig.SavePath, "{ this is not json");
+            LogAssert.ignoreFailingMessages = true;         // for this test only: how the unreadable file is reported isn't pinned here
 
-            Assert.That(() => SaveManager.Instance.Load(), Throws.Exception);
+            Assert.DoesNotThrow(() => SaveManager.Instance.Load());
 
             Assert.That(m_rig.Wallet.CurrentSilver, Is.EqualTo(75));
+        }
+
+        [UnityTest]
+        [Description("Saving over a save file that is not valid JSON does not throw and leaves a readable save holding the Player's current state.")]
+        public IEnumerator Save_OverACorruptSaveFile_WritesAReadableSave()
+        {
+            yield return null;
+            m_rig.Wallet.UpdateSilver(75);
+            File.WriteAllText(PlayerRig.SavePath, "{ this is not json");
+            LogAssert.ignoreFailingMessages = true;         // for this test only: how the unreadable file is reported isn't pinned here
+
+            Assert.DoesNotThrow(() => SaveManager.Instance.Save());
+
+            JObject file = null;
+            Assert.DoesNotThrow(() => file = JObject.Parse(File.ReadAllText(PlayerRig.SavePath)), "the save file is still unreadable");
+            Assert.That(file.ContainsKey(m_rig.Player.GetComponent<SaveableEntity>().UID), Is.True);
+        }
+
+        [UnityTest]
+        [Description("A saved position that can't be read is ignored, as if the save never held it: the Player stays where it is instead of moving to the world origin.")]
+        public IEnumerator RestoreState_UnreadablePosition_LeavesThePlayerWhereItIs()
+        {
+            yield return null;
+            m_rig.Player.GetComponent<NavMeshAgent>().Warp(new Vector3(3f, 0f, 4f));
+            Vector3 position = m_rig.Player.transform.position;
+            Assert.That(new Vector2(position.x, position.z).magnitude, Is.GreaterThan(1f), "fixture: the Player must start away from the origin");
+
+            m_rig.Player.GetComponent<MovementComponent>().RestoreState(new JValue(5));
+
+            Assert.That(m_rig.Player.transform.position, Is.EqualTo(position).Using(Vector3EqualityComparer.Instance));
         }
 
         /* ============================== Slots and auto-saves ============================== */
@@ -197,17 +229,16 @@ namespace PolyQuest.Tests
         }
 
         [UnityTest]
-        [Description("Save merges into the existing file rather than replacing it, so entries for entities that no longer exist are kept.")]
-        public IEnumerator Save_KeepsEntriesOfEntitiesThatNoLongerExist()
+        [Description("Save keeps the entries of entities that aren't loaded right now (another scene's), so their state survives a save made elsewhere.")]
+        public IEnumerator Save_KeepsEntriesOfEntitiesInOtherScenes()
         {
-            // Save() loads the existing file and merges into it, so nothing removes an entity's old entry
             yield return null;
-            File.WriteAllText(PlayerRig.SavePath, "{ \"removed-entity-uid\": { \"Some.Component\": 1 } }");
+            File.WriteAllText(PlayerRig.SavePath, "{ \"other-scene-entity-uid\": { \"Some.Component\": 1 } }");
 
             SaveManager.Instance.Save();
 
             JObject file = JObject.Parse(File.ReadAllText(PlayerRig.SavePath));
-            Assert.That(file.ContainsKey("removed-entity-uid"), Is.True);
+            Assert.That(file.ContainsKey("other-scene-entity-uid"), Is.True);
         }
     }
 }

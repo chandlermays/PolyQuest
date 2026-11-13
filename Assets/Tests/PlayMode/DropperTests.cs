@@ -129,13 +129,6 @@ namespace PolyQuest.Tests
             Assert.That(m_kit.Spawned().Single().transform.position, Is.EqualTo(new Vector3(1f, 2f, 3f)));
         }
 
-        [Test]
-        [Description("Characterization: DropItem has no null guard, so a null item throws a NullReferenceException.")]
-        public void DropItem_Null_Throws()
-        {
-            Assert.That(() => m_dropper.DropItem(null, 1), Throws.TypeOf<NullReferenceException>());
-        }
-
         // ================================================================================
         //  ItemDropper: save / restore
         // ================================================================================
@@ -222,20 +215,17 @@ namespace PolyQuest.Tests
             Assert.That(spawned[0].Item, Is.SameAs(m_sword));
         }
 
-        [UnityTest]
-        [Description("Characterization: Destroy is deferred, so a CaptureState in the same frame as RestoreState still includes the replaced drops; the next frame reports only the restored ones.")]
-        public IEnumerator RestoreState_CaptureInTheSameFrame_ReportsOldAndNewDrops()
+        [Test]
+        [Description("A CaptureState in the same frame as RestoreState (as a load followed by a save does) reports only the restored drops, not the ones they replaced.")]
+        public void RestoreState_CaptureInTheSameFrame_ReportsOnlyTheRestoredDrops()
         {
             m_dropper.DropItem(m_potion, 1);
 
             m_dropper.RestoreState(new JArray { Entry("sword", 1, Vector3.zero, CurrentScene) });
-            int sameFrame = ((JArray)m_dropper.CaptureState()).Count;
+            JArray captured = (JArray)m_dropper.CaptureState();
 
-            yield return null;
-            int nextFrame = ((JArray)m_dropper.CaptureState()).Count;
-
-            Assert.That(sameFrame, Is.EqualTo(2));
-            Assert.That(nextFrame, Is.EqualTo(1));
+            Assert.That(captured.Count, Is.EqualTo(1));
+            Assert.That(captured[0]["ItemID"].ToObject<string>(), Is.EqualTo("sword"));
         }
 
         [Test]
@@ -279,8 +269,8 @@ namespace PolyQuest.Tests
         }
 
         [UnityTest]
-        [Description("Characterization: an unknown current-scene item ID throws a NullReferenceException after the existing drops were already destroyed, and valid entries after it are never restored.")]
-        public IEnumerator RestoreState_UnknownItemID_Throws_AfterClearingTheExistingDrops()
+        [Description("A current-scene entry whose item ID is unknown is skipped without throwing; the valid entries after it are still restored.")]
+        public IEnumerator RestoreState_UnknownItemID_IsSkipped_AndTheValidEntriesStillLoad()
         {
             m_dropper.DropItem(m_potion, 1);
             JArray state = new JArray
@@ -289,10 +279,12 @@ namespace PolyQuest.Tests
                 Entry("sword", 1, Vector3.zero, CurrentScene)
             };
 
-            Assert.That(() => m_dropper.RestoreState(state), Throws.TypeOf<NullReferenceException>());
+            Assert.DoesNotThrow(() => m_dropper.RestoreState(state));
             yield return null;
 
-            Assert.That(m_kit.Spawned(), Is.Empty, "old drop destroyed, and the valid entry after the bad one was never restored");
+            Pickup[] spawned = m_kit.Spawned();
+            Assert.That(spawned.Length, Is.EqualTo(1));
+            Assert.That(spawned[0].Item, Is.SameAs(m_sword));
         }
 
         [Test]
@@ -371,23 +363,7 @@ namespace PolyQuest.Tests
         }
 
         [UnityTest]
-        [Description("Characterization (current behavior): PickupItem with a full inventory destroys the Pickup without adding the item, so the item is lost.")]
-        public IEnumerator Pickup_PickupItem_WithAFullInventory_DestroysThePickupAndLosesTheItem()
-        {
-            for (int i = 0; i < 4; ++i)
-                m_kit.PlayerInventory.TryAddToAvailableSlot(m_kit.Item("filler" + i), 1);
-            m_dropper.DropItem(m_sword, 1);
-            Pickup pickup = m_kit.Spawned().Single();
-
-            pickup.PickupItem();
-            yield return null;
-
-            Assert.That(m_kit.PlayerInventory.ContainsItem(m_sword), Is.False);
-            Assert.That(m_kit.Spawned(), Is.Empty);
-        }
-
-        [UnityTest]
-        [Description("Intended behavior: PickupItem with a full inventory must leave the item either in the inventory or in the world. Fails while the item-loss bug above exists.")]
+        [Description("PickupItem with a full inventory never loses the item: it ends up either in the inventory or still in the world.")]
         public IEnumerator Pickup_PickupItem_WithAFullInventory_NeverLosesTheItem()
         {
             for (int i = 0; i < 4; ++i)
@@ -400,7 +376,7 @@ namespace PolyQuest.Tests
             yield return null;                                      // let Destroy() run
 
             bool exists = m_kit.PlayerInventory.ContainsItem(m_sword) || m_kit.Spawned().Any(p => p.Item == m_sword);
-            Assert.That(exists, Is.True, "the sword is in neither the inventory nor the world: it was lost");
+            Assert.That(exists, Is.True, "the sword is in neither the inventory nor the world");
         }
 
         // ================================================================================
@@ -484,33 +460,6 @@ namespace PolyQuest.Tests
             enemy.RandomDrop();
 
             Assert.That(m_kit.Spawned(), Is.Empty);
-        }
-
-        [Test]
-        [Description("Characterization: RandomDrop has no null guard, so an enemy with no loot table assigned throws a NullReferenceException.")]
-        public void RandomDrop_WithoutALootTable_Throws()
-        {
-            BuildFlatNavMesh();
-            RandomDropper enemy = BuildEnemy(null);
-
-            Assert.That(() => enemy.RandomDrop(), Throws.TypeOf<NullReferenceException>());
-        }
-
-        [Test]
-        [Description("Characterization: a table that guarantees a random drop but has no items to pick from logs a no-drop-selected warning, then throws a NullReferenceException.")]
-        public void RandomDrop_WhenTheTableYieldsAnEmptyDrop_Throws()
-        {
-            BuildFlatNavMesh();
-            EnemyLootTable table = BuildTable(t =>
-            {
-                PlayModeTestKit.Set(t, "m_dropChancePercentage", new[] { 100f });
-                PlayModeTestKit.Set(t, "m_minDrops", new[] { 1 });
-                PlayModeTestKit.Set(t, "m_maxDrops", new[] { 1 });
-            });
-            RandomDropper enemy = BuildEnemy(table);
-            LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex("no drop selected"));
-
-            Assert.That(() => enemy.RandomDrop(), Throws.TypeOf<NullReferenceException>());
         }
 
         [Test]

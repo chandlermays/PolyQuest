@@ -104,17 +104,8 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("AddItem accepts an item into a slot that doesn't match the item's target slot.")]
-        public void AddItem_DoesNotValidateTheSlot()
-        {
-            m_equipment.AddItem(EquipmentSlot.kHelmet, m_sword);
-
-            Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kHelmet), Is.SameAs(m_sword));
-        }
-
-        [Test]
-        [Description("AddItem on an occupied slot replaces the item; the previous item is discarded, not returned.")]
-        public void AddItem_OverAnOccupiedSlot_ReplacesAndDiscardsThePreviousItem()
+        [Description("AddItem on an occupied slot replaces the item in that slot; the slot still counts once.")]
+        public void AddItem_OverAnOccupiedSlot_ReplacesTheItem()
         {
             m_equipment.AddItem(EquipmentSlot.kWeapon, m_sword);
 
@@ -274,26 +265,18 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("RestoreState places an item into a slot that doesn't match its target slot.")]
-        public void RestoreState_DoesNotValidateItemAgainstSlot()
-        {
-            m_equipment.RestoreState(new JObject { ["kHelmet"] = m_sword.ID });
-
-            Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kHelmet), Is.SameAs(m_sword));
-        }
-
-        [Test]
-        [Description("A non-object state leaves equipment unchanged but still raises both change events.")]
-        public void RestoreState_NonObject_KeepsEquipment_ButStillRaisesEvents()
+        [Description("A null or non-object state is ignored, as if the save never held Equipment: what is equipped is kept and no event fires.")]
+        public void RestoreState_NonObject_IsIgnored()
         {
             m_equipment.AddItem(EquipmentSlot.kWeapon, m_sword);
             ResetCounts();
 
+            m_equipment.RestoreState(null);
             m_equipment.RestoreState(new JValue(5));
 
             Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kWeapon), Is.SameAs(m_sword));
-            Assert.That(m_equipmentChanged, Is.EqualTo(1));
-            Assert.That(m_statsModified, Is.EqualTo(1));
+            Assert.That(m_equipmentChanged, Is.EqualTo(0));
+            Assert.That(m_statsModified, Is.EqualTo(0));
         }
 
         /* ============================== EquipableItem.OnUse ============================== */
@@ -339,16 +322,6 @@ namespace PolyQuest.Tests
 
             Assert.That(m_inventory.GetItemAtSlot(0), Is.SameAs(trinket));
             Assert.That(m_equipment.OccupiedSlots, Is.Empty);
-        }
-
-        [Test]
-        [Description("Using an equipable item from an inventory with no Equipment component on its GameObject throws.")]
-        public void OnUse_WithoutAnEquipmentComponent_Throws()
-        {
-            Inventory bare = m_kit.NewInventory(m_kit.NewObject("BareInventory"), kSlots);
-            bare.TryAddToAvailableSlot(m_sword);
-
-            Assert.That(() => m_sword.OnUse(bare, 0), Throws.Exception);
         }
 
         [Test]

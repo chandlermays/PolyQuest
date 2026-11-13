@@ -2,10 +2,8 @@
 | File: BaseStatsTests.cs
 | Author: Chandler Mays
 ----------------------------*/
-using System.Text.RegularExpressions;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.TestTools;
 //---------------------------------
 using PolyQuest.Attributes;
 
@@ -21,13 +19,22 @@ namespace PolyQuest.Tests
         [SetUp]
         public void SetUp()
         {
+            // Every table in a progression has the same number of rows, as in the shipped assets; that row count is the max level
             m_player = ScriptableObject.CreateInstance<PlayerProgression>();
             SerializedTestUtil.SetIntArray(m_player, "m_maxHealthAmounts", 100, 110, 121, 133, 146);
+            SerializedTestUtil.SetIntArray(m_player, "m_damageAmounts", 10, 11, 12, 13, 14);
             SerializedTestUtil.SetIntArray(m_player, "m_defenseAmounts", 5, 6, 7, 8, 9);
+            SerializedTestUtil.SetIntArray(m_player, "m_manaAmounts", 50, 55, 60, 65, 70);
+            SerializedTestUtil.SetIntArray(m_player, "m_manaRegenRates", 1, 1, 2, 2, 3);
             SerializedTestUtil.SetIntArray(m_player, "m_maxExperienceAmounts", 100, 250, 475, 813, 1300);
+            SerializedTestUtil.SetIntArray(m_player, "m_maxAttributePoints", 5, 10, 15, 20, 25);
 
             m_ai = ScriptableObject.CreateInstance<AIProgression>();
             SerializedTestUtil.SetIntArray(m_ai, "m_maxHealthAmounts", 30, 40);
+            SerializedTestUtil.SetIntArray(m_ai, "m_damageAmounts", 4, 5);
+            SerializedTestUtil.SetIntArray(m_ai, "m_defenseAmounts", 1, 2);
+            SerializedTestUtil.SetIntArray(m_ai, "m_manaAmounts", 0, 0);
+            SerializedTestUtil.SetIntArray(m_ai, "m_manaRegenRates", 0, 0);
             SerializedTestUtil.SetIntArray(m_ai, "m_experienceRewardAmounts", 15, 20);
 
             m_gameObject = new GameObject("BaseStatsTestSubject");
@@ -42,6 +49,8 @@ namespace PolyQuest.Tests
             Object.DestroyImmediate(m_player);
             Object.DestroyImmediate(m_ai);
         }
+
+        private const int kPlayerMaxLevel = 5;
 
         private void SetLevel(int level) => SerializedTestUtil.SetInt(m_stats, "m_level", level);
         private void UseModifiers(bool use) => SerializedTestUtil.SetBool(m_stats, "m_useStatModifiers", use);
@@ -73,17 +82,6 @@ namespace PolyQuest.Tests
             Assert.That(m_stats.GetHealth(), Is.EqualTo(121f));
         }
 
-        [Test]
-        [Description("A level past the end of the progression table returns 0 and logs 'Level out of range'.")]
-        public void GetStat_BeyondProgressionTable_ReturnsZeroAndWarns()
-        {
-            SetLevel(6);
-
-            LogAssert.Expect(LogType.Warning, "Level out of range");
-
-            Assert.That(m_stats.GetHealth(), Is.EqualTo(0f));
-        }
-
         /* --- Experience-related stats depend on the progression TYPE --- */
 
         [Test]
@@ -110,24 +108,6 @@ namespace PolyQuest.Tests
             SetLevel(2);
 
             Assert.That(m_stats.GetExperienceReward(), Is.EqualTo(20f));
-        }
-
-        [Test]
-        [Description("An AIProgression has no XP table, so GetExperienceToLevelUp returns 0.")]
-        public void ExperienceToLevelUp_OnAIProgression_IsZero()
-        {
-            SerializedTestUtil.SetObject(m_stats, "m_baseProgression", m_ai);
-
-            Assert.That(m_stats.GetExperienceToLevelUp(), Is.EqualTo(0f));
-        }
-
-        [Test]
-        [Description("A Stat value with no case in GetBaseStat returns 0 and logs a 'not implemented' warning.")]
-        public void UnimplementedStat_ReturnsZeroAndWarns()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex("not implemented in GetBaseStat"));
-
-            Assert.That(m_stats.GetStat((Stat)99), Is.EqualTo(0f));
         }
 
         /* --- Modifiers --- */
@@ -201,13 +181,24 @@ namespace PolyQuest.Tests
             Assert.That(notifications, Is.EqualTo(1));
         }
 
-        [TestCase(-5, 1)]
+        [Test]
+        [Description("LevelUp at the max level (the progression table's row count) keeps the level at the max.")]
+        public void LevelUp_AtMaxLevel_StaysAtMaxLevel()
+        {
+            SetLevel(kPlayerMaxLevel);
+
+            m_stats.LevelUp();
+
+            Assert.That(m_stats.Level, Is.EqualTo(kPlayerMaxLevel));
+            Assert.That(m_stats.GetHealth(), Is.EqualTo(146f), "the max level still reads the table's last row");
+        }
+
         [TestCase(0, 1)]
-        [TestCase(7, 7)]
-        [TestCase(99, 99)]
-        [TestCase(500, 99)]
-        [Description("SetLevel clamps the requested level to [1, 99] and raises OnStatModified once.")]
-        public void SetLevel_ClampsToValidRange_AndNotifies(int requested, int expected)
+        [TestCase(3, 3)]
+        [TestCase(kPlayerMaxLevel, kPlayerMaxLevel)]
+        [TestCase(kPlayerMaxLevel + 1, kPlayerMaxLevel)]
+        [Description("SetLevel clamps the requested level to [1, max level], where the max level is the progression table's row count, and raises OnStatModified once.")]
+        public void SetLevel_ClampsToTheProgressionTable_AndNotifies(int requested, int expected)
         {
             int notifications = 0;
             m_stats.OnStatModified += () => ++notifications;
@@ -216,17 +207,6 @@ namespace PolyQuest.Tests
 
             Assert.That(m_stats.Level, Is.EqualTo(expected));
             Assert.That(notifications, Is.EqualTo(1));
-        }
-
-        [Test]
-        [Description("SetLevel clamps to 99 but LevelUp does not.")]
-        public void LevelUp_AtMaxLevel_IsNotClamped()
-        {
-            m_stats.SetLevel(99);
-
-            m_stats.LevelUp();
-
-            Assert.That(m_stats.Level, Is.EqualTo(100));
         }
 
         [Test]
