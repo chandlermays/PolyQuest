@@ -4,7 +4,6 @@
 ----------------------------*/
 using System.Collections;
 using System.IO;
-using System.Linq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using UnityEngine;
@@ -62,7 +61,7 @@ namespace PolyQuest.Tests
 
             m_rig.Wallet.UpdateSilver(-50);
             m_rig.ClearInventory();
-            m_rig.Health.Heal(1000f);
+            m_rig.Health.ReplenishHealth(1000f);
 
             SaveManager.Instance.Load();
 

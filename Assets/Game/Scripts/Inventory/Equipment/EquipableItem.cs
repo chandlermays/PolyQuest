@@ -25,8 +25,8 @@ namespace PolyQuest.Inventories
         [Tooltip("The equipment slot this item can be equipped to.")]
         [SerializeField] private EquipmentSlot m_targetEquipmentSlot = EquipmentSlot.kNone;
         [SerializeField] private Conjunction m_equipCondition;
-        [SerializeField] private Modifier[] m_additiveModifiers;
-        [SerializeField] private Modifier[] m_percentageModifiers;
+        [SerializeField] private Modifier[] m_additiveModifiers = new Modifier[0];
+        [SerializeField] private Modifier[] m_percentageModifiers = new Modifier[0];
 
         public EquipmentSlot TargetEquipmentSlot => m_targetEquipmentSlot;
 

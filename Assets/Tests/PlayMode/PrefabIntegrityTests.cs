@@ -23,12 +23,31 @@ namespace PolyQuest.Tests
         private const string kGameFolder = "Assets/Game";
 
         private PlayerRig m_rig;
+        private bool m_loadedAScene;
 
-        [TearDown]
-        public void TearDown()
+        [UnityTearDown]
+        public IEnumerator TearDown()
         {
             m_rig?.Dispose();
             m_rig = null;
+
+            if (m_loadedAScene)
+            {
+                // Unload the loaded scene so its objects don't leak into the tests that run after this class
+                Scene empty = SceneManager.CreateScene("PrefabIntegrity_Empty_" + System.Guid.NewGuid().ToString("N"));
+                SceneManager.SetActiveScene(empty);
+                List<Scene> loaded = new();
+                for (int i = 0; i < SceneManager.sceneCount; ++i)
+                {
+                    Scene scene = SceneManager.GetSceneAt(i);
+                    if (scene != empty)
+                        loaded.Add(scene);
+                }
+                foreach (Scene scene in loaded)
+                    yield return SceneManager.UnloadSceneAsync(scene);
+                m_loadedAScene = false;
+            }
+
             PlayerRig.DestroyPersistentObjects();       // a scene load can leave singletons behind in DontDestroyOnLoad
         }
 
@@ -181,6 +200,7 @@ namespace PolyQuest.Tests
         {
             PlayerRig.DestroyPersistentObjects();
 
+            m_loadedAScene = true;
             yield return SceneManager.LoadSceneAsync(buildIndex);
             yield return null;
             yield return null;

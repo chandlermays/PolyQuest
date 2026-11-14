@@ -35,6 +35,8 @@ namespace PolyQuest.Tests
 
         private static readonly FieldInfo kRegistryField =
             typeof(InventoryItem).GetField("m_itemRegistry", BindingFlags.NonPublic | BindingFlags.Static);
+        private static readonly FieldInfo kPreservedSpawnedField =
+            typeof(PreservedObjectSpawner).GetField("m_hasSpawned", BindingFlags.NonPublic | BindingFlags.Static);
 
         private readonly List<Object> m_created = new();
         private readonly bool m_hadSaveKey;
@@ -204,6 +206,10 @@ namespace PolyQuest.Tests
             Object.DestroyImmediate(probe);
             ClearStatic(typeof(SaveManager));
             ClearStatic(typeof(InputManager));
+
+            // The preserved objects are gone, so the next scene load must spawn them again
+            Assert.That(kPreservedSpawnedField, Is.Not.Null, "PreservedObjectSpawner.m_hasSpawned was not found. Was it renamed?");
+            kPreservedSpawnedField.SetValue(null, false);
         }
 
         private static void ClearStatic(Type type)

@@ -191,15 +191,6 @@ namespace PolyQuest.Components
             OnHealthChanged?.Invoke();
         }
 
-        /*-----------------------------------------------------
-        | --- Heal: Heal the Entity by a specified amount --- |
-        -----------------------------------------------------*/
-        public void Heal(float amount)
-        {
-            m_health = Mathf.Min(m_health + amount, m_stats.GetHealth());
-            OnHealthChanged?.Invoke();
-        }
-
         /*------------------------------------------------------------- 
         | --- HandleDeath: The Behavior when this Entity has Died --- |
         -------------------------------------------------------------*/
