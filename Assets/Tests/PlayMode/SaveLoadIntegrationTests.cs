@@ -216,15 +216,16 @@ namespace PolyQuest.Tests
         }
 
         [UnityTest]
-        [Description("Gaining a level writes the save file for the current slot when none existed before.")]
+        [Description("Gaining a level autosaves: it writes the current slot's autosave and leaves the Player's own save alone.")]
         public IEnumerator LevelingUp_AutoSavesTheGame()
         {
             yield return null;
-            Assert.That(File.Exists(PlayerRig.SavePath), Is.False, "fixture: no save file should exist yet");
+            Assert.That(File.Exists(PlayerRig.AutoSavePath), Is.False, "fixture: no autosave should exist yet");
 
             m_rig.LevelUpTo(2);
 
-            Assert.That(File.Exists(PlayerRig.SavePath), Is.True);
+            Assert.That(File.Exists(PlayerRig.AutoSavePath), Is.True);
+            Assert.That(File.Exists(PlayerRig.SavePath), Is.False, "an automatic save wrote the Player's own save");
         }
 
         [UnityTest]

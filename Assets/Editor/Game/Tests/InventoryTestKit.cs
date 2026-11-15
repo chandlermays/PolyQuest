@@ -53,8 +53,16 @@ namespace PolyQuest.Tests
         }
 
         public static bool TestSaveFileExists() => File.Exists(TestSavePath());
+        public static bool TestAutoSaveFileExists() => File.Exists(Path.Combine(Application.persistentDataPath, kTestSaveName + "_autosave.sav"));
 
         private static string TestSavePath() => Path.Combine(Application.persistentDataPath, kTestSaveName + ".sav");
+
+        // Every file of the test slot: the main save, the autosave, their backups and any moved-aside corrupt file
+        private static void DeleteTestSaveFiles()
+        {
+            foreach (string path in Directory.GetFiles(Application.persistentDataPath, kTestSaveName + "*"))
+                File.Delete(path);
+        }
 
         public static void ClearSaveManager()
         {
@@ -142,8 +150,7 @@ namespace PolyQuest.Tests
             ClearSaveManager();
             if (m_savesIsolated)
             {
-                if (File.Exists(TestSavePath()))
-                    File.Delete(TestSavePath());
+                DeleteTestSaveFiles();
 
                 if (m_hadSaveKey)
                     PlayerPrefs.SetString(kCurrentSaveKey, m_previousSaveName);

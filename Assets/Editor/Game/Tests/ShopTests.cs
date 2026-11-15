@@ -479,14 +479,15 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("Completing a buy autosaves through the SaveManager, writing the (isolated) save file.")]
-        public void Buy_Complete_WritesTheSaveFile()
+        [Description("Completing a buy autosaves: it writes the autosave and leaves the Player's own save alone.")]
+        public void Buy_Complete_AutoSaves()
         {
             m_shop.AddToPurchase(m_potion, 1);
 
             m_shop.CompletePurchase();
 
-            Assert.That(InventoryTestKit.TestSaveFileExists(), Is.True);
+            Assert.That(InventoryTestKit.TestAutoSaveFileExists(), Is.True);
+            Assert.That(InventoryTestKit.TestSaveFileExists(), Is.False, "an automatic save wrote the Player's own save");
         }
 
         /* --- Save / restore --- */

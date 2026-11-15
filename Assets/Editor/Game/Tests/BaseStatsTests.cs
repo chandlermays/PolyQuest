@@ -182,7 +182,7 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("LevelUp at the max level (the progression table's row count) keeps the level at the max.")]
+        [Description("LevelUp at the max level (the progression table's row count) keeps the level at the max, and the stats still read the table's last row, the XP goal included, rather than 0.")]
         public void LevelUp_AtMaxLevel_StaysAtMaxLevel()
         {
             SetLevel(kPlayerMaxLevel);
@@ -191,6 +191,7 @@ namespace PolyQuest.Tests
 
             Assert.That(m_stats.Level, Is.EqualTo(kPlayerMaxLevel));
             Assert.That(m_stats.GetHealth(), Is.EqualTo(146f), "the max level still reads the table's last row");
+            Assert.That(m_stats.GetExperienceToLevelUp(), Is.EqualTo(1300f), "the XP goal at the max level is the table's last row");
         }
 
         [TestCase(0, 1)]

@@ -65,12 +65,8 @@ namespace PolyQuest.Tests
 
         private static void DeleteSaveFiles()
         {
-            foreach (string slot in new[] { kSaveSlot, kSaveSlot + "_autosave" })
-            {
-                string path = Path.Combine(Application.persistentDataPath, slot + ".sav");
-                if (File.Exists(path))
-                    File.Delete(path);
-            }
+            foreach (string path in Directory.GetFiles(Application.persistentDataPath, kSaveSlot + "*"))
+                File.Delete(path);
         }
 
         private static GameObject Bandit()

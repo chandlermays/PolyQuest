@@ -220,10 +220,11 @@ namespace PolyQuest.Tests
 
         private static string PathFor(string slot) => Path.Combine(Application.persistentDataPath, slot + ".sav");
 
+        // Every file of the test slot: the main save, the autosave, their backups and any moved-aside corrupt file
         private static void DeleteSaveFiles()
         {
-            if (File.Exists(SavePath)) File.Delete(SavePath);
-            if (File.Exists(AutoSavePath)) File.Delete(AutoSavePath);
+            foreach (string path in Directory.GetFiles(Application.persistentDataPath, kSaveSlot + "*"))
+                File.Delete(path);
         }
 
         public void Dispose()

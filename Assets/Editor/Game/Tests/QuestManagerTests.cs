@@ -246,14 +246,15 @@ namespace PolyQuest.Tests
         }
 
         [Test]
-        [Description("Completing an objective autosaves the game.")]
-        public void CompleteObjective_WritesTheSaveFile()
+        [Description("Completing an objective autosaves: it writes the autosave and leaves the Player's own save alone.")]
+        public void CompleteObjective_AutoSaves()
         {
             m_manager.AddQuest(m_quest);
 
             m_manager.CompleteObjective(m_quest, m_find);
 
-            Assert.That(InventoryTestKit.TestSaveFileExists(), Is.True);
+            Assert.That(InventoryTestKit.TestAutoSaveFileExists(), Is.True);
+            Assert.That(InventoryTestKit.TestSaveFileExists(), Is.False, "an automatic save wrote the Player's own save");
         }
 
         /* ============================== Work done before acquiring the quest ============================== */
