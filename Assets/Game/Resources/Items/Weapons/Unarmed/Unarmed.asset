@@ -24,10 +24,11 @@ MonoBehaviour:
   m_targetEquipmentSlot: 6
   m_equipCondition:
     m_AND: []
+  m_additiveModifiers: []
+  m_percentageModifiers: []
   m_equippedPrefab: {fileID: 0}
   m_projectile: {fileID: 0}
   m_weaponAOC: {fileID: 0}
-  m_weaponDamage: 0
+  m_baseDamage: 2
   m_weaponRange: 2
-  m_percentageBonus: 0
   m_isRightHanded: 1

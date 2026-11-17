@@ -213,7 +213,26 @@ namespace PolyQuest.Tests
             m_rig.Health.OnCombatExited += () => ++combatExits;
 
             Combat.SetTarget(bandit.gameObject);
-            yield return WaitUntil(() => bandit.IsDead, 15f, "the Player never killed the bandit");
+
+            // Watch the attack while waiting, so a timeout says where the loop stopped
+            Animator animator = m_rig.Player.GetComponentInChildren<Animator>();
+            int swings = 0;
+            bool wasInAttack = false;
+            for (float waited = 0f; !bandit.IsDead; waited += Time.unscaledDeltaTime)
+            {
+                bool inAttack = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
+                if (inAttack && !wasInAttack)
+                    ++swings;
+                wasInAttack = inAttack;
+                if (waited >= 15f)
+                {
+                    float distance = Vector3.Distance(m_rig.Player.transform.position, bandit.transform.position);
+                    Assert.Fail($"the Player never killed the bandit: target {(Combat.Target == bandit.gameObject ? "kept" : "lost")}, " +
+                                $"distance {distance:F2} (weapon range 2), attack animations started {swings}, hits landed {hits}, " +
+                                $"controller '{(animator.runtimeAnimatorController != null ? animator.runtimeAnimatorController.name : "none")}'");
+                }
+                yield return null;
+            }
             yield return new WaitForSeconds(1f);
 
             Assert.That(hits, Is.EqualTo(hitsToKill));

@@ -23,10 +23,11 @@ MonoBehaviour:
   m_targetEquipmentSlot: 6
   m_equipCondition:
     m_AND: []
+  m_additiveModifiers: []
+  m_percentageModifiers: []
   m_equippedPrefab: {fileID: 2283741905343481417, guid: ab75f33ad3714ab48902c533fad8b17e, type: 3}
   m_projectile: {fileID: 6325536849327657915, guid: 2bce49edb0ec7df4b9173eb729a98366, type: 3}
   m_weaponAOC: {fileID: 22100000, guid: c84c4e62a2e42164c975f772a0a811a0, type: 2}
-  m_weaponDamage: 10
+  m_baseDamage: 5
   m_weaponRange: 10
-  m_percentageBonus: 0
   m_isRightHanded: 0

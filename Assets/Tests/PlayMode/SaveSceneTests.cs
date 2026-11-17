@@ -207,8 +207,8 @@ namespace PolyQuest.Tests
             menu.NewGame();
             yield return new WaitForSecondsRealtime(kContinueSettle);
 
+            Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo(kMainMenu), "a new game started");
             Assert.That(PlayModeTestKit.Get<GameObject>(menu, "m_errorMessage").activeSelf, Is.True, "no error message");
-            Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo(kMainMenu));
             Assert.That(File.ReadAllText(PathFor(name)), Is.EqualTo(oldSave));
         }
 
@@ -226,8 +226,8 @@ namespace PolyQuest.Tests
             menu.NewGame();
             yield return new WaitForSecondsRealtime(kContinueSettle);
 
+            Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo(kMainMenu), "a new game started");
             Assert.That(PlayModeTestKit.Get<GameObject>(menu, "m_errorMessage").activeSelf, Is.True, "no error message");
-            Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo(kMainMenu));
         }
 
         /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
