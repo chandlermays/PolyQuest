@@ -33,6 +33,9 @@ namespace PolyQuest.Tests
         private int m_statsModified;
         private int m_itemAdded;
 
+        /*-----------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for equipment testing --- |
+        -----------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -59,14 +62,22 @@ namespace PolyQuest.Tests
             m_inventory.OnItemAdded += (item, quantity) => ++m_itemAdded;
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
             m_kit.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*--------------------------------------------------------------------------------------------------------
+        | --- NewOtherEquipment: Creates a second Equipment on its own GameObject, for restoring a save into --- |
+        --------------------------------------------------------------------------------------------------------*/
         private Equipment NewOtherEquipment()
         {
             GameObject other = m_kit.NewObject("OtherEquipment");
@@ -76,6 +87,9 @@ namespace PolyQuest.Tests
             return equipment;
         }
 
+        /*-------------------------------------------------------------------------------
+        | --- ResetCounts: Zeroes the equipment, stat and item-added event counters --- |
+        -------------------------------------------------------------------------------*/
         private void ResetCounts()
         {
             m_equipmentChanged = 0;
@@ -83,8 +97,13 @@ namespace PolyQuest.Tests
             m_itemAdded = 0;
         }
 
-        /* ============================== Equipment ============================== */
 
+        /*-------------------
+        | --- Equipment --- |
+        -------------------*/
+        /*-----------------------------------------------------------------------------------
+        | --- GetItemInSlot_EmptySlot_ReturnsNull: An empty equipment slot returns null --- |
+        -----------------------------------------------------------------------------------*/
         [Test]
         [Description("An empty equipment slot returns null.")]
         public void GetItemInSlot_EmptySlot_ReturnsNull()
@@ -92,6 +111,9 @@ namespace PolyQuest.Tests
             Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kWeapon), Is.Null);
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- AddItem_StoresTheItem_AndNotifiesEquipmentAndStats: AddItem stores the item in the slot and raises OnEquipmentChanged and OnStatModified once each --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("AddItem stores the item in the slot and raises OnEquipmentChanged and OnStatModified once each.")]
         public void AddItem_StoresTheItem_AndNotifiesEquipmentAndStats()
@@ -103,6 +125,9 @@ namespace PolyQuest.Tests
             Assert.That(m_statsModified, Is.EqualTo(1));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------
+        | --- AddItem_OverAnOccupiedSlot_ReplacesTheItem: AddItem on an occupied slot replaces the item in that slot; the slot still counts once --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("AddItem on an occupied slot replaces the item in that slot; the slot still counts once.")]
         public void AddItem_OverAnOccupiedSlot_ReplacesTheItem()
@@ -115,6 +140,9 @@ namespace PolyQuest.Tests
             Assert.That(m_equipment.OccupiedSlots.Count(), Is.EqualTo(1));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RemoveItem_OccupiedSlot_ClearsIt_AndNotifies: RemoveItem clears an occupied slot and raises OnEquipmentChanged and OnStatModified once each --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("RemoveItem clears an occupied slot and raises OnEquipmentChanged and OnStatModified once each.")]
         public void RemoveItem_OccupiedSlot_ClearsIt_AndNotifies()
@@ -129,6 +157,9 @@ namespace PolyQuest.Tests
             Assert.That(m_statsModified, Is.EqualTo(1));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------
+        | --- RemoveItem_EmptySlot_DoesNothing_AndRaisesNoEvents: RemoveItem on an empty slot changes nothing and raises no events --- |
+        ------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("RemoveItem on an empty slot changes nothing and raises no events.")]
         public void RemoveItem_EmptySlot_DoesNothing_AndRaisesNoEvents()
@@ -139,8 +170,13 @@ namespace PolyQuest.Tests
             Assert.That(m_statsModified, Is.EqualTo(0));
         }
 
-        /* --- Stat modifiers --- */
 
+        /*------------------------
+        | --- Stat Modifiers --- |
+        ------------------------*/
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EquippedArmor_AddsItsDefense_ThroughBaseStats_AndRemovingItReverts: Equipped armor adds its defense through BaseStats' modifiers; unequipping it restores the base value --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Equipped armor adds its defense through BaseStats' modifiers; unequipping it restores the base value.")]
         public void EquippedArmor_AddsItsDefense_ThroughBaseStats_AndRemovingItReverts()
@@ -159,6 +195,9 @@ namespace PolyQuest.Tests
             Assert.That(m_stats.GetDefense(), Is.EqualTo(5f).Within(1e-4f));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------
+        | --- Modifiers_AreEmpty_WhenNothingIsEquipped: With nothing equipped, Equipment provides no additive or percentage modifiers --- |
+        ---------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("With nothing equipped, Equipment provides no additive or percentage modifiers.")]
         public void Modifiers_AreEmpty_WhenNothingIsEquipped()
@@ -167,8 +206,13 @@ namespace PolyQuest.Tests
             Assert.That(m_equipment.GetPercentageModifiers(Stat.kDefense), Is.Empty);
         }
 
-        /* --- Evaluate --- */
 
+        /*------------------
+        | --- Evaluate --- |
+        ------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------------------
+        | --- Evaluate_HasItemEquipped_ReflectsWhatIsEquipped: kHasItemEquipped is true only for the ID of an item that is currently equipped --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("kHasItemEquipped is true only for the ID of an item that is currently equipped.")]
         public void Evaluate_HasItemEquipped_ReflectsWhatIsEquipped()
@@ -180,6 +224,9 @@ namespace PolyQuest.Tests
             Assert.That(m_equipment.Evaluate(ConditionType.kHasItemEquipped, new[] { "missing" }), Is.False);
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Evaluate_NullOrEmptyParameters_OrUnhandledPredicate_ReturnsNull: Evaluate returns null (unhandled) for null or empty parameters and for predicates other than kHasItemEquipped --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Evaluate returns null (unhandled) for null or empty parameters and for predicates other than kHasItemEquipped.")]
         public void Evaluate_NullOrEmptyParameters_OrUnhandledPredicate_ReturnsNull()
@@ -189,8 +236,13 @@ namespace PolyQuest.Tests
             Assert.That(m_equipment.Evaluate(ConditionType.kHasItem, new[] { m_sword.ID }), Is.Null);
         }
 
-        /* --- Save / Restore --- */
 
+        /*----------------
+        | --- Saving --- |
+        ----------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CaptureState_KeysAreSlotNames_ValuesAreItemIds: CaptureState writes one entry per occupied slot, keyed by slot enum name, valued by item ID --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("CaptureState writes one entry per occupied slot, keyed by slot enum name, valued by item ID.")]
         public void CaptureState_KeysAreSlotNames_ValuesAreItemIds()
@@ -205,6 +257,9 @@ namespace PolyQuest.Tests
             Assert.That(state["kHelmet"].ToObject<string>(), Is.EqualTo(m_helm.ID));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RoundTrip_RestoresItems_AndNotifies: Capturing and restoring through JSON text restores every equipped item and raises OnEquipmentChanged once --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Capturing and restoring through JSON text restores every equipped item and raises OnEquipmentChanged once.")]
         public void RoundTrip_RestoresItems_AndNotifies()
@@ -222,6 +277,9 @@ namespace PolyQuest.Tests
             Assert.That(changed, Is.EqualTo(1));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_ReplacesWhatWasEquipped: RestoreState replaces the current equipment; slots absent from the save are cleared --- |
+        -----------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("RestoreState replaces the current equipment; slots absent from the save are cleared.")]
         public void RestoreState_ReplacesWhatWasEquipped()
@@ -234,6 +292,9 @@ namespace PolyQuest.Tests
             Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kHelmet), Is.SameAs(m_helm));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_UnknownItemId_IsDropped_ButEventsStillFire: An unknown item ID in the save is dropped, but OnEquipmentChanged and OnStatModified still fire --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An unknown item ID in the save is dropped, but OnEquipmentChanged and OnStatModified still fire.")]
         public void RestoreState_UnknownItemId_IsDropped_ButEventsStillFire()
@@ -246,6 +307,9 @@ namespace PolyQuest.Tests
             Assert.That(m_statsModified, Is.EqualTo(1));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_UnknownItemId_LogsAWarningNamingIt: Restoring an unknown item ID logs a warning that names the missing ID --- |
+        --------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Restoring an unknown item ID logs a warning that names the missing ID.")]
         public void RestoreState_UnknownItemId_LogsAWarningNamingIt()
@@ -255,6 +319,9 @@ namespace PolyQuest.Tests
             m_equipment.RestoreState(new JObject { ["kWeapon"] = "gone" });
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_NonEquipableItem_OrUnknownSlot_IsDropped: Saved entries whose item isn't equipable, or whose key isn't a valid slot name, are dropped --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Saved entries whose item isn't equipable, or whose key isn't a valid slot name, are dropped.")]
         public void RestoreState_NonEquipableItem_OrUnknownSlot_IsDropped()
@@ -264,6 +331,9 @@ namespace PolyQuest.Tests
             Assert.That(m_equipment.OccupiedSlots, Is.Empty);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_NonObject_IsIgnored: A null or non-object state is ignored, as if the save never held Equipment: what is equipped is kept and no event fires --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A null or non-object state is ignored, as if the save never held Equipment: what is equipped is kept and no event fires.")]
         public void RestoreState_NonObject_IsIgnored()
@@ -279,8 +349,13 @@ namespace PolyQuest.Tests
             Assert.That(m_statsModified, Is.EqualTo(0));
         }
 
-        /* ============================== EquipableItem.OnUse ============================== */
 
+        /*-----------------------------
+        | --- EquipableItem.OnUse --- |
+        -----------------------------*/
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- OnUse_EquipsTheItem_AndRemovesItFromTheInventory: Using an equipable item equips it into its target slot and removes it from the inventory --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Using an equipable item equips it into its target slot and removes it from the inventory.")]
         public void OnUse_EquipsTheItem_AndRemovesItFromTheInventory()
@@ -294,6 +369,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.GetEmptySlotCount(), Is.EqualTo(kSlots));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- OnUse_WhenTheSlotIsOccupied_SwapsInPlace_WithoutRaisingItemAdded: Using an item whose slot is occupied swaps the two in place, without raising OnItemAdded, and restores the suppress flag --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Using an item whose slot is occupied swaps the two in place, without raising OnItemAdded, and restores the suppress flag.")]
         public void OnUse_WhenTheSlotIsOccupied_SwapsInPlace_WithoutRaisingItemAdded()
@@ -311,6 +389,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.SuppressItemAddedNotif, Is.False);
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------
+        | --- OnUse_WithNoTargetSlot_DoesNothing: Using an equipable item with no target slot does nothing; it stays in the inventory --- |
+        ---------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Using an equipable item with no target slot does nothing; it stays in the inventory.")]
         public void OnUse_WithNoTargetSlot_DoesNothing()
@@ -324,6 +405,9 @@ namespace PolyQuest.Tests
             Assert.That(m_equipment.OccupiedSlots, Is.Empty);
         }
 
+        /*------------------------------------------------------------------------------------------------------
+        | --- CanEquip_RequiresTheItemsOwnTargetSlot: CanEquip is true only for the item's own target slot --- |
+        ------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("CanEquip is true only for the item's own target slot.")]
         public void CanEquip_RequiresTheItemsOwnTargetSlot()

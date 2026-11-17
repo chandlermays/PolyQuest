@@ -16,6 +16,9 @@ namespace PolyQuest.Tests
         private PlayerProgression m_player;
         private AIProgression m_ai;
 
+        /*------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for base stats testing --- |
+        ------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -42,6 +45,9 @@ namespace PolyQuest.Tests
             SerializedTestUtil.SetObject(m_stats, "m_baseProgression", m_player);
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
@@ -52,9 +58,19 @@ namespace PolyQuest.Tests
 
         private const int kPlayerMaxLevel = 5;
 
+        /*------------------------------------------------------------------------
+        | --- SetLevel: Sets the level value on the stats object for testing --- |
+        ------------------------------------------------------------------------*/
         private void SetLevel(int level) => SerializedTestUtil.SetInt(m_stats, "m_level", level);
+
+        /*-----------------------------------------------------------------------
+        | --- UseModifiers: Enables or disables stat modifier functionality --- |
+        -----------------------------------------------------------------------*/
         private void UseModifiers(bool use) => SerializedTestUtil.SetBool(m_stats, "m_useStatModifiers", use);
 
+        /*------------------------------------------------------------------------------------------------
+        | --- AddModifier: Creates and configures a fake stat modifier with the specified properties --- |
+        ------------------------------------------------------------------------------------------------*/
         private FakeStatModifier AddModifier(Stat stat, float additive, float percentage)
         {
             FakeStatModifier modifier = m_gameObject.AddComponent<FakeStatModifier>();
@@ -64,8 +80,13 @@ namespace PolyQuest.Tests
             return modifier;
         }
 
-        /* --- Base stats --- */
 
+        /*--------------------
+        | --- Base Stats --- |
+        --------------------*/
+        /*--------------------------------------------------------------------------
+        | --- Level_DefaultsToOne: A freshly added BaseStats starts at level 1 --- |
+        --------------------------------------------------------------------------*/
         [Test]
         [Description("A freshly added BaseStats starts at level 1.")]
         public void Level_DefaultsToOne()
@@ -73,6 +94,9 @@ namespace PolyQuest.Tests
             Assert.That(m_stats.Level, Is.EqualTo(1));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------
+        | --- GetHealth_ReadsProgressionAtCurrentLevel: GetHealth returns the progression table's entry for the current level (index level - 1) --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("GetHealth returns the progression table's entry for the current level (index level - 1).")]
         public void GetHealth_ReadsProgressionAtCurrentLevel()
@@ -82,8 +106,13 @@ namespace PolyQuest.Tests
             Assert.That(m_stats.GetHealth(), Is.EqualTo(121f));
         }
 
-        /* --- Experience-related stats depend on the progression TYPE --- */
 
+        /*-----------------------------------------------------------------
+        | --- Experience-related stats depend on the progression TYPE --- |
+        -----------------------------------------------------------------*/
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- ExperienceToLevelUp_OnPlayerProgression_ReadsXpTable: With a PlayerProgression, GetExperienceToLevelUp reads the XP table at the current level --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("With a PlayerProgression, GetExperienceToLevelUp reads the XP table at the current level.")]
         public void ExperienceToLevelUp_OnPlayerProgression_ReadsXpTable()
@@ -93,6 +122,9 @@ namespace PolyQuest.Tests
             Assert.That(m_stats.GetExperienceToLevelUp(), Is.EqualTo(250f));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------
+        | --- ExperienceReward_OnPlayerProgression_IsZero: A PlayerProgression has no reward table, so GetExperienceReward returns 0 --- |
+        --------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A PlayerProgression has no reward table, so GetExperienceReward returns 0.")]
         public void ExperienceReward_OnPlayerProgression_IsZero()
@@ -100,6 +132,9 @@ namespace PolyQuest.Tests
             Assert.That(m_stats.GetExperienceReward(), Is.EqualTo(0f));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- ExperienceReward_OnAIProgression_ReadsRewardTable: With an AIProgression, GetExperienceReward reads the reward table at the current level --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("With an AIProgression, GetExperienceReward reads the reward table at the current level.")]
         public void ExperienceReward_OnAIProgression_ReadsRewardTable()
@@ -110,8 +145,13 @@ namespace PolyQuest.Tests
             Assert.That(m_stats.GetExperienceReward(), Is.EqualTo(20f));
         }
 
-        /* --- Modifiers --- */
 
+        /*-------------------
+        | --- Modifiers --- |
+        -------------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------
+        | --- Modifiers_AreIgnored_WhenFlagIsOff: With m_useStatModifiers off, modifier components have no effect on the stat --- |
+        -------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("With m_useStatModifiers off, modifier components have no effect on the stat.")]
         public void Modifiers_AreIgnored_WhenFlagIsOff()
@@ -121,6 +161,9 @@ namespace PolyQuest.Tests
             Assert.That(m_stats.GetHealth(), Is.EqualTo(100f));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------
+        | --- Modifiers_Formula_IsAdditiveThenPercentage: A modified stat is (base + additive) * (1 + percentage / 100) --- |
+        -------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A modified stat is (base + additive) * (1 + percentage / 100).")]
         public void Modifiers_Formula_IsAdditiveThenPercentage()
@@ -133,6 +176,9 @@ namespace PolyQuest.Tests
             Assert.That(m_stats.GetHealth(), Is.EqualTo(195f).Within(1e-4f));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Modifiers_FromMultipleComponents_AreSummed_NotMultiplied: Additive and percentage values from multiple modifier components are each summed, not compounded --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Additive and percentage values from multiple modifier components are each summed, not compounded.")]
         public void Modifiers_FromMultipleComponents_AreSummed_NotMultiplied()
@@ -145,6 +191,9 @@ namespace PolyQuest.Tests
             Assert.That(m_stats.GetHealth(), Is.EqualTo(149.5f).Within(1e-4f));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------
+        | --- Modifiers_OnlyAffectTheirOwnStat: A modifier targeting one stat leaves every other stat unchanged --- |
+        -----------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A modifier targeting one stat leaves every other stat unchanged.")]
         public void Modifiers_OnlyAffectTheirOwnStat()
@@ -156,6 +205,9 @@ namespace PolyQuest.Tests
             Assert.That(m_stats.GetDefense(), Is.EqualTo(30f).Within(1e-4f));      // (5 + 10) * 2
         }
 
+        /*----------------------------------------------------------------------------------------------
+        | --- Modifiers_NegativeValues_ReduceTheStat: A negative additive modifier lowers the stat --- |
+        ----------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A negative additive modifier lowers the stat.")]
         public void Modifiers_NegativeValues_ReduceTheStat()
@@ -166,8 +218,13 @@ namespace PolyQuest.Tests
             Assert.That(m_stats.GetHealth(), Is.EqualTo(50f).Within(1e-4f));
         }
 
-        /* --- Leveling --- */
 
+        /*------------------
+        | --- Leveling --- |
+        ------------------*/
+        /*----------------------------------------------------------------------------------------------------------------
+        | --- LevelUp_IncrementsLevel_AndNotifies: LevelUp increases the level by one and raises OnStatModified once --- |
+        ----------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("LevelUp increases the level by one and raises OnStatModified once.")]
         public void LevelUp_IncrementsLevel_AndNotifies()
@@ -181,8 +238,11 @@ namespace PolyQuest.Tests
             Assert.That(notifications, Is.EqualTo(1));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- LevelUp_AtMaxLevel_StaysAtMaxLevel: LevelUp at the max level keeps the level at the max, and the stats still read the table's last row, the XP goal included, rather than 0 --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("LevelUp at the max level (the progression table's row count) keeps the level at the max, and the stats still read the table's last row, the XP goal included, rather than 0.")]
+        [Description("LevelUp at the max level keeps the level at the max, and the stats still read the table's last row, the XP goal included, rather than 0.")]
         public void LevelUp_AtMaxLevel_StaysAtMaxLevel()
         {
             SetLevel(kPlayerMaxLevel);
@@ -194,6 +254,9 @@ namespace PolyQuest.Tests
             Assert.That(m_stats.GetExperienceToLevelUp(), Is.EqualTo(1300f), "the XP goal at the max level is the table's last row");
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- SetLevel_ClampsToTheProgressionTable_AndNotifies: SetLevel clamps the requested level to [1, max level], where the max level is the progression table's row count, and raises OnStatModified once --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [TestCase(0, 1)]
         [TestCase(3, 3)]
         [TestCase(kPlayerMaxLevel, kPlayerMaxLevel)]
@@ -210,6 +273,9 @@ namespace PolyQuest.Tests
             Assert.That(notifications, Is.EqualTo(1));
         }
 
+        /*---------------------------------------------------------------------------------------
+        | --- NotifyStatModified_RaisesEvent: NotifyStatModified raises OnStatModified once --- |
+        ---------------------------------------------------------------------------------------*/
         [Test]
         [Description("NotifyStatModified raises OnStatModified once.")]
         public void NotifyStatModified_RaisesEvent()

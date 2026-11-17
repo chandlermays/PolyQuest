@@ -25,6 +25,9 @@ namespace PolyQuest.Tests
         private readonly List<string> m_events = new();
         private int m_hits, m_deaths;
 
+        /*------------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for health component testing --- |
+        ------------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -40,18 +43,31 @@ namespace PolyQuest.Tests
             m_health.OnDeath += () => { ++m_deaths; m_events.Add("death"); };
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
             m_kit.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*-------------------------------------------------------------------------
+        | --- Hit: Hits the bandit for the given damage as the hostile Player --- |
+        -------------------------------------------------------------------------*/
         private void Hit(float damage) => m_health.TakeDamage(m_player, damage);
 
-        /* ============================== Taking damage ============================== */
 
+        /*-----------------------
+        | --- Taking Damage --- |
+        -----------------------*/
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- HostileHit_LowersHealth_AndRaisesOnHitWithTheAttacker: A hostile attacker's hit lowers health by the damage and raises OnHit with the attacker --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A hostile attacker's hit lowers health by the damage and raises OnHit with the attacker.")]
         public void HostileHit_LowersHealth_AndRaisesOnHitWithTheAttacker()
@@ -66,6 +82,9 @@ namespace PolyQuest.Tests
             Assert.That(m_health.IsDead, Is.False);
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------
+        | --- NonHostileHit_ChangesNothing: A hit from an attacker that isn't hostile to the target deals no damage and raises no OnHit --- |
+        -----------------------------------------------------------------------------------------------------------------------------------*/
         [TestCase(Faction.kNPC, Faction.kPlayer, TestName = "NonHostileHit_ChangesNothing(guard hits player)")]
         [TestCase(Faction.kEnemy, Faction.kEnemy, TestName = "NonHostileHit_ChangesNothing(bandit hits bandit)")]
         [Description("A hit from an attacker that isn't hostile to the target deals no damage and raises no OnHit.")]
@@ -83,6 +102,9 @@ namespace PolyQuest.Tests
             Assert.That(hits, Is.EqualTo(0));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------
+        | --- HitWithoutAFaction_DealsDamage: When the attacker or the target has no faction, the hit deals its damage --- |
+        ------------------------------------------------------------------------------------------------------------------*/
         [TestCase(false, true, TestName = "HitWithoutAFaction_DealsDamage(attacker has none)")]
         [TestCase(true, false, TestName = "HitWithoutAFaction_DealsDamage(target has none)")]
         [Description("When the attacker or the target has no faction, the hit deals its damage.")]
@@ -98,8 +120,13 @@ namespace PolyQuest.Tests
             Assert.That(health.CurrentHealth, Is.EqualTo(70f).Within(kTolerance));
         }
 
-        /* ============================== Death ============================== */
 
+        /*---------------
+        | --- Death --- |
+        ---------------*/
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- KillingBlow_LeavesHealthAtZero_AndDiesOnce: A killing blow larger than the remaining health leaves health at 0, and the entity dies once --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A killing blow larger than the remaining health leaves health at 0, and the entity dies once.")]
         public void KillingBlow_LeavesHealthAtZero_AndDiesOnce()
@@ -111,6 +138,9 @@ namespace PolyQuest.Tests
             Assert.That(m_deaths, Is.EqualTo(1));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------
+        | --- KillingBlow_RaisesOnHit_ThenOnDeath: The killing blow still counts as a hit: OnHit is raised, then OnDeath --- |
+        --------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("The killing blow still counts as a hit: OnHit is raised, then OnDeath.")]
         public void KillingBlow_RaisesOnHit_ThenOnDeath()
@@ -120,6 +150,9 @@ namespace PolyQuest.Tests
             Assert.That(m_events, Is.EqualTo(new[] { "hit", "death" }));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------
+        | --- Dead_IgnoresFurtherHits: Hitting a dead entity changes nothing: no damage, no OnHit, no second death --- |
+        --------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Hitting a dead entity changes nothing: no damage, no OnHit, no second death.")]
         public void Dead_IgnoresFurtherHits()
@@ -134,6 +167,9 @@ namespace PolyQuest.Tests
             Assert.That(m_deaths, Is.EqualTo(1));
         }
 
+        /*-------------------------------------------------------------------------------------------------------
+        | --- Dead_CannotBeReplenished: A dead entity can't be replenished, partly or fully, and stays dead --- |
+        -------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A dead entity can't be replenished, partly or fully, and stays dead.")]
         public void Dead_CannotBeReplenished()
@@ -148,8 +184,13 @@ namespace PolyQuest.Tests
             Assert.That(m_health.IsDead, Is.True);
         }
 
-        /* ============================== Replenishing ============================== */
 
+        /*----------------------
+        | --- Replenishing --- |
+        ----------------------*/
+        /*---------------------------------------------------------------------------------------------------
+        | --- ReplenishHealth_StopsAtTheMaximum: ReplenishHealth adds health but never past the maximum --- |
+        ---------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("ReplenishHealth adds health but never past the maximum.")]
         public void ReplenishHealth_StopsAtTheMaximum()
@@ -163,8 +204,13 @@ namespace PolyQuest.Tests
             Assert.That(m_health.CurrentHealth, Is.EqualTo(100f).Within(kTolerance));
         }
 
-        /* ============================== Max-health changes ============================== */
 
+        /*----------------------------
+        | --- Max-Health Changes --- |
+        ----------------------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- MaxHealthChange_KeepsTheSamePercentage_BothWays: When the maximum changes, health keeps the same percentage: at 20/100, losing a +50 item gives 10/50, and getting it back gives 20/100 --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("When the maximum changes, health keeps the same percentage: at 20/100, losing a +50 item gives 10/50, and getting it back gives 20/100.")]
         public void MaxHealthChange_KeepsTheSamePercentage_BothWays()
@@ -186,6 +232,9 @@ namespace PolyQuest.Tests
             Assert.That(health.CurrentHealth, Is.EqualTo(20f).Within(kTolerance), "after getting the item back");
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------
+        | --- MaxHealthDrop_NeverTakesALivingEntityToZero: A drop in the maximum never takes a living entity's health to 0 --- |
+        ----------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A drop in the maximum never takes a living entity's health to 0.")]
         public void MaxHealthDrop_NeverTakesALivingEntityToZero()
@@ -203,8 +252,13 @@ namespace PolyQuest.Tests
             Assert.That(health.IsDead, Is.False);
         }
 
-        /* ============================== Saving ============================== */
 
+        /*----------------
+        | --- Saving --- |
+        ----------------*/
+        /*--------------------------------------------------------------------------
+        | --- FreshBandit: Creates a full-health bandit to restore a save into --- |
+        --------------------------------------------------------------------------*/
         private HealthComponent FreshBandit()
         {
             GameObject bandit = m_kit.Entity("FreshBandit", health: 100);
@@ -212,6 +266,9 @@ namespace PolyQuest.Tests
             return EntityTestKit.AddHealth(bandit);
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CaptureThenRestore_RestoresTheHealth: Capturing a hurt entity's health and restoring it into a fresh one restores that health, alive --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Capturing a hurt entity's health and restoring it into a fresh one restores that health, alive.")]
         public void CaptureThenRestore_RestoresTheHealth()
@@ -225,6 +282,9 @@ namespace PolyQuest.Tests
             Assert.That(fresh.IsDead, Is.False);
         }
 
+        /*---------------------------------------------------------------------------------------------------------------
+        | --- CaptureThenRestore_Dead_StaysDead: Restoring a dead entity's save leaves it dead, and it ignores hits --- |
+        ---------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Restoring a dead entity's save leaves it dead, and it ignores hits.")]
         public void CaptureThenRestore_Dead_StaysDead()
@@ -239,6 +299,9 @@ namespace PolyQuest.Tests
             Assert.That(fresh.CurrentHealth, Is.EqualTo(0f).Within(kTolerance));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_Unreadable_IsIgnored: Health save data that can't be read is ignored: health and life are unchanged --- |
+        --------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Health save data that can't be read is ignored: health and life are unchanged.")]
         public void RestoreState_Unreadable_IsIgnored()

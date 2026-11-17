@@ -27,27 +27,50 @@ namespace PolyQuest.Tests
         // Every RecordingDialogueEvent made by this kit writes here.
         public List<string> Fired { get; } = new();
 
+        /*----------------------------------------------------------------------
+        | --- Track: Registers an object for the kit to destroy on Dispose --- |
+        ----------------------------------------------------------------------*/
         public T Track<T>(T obj) where T : Object
         {
             m_created.Add(obj);
             return obj;
         }
 
-        /* --- Conditions --- */
 
+        /*--------------------
+        | --- Conditions --- |
+        --------------------*/
+        /*------------------------------------------------
+        | --- Always: A condition that always passes --- |
+        ------------------------------------------------*/
         public static Conjunction Always => JsonUtility.FromJson<Conjunction>("{\"m_AND\":[]}");
 
+        /*-----------------------------------------------------------------------------------
+        | --- When: A condition on one condition type and parameter, optionally negated --- |
+        -----------------------------------------------------------------------------------*/
         public static Conjunction When(ConditionType type, string parameter, bool negate = false)
         {
             string condition = $"{{\"m_condition\":{(int)type},\"m_parameters\":[\"{parameter}\"],\"m_negate\":{(negate ? "true" : "false")}}}";
             return JsonUtility.FromJson<Conjunction>($"{{\"m_AND\":[{{\"m_OR\":[{condition}]}}]}}");
         }
 
-        /* --- Nodes and dialogues --- */
 
+        /*---------------------------
+        | --- Nodes & Dialogues --- |
+        ---------------------------*/
+        /*-----------------------------------------------------------------
+        | --- NpcLine: Creates an NPC line with an optional condition --- |
+        -----------------------------------------------------------------*/
         public DialogueNode NpcLine(string text, Conjunction condition = null) => Line(text, false, condition);
+
+        /*----------------------------------------------------------------------
+        | --- PlayerLine: Creates a Player line with an optional condition --- |
+        ----------------------------------------------------------------------*/
         public DialogueNode PlayerLine(string text, Conjunction condition = null) => Line(text, true, condition);
 
+        /*--------------------------------------------------------------------------------------
+        | --- Line: Creates a dialogue node named by its text, which keeps node IDs unique --- |
+        --------------------------------------------------------------------------------------*/
         private DialogueNode Line(string text, bool isPlayerSpeaking, Conjunction condition)
         {
             DialogueNode node = Track(ScriptableObject.CreateInstance<DialogueNode>());
@@ -58,18 +81,29 @@ namespace PolyQuest.Tests
             return node;
         }
 
+        /*---------------------------------------------------------
+        | --- Link: Makes the children follow the parent node --- |
+        ---------------------------------------------------------*/
         public static void Link(DialogueNode parent, params DialogueNode[] children)
         {
             parent.Children.AddRange(children.Select(c => c.name));
         }
 
+        /*---------------------------------------------------------------
+        | --- OnEnter: Adds an event fired when the node is entered --- |
+        ---------------------------------------------------------------*/
         public static void OnEnter(DialogueNode node, DialogueEvent dialogueEvent)
             => PlayModeTestKit.Get<List<DialogueEvent>>(node, "m_onEnterEvents").Add(dialogueEvent);
 
+        /*-----------------------------------------------------------
+        | --- OnExit: Adds an event fired when the node is left --- |
+        -----------------------------------------------------------*/
         public static void OnExit(DialogueNode node, DialogueEvent dialogueEvent)
             => PlayModeTestKit.Get<List<DialogueEvent>>(node, "m_onExitEvents").Add(dialogueEvent);
 
-        // Adds an enter and an exit recorder to each node: "enter:<text>" / "exit:<text>".
+        /*-------------------------------------------------------------------------------------------------------------------------
+        | --- RecordEntersAndExits: Adds an enter and an exit recorder to each node, logging "enter:<text>" and "exit:<text>" --- |
+        -------------------------------------------------------------------------------------------------------------------------*/
         public void RecordEntersAndExits(params DialogueNode[] nodes)
         {
             foreach (DialogueNode node in nodes)
@@ -79,6 +113,9 @@ namespace PolyQuest.Tests
             }
         }
 
+        /*-----------------------------------------------------------------------------------
+        | --- Recorder: Creates a RecordingDialogueEvent that writes its label to Fired --- |
+        -----------------------------------------------------------------------------------*/
         public RecordingDialogueEvent Recorder(string label)
         {
             RecordingDialogueEvent recorder = Track(ScriptableObject.CreateInstance<RecordingDialogueEvent>());
@@ -87,9 +124,14 @@ namespace PolyQuest.Tests
             return recorder;
         }
 
+        /*-----------------------------------------------------------
+        | --- Event: Creates a dialogue event of the given type --- |
+        -----------------------------------------------------------*/
         public T Event<T>() where T : DialogueEvent => Track(ScriptableObject.CreateInstance<T>());
 
-        // Nodes are stored in the given order; that is the authored order.
+        /*-------------------------------------------------------------------------------------------------------------
+        | --- Dialogue: Creates a dialogue whose nodes are stored in the given order, which is the authored order --- |
+        -------------------------------------------------------------------------------------------------------------*/
         public Dialogue Dialogue(string name, params DialogueNode[] nodes)
         {
             Dialogue dialogue = Track(ScriptableObject.CreateInstance<Dialogue>());
@@ -101,8 +143,13 @@ namespace PolyQuest.Tests
             return dialogue;
         }
 
-        /* --- NPC --- */
 
+        /*-------------
+        | --- NPC --- |
+        -------------*/
+        /*---------------------------------------------------------------------------------------------------
+        | --- Npc: Creates an NPC with a label, outline and dialogue, optionally with a dialogue camera --- |
+        ---------------------------------------------------------------------------------------------------*/
         public AIDialogueHandler Npc(string speakerName, Dialogue dialogue, Vector3 position, bool withDialogueCamera = false)
         {
             GameObject go = new GameObject(speakerName);
@@ -135,10 +182,14 @@ namespace PolyQuest.Tests
             return npc;
         }
 
-        // The key DialogueHistory records for an NPC.
+        /*----------------------------------------------------------------
+        | --- HistoryKey: The key DialogueHistory records for an NPC --- |
+        ----------------------------------------------------------------*/
         public static string HistoryKey(AIDialogueHandler npc) => npc.SpeakerName;
 
-        // Starts the conversation the way arriving at the NPC does, without the walk.
+        /*------------------------------------------------------------------------------------------
+        | --- Talk: Starts the conversation the way arriving at the NPC does, without the walk --- |
+        ------------------------------------------------------------------------------------------*/
         public static void Talk(PlayerDialogueHandler handler, AIDialogueHandler npc)
         {
             handler.BeginDialogueAction(npc, PlayModeTestKit.Get<Dialogue>(npc, "m_dialogue"));
@@ -154,8 +205,13 @@ namespace PolyQuest.Tests
             }
         }
 
-        /* --- Dialogue UI --- */
 
+        /*---------------------
+        | --- Dialogue UI --- |
+        ---------------------*/
+        /*------------------------------------------------------------------
+        | --- UIParts: The dialogue UI and the parts the tests inspect --- |
+        ------------------------------------------------------------------*/
         public sealed class UIParts
         {
             public DialogueUI UI;
@@ -175,6 +231,9 @@ namespace PolyQuest.Tests
             }
         }
 
+        /*-------------------------------------------------------------------------------------------------------
+        | --- DialogueUI: Builds a dialogue UI with its text, choice and button parts, wired to the handler --- |
+        -------------------------------------------------------------------------------------------------------*/
         public UIParts DialogueUI(PlayerDialogueHandler handler)
         {
             GameObject root = new GameObject("DialogueUI");
@@ -214,6 +273,9 @@ namespace PolyQuest.Tests
             return parts;
         }
 
+        /*----------------------------------------------------------------
+        | --- Child: Creates a child object with the given component --- |
+        ----------------------------------------------------------------*/
         private static T Child<T>(GameObject parent, string name) where T : Component
         {
             GameObject child = new GameObject(name);
@@ -221,6 +283,9 @@ namespace PolyQuest.Tests
             return child.AddComponent<T>();
         }
 
+        /*--------------------------------------------------------
+        | --- Dispose: Destroys every object the kit created --- |
+        --------------------------------------------------------*/
         public void Dispose()
         {
             for (int i = m_created.Count - 1; i >= 0; --i)

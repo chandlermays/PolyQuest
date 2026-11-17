@@ -24,6 +24,9 @@ namespace PolyQuest.Tests
         private BaseStats m_stats;
         private Attributes.Attributes m_attributes;
 
+        /*------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for attributes testing --- |
+        ------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -31,15 +34,22 @@ namespace PolyQuest.Tests
             (m_stats, m_attributes) = NewPlayer("Player");
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
             m_kit.Dispose();
         }
 
-        /* --- Helpers --- */
 
-        // Points per level: 4, 8, 12. Strength: +2 damage per point. Vitality: +10% health per point.
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------------
+        | --- NewPlayer: Creates a new player GameObject with BaseStats and Attributes components configured with test progression data --- |
+        -----------------------------------------------------------------------------------------------------------------------------------*/
         private (BaseStats, Attributes.Attributes) NewPlayer(string name)
         {
             PlayerProgression progression = m_kit.Track(ScriptableObject.CreateInstance<PlayerProgression>());
@@ -64,6 +74,9 @@ namespace PolyQuest.Tests
             return (stats, attributes);
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------
+        | --- SetConfig: Configures an attribute modifier with its associated stat, additive bonus, and percentage bonus --- |
+        --------------------------------------------------------------------------------------------------------------------*/
         private static void SetConfig(SerializedProperty config, Attribute attribute, Stat stat, float additive, float percentage)
         {
             config.FindPropertyRelative("m_attribute").enumValueIndex = (int)attribute;
@@ -72,8 +85,13 @@ namespace PolyQuest.Tests
             config.FindPropertyRelative("m_percentageBonus").floatValue = percentage;
         }
 
-        /* ============================== Points available ============================== */
 
+        /*--------------------------
+        | --- Points Available --- |
+        --------------------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RemainingPoints_AreTheLevelsTotal_MinusConfirmedAndPending: The points remaining are the level's total minus the confirmed and pending points --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("The points remaining are the level's total minus the confirmed and pending points.")]
         public void RemainingPoints_AreTheLevelsTotal_MinusConfirmedAndPending()
@@ -87,6 +105,9 @@ namespace PolyQuest.Tests
             Assert.That(m_attributes.GetRemainingPoints(), Is.EqualTo(1));
         }
 
+        /*--------------------------------------------------------------------------------------------------
+        | --- LevelingUp_AddsThatLevelsPoints: Leveling up adds that level's points to those remaining --- |
+        --------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Leveling up adds that level's points to those remaining.")]
         public void LevelingUp_AddsThatLevelsPoints()
@@ -99,8 +120,13 @@ namespace PolyQuest.Tests
             Assert.That(m_attributes.GetRemainingPoints(), Is.EqualTo(5));
         }
 
-        /* ============================== Assigning ============================== */
 
+        /*-------------------
+        | --- Assigning --- |
+        -------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Assigning_StopsAtTheRemainingPoints: Points can be assigned up to the number remaining and no further; a refused assignment changes nothing --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Points can be assigned up to the number remaining and no further; a refused assignment changes nothing.")]
         public void Assigning_StopsAtTheRemainingPoints()
@@ -114,6 +140,9 @@ namespace PolyQuest.Tests
             Assert.That(m_attributes.CanAssignPoints(Attribute.kVitality, 1), Is.True);
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------
+        | --- RemovingPendingPoints_GivesThemBack_NotBelowZero: Removing a pending point gives it back, and pending points never go below 0 --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Removing a pending point gives it back, and pending points never go below 0.")]
         public void RemovingPendingPoints_GivesThemBack_NotBelowZero()
@@ -131,8 +160,13 @@ namespace PolyQuest.Tests
             Assert.That(m_attributes.GetRemainingPoints(), Is.EqualTo(4));
         }
 
-        /* ============================== Confirming and stats ============================== */
 
+        /*----------------------------
+        | --- Confirming & Stats --- |
+        ----------------------------*/
+        /*-----------------------------------------------------------------------------------------------------------
+        | --- PendingPoints_ChangeNoStat_UntilConfirmed: Pending points change no stat until they are confirmed --- |
+        -----------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Pending points change no stat until they are confirmed.")]
         public void PendingPoints_ChangeNoStat_UntilConfirmed()
@@ -147,6 +181,9 @@ namespace PolyQuest.Tests
             Assert.That(m_stats.GetHealth(), Is.EqualTo(health).Within(kTolerance));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Confirm_AppliesThePoints_ToTheStats: Confirming moves the pending points into the attributes, applies their bonuses to the stats, and raises OnStatModified once --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Confirming moves the pending points into the attributes, applies their bonuses to the stats, and raises OnStatModified once.")]
         public void Confirm_AppliesThePoints_ToTheStats()
@@ -165,8 +202,13 @@ namespace PolyQuest.Tests
             Assert.That(notifications, Is.EqualTo(1));
         }
 
-        /* ============================== Saving ============================== */
 
+        /*----------------
+        | --- Saving --- |
+        ----------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CaptureThenRestore_RestoresConfirmedPoints_NotPendingOnes: Capturing and restoring into a fresh Player restores the confirmed points and their bonuses; pending points aren't saved --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Capturing and restoring into a fresh Player restores the confirmed points and their bonuses; pending points aren't saved.")]
         public void CaptureThenRestore_RestoresConfirmedPoints_NotPendingOnes()
@@ -183,6 +225,9 @@ namespace PolyQuest.Tests
             Assert.That(freshStats.GetDamage(), Is.EqualTo(14f).Within(kTolerance));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_UnreadableEntries_AreSkipped_TheRestLoad: A saved entry with an unknown attribute name or a value that isn't a number is skipped, and the rest load --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A saved entry with an unknown attribute name or a value that isn't a number is skipped, and the rest load.")]
         public void RestoreState_UnreadableEntries_AreSkipped_TheRestLoad()
@@ -200,6 +245,9 @@ namespace PolyQuest.Tests
             Assert.That(m_attributes.GetAssignedPoints(Attribute.kVitality), Is.EqualTo(0));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_NotAnObject_IsIgnored: Attribute save data that isn't an object is ignored: the confirmed points are unchanged --- |
+        -------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Attribute save data that isn't an object is ignored: the confirmed points are unchanged.")]
         public void RestoreState_NotAnObject_IsIgnored()
@@ -213,8 +261,13 @@ namespace PolyQuest.Tests
             Assert.That(m_attributes.GetAssignedPoints(Attribute.kStrength), Is.EqualTo(2));
         }
 
-        /* ============================== The attribute panel ============================== */
 
+        /*-----------------------------
+        | --- The Attribute Panel --- |
+        -----------------------------*/
+        /*--------------------------------------------------------------------------------------------------------------------------
+        | --- Listing: Creates an AttributeListingUI component with UI buttons and text for testing attribute row interactions --- |
+        --------------------------------------------------------------------------------------------------------------------------*/
         private AttributeListingUI Listing(Attribute attribute, out Button minus, out Button plus, out TextMeshProUGUI value)
         {
             GameObject row = m_kit.NewObject(attribute + " Row");
@@ -231,10 +284,16 @@ namespace PolyQuest.Tests
             return listing;
         }
 
+        /*--------------------------------------------------------------------------
+        | --- Invoke: Invokes a private method on a component using reflection --- |
+        --------------------------------------------------------------------------*/
         private static void Invoke(Component component, string method)
             => component.GetType().GetMethod(method, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public)
                         .Invoke(component, null);
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- AttributeRow_Buttons_AssignAndRemove_AndTheValueShowsThePoints: An attribute row's + and - buttons add and remove a pending point, and its value shows the confirmed plus pending points --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An attribute row's + and - buttons add and remove a pending point, and its value shows the confirmed plus pending points.")]
         public void AttributeRow_Buttons_AssignAndRemove_AndTheValueShowsThePoints()
@@ -250,6 +309,9 @@ namespace PolyQuest.Tests
             Assert.That(value.text, Is.EqualTo("1"));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- AttributeRow_Buttons_AreEnabledOnlyWhenTheChangeIsAllowed: An attribute row's + is enabled only while a point remains, and - only while the attribute has a pending point --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An attribute row's + is enabled only while a point remains, and - only while the attribute has a pending point.")]
         public void AttributeRow_Buttons_AreEnabledOnlyWhenTheChangeIsAllowed()
@@ -266,6 +328,9 @@ namespace PolyQuest.Tests
             Assert.That(plus.interactable, Is.False, "no points remaining");
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- AttributePanel_Confirm_ConfirmsThePoints_AndShowsThePointsRemaining: The attribute panel's Confirm button confirms the pending points, and its text shows the points remaining --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("The attribute panel's Confirm button confirms the pending points, and its text shows the points remaining.")]
         public void AttributePanel_Confirm_ConfirmsThePoints_AndShowsThePointsRemaining()

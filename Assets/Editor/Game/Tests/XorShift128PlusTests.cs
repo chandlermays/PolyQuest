@@ -13,6 +13,9 @@ namespace PolyQuest.Tests
     {
         private const ulong kSeed = 12345UL;
 
+        /*----------------------------------------------------------------------------------------------------------------
+        | --- SameSeed_ProducesIdenticalSequence: Two generators with the same seed produce the same 64-bit sequence --- |
+        ----------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Two generators with the same seed produce the same 64-bit sequence.")]
         public void SameSeed_ProducesIdenticalSequence()
@@ -24,6 +27,9 @@ namespace PolyQuest.Tests
                 Assert.That(a.RandomUInt64(), Is.EqualTo(b.RandomUInt64()), $"draw {i}");
         }
 
+        /*-------------------------------------------------------------------------------------------------
+        | --- DifferentSeeds_ProduceDifferentSequences: Different seeds produce different first draws --- |
+        -------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Different seeds produce different first draws.")]
         public void DifferentSeeds_ProduceDifferentSequences()
@@ -34,6 +40,9 @@ namespace PolyQuest.Tests
             Assert.That(a.RandomUInt64(), Is.Not.EqualTo(b.RandomUInt64()));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------
+        | --- Reseeding_RestartsTheSequence: Calling Seed with the original seed restarts the sequence from its first value --- |
+        -----------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Calling Seed with the original seed restarts the sequence from its first value.")]
         public void Reseeding_RestartsTheSequence()
@@ -47,6 +56,9 @@ namespace PolyQuest.Tests
             Assert.That(rng.RandomUInt64(), Is.EqualTo(first));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------
+        | --- Seed_Zero_InitializesWithoutError: Passing a seed of 0 does not throw and initializes a valid non-zero generator state --- |
+        --------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Passing a seed of 0 does not throw and initializes a valid non-zero generator state.")]
         public void Seed_Zero_InitializesWithoutError()
@@ -58,8 +70,13 @@ namespace PolyQuest.Tests
             });
         }
 
-        ///* --- Golden values --- *///
 
+        /*-----------------------
+        | --- Golden Values --- |
+        -----------------------*/
+        /*--------------------------------------------------------------------------------------------------------------------
+        | --- RandomUInt64_MatchesGoldenSequence: Golden values: the first five 64-bit draws for seed 12345 never change --- |
+        --------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Golden values: the first five 64-bit draws for seed 12345 never change.")]
         public void RandomUInt64_MatchesGoldenSequence()
@@ -71,6 +88,9 @@ namespace PolyQuest.Tests
                 Assert.That(rng.RandomUInt64(), Is.EqualTo(expected[i]), $"draw {i}");
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------
+        | --- RandomUInt32_IsTheUpper32BitsOfTheFirst64BitDraw: RandomUInt32 returns the upper 32 bits of a 64-bit draw --- |
+        -------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("RandomUInt32 returns the upper 32 bits of a 64-bit draw.")]
         public void RandomUInt32_IsTheUpper32BitsOfTheFirst64BitDraw()
@@ -80,6 +100,9 @@ namespace PolyQuest.Tests
             Assert.That(rng.RandomUInt32(), Is.EqualTo(1855622656u));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------
+        | --- RandomDouble_UsesTheTop53Bits: RandomDouble builds a [0, 1) value from the top 53 bits of a 64-bit draw --- |
+        -----------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("RandomDouble builds a [0, 1) value from the top 53 bits of a 64-bit draw.")]
         public void RandomDouble_UsesTheTop53Bits()
@@ -89,6 +112,9 @@ namespace PolyQuest.Tests
             Assert.That(rng.RandomDouble(), Is.EqualTo(0.4320458173962787).Within(1e-15));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------
+        | --- RandomRangeInt_MatchesGoldenSequence: Golden values: RandomRange(0, 100) for seed 777 never changes --- |
+        -------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Golden values: RandomRange(0, 100) for seed 777 never changes.")]
         public void RandomRangeInt_MatchesGoldenSequence()
@@ -100,6 +126,9 @@ namespace PolyQuest.Tests
                 Assert.That(rng.RandomRange(0, 100), Is.EqualTo(expected[i]), $"draw {i}");
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RandomRangeInt_WithNegativeMin_MatchesGoldenSequence: Golden values: RandomRange(-5, 5) for seed 777 handles a negative minimum and never changes --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Golden values: RandomRange(-5, 5) for seed 777 handles a negative minimum and never changes.")]
         public void RandomRangeInt_WithNegativeMin_MatchesGoldenSequence()
@@ -111,8 +140,13 @@ namespace PolyQuest.Tests
                 Assert.That(rng.RandomRange(-5, 5), Is.EqualTo(expected[i]), $"draw {i}");
         }
 
-        ///* --- Ranges and bounds --- *///
 
+        /*-------------------------
+        | --- Ranges & Bounds --- |
+        -------------------------*/
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RandomRangeInt_StaysInHalfOpenRange_AndCoversEveryValue: Integer RandomRange is half-open [min, max) and produces every value in the range --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Integer RandomRange is half-open [min, max) and produces every value in the range.")]
         public void RandomRangeInt_StaysInHalfOpenRange_AndCoversEveryValue()
@@ -130,6 +164,9 @@ namespace PolyQuest.Tests
             Assert.That(seen.Count, Is.EqualTo(5));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RandomRangeInt_LargeSpan_ExecutesSafely: Large-span integer ranges execute successfully through rejection sampling without hanging --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Large-span integer ranges execute successfully through rejection sampling without hanging.")]
         public void RandomRangeInt_LargeSpan_ExecutesSafely()
@@ -143,6 +180,9 @@ namespace PolyQuest.Tests
             }
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------
+        | --- RandomRangeInt_EmptyOrInvertedRange_ReturnsMin: Integer RandomRange returns min when the range is empty or inverted --- |
+        -----------------------------------------------------------------------------------------------------------------------------*/
         [TestCase(5, 5)]
         [TestCase(5, 3)]
         [Description("Integer RandomRange returns min when the range is empty or inverted.")]
@@ -153,6 +193,9 @@ namespace PolyQuest.Tests
             Assert.That(rng.RandomRange(min, max), Is.EqualTo(min));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RandomRangeFloat_StaysInRange_AndEmptyRangeReturnsMin: Float RandomRange stays within [min, max]; an empty or inverted range returns min --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Float RandomRange stays within [min, max]; an empty or inverted range returns min.")]
         public void RandomRangeFloat_StaysInRange_AndEmptyRangeReturnsMin()
@@ -166,6 +209,9 @@ namespace PolyQuest.Tests
             Assert.That(rng.RandomRange(3f, 1f), Is.EqualTo(3f));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------
+        | --- RandomRangeDouble_StaysInRange_AndEmptyRangeReturnsMin: Double RandomRange stays within [min, max]; an empty range returns min --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Double RandomRange stays within [min, max]; an empty range returns min.")]
         public void RandomRangeDouble_StaysInRange_AndEmptyRangeReturnsMin()
@@ -178,6 +224,9 @@ namespace PolyQuest.Tests
             Assert.That(rng.RandomRange(7.0, 7.0), Is.EqualTo(7.0));
         }
 
+        /*---------------------------------------------------------------------------------------------------
+        | --- RandomRangeDouble_InvertedRange_ReturnsMin: Inverted double range (min > max) returns min --- |
+        ---------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Inverted double range (min > max) returns min.")]
         public void RandomRangeDouble_InvertedRange_ReturnsMin()
@@ -187,6 +236,9 @@ namespace PolyQuest.Tests
             Assert.That(rng.RandomRange(5.0, 2.0), Is.EqualTo(5.0));
         }
 
+        /*------------------------------------------------------------------------------------------------------------
+        | --- RandomDoubleAndFloat_StayInUnitRange: RandomDouble stays in [0, 1) and RandomFloat stays in [0, 1] --- |
+        ------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("RandomDouble stays in [0, 1) and RandomFloat stays in [0, 1].")]
         public void RandomDoubleAndFloat_StayInUnitRange()
@@ -200,6 +252,9 @@ namespace PolyQuest.Tests
             }
         }
 
+        /*-----------------------------------------------------------------------------------------------
+        | --- RandomBool_ProducesBothValues: RandomBool produces both true and false over 200 draws --- |
+        -----------------------------------------------------------------------------------------------*/
         [Test]
         [Description("RandomBool produces both true and false over 200 draws.")]
         public void RandomBool_ProducesBothValues()

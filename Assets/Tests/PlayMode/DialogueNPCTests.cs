@@ -20,6 +20,9 @@ namespace PolyQuest.Tests
         private PlayerRig m_rig;
         private DialogueTestKit m_kit;
 
+        /*--------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for dialogue NPC testing --- |
+        --------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -27,6 +30,9 @@ namespace PolyQuest.Tests
             m_kit = new DialogueTestKit();
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
@@ -34,19 +40,35 @@ namespace PolyQuest.Tests
             m_rig.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*-----------------------------------------------------
+        | --- Handler: The Player's PlayerDialogueHandler --- |
+        -----------------------------------------------------*/
         private PlayerDialogueHandler Handler => m_rig.Player.GetComponent<PlayerDialogueHandler>();
 
+        /*-----------------------------------------------------------------------------------
+        | --- Npc: Creates an NPC with a one-line dialogue at an offset from the Player --- |
+        -----------------------------------------------------------------------------------*/
         private AIDialogueHandler Npc(string speakerName, Vector3 offset)
             => m_kit.Npc(speakerName, m_kit.Dialogue(speakerName + " Dialogue", m_kit.NpcLine("Hello there.")),
                          m_rig.Player.transform.position + offset);
 
+        /*-------------------------------------------------------------
+        | --- LabelRoot: The root object of the NPC's world label --- |
+        -------------------------------------------------------------*/
         private static GameObject LabelRoot(AIDialogueHandler npc)
             => PlayModeTestKit.Get<GameObject>(npc.GetComponent<WorldLabel>(), "m_labelRoot");
 
-        /* ============================== Label ============================== */
 
+        /*---------------
+        | --- Label --- |
+        ---------------*/
+        /*---------------------------------------------------------------------------------
+        | --- Label_ShowsTheSpeakersName: An NPC's world label shows its display name --- |
+        ---------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("An NPC's world label shows its display name.")]
         public IEnumerator Label_ShowsTheSpeakersName()
@@ -57,6 +79,9 @@ namespace PolyQuest.Tests
             Assert.That(LabelRoot(npc).GetComponent<TextMeshProUGUI>().text, Is.EqualTo("Town Crier"));
         }
 
+        /*---------------------------------------------------------------------------------
+        | --- Hover_ShowsTheDialogueCursor: Hovering an NPC shows the dialogue cursor --- |
+        ---------------------------------------------------------------------------------*/
         [UnityTest]
         [Category("ClickModel")]
         [Description("Hovering an NPC shows the dialogue cursor.")]
@@ -68,6 +93,9 @@ namespace PolyQuest.Tests
             Assert.That(npc.GetCursorType(), Is.EqualTo(CursorSettings.CursorType.kDialogue));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------
+        | --- Highlight_TurnsTheOutlineOnAndOff: Highlighting an NPC turns its outline on, and clearing the highlight turns it off --- |
+        ------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Category("ClickModel")]
         [Description("Highlighting an NPC turns its outline on, and clearing the highlight turns it off.")]
@@ -84,6 +112,9 @@ namespace PolyQuest.Tests
             Assert.That(outline.enabled, Is.False);
         }
 
+        /*--------------------------------------------------------------------------------------------
+        | --- Label_ShowsAndHides: An NPC's label is hidden until shown, and can be hidden again --- |
+        --------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Category("ClickModel")]
         [Description("An NPC's label is hidden until shown, and can be hidden again.")]
@@ -100,8 +131,13 @@ namespace PolyQuest.Tests
             Assert.That(LabelRoot(npc).activeSelf, Is.False);
         }
 
-        /* ============================== Walking up to talk ============================== */
 
+        /*----------------------------
+        | --- Walking Up to Talk --- |
+        ----------------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- TalkingToADistantNpc_WalksOver_ThenStartsTheConversation: Talking to a distant NPC walks the Player over, and the conversation starts only once the Player is within talking distance --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Category("ClickModel")]
         [Description("Talking to a distant NPC walks the Player over, and the conversation starts only once the Player is within talking distance.")]

@@ -27,6 +27,9 @@ namespace PolyQuest.Tests
         private bool m_hadSaveKey;
         private string m_previousSaveName;
 
+        /*---------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for respawn testing --- |
+        ---------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -37,6 +40,9 @@ namespace PolyQuest.Tests
             PlayerRig.DestroyPersistentObjects();
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------
+        | --- TearDown: Unloads the scene, clears the singletons and test save files, and restores the current save name --- |
+        --------------------------------------------------------------------------------------------------------------------*/
         [UnityTearDown]
         public IEnumerator TearDown()
         {
@@ -61,14 +67,22 @@ namespace PolyQuest.Tests
                 PlayerPrefs.DeleteKey(kCurrentSaveKey);
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*--------------------------------------------------------------
+        | --- DeleteSaveFiles: Deletes every file of the test slot --- |
+        --------------------------------------------------------------*/
         private static void DeleteSaveFiles()
         {
             foreach (string path in Directory.GetFiles(Application.persistentDataPath, kSaveSlot + "*"))
                 File.Delete(path);
         }
 
+        /*-------------------------------------------------------------------------------------
+        | --- Bandit: Creates a plain object on the enemy faction, for use as an attacker --- |
+        -------------------------------------------------------------------------------------*/
         private static GameObject Bandit()
         {
             GameObject bandit = new GameObject("Bandit");
@@ -76,8 +90,13 @@ namespace PolyQuest.Tests
             return bandit;
         }
 
-        /* ============================== Tests ============================== */
 
+        /*---------------
+        | --- Tests --- |
+        ---------------*/
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- PlayerDeath_ReloadsTheLastSave_WithFullHealthAndMana: When the Player dies, the last save is reloaded, and the Player comes back with full health and mana --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("When the Player dies, the last save is reloaded, and the Player comes back with full health and mana.")]
         public IEnumerator PlayerDeath_ReloadsTheLastSave_WithFullHealthAndMana()

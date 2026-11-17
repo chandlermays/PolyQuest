@@ -34,6 +34,9 @@ namespace PolyQuest.Tests
 
         private const int kSlotCount = 4;
 
+        /*---------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for drag and slot testing --- |
+        ---------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -66,14 +69,22 @@ namespace PolyQuest.Tests
             m_drag = m_kit.NewObject("Drag").AddComponent<InventoryDragItem>();
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
             m_kit.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*--------------------------------------------------------------------
+        | --- NewIcon: Creates an item icon with the Image it draws into --- |
+        --------------------------------------------------------------------*/
         private InventoryItemIcon NewIcon()
         {
             GameObject go = m_kit.NewObject("Icon");
@@ -83,6 +94,9 @@ namespace PolyQuest.Tests
             return icon;
         }
 
+        /*------------------------------------------------------------------------------------------------------
+        | --- NewEquipmentSlot: Creates an equipment slot UI wired to the Player's equipment and inventory --- |
+        ------------------------------------------------------------------------------------------------------*/
         private EquipmentSlotUI NewEquipmentSlot(EquipmentSlot slot)
         {
             EquipmentSlotUI ui = m_kit.NewObject("Equip" + slot).AddComponent<EquipmentSlotUI>();
@@ -94,11 +108,17 @@ namespace PolyQuest.Tests
             return ui;
         }
 
+        /*------------------------------------------------------------------------------------------------------
+        | --- Put: Places items directly into an inventory slot, failing the test if the slot refuses them --- |
+        ------------------------------------------------------------------------------------------------------*/
         private void Put(int slot, InventoryItem item, int quantity = 1)
         {
             Assert.That(m_inventory.TryAddItemToSlot(slot, item, quantity), Is.True);
         }
 
+        /*----------------------------------------------------------------------------------------
+        | --- FillRemainingSlots: Fills every empty inventory slot with a unique filler item --- |
+        ----------------------------------------------------------------------------------------*/
         private void FillRemainingSlots()
         {
             for (int i = 0; i < kSlotCount; ++i)
@@ -108,6 +128,9 @@ namespace PolyQuest.Tests
             }
         }
 
+        /*------------------------------------------------------------------------
+        | --- CountOf: Totals an item's quantity across every inventory slot --- |
+        ------------------------------------------------------------------------*/
         private int CountOf(InventoryItem item)
         {
             int total = 0;
@@ -116,15 +139,22 @@ namespace PolyQuest.Tests
             return total;
         }
 
-        // Runs the private drop algorithm exactly as OnEndDrag would after resolving the target container
+        /*---------------------------------------------------------------------------------------------------------------
+        | --- Drop: Runs the private drop algorithm exactly as OnEndDrag would after resolving the target container --- |
+        ---------------------------------------------------------------------------------------------------------------*/
         private void Drop(IDragSource<InventoryItem> source, IDragDestination<InventoryItem> destination)
         {
             typeof(DragItem<InventoryItem>).GetField("m_dragSource", kAny).SetValue(m_drag, source);
             typeof(DragItem<InventoryItem>).GetMethod("DropItemIntoContainer", kAny).Invoke(m_drag, new object[] { destination });
         }
 
-        /* --- Fakes --- */
 
+        /*---------------
+        | --- Fakes --- |
+        ---------------*/
+        /*--------------------------------------------------------------------------------------------------------------
+        | --- FakeContainer: A drag container that records what is added and removed, with a configurable capacity --- |
+        --------------------------------------------------------------------------------------------------------------*/
         private sealed class FakeContainer : IDragContainer<InventoryItem>
         {
             public InventoryItem Item;
@@ -140,6 +170,9 @@ namespace PolyQuest.Tests
             public void RemoveItems(int quantity) => Removed.Add(quantity);
         }
 
+        /*------------------------------------------------------------------------------------------------------
+        | --- FakeDestination: A drag destination that records what is added, with a configurable capacity --- |
+        ------------------------------------------------------------------------------------------------------*/
         private sealed class FakeDestination : IDragDestination<InventoryItem>
         {
             public int Capacity = int.MaxValue;
@@ -149,10 +182,13 @@ namespace PolyQuest.Tests
             public void AddItems(InventoryItem item, int quantity) => Added.Add((item, quantity));
         }
 
-        // ================================================================================
-        //  DragItem: drop algorithm (fakes)
-        // ================================================================================
 
+        /*--------------------------------
+        | --- Drop Algorithm (Fakes) --- |
+        --------------------------------*/
+        /*---------------------------------------------------------------------------------------------------------
+        | --- Drop_OntoItself_DoesNothing: Dropping a slot onto itself leaves its item and quantity unchanged --- |
+        ---------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dropping a slot onto itself leaves its item and quantity unchanged.")]
         public void Drop_OntoItself_DoesNothing()
@@ -165,6 +201,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.GetQuantityAtSlot(0), Is.EqualTo(3));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Transfer_ToPlainDestination_MovesEverythingWhenCapacityAllows: Dropping onto a non-container destination with enough capacity moves the whole stack --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dropping onto a non-container destination with enough capacity moves the whole stack.")]
         public void Transfer_ToPlainDestination_MovesEverythingWhenCapacityAllows()
@@ -178,6 +217,9 @@ namespace PolyQuest.Tests
             Assert.That(destination.Added, Is.EqualTo(new[] { (m_potion as InventoryItem, 5) }));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------
+        | --- Transfer_IsLimitedByDestinationCapacity: A transfer moves only as many units as the destination's capacity allows --- |
+        ---------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A transfer moves only as many units as the destination's capacity allows.")]
         public void Transfer_IsLimitedByDestinationCapacity()
@@ -191,6 +233,9 @@ namespace PolyQuest.Tests
             Assert.That(destination.Added.Single().quantity, Is.EqualTo(2));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Transfer_ToZeroCapacityDestination_ChangesNothing: A destination with zero capacity receives nothing, and nothing is removed from the source --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A destination with zero capacity receives nothing, and nothing is removed from the source.")]
         public void Transfer_ToZeroCapacityDestination_ChangesNothing()
@@ -204,6 +249,9 @@ namespace PolyQuest.Tests
             Assert.That(destination.Added, Is.Empty);
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Transfer_ToContainerHoldingTheSameItem_MergesInsteadOfSwapping: Dropping onto a container holding the same item merges the stacks instead of swapping --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dropping onto a container holding the same item merges the stacks instead of swapping.")]
         public void Transfer_ToContainerHoldingTheSameItem_MergesInsteadOfSwapping()
@@ -218,6 +266,9 @@ namespace PolyQuest.Tests
             Assert.That(destination.Added.Single(), Is.EqualTo((m_potion as InventoryItem, 2)));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Transfer_ToAnEmptyContainer_IsATransfer_NotASwap: Dropping onto an empty container is a one-way transfer; nothing is taken from the destination --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dropping onto an empty container is a one-way transfer; nothing is taken from the destination.")]
         public void Transfer_ToAnEmptyContainer_IsATransfer_NotASwap()
@@ -231,6 +282,9 @@ namespace PolyQuest.Tests
             Assert.That(destination.Removed, Is.Empty);
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Swap_BothSidesAcceptTheOther_ExchangesStacks: When both containers accept the other's item, the two stacks are exchanged in full --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("When both containers accept the other's item, the two stacks are exchanged in full.")]
         public void Swap_BothSidesAcceptTheOther_ExchangesStacks()
@@ -246,6 +300,9 @@ namespace PolyQuest.Tests
             Assert.That(destination.Added.Single(), Is.EqualTo((m_potion as InventoryItem, 3)));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Swap_PartialDestinationCapacity_ReturnsOverflowToTheSource: In a swap, units the destination can't hold are returned to the source along with the destination's item --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("In a swap, units the destination can't hold are returned to the source along with the destination's item.")]
         public void Swap_PartialDestinationCapacity_ReturnsOverflowToTheSource()
@@ -264,6 +321,9 @@ namespace PolyQuest.Tests
             Assert.That(destination.Added, Is.EqualTo(new[] { (m_potion as InventoryItem, 2) }));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Swap_ThatCannotBePlaced_IsRevertedWithoutLoss: A swap that can't be placed on either side is reverted: each container gets its original stack back --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A swap that can't be placed on either side is reverted: each container gets its original stack back.")]
         public void Swap_ThatCannotBePlaced_IsRevertedWithoutLoss()
@@ -289,10 +349,13 @@ namespace PolyQuest.Tests
             Assert.That(source.Added, Is.EqualTo(new[] { (m_potion as InventoryItem, 5) }));
         }
 
-        // ================================================================================
-        //  DragItem: real inventory <-> inventory
-        // ================================================================================
 
+        /*---------------------------------
+        | --- Inventory <-> Inventory --- |
+        ---------------------------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------------
+        | --- Inventory_MoveToEmptySlot_MovesTheWholeStack: Dragging a stack onto an empty inventory slot moves the whole stack there --- |
+        ---------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dragging a stack onto an empty inventory slot moves the whole stack there.")]
         public void Inventory_MoveToEmptySlot_MovesTheWholeStack()
@@ -306,6 +369,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.GetQuantityAtSlot(2), Is.EqualTo(5));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------
+        | --- Inventory_DropStackOnSameItem_Merges: Dragging a stack onto another stack of the same item merges them into the target slot --- |
+        -------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dragging a stack onto another stack of the same item merges them into the target slot.")]
         public void Inventory_DropStackOnSameItem_Merges()
@@ -319,6 +385,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.GetQuantityAtSlot(1), Is.EqualTo(5));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Inventory_DropOnDifferentItem_SwapsSlotsAndKeepsQuantities: Dragging onto a slot with a different item swaps the two slots, keeping each quantity --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dragging onto a slot with a different item swaps the two slots, keeping each quantity.")]
         public void Inventory_DropOnDifferentItem_SwapsSlotsAndKeepsQuantities()
@@ -334,6 +403,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.GetQuantityAtSlot(1), Is.EqualTo(3));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------
+        | --- Inventory_SwapInAFullInventory_Works: Swapping two slots works even when the inventory has no free slots --- |
+        ------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Swapping two slots works even when the inventory has no free slots.")]
         public void Inventory_SwapInAFullInventory_Works()
@@ -350,6 +422,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.GetEmptySlotCount(), Is.EqualTo(0));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Inventory_Drag_DoesNotRaiseItemAddedNotifications: Moving items by dragging doesn't raise OnItemAdded, and the suppress flag is restored afterwards --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Moving items by dragging doesn't raise OnItemAdded, and the suppress flag is restored afterwards.")]
         public void Inventory_Drag_DoesNotRaiseItemAddedNotifications()
@@ -364,10 +439,13 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.SuppressItemAddedNotif, Is.False, "the suppress flag is restored");
         }
 
-        // ================================================================================
-        //  DragItem: inventory <-> equipment
-        // ================================================================================
 
+        /*---------------------------------
+        | --- Inventory <-> Equipment --- |
+        ---------------------------------*/
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Equip_ByDragging_MovesItemFromInventoryToTheEquipmentSlot: Dragging an equipable item onto its matching equipment slot equips it and removes it from the inventory --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dragging an equipable item onto its matching equipment slot equips it and removes it from the inventory.")]
         public void Equip_ByDragging_MovesItemFromInventoryToTheEquipmentSlot()
@@ -380,6 +458,9 @@ namespace PolyQuest.Tests
             Assert.That(CountOf(m_sword), Is.EqualTo(0));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------
+        | --- Equip_WrongSlotType_IsRejected: Dragging an equipable item onto the wrong slot type is rejected; it stays in the inventory --- |
+        ------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dragging an equipable item onto the wrong slot type is rejected; it stays in the inventory.")]
         public void Equip_WrongSlotType_IsRejected()
@@ -392,6 +473,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.GetItemAtSlot(0), Is.SameAs(m_helm));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------
+        | --- Equip_NonEquipableItem_IsRejected: Dragging a non-equipable item onto an equipment slot is rejected; the stack stays intact --- |
+        -------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dragging a non-equipable item onto an equipment slot is rejected; the stack stays intact.")]
         public void Equip_NonEquipableItem_IsRejected()
@@ -404,6 +488,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.GetQuantityAtSlot(0), Is.EqualTo(2));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Unequip_ByDraggingToAnEmptySlot_PutsItemInThatSlot: Dragging an equipped item onto an empty inventory slot unequips it into that slot --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dragging an equipped item onto an empty inventory slot unequips it into that slot.")]
         public void Unequip_ByDraggingToAnEmptySlot_PutsItemInThatSlot()
@@ -416,6 +503,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.GetItemAtSlot(2), Is.SameAs(m_sword));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Swap_EquippedItemWithInventoryItemOfTheSameSlotType_ExchangesThem: Dragging an equipped item onto an inventory item of the same slot type exchanges them --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dragging an equipped item onto an inventory item of the same slot type exchanges them.")]
         public void Swap_EquippedItemWithInventoryItemOfTheSameSlotType_ExchangesThem()
@@ -429,6 +519,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.GetItemAtSlot(1), Is.SameAs(m_sword));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Swap_InventoryItemOverEquippedItem_ExchangesThem: Dragging an inventory item onto an occupied equipment slot of its type exchanges them --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dragging an inventory item onto an occupied equipment slot of its type exchanges them.")]
         public void Swap_InventoryItemOverEquippedItem_ExchangesThem()
@@ -442,6 +535,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.GetItemAtSlot(0), Is.SameAs(m_axe));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Drop_UnequipableItemOnAnOccupiedEquipmentSlot_IsRejected: Dropping a non-equipable item on an occupied equipment slot is rejected: the equipped item stays equipped and the stack stays where it was --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dropping a non-equipable item on an occupied equipment slot is rejected: the equipped item stays equipped and the stack stays where it was.")]
         public void Drop_UnequipableItemOnAnOccupiedEquipmentSlot_IsRejected()
@@ -457,6 +553,9 @@ namespace PolyQuest.Tests
             Assert.That(CountOf(m_axe), Is.EqualTo(0));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Drop_WrongSlotEquipableOnAnOccupiedEquipmentSlot_IsRejected: Dropping an equipable item for a different slot type on an occupied equipment slot is rejected: the equipped item stays equipped and the dropped item stays where it was --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dropping an equipable item for a different slot type on an occupied equipment slot is rejected: the equipped item stays equipped and the dropped item stays where it was.")]
         public void Drop_WrongSlotEquipableOnAnOccupiedEquipmentSlot_IsRejected()
@@ -471,6 +570,9 @@ namespace PolyQuest.Tests
             Assert.That(CountOf(m_axe), Is.EqualTo(0));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Swap_EquippedItemOverUnrelatedStack_MovesEquippedItemToAFreeSlot: Dragging an equipped item onto an unrelated stack unequips it into a free slot and leaves the stack in place --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dragging an equipped item onto an unrelated stack unequips it into a free slot and leaves the stack in place.")]
         public void Swap_EquippedItemOverUnrelatedStack_MovesEquippedItemToAFreeSlot()
@@ -485,6 +587,9 @@ namespace PolyQuest.Tests
             Assert.That(CountOf(m_sword), Is.EqualTo(1));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Swap_EquippedItemOverUnrelatedStack_InAFullInventory_IsReverted: With a full inventory, dragging an equipped item onto an unrelated stack is reverted; it stays equipped --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("With a full inventory, dragging an equipped item onto an unrelated stack is reverted; it stays equipped.")]
         public void Swap_EquippedItemOverUnrelatedStack_InAFullInventory_IsReverted()
@@ -500,10 +605,13 @@ namespace PolyQuest.Tests
             Assert.That(CountOf(m_sword), Is.EqualTo(0));
         }
 
-        // ================================================================================
-        //  InventorySlotUI
-        // ================================================================================
 
+        /*-------------------------
+        | --- InventorySlotUI --- |
+        -------------------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------------------------
+        | --- SlotUI_ReportsTheItemAndQuantityOfItsInventorySlot: An inventory slot UI reports the item and quantity held in its inventory slot --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An inventory slot UI reports the item and quantity held in its inventory slot.")]
         public void SlotUI_ReportsTheItemAndQuantityOfItsInventorySlot()
@@ -515,6 +623,9 @@ namespace PolyQuest.Tests
             Assert.That(m_slots[0].GetItem(), Is.Null);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------
+        | --- SlotUI_Setup_ShowsTheIconOnlyWhenOccupied: Setup enables the slot's icon image only when the slot holds an item --- |
+        -------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Setup enables the slot's icon image only when the slot holds an item.")]
         public void SlotUI_Setup_ShowsTheIconOnlyWhenOccupied()
@@ -530,12 +641,18 @@ namespace PolyQuest.Tests
             Assert.That(IconImage(empty).enabled, Is.False);
         }
 
+        /*----------------------------------------------------------------------
+        | --- IconImage: Returns the Image behind an inventory slot's icon --- |
+        ----------------------------------------------------------------------*/
         private static Image IconImage(InventorySlotUI slot)
         {
             InventoryItemIcon icon = (InventoryItemIcon)typeof(InventorySlotUI).GetField("m_itemIcon", kAny).GetValue(slot);
             return icon.GetComponent<Image>();
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- SlotUI_Capacity_IsUnlimitedWhileAnySlotIsFree: While any inventory slot is free, a slot's capacity is unlimited, and GetMaxQuantity agrees --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("While any inventory slot is free, a slot's capacity is unlimited, and GetMaxQuantity agrees.")]
         public void SlotUI_Capacity_IsUnlimitedWhileAnySlotIsFree()
@@ -544,6 +661,9 @@ namespace PolyQuest.Tests
             Assert.That(m_slots[0].GetMaxItemsCapacity(m_stone), Is.EqualTo(m_slots[0].GetMaxQuantity(m_stone)));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- SlotUI_AddItems_PlacesInItsOwnSlot_WithoutNotification: A slot UI's AddItems puts the items in its own slot without raising OnItemAdded --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A slot UI's AddItems puts the items in its own slot without raising OnItemAdded.")]
         public void SlotUI_AddItems_PlacesInItsOwnSlot_WithoutNotification()
@@ -559,6 +679,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.SuppressItemAddedNotif, Is.False);
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------
+        | --- SlotUI_RemoveItems_RemovesFromItsOwnSlot: A slot UI's RemoveItems removes the given quantity from its own slot --- |
+        ------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A slot UI's RemoveItems removes the given quantity from its own slot.")]
         public void SlotUI_RemoveItems_RemovesFromItsOwnSlot()
@@ -570,6 +693,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.GetQuantityAtSlot(1), Is.EqualTo(3));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- SlotUI_DoubleClick_UsesTheItem_OnlyWhileTheCursorIsOver: Double-clicking an inventory slot uses its item only while the pointer is over that slot --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Double-clicking an inventory slot uses its item only while the pointer is over that slot.")]
         public void SlotUI_DoubleClick_UsesTheItem_OnlyWhileTheCursorIsOver()
@@ -584,6 +710,9 @@ namespace PolyQuest.Tests
             Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kWeapon), Is.SameAs(m_sword));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------
+        | --- SlotUI_DoubleClick_AfterThePointerLeaves_DoesNothing: After the pointer exits a slot, double-clicking does nothing --- |
+        ----------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("After the pointer exits a slot, double-clicking does nothing.")]
         public void SlotUI_DoubleClick_AfterThePointerLeaves_DoesNothing()
@@ -597,6 +726,9 @@ namespace PolyQuest.Tests
             Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kWeapon), Is.Null);
         }
 
+        /*------------------------------------------------------------------------------------------------------------
+        | --- SlotUI_DoubleClick_OnAnEmptySlot_IsHarmless: Double-clicking an empty inventory slot doesn't throw --- |
+        ------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Double-clicking an empty inventory slot doesn't throw.")]
         public void SlotUI_DoubleClick_OnAnEmptySlot_IsHarmless()
@@ -606,15 +738,21 @@ namespace PolyQuest.Tests
             Assert.DoesNotThrow(() => DoubleClick(m_slots[0]));
         }
 
+        /*--------------------------------------------------------------------
+        | --- DoubleClick: Invokes a slot's private double-click handler --- |
+        --------------------------------------------------------------------*/
         private static void DoubleClick(Component slot)
         {
             slot.GetType().GetMethod("OnDoubleClick", kAny).Invoke(slot, new object[] { default(InputAction.CallbackContext) });
         }
 
-        // ================================================================================
-        //  EquipmentSlotUI
-        // ================================================================================
 
+        /*-------------------------
+        | --- EquipmentSlotUI --- |
+        -------------------------*/
+        /*---------------------------------------------------------------------------------------------------------------------
+        | --- EquipSlotUI_EmptySlot_ReportsNoItem_QuantityZero: An empty equipment slot UI reports no item and quantity 0 --- |
+        ---------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An empty equipment slot UI reports no item and quantity 0.")]
         public void EquipSlotUI_EmptySlot_ReportsNoItem_QuantityZero()
@@ -623,6 +761,9 @@ namespace PolyQuest.Tests
             Assert.That(m_weaponSlot.GetQuantity(), Is.EqualTo(0));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------
+        | --- EquipSlotUI_OccupiedSlot_ReportsItem_QuantityOne: An occupied equipment slot UI reports the equipped item and quantity 1 --- |
+        ----------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An occupied equipment slot UI reports the equipped item and quantity 1.")]
         public void EquipSlotUI_OccupiedSlot_ReportsItem_QuantityOne()
@@ -633,6 +774,9 @@ namespace PolyQuest.Tests
             Assert.That(m_weaponSlot.GetQuantity(), Is.EqualTo(1));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EquipSlotUI_Capacity_IsOneOnlyForAMatchingItemIntoAnEmptySlot: An equipment slot's capacity is 1 only for a matching equipable item into an empty slot; otherwise 0 --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An equipment slot's capacity is 1 only for a matching equipable item into an empty slot; otherwise 0.")]
         public void EquipSlotUI_Capacity_IsOneOnlyForAMatchingItemIntoAnEmptySlot()
@@ -646,6 +790,9 @@ namespace PolyQuest.Tests
             Assert.That(m_weaponSlot.GetMaxItemsCapacity(m_sword), Is.EqualTo(0), "already occupied");
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EquipSlotUI_AddItems_EquipsIntoItsConfiguredSlot: An equipment slot UI's AddItems equips the item into the slot it is configured for --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An equipment slot UI's AddItems equips the item into the slot it is configured for.")]
         public void EquipSlotUI_AddItems_EquipsIntoItsConfiguredSlot()
@@ -655,6 +802,9 @@ namespace PolyQuest.Tests
             Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kHelmet), Is.SameAs(m_helm));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------
+        | --- EquipSlotUI_RemoveItems_UnequipsTheItem: An equipment slot UI's RemoveItems unequips the item in its slot --- |
+        -------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An equipment slot UI's RemoveItems unequips the item in its slot.")]
         public void EquipSlotUI_RemoveItems_UnequipsTheItem()
@@ -666,6 +816,9 @@ namespace PolyQuest.Tests
             Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kWeapon), Is.Null);
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EquipSlotUI_RedrawUI_ShowsTheIconOnlyWhenEquipped: RedrawUI enables the equipment slot's icon image only while an item is equipped --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("RedrawUI enables the equipment slot's icon image only while an item is equipped.")]
         public void EquipSlotUI_RedrawUI_ShowsTheIconOnlyWhenEquipped()
@@ -680,8 +833,14 @@ namespace PolyQuest.Tests
             Assert.That(image.enabled, Is.True);
         }
 
+        /*--------------------------------------------------------------
+        | --- Redraw: Invokes an equipment slot's private RedrawUI --- |
+        --------------------------------------------------------------*/
         private static void Redraw(EquipmentSlotUI slot) => typeof(EquipmentSlotUI).GetMethod("RedrawUI", kAny).Invoke(slot, null);
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EquipSlotUI_DoubleClick_MovesTheEquippedItemToTheInventory: Double-clicking an equipment slot unequips its item into the inventory and restores the suppress flag --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Double-clicking an equipment slot unequips its item into the inventory and restores the suppress flag.")]
         public void EquipSlotUI_DoubleClick_MovesTheEquippedItemToTheInventory()
@@ -696,6 +855,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.SuppressItemAddedNotif, Is.False);
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EquipSlotUI_DoubleClick_WithAFullInventory_KeepsItEquipped: Double-clicking an equipment slot with a full inventory keeps the item equipped and restores the suppress flag --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Double-clicking an equipment slot with a full inventory keeps the item equipped and restores the suppress flag.")]
         public void EquipSlotUI_DoubleClick_WithAFullInventory_KeepsItEquipped()
@@ -710,6 +872,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.SuppressItemAddedNotif, Is.False);
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EquipSlotUI_DoubleClick_WithoutTheCursorOver_DoesNothing: Double-clicking an equipment slot without the pointer over it does nothing --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Double-clicking an equipment slot without the pointer over it does nothing.")]
         public void EquipSlotUI_DoubleClick_WithoutTheCursorOver_DoesNothing()
@@ -721,6 +886,9 @@ namespace PolyQuest.Tests
             Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kWeapon), Is.SameAs(m_sword));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------
+        | --- EquipSlotUI_DoubleClick_OnAnEmptySlot_IsHarmless: Double-clicking an empty equipment slot doesn't throw --- |
+        -----------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Double-clicking an empty equipment slot doesn't throw.")]
         public void EquipSlotUI_DoubleClick_OnAnEmptySlot_IsHarmless()
@@ -730,10 +898,13 @@ namespace PolyQuest.Tests
             Assert.DoesNotThrow(() => DoubleClick(m_weaponSlot));
         }
 
-        // ================================================================================
-        //  InventoryDropTarget
-        // ================================================================================
 
+        /*-----------------------------
+        | --- InventoryDropTarget --- |
+        -----------------------------*/
+        /*------------------------------------------------------------------------------------------------------------------------
+        | --- DropTarget_AcceptsAnyQuantity: The world drop target accepts an unlimited quantity of any item, including null --- |
+        ------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("The world drop target accepts an unlimited quantity of any item, including null.")]
         public void DropTarget_AcceptsAnyQuantity()
@@ -744,10 +915,13 @@ namespace PolyQuest.Tests
             Assert.That(target.GetMaxItemsCapacity(null), Is.EqualTo(int.MaxValue));
         }
 
-        // ================================================================================
-        //  DragItem: pointer handlers
-        // ================================================================================
 
+        /*--------------------------
+        | --- Pointer Handlers --- |
+        --------------------------*/
+        /*--------------------------------------------------------------------------------------------------
+        | --- BuildDraggable: Creates a drag item under a parent on a canvas, ready for pointer events --- |
+        --------------------------------------------------------------------------------------------------*/
         private (InventoryDragItem drag, Canvas canvas, CanvasGroup group, GameObject home) BuildDraggable()
         {
             GameObject canvasObject = m_kit.NewObject("Canvas");
@@ -764,6 +938,9 @@ namespace PolyQuest.Tests
             return (drag, canvas, group, home);
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- BeginDrag_BlocksRaycasts_AndMovesTheItemUnderTheCanvas: OnBeginDrag stops the item blocking raycasts and reparents it under the root canvas --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("OnBeginDrag stops the item blocking raycasts and reparents it under the root canvas.")]
         public void BeginDrag_BlocksRaycasts_AndMovesTheItemUnderTheCanvas()
@@ -776,6 +953,9 @@ namespace PolyQuest.Tests
             Assert.That(drag.transform.parent, Is.SameAs(canvas.transform));
         }
 
+        /*-----------------------------------------------------------------------------------------------
+        | --- Drag_FollowsThePointerPosition: OnDrag moves the dragged item to the pointer position --- |
+        -----------------------------------------------------------------------------------------------*/
         [Test]
         [Description("OnDrag moves the dragged item to the pointer position.")]
         public void Drag_FollowsThePointerPosition()
@@ -787,6 +967,9 @@ namespace PolyQuest.Tests
             Assert.That(drag.transform.position, Is.EqualTo(new Vector3(12f, 34f, 0f)));
         }
 
+        /*-----------------------------------------------------------------------------------------------
+        | --- Awake_FindsTheDragSourceOnAParent: Awake finds the drag source on a parent GameObject --- |
+        -----------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Awake finds the drag source on a parent GameObject.")]
         public void Awake_FindsTheDragSourceOnAParent()

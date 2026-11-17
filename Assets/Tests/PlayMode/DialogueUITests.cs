@@ -24,6 +24,9 @@ namespace PolyQuest.Tests
         private PlayerRig m_rig;
         private DialogueTestKit m_kit;
 
+        /*-------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for dialogue UI testing --- |
+        -------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -31,6 +34,9 @@ namespace PolyQuest.Tests
             m_kit = new DialogueTestKit();
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
@@ -38,11 +44,18 @@ namespace PolyQuest.Tests
             m_rig.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*-----------------------------------------------------
+        | --- Handler: The Player's PlayerDialogueHandler --- |
+        -----------------------------------------------------*/
         private PlayerDialogueHandler Handler => m_rig.Player.GetComponent<PlayerDialogueHandler>();
 
-        // Builds the panel, then starts the conversation.
+        /*--------------------------------------------------------------
+        | --- Open: Builds the panel, then starts the conversation --- |
+        --------------------------------------------------------------*/
         private DialogueTestKit.UIParts Open(string speakerName, Dialogue dialogue)
         {
             DialogueTestKit.UIParts ui = m_kit.DialogueUI(Handler);
@@ -51,10 +64,18 @@ namespace PolyQuest.Tests
             return ui;
         }
 
+        /*--------------------------------------------
+        | --- Label: The text on a choice button --- |
+        --------------------------------------------*/
         private static string Label(GameObject choice) => choice.GetComponentInChildren<TextMeshProUGUI>(true).text;
 
-        /* ============================== Player's turn ============================== */
 
+        /*-----------------------
+        | --- Player's Turn --- |
+        -----------------------*/
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- PlayersTurn_ShowsAChoiceButtonPerAvailableReply_AndHidesNextAndEnd: On the Player's turn the panel shows one choice button per available reply, labelled with its text, and hides Next and End --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("On the Player's turn the panel shows one choice button per available reply, labelled with its text, and hides Next and End.")]
         public IEnumerator PlayersTurn_ShowsAChoiceButtonPerAvailableReply_AndHidesNextAndEnd()
@@ -75,6 +96,9 @@ namespace PolyQuest.Tests
             Assert.That(ui.End.gameObject.activeSelf, Is.False);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- ClickingAChoice_MovesTheConversationOn_AndClearsTheChoices: Clicking a choice button selects that reply: the conversation moves on to the NPC's answer and the old choice buttons are removed --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Clicking a choice button selects that reply: the conversation moves on to the NPC's answer and the old choice buttons are removed.")]
         public IEnumerator ClickingAChoice_MovesTheConversationOn_AndClearsTheChoices()
@@ -98,8 +122,13 @@ namespace PolyQuest.Tests
             Assert.That(ui.Choices(), Is.Empty);
         }
 
-        /* ============================== NPC's turn ============================== */
 
+        /*--------------------
+        | --- NPC's Turn --- |
+        --------------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------------------------
+        | --- NpcTurn_WithMoreToSay_ShowsNext_NotEnd: On the NPC's turn with more to say, the panel shows Next, hides End, and shows no choices --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("On the NPC's turn with more to say, the panel shows Next, hides End, and shows no choices.")]
         public IEnumerator NpcTurn_WithMoreToSay_ShowsNext_NotEnd()
@@ -117,6 +146,9 @@ namespace PolyQuest.Tests
             Assert.That(ui.Choices(), Is.Empty);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------
+        | --- NpcTurn_OnTheLastLine_ShowsEnd_NotNext: On the NPC's last line, the panel shows End, hides Next, and shows no choices --- |
+        -------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("On the NPC's last line, the panel shows End, hides Next, and shows no choices.")]
         public IEnumerator NpcTurn_OnTheLastLine_ShowsEnd_NotNext()
@@ -130,6 +162,9 @@ namespace PolyQuest.Tests
             Assert.That(ui.Choices(), Is.Empty);
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------
+        | --- ShowsTheSpeakersNameAndTheCurrentLine: The panel shows the NPC's display name as the speaker and the current line's text --- |
+        ----------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("The panel shows the NPC's display name as the speaker and the current line's text.")]
         public IEnumerator ShowsTheSpeakersNameAndTheCurrentLine()
@@ -143,8 +178,13 @@ namespace PolyQuest.Tests
             Assert.That(ui.Text.text, Is.EqualTo(opener.Text));
         }
 
-        /* ============================== Buttons ============================== */
 
+        /*-----------------
+        | --- Buttons --- |
+        -----------------*/
+        /*-----------------------------------------------------------------------------------------------------------
+        | --- NextButton_AdvancesTheConversation: The Next button moves the conversation to the NPC's next line --- |
+        -----------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("The Next button moves the conversation to the NPC's next line.")]
         public IEnumerator NextButton_AdvancesTheConversation()
@@ -161,6 +201,9 @@ namespace PolyQuest.Tests
             Assert.That(ui.Text.text, Is.EqualTo(more.Text));
         }
 
+        /*-----------------------------------------------------------------------------
+        | --- EndButton_EndsTheConversation: The End button ends the conversation --- |
+        -----------------------------------------------------------------------------*/
         [UnityTest]
         [Description("The End button ends the conversation.")]
         public IEnumerator EndButton_EndsTheConversation()
@@ -173,6 +216,9 @@ namespace PolyQuest.Tests
             Assert.That(Handler.IsActive(), Is.False);
         }
 
+        /*-----------------------------------------------------------------------------------------------------
+        | --- QuitButton_EndsTheConversation: The Quit button ends the conversation from the middle of it --- |
+        -----------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("The Quit button ends the conversation from the middle of it.")]
         public IEnumerator QuitButton_EndsTheConversation()

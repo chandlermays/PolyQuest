@@ -19,12 +19,18 @@ namespace PolyQuest.Tests
         private AbilityConfig m_config;
         private Action m_onComplete;
 
+        /*------------------------------------------------------------------------------------
+        | --- StartTargeting: Stores the config and callback until the test calls Finish --- |
+        ------------------------------------------------------------------------------------*/
         public override void StartTargeting(AbilityConfig config, Action onComplete)
         {
             m_config = config;
             m_onComplete = onComplete;
         }
 
+        /*---------------------------------------------------------------------------------
+        | --- Finish: Hands the chosen targets to the ability and completes targeting --- |
+        ---------------------------------------------------------------------------------*/
         public void Finish()
         {
             m_config.Targets = new List<GameObject>(Targets);

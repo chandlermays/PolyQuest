@@ -3,13 +3,13 @@
 | Author: Chandler Mays
 ----------------------------*/
 using NUnit.Framework;
+using UnityEditor;
+using UnityEngine;
 //---------------------------------
 using PolyQuest.Abilities;
 using PolyQuest.Components;
 using PolyQuest.Core;
 using PolyQuest.Inventories;
-using UnityEditor;
-using UnityEngine;
 
 namespace PolyQuest.Tests
 {
@@ -29,6 +29,9 @@ namespace PolyQuest.Tests
         private Actions m_actions;
         private ManualTargeting m_targeting;
 
+        /*---------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for ability testing --- |
+        ---------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -48,6 +51,9 @@ namespace PolyQuest.Tests
             m_targeting = m_items.Track(ScriptableObject.CreateInstance<ManualTargeting>());
         }
 
+        /*-------------------------------------------------------------------------
+        | --- TearDown: Destroys every entity and asset the test kits created --- |
+        -------------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
@@ -55,8 +61,13 @@ namespace PolyQuest.Tests
             m_items.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*----------------------------------------------------------------------------
+        | --- Target: Creates a 100-health target with the given faction and tag --- |
+        ----------------------------------------------------------------------------*/
         private HealthComponent Target(string name, Faction faction, string tag = "Untagged")
         {
             GameObject target = m_entities.Entity(name, health: 100);
@@ -65,6 +76,9 @@ namespace PolyQuest.Tests
             return EntityTestKit.AddHealth(target);
         }
 
+        /*--------------------------------------------------------------------------
+        | --- Effect: Creates a tracked effect asset with its amount field set --- |
+        --------------------------------------------------------------------------*/
         private T Effect<T>(string field, int amount) where T : EffectStrategy
         {
             T effect = m_items.Track(ScriptableObject.CreateInstance<T>());
@@ -72,10 +86,24 @@ namespace PolyQuest.Tests
             return effect;
         }
 
+        /*-------------------------------------------------------------
+        | --- Damage: A damage effect that deals the given amount --- |
+        -------------------------------------------------------------*/
         private DamageEffect Damage(int amount) => Effect<DamageEffect>("m_damageAmount", amount);
+
+        /*----------------------------------------------------------------------------
+        | --- Healing: A healing effect that restores the given amount of health --- |
+        ----------------------------------------------------------------------------*/
         private HealingEffect Healing(int amount) => Effect<HealingEffect>("m_healAmount", amount);
+
+        /*---------------------------------------------------------------------------
+        | --- ManaRestore: A mana effect that restores the given amount of mana --- |
+        ---------------------------------------------------------------------------*/
         private ManaEffect ManaRestore(int amount) => Effect<ManaEffect>("m_manaAmount", amount);
 
+        /*-----------------------------------------------------------------------------
+        | --- OnlyTagged: A filter that keeps only targets carrying the given tag --- |
+        -----------------------------------------------------------------------------*/
         private TagFilter OnlyTagged(string tag)
         {
             TagFilter filter = m_items.Track(ScriptableObject.CreateInstance<TagFilter>());
@@ -83,6 +111,9 @@ namespace PolyQuest.Tests
             return filter;
         }
 
+        /*---------------------------------------------------------------------
+        | --- NewAbility: Creates an ability with the given configuration --- |
+        ---------------------------------------------------------------------*/
         private Ability NewAbility(string id, float manaCost, float cooldown, TargetingStrategy targeting, EffectStrategy[] effects,
                                    FilteringStrategy[] filters = null, bool consumable = false)
         {
@@ -96,6 +127,9 @@ namespace PolyQuest.Tests
             return ability;
         }
 
+        /*----------------------------------------------------------------------------------------
+        | --- SetObjects: Writes an array of object references into a serialized array field --- |
+        ----------------------------------------------------------------------------------------*/
         private static void SetObjects(Object target, string field, Object[] values)
         {
             SerializedObject so = new SerializedObject(target);
@@ -106,10 +140,18 @@ namespace PolyQuest.Tests
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        /*-----------------------------------------------------
+        | --- Cancel: Cancels the caster's current action --- |
+        -----------------------------------------------------*/
         private void Cancel() => m_caster.GetComponent<ActionManager>().CancelCurrentAction();
 
-        /* ============================== Casting ============================== */
 
+        /*-----------------
+        | --- Casters --- |
+        -----------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Cast_SpendsManaOnce_StartsTheCooldown_AndAppliesEveryEffect: A cast spends the mana cost once, starts the cooldown, and applies every effect to the targets --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A cast spends the mana cost once, starts the cooldown, and applies every effect to the targets.")]
         public void Cast_SpendsManaOnce_StartsTheCooldown_AndAppliesEveryEffect()
@@ -126,6 +168,9 @@ namespace PolyQuest.Tests
             Assert.That(bandit.CurrentHealth, Is.EqualTo(85f).Within(kTolerance));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Use_WithTooLittleMana_IsRefused: With too little mana the cast is refused: Use returns false, and no mana, cooldown or effect is spent --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("With too little mana the cast is refused: Use returns false, and no mana, cooldown or effect is spent.")]
         public void Use_WithTooLittleMana_IsRefused()
@@ -141,6 +186,9 @@ namespace PolyQuest.Tests
             Assert.That(bandit.CurrentHealth, Is.EqualTo(100f).Within(kTolerance));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------
+        | --- Use_WhileOnCooldown_IsRefused: While the ability is on cooldown the cast is refused: Use returns false and nothing is spent --- |
+        -------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("While the ability is on cooldown the cast is refused: Use returns false and nothing is spent.")]
         public void Use_WhileOnCooldown_IsRefused()
@@ -153,6 +201,9 @@ namespace PolyQuest.Tests
             Assert.That(m_mana.CurrentMana, Is.EqualTo(100f).Within(kTolerance));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------
+        | --- CancelledTargeting_SpendsNothing: Targeting cancelled before it finishes spends nothing: no mana, no cooldown, no effect --- |
+        ----------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Targeting cancelled before it finishes spends nothing: no mana, no cooldown, no effect.")]
         public void CancelledTargeting_SpendsNothing()
@@ -170,6 +221,9 @@ namespace PolyQuest.Tests
             Assert.That(bandit.CurrentHealth, Is.EqualTo(100f).Within(kTolerance));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- ManaSpentWhileTargeting_TheCastDoesNotHappen: If mana drops below the cost while targeting, the cast doesn't happen: no cooldown and no effect --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("If mana drops below the cost while targeting, the cast doesn't happen: no cooldown and no effect.")]
         public void ManaSpentWhileTargeting_TheCastDoesNotHappen()
@@ -187,8 +241,13 @@ namespace PolyQuest.Tests
             Assert.That(bandit.CurrentHealth, Is.EqualTo(100f).Within(kTolerance));
         }
 
-        /* ============================== Filters and effects ============================== */
 
+        /*---------------------------
+        | --- Filters & Effects --- |
+        ---------------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------
+        | --- Filters_RunBeforeTheEffects: Filters run before the effects: only targets with the filter's tag are hit --- |
+        -----------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Filters run before the effects: only targets with the filter's tag are hit.")]
         public void Filters_RunBeforeTheEffects()
@@ -206,6 +265,9 @@ namespace PolyQuest.Tests
             Assert.That(untagged.CurrentHealth, Is.EqualTo(100f).Within(kTolerance));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------
+        | --- DamageEffect_DoesNotHurtAllies: A damage effect hits through the normal damage rules: an ally caught in it isn't hurt --- |
+        -------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A damage effect hits through the normal damage rules: an ally caught in it isn't hurt.")]
         public void DamageEffect_DoesNotHurtAllies()
@@ -220,6 +282,9 @@ namespace PolyQuest.Tests
             Assert.That(guard.CurrentHealth, Is.EqualTo(100f).Within(kTolerance));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------
+        | --- HealingEffect_Heals_NotPastTheMaximum_NotTheDead: A healing effect heals each target, never past its maximum and never a dead one --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A healing effect heals each target, never past its maximum and never a dead one.")]
         public void HealingEffect_Heals_NotPastTheMaximum_NotTheDead()
@@ -242,6 +307,9 @@ namespace PolyQuest.Tests
             Assert.That(fallen.IsDead, Is.True);
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------
+        | --- ManaEffect_RestoresMana_NotPastTheMaximum: A mana effect restores each target's mana, never past its maximum --- |
+        ----------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A mana effect restores each target's mana, never past its maximum.")]
         public void ManaEffect_RestoresMana_NotPastTheMaximum()
@@ -259,8 +327,13 @@ namespace PolyQuest.Tests
             Assert.That(m_mana.CurrentMana, Is.EqualTo(100f).Within(kTolerance));
         }
 
-        /* ============================== Consumable abilities ============================== */
 
+        /*------------------------------
+        | --- Consumable Abilities --- |
+        ------------------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- ConsumableWithClickTargeting_IsUsedUpWhenTheCastHappens: A consumable ability with click targeting is used up only when the cast happens, not when targeting starts --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A consumable ability with click targeting is used up only when the cast happens, not when targeting starts.")]
         public void ConsumableWithClickTargeting_IsUsedUpWhenTheCastHappens()
@@ -277,6 +350,9 @@ namespace PolyQuest.Tests
             Assert.That(m_actions.GetQuantity(0), Is.EqualTo(1));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------
+        | --- ConsumableWithClickTargeting_Cancelled_IsNotUsedUp: A consumable ability whose click targeting is cancelled is not used up --- |
+        ------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A consumable ability whose click targeting is cancelled is not used up.")]
         public void ConsumableWithClickTargeting_Cancelled_IsNotUsedUp()
@@ -291,6 +367,9 @@ namespace PolyQuest.Tests
             Assert.That(m_actions.GetQuantity(0), Is.EqualTo(2));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------
+        | --- SelfTargetedPotion_AtFullHealth_IsUsedUp: A self-targeted potion casts at once and is used up, even at full health --- |
+        ----------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A self-targeted potion casts at once and is used up, even at full health.")]
         public void SelfTargetedPotion_AtFullHealth_IsUsedUp()

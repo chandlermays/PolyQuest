@@ -21,21 +21,31 @@ namespace PolyQuest.Tests
     {
         private PlayerRig m_rig;
 
+        /*---------------------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for save and load integration testing --- |
+        ---------------------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
             m_rig = new PlayerRig();
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
             m_rig.Dispose();
         }
 
-        /* --- Helpers --- */
 
-        // Gives the Player something to lose: items, silver, XP/levels and some damage. Returns the damaged health.
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------
+        | --- Seed: Gives the Player something to lose: items, silver, XP and levels, and some damage; returns the damaged health --- |
+        -----------------------------------------------------------------------------------------------------------------------------*/
         private float Seed()
         {
             m_rig.Inventory.TryAddToAvailableSlot(m_rig.StackableItem, 5);
@@ -45,8 +55,13 @@ namespace PolyQuest.Tests
             return m_rig.Health.CurrentHealth;
         }
 
-        /* ============================== Same Player ============================== */
 
+        /*---------------------
+        | --- Same Player --- |
+        ---------------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- SaveThenLoad_RestoresWhatWasChangedAfterTheSave: Save, then change silver, inventory and health, then Load: silver, item quantity, level, experience and health return to their saved values on the same Player --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Save, then change silver, inventory and health, then Load: silver, item quantity, level, experience and health return to their saved values on the same Player.")]
         public IEnumerator SaveThenLoad_RestoresWhatWasChangedAfterTheSave()
@@ -72,6 +87,9 @@ namespace PolyQuest.Tests
             Assert.That(m_rig.Health.CurrentHealth, Is.EqualTo(savedHealth).Within(1e-3f));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Save_CapturesEverySaveableComponentOnThePlayer: The save file holds an entry under the Player's UID with a key for every ISaveable component on the Player --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("The save file holds an entry under the Player's UID with a key for every ISaveable component on the Player.")]
         public IEnumerator Save_CapturesEverySaveableComponentOnThePlayer()
@@ -88,8 +106,13 @@ namespace PolyQuest.Tests
                 Assert.That(player.ContainsKey(saveable.GetType().ToString()), Is.True, saveable.GetType().Name);
         }
 
-        /* ============================== A fresh Player (what a scene reload / Continue does) ============================== */
 
+        /*------------------------
+        | --- A Fresh Player --- |
+        ------------------------*/
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Load_IntoAFreshPlayer_RestoresInventoryEquipmentWalletAndProgression: Loading into a newly spawned Player (as a scene reload or Continue does) restores silver, items, the equipped item, level and experience --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Loading into a newly spawned Player (as a scene reload or Continue does) restores silver, items, the equipped item, level and experience.")]
         public IEnumerator Load_IntoAFreshPlayer_RestoresInventoryEquipmentWalletAndProgression()
@@ -117,6 +140,9 @@ namespace PolyQuest.Tests
             Assert.That(m_rig.Experience.ExperiencePoints, Is.EqualTo(xp));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Load_IntoAFreshPlayer_DoesNotChangeTheSavedHealth: Loading a damaged level-3 save into a fresh level-1 Player restores exactly the saved health, whatever order the Player's components restore in --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Loading a damaged level-3 save into a fresh level-1 Player restores exactly the saved health, whatever order the Player's components restore in.")]
         public IEnumerator Load_IntoAFreshPlayer_DoesNotChangeTheSavedHealth()
@@ -137,8 +163,13 @@ namespace PolyQuest.Tests
                         $"saved {savedHealth}/{savedMax}, loaded {m_rig.Health.CurrentHealth}");
         }
 
-        /* ============================== Bad or missing files ============================== */
 
+        /*------------------------------
+        | --- Bad or Missing Files --- |
+        ------------------------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------------------
+        | --- Load_WithNoSaveFile_ChangesNothing: Load with no save file on disk does not throw and leaves the current game state unchanged --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Load with no save file on disk does not throw and leaves the current game state unchanged.")]
         public IEnumerator Load_WithNoSaveFile_ChangesNothing()
@@ -152,6 +183,9 @@ namespace PolyQuest.Tests
             Assert.That(m_rig.Wallet.CurrentSilver, Is.EqualTo(75));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Load_CorruptSaveFile_DoesNotThrow_AndLeavesTheGameUntouched: Loading a save file that is not valid JSON, with nothing to fall back to, does not throw and leaves the current game state as it was --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Loading a save file that is not valid JSON, with nothing to fall back to, does not throw and leaves the current game state as it was.")]
         public IEnumerator Load_CorruptSaveFile_DoesNotThrow_AndLeavesTheGameUntouched()
@@ -166,6 +200,9 @@ namespace PolyQuest.Tests
             Assert.That(m_rig.Wallet.CurrentSilver, Is.EqualTo(75));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Save_OverACorruptSaveFile_WritesAReadableSave: Saving over a save file that is not valid JSON does not throw and leaves a readable save holding the Player's current state --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Saving over a save file that is not valid JSON does not throw and leaves a readable save holding the Player's current state.")]
         public IEnumerator Save_OverACorruptSaveFile_WritesAReadableSave()
@@ -182,6 +219,9 @@ namespace PolyQuest.Tests
             Assert.That(file.ContainsKey(m_rig.Player.GetComponent<SaveableEntity>().UID), Is.True);
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_UnreadablePosition_LeavesThePlayerWhereItIs: A saved position that can't be read is ignored, as if the save never held it: the Player stays where it is instead of moving to the world origin --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("A saved position that can't be read is ignored, as if the save never held it: the Player stays where it is instead of moving to the world origin.")]
         public IEnumerator RestoreState_UnreadablePosition_LeavesThePlayerWhereItIs()
@@ -196,8 +236,13 @@ namespace PolyQuest.Tests
             Assert.That(m_rig.Player.transform.position, Is.EqualTo(position).Using(Vector3EqualityComparer.Instance));
         }
 
-        /* ============================== Slots and auto-saves ============================== */
 
+        /*---------------------------
+        | --- Slots & Autosaves --- |
+        ---------------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------
+        | --- AutoSave_WritesItsOwnSlot_AndLeavesTheMainSaveAlone: AutoSave writes to its own _autosave slot and does not modify the main save file --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("AutoSave writes to its own _autosave slot and does not modify the main save file.")]
         public IEnumerator AutoSave_WritesItsOwnSlot_AndLeavesTheMainSaveAlone()
@@ -215,6 +260,9 @@ namespace PolyQuest.Tests
             Assert.That(File.ReadAllText(PlayerRig.AutoSavePath), Is.Not.EqualTo(mainBefore));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------
+        | --- LevelingUp_AutoSavesTheGame: Gaining a level autosaves: it writes the current slot's autosave and leaves the Player's own save alone --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Gaining a level autosaves: it writes the current slot's autosave and leaves the Player's own save alone.")]
         public IEnumerator LevelingUp_AutoSavesTheGame()
@@ -228,6 +276,9 @@ namespace PolyQuest.Tests
             Assert.That(File.Exists(PlayerRig.SavePath), Is.False, "an automatic save wrote the Player's own save");
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Save_KeepsEntriesOfEntitiesInOtherScenes: Save keeps the entries of entities that aren't loaded right now (another scene's), so their state survives a save made elsewhere --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Save keeps the entries of entities that aren't loaded right now (another scene's), so their state survives a save made elsewhere.")]
         public IEnumerator Save_KeepsEntriesOfEntitiesInOtherScenes()

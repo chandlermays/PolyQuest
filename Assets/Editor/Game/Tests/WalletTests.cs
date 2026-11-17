@@ -17,6 +17,9 @@ namespace PolyQuest.Tests
         private Wallet m_wallet;
         private int m_updates;
 
+        /*--------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for wallet testing --- |
+        --------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -26,12 +29,18 @@ namespace PolyQuest.Tests
             m_wallet.OnWalletUpdated += () => ++m_updates;
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
             Object.DestroyImmediate(m_player);
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- AddingAndSpending_ChangeTheBalance_AndRaiseOnWalletUpdated: Adding and spending silver changes the balance and raises OnWalletUpdated each time --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Adding and spending silver changes the balance and raises OnWalletUpdated each time.")]
         public void AddingAndSpending_ChangeTheBalance_AndRaiseOnWalletUpdated()
@@ -43,6 +52,9 @@ namespace PolyQuest.Tests
             Assert.That(m_updates, Is.EqualTo(2));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CaptureThenRestore_RestoresTheBalance: Capturing the balance and restoring it into a fresh wallet restores it and raises OnWalletUpdated --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Capturing the balance and restoring it into a fresh wallet restores it and raises OnWalletUpdated.")]
         public void CaptureThenRestore_RestoresTheBalance()
@@ -58,6 +70,9 @@ namespace PolyQuest.Tests
             Assert.That(freshUpdates, Is.EqualTo(1));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_Unreadable_IsIgnored: Wallet save data that can't be read is ignored: the balance is unchanged --- |
+        ---------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Wallet save data that can't be read is ignored: the balance is unchanged.")]
         public void RestoreState_Unreadable_IsIgnored()

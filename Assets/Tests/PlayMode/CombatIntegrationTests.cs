@@ -31,12 +31,18 @@ namespace PolyQuest.Tests
         private PlayerRig m_rig;
         private readonly List<Object> m_created = new();
 
+        /*--------------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for combat integration testing --- |
+        --------------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
             m_rig = new PlayerRig();
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
@@ -51,17 +57,32 @@ namespace PolyQuest.Tests
             m_rig.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*------------------------------------------
+        | --- Mana: The Player's ManaComponent --- |
+        ------------------------------------------*/
         private ManaComponent Mana => m_rig.Player.GetComponent<ManaComponent>();
+
+        /*----------------------------------------------
+        | --- Combat: The Player's CombatComponent --- |
+        ----------------------------------------------*/
         private CombatComponent Combat => m_rig.Player.GetComponent<CombatComponent>();
 
+        /*------------------------------------------------------------
+        | --- Track: Registers an object for TearDown to destroy --- |
+        ------------------------------------------------------------*/
         private T Track<T>(T obj) where T : Object
         {
             m_created.Add(obj);
             return obj;
         }
 
+        /*----------------------------------------------------------------------
+        | --- Load: Loads an asset from Resources, failing if it's missing --- |
+        ----------------------------------------------------------------------*/
         private static T Load<T>(string path) where T : Object
         {
             T asset = Resources.Load<T>(path);
@@ -69,7 +90,9 @@ namespace PolyQuest.Tests
             return asset;
         }
 
-        // A bare bandit: enemy faction, a capsule on the Player's target layers, and nothing that fights back.
+        /*---------------------------------------------------------------------------------------------------------------------
+        | --- Bandit: A bare bandit: enemy faction, a capsule on the Player's target layers, and nothing that fights back --- |
+        ---------------------------------------------------------------------------------------------------------------------*/
         private HealthComponent Bandit(string name, Vector3 offset, int health = 20, int experienceReward = 30)
         {
             AIProgression progression = Track(ScriptableObject.CreateInstance<AIProgression>());
@@ -91,6 +114,9 @@ namespace PolyQuest.Tests
             return healthComponent;
         }
 
+        /*---------------------------------------------------------------------------------------
+        | --- Guard: Creates a plain object on the NPC faction, for use as a guard attacker --- |
+        ---------------------------------------------------------------------------------------*/
         private GameObject Guard()
         {
             GameObject guard = Track(new GameObject("Guard"));
@@ -98,6 +124,9 @@ namespace PolyQuest.Tests
             return guard;
         }
 
+        /*----------------------------------------------------------------------------------
+        | --- FirstLayerIn: The lowest layer in the mask, failing if the mask is empty --- |
+        ----------------------------------------------------------------------------------*/
         private static int FirstLayerIn(LayerMask mask)
         {
             for (int layer = 0; layer < 32; ++layer)
@@ -109,6 +138,9 @@ namespace PolyQuest.Tests
             return 0;
         }
 
+        /*--------------------------------------------------------------------------------------
+        | --- WaitUntil: Waits frames until the condition holds, failing after the timeout --- |
+        --------------------------------------------------------------------------------------*/
         private static IEnumerator WaitUntil(System.Func<bool> condition, float timeout, string failure)
         {
             for (float waited = 0f; !condition(); waited += Time.unscaledDeltaTime)
@@ -118,10 +150,18 @@ namespace PolyQuest.Tests
             }
         }
 
+        /*-------------------------------------------------
+        | --- Sum: Sums a sequence of modifier values --- |
+        -------------------------------------------------*/
         private static float Sum(IEnumerable<float> values) => values.Sum();
 
-        /* ============================== Weapons ============================== */
 
+        /*-----------------
+        | --- Weapons --- |
+        -----------------*/
+        /*--------------------------------------------------------------------------------------
+        | --- UnarmedWeapon_DealsRealDamage: The Player's unarmed weapon deals real damage --- |
+        --------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("The Player's unarmed weapon deals real damage.")]
         public IEnumerator UnarmedWeapon_DealsRealDamage()
@@ -133,6 +173,9 @@ namespace PolyQuest.Tests
             Assert.That(Sum(unarmed.GetAdditiveModifiers(Stat.kDamage)), Is.GreaterThan(0f));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------
+        | --- EquippingAWeapon_AddsItsDamageToThePlayer: Equipping a weapon adds its damage to the Player's damage stat --- |
+        -------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Equipping a weapon adds its damage to the Player's damage stat.")]
         public IEnumerator EquippingAWeapon_AddsItsDamageToThePlayer()
@@ -147,8 +190,13 @@ namespace PolyQuest.Tests
             Assert.That(m_rig.Stats.GetDamage(), Is.EqualTo(bareHanded + Sum(sword.GetAdditiveModifiers(Stat.kDamage))).Within(kTolerance));
         }
 
-        /* ============================== The attack loop ============================== */
 
+        /*-------------------------
+        | --- The Attack Loop --- |
+        -------------------------*/
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- MeleeAttack_KeepsHittingTheTargetUntilItDies_ThenStops: With a melee weapon, the Player keeps hitting the selected target until it dies, then stops: no further hits, no target, and combat ends --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("With a melee weapon, the Player keeps hitting the selected target until it dies, then stops: no further hits, no target, and combat ends.")]
         public IEnumerator MeleeAttack_KeepsHittingTheTargetUntilItDies_ThenStops()
@@ -173,6 +221,9 @@ namespace PolyQuest.Tests
             Assert.That(combatExits, Is.EqualTo(1));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------
+        | --- AfterAKill_TargetsTheNearestEnemyInRange: After a kill, the Player automatically targets the nearest enemy within auto-attack range --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Category("ClickModel")]
         [Description("After a kill, the Player automatically targets the nearest enemy within auto-attack range.")]
@@ -191,8 +242,13 @@ namespace PolyQuest.Tests
             Assert.That(Combat.Target, Is.SameAs(next.gameObject));
         }
 
-        /* ============================== Projectiles ============================== */
 
+        /*---------------------
+        | --- Projectiles --- |
+        ---------------------*/
+        /*-----------------------------------------------------------------------------------
+        | --- LaunchArrow: Launches a Wooden Bow arrow at the target from 30 units away --- |
+        -----------------------------------------------------------------------------------*/
         private Projectile LaunchArrow(HealthComponent target, float damage)
         {
             Projectile prefab = PlayModeTestKit.Get<Projectile>(Load<Weapon>(kWoodenBow), "m_projectile");
@@ -203,9 +259,15 @@ namespace PolyQuest.Tests
             return arrow;
         }
 
+        /*----------------------------------------------------------------------------------------
+        | --- Touch: Invokes the projectile's private OnTriggerEnter with the given collider --- |
+        ----------------------------------------------------------------------------------------*/
         private static void Touch(Projectile arrow, Collider other)
             => typeof(Projectile).GetMethod("OnTriggerEnter", kAny).Invoke(arrow, new object[] { other });
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Projectile_ReachingItsTarget_DealsItsDamage_AndIsDestroyed: A projectile reaching its target deals its damage to it and is destroyed --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("A projectile reaching its target deals its damage to it and is destroyed.")]
         public IEnumerator Projectile_ReachingItsTarget_DealsItsDamage_AndIsDestroyed()
@@ -223,6 +285,9 @@ namespace PolyQuest.Tests
             Assert.That(arrow == null, Is.True, "the projectile is still in the world");
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Projectile_TouchingSomethingElse_DealsNoDamage_AndKeepsFlying: A projectile touching something other than its target deals no damage and keeps flying --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("A projectile touching something other than its target deals no damage and keeps flying.")]
         public IEnumerator Projectile_TouchingSomethingElse_DealsNoDamage_AndKeepsFlying()
@@ -241,8 +306,13 @@ namespace PolyQuest.Tests
             Assert.That(arrow != null, Is.True, "the projectile was destroyed");
         }
 
-        /* ============================== Kill XP ============================== */
 
+        /*-----------------
+        | --- Kill XP --- |
+        -----------------*/
+        /*------------------------------------------------------------------------------------------------------------------
+        | --- KillingAnEnemy_GivesItsExperienceToTheKiller: Killing an enemy gives its experience reward to the killer --- |
+        ------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Killing an enemy gives its experience reward to the killer.")]
         public IEnumerator KillingAnEnemy_GivesItsExperienceToTheKiller()
@@ -258,6 +328,9 @@ namespace PolyQuest.Tests
             Assert.That(m_rig.Experience.ExperiencePoints, Is.EqualTo(before + 30f).Within(kTolerance));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------
+        | --- AGuardKillingAnEnemy_GivesNoOneExperience: When a guard kills an enemy, nobody gains experience, including a Player standing nearby --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("When a guard kills an enemy, nobody gains experience, including a Player standing nearby.")]
         public IEnumerator AGuardKillingAnEnemy_GivesNoOneExperience()
@@ -273,8 +346,13 @@ namespace PolyQuest.Tests
             Assert.That(m_rig.Experience.ExperiencePoints, Is.EqualTo(before).Within(kTolerance));
         }
 
-        /* ============================== Level-up and mana ============================== */
 
+        /*-------------------------
+        | --- Level-Up & Mana --- |
+        -------------------------*/
+        /*--------------------------------------------------------------------------------------------------
+        | --- LevelingUp_RefillsHealthAndMana: Leveling up refills health and mana to the new maximums --- |
+        --------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Leveling up refills health and mana to the new maximums.")]
         public IEnumerator LevelingUp_RefillsHealthAndMana()
@@ -289,6 +367,9 @@ namespace PolyQuest.Tests
             Assert.That(Mana.CurrentMana, Is.EqualTo(m_rig.Stats.GetMana()).Within(kTolerance));
         }
 
+        /*------------------------------------------------------------------------------------------------------------
+        | --- Mana_RegeneratesUpToTheMaximum: Spent mana regenerates over time, up to the maximum and no further --- |
+        ------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Spent mana regenerates over time, up to the maximum and no further.")]
         public IEnumerator Mana_RegeneratesUpToTheMaximum()
@@ -302,6 +383,9 @@ namespace PolyQuest.Tests
             Assert.That(Mana.CurrentMana, Is.EqualTo(m_rig.Stats.GetMana()).Within(kTolerance));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------
+        | --- AfterLoadingASave_ManaStillRegenerates: A Player whose mana was loaded from a save before its first frame still regenerates mana --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("A Player whose mana was loaded from a save before its first frame still regenerates mana.")]
         public IEnumerator AfterLoadingASave_ManaStillRegenerates()

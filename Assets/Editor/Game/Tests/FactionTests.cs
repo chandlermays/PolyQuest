@@ -14,18 +14,27 @@ namespace PolyQuest.Tests
     {
         private GameObject m_go;
 
+        /*---------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for faction testing --- |
+        ---------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
             m_go = new GameObject("Faction");
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
             Object.DestroyImmediate(m_go);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- IsHostileTo: Player and Enemy are hostile to each other, as are NPC and Enemy. Player and NPC are allies, no faction is hostile to itself, and Neutral is hostile to no one --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [TestCase(Faction.kPlayer, Faction.kPlayer, false)]
         [TestCase(Faction.kPlayer, Faction.kNPC, false)]
         [TestCase(Faction.kPlayer, Faction.kEnemy, true)]

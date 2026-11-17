@@ -31,6 +31,9 @@ namespace PolyQuest.Tests
         private DialogueTestKit.UIParts m_ui;
         private AIDialogueHandler m_npc;
 
+        /*-----------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for dialogue camera testing --- |
+        -----------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -69,6 +72,9 @@ namespace PolyQuest.Tests
                               m_rig.Player.transform.position + new Vector3(2f, 0f, 0f), withDialogueCamera: true);
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
@@ -76,17 +82,30 @@ namespace PolyQuest.Tests
             m_rig.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*-----------------------------------------------------
+        | --- Handler: The Player's PlayerDialogueHandler --- |
+        -----------------------------------------------------*/
         private PlayerDialogueHandler Handler => m_rig.Player.GetComponent<PlayerDialogueHandler>();
 
+        /*-------------------------------------------------------------------------------------
+        | --- WaitRealtime: Waits the given seconds of real time, ignoring the time scale --- |
+        -------------------------------------------------------------------------------------*/
         private static IEnumerator WaitRealtime(float seconds)
         {
             yield return new WaitForSecondsRealtime(seconds);
         }
 
-        /* ============================== Tests ============================== */
 
+        /*---------------
+        | --- Tests --- |
+        ---------------*/
+        /*----------------------------------------------------------------------------------------------------------------------------
+        | --- AfterTheConversationEnds_InputIsUnlocked: After a conversation ends and the camera has returned, input is unlocked --- |
+        ----------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("After a conversation ends and the camera has returned, input is unlocked.")]
         public IEnumerator AfterTheConversationEnds_InputIsUnlocked()
@@ -101,6 +120,9 @@ namespace PolyQuest.Tests
             Assert.That(m_inputGuard.IsInputLocked, Is.False);
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- QuittingDuringTheFadeIn_ExitsCleanly: Quitting while the screen is still fading in to the conversation exits cleanly: input is unlocked and the HUD is back --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Quitting while the screen is still fading in to the conversation exits cleanly: input is unlocked and the HUD is back.")]
         public IEnumerator QuittingDuringTheFadeIn_ExitsCleanly()

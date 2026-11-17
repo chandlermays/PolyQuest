@@ -35,6 +35,9 @@ namespace PolyQuest.Tests
         private bool m_hadSaveKey;
         private string m_previousSaveName;
 
+        /*------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for save scene testing --- |
+        ------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -45,6 +48,9 @@ namespace PolyQuest.Tests
             PlayerRig.DestroyPersistentObjects();
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------
+        | --- TearDown: Unloads the scene, clears the singletons and test save files, and restores the current save name --- |
+        --------------------------------------------------------------------------------------------------------------------*/
         [UnityTearDown]
         public IEnumerator TearDown()
         {
@@ -69,17 +75,32 @@ namespace PolyQuest.Tests
                 PlayerPrefs.DeleteKey(kCurrentSaveKey);
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*---------------------------------------------------
+        | --- Dir: The folder save files are written to --- |
+        ---------------------------------------------------*/
         private static string Dir => Application.persistentDataPath;
+
+        /*---------------------------------------------
+        | --- PathFor: Path of a slot's save file --- |
+        ---------------------------------------------*/
         private static string PathFor(string slot) => Path.Combine(Dir, slot + ".sav");
 
+        /*--------------------------------------------------------------
+        | --- DeleteSlotFiles: Deletes every file of the test slot --- |
+        --------------------------------------------------------------*/
         private static void DeleteSlotFiles()
         {
             foreach (string path in Directory.GetFiles(Dir, kSlot + "*"))
                 File.Delete(path);
         }
 
+        /*-----------------------------------------------------------------------------------------
+        | --- LoadScene: Loads a scene and checks it spawned a SaveManager and TransitionFade --- |
+        -----------------------------------------------------------------------------------------*/
         private static IEnumerator LoadScene(string name)
         {
             yield return SceneManager.LoadSceneAsync(name);
@@ -88,14 +109,23 @@ namespace PolyQuest.Tests
             Assert.That(TransitionFade.Instance, Is.Not.Null, $"fixture: {name} did not spawn a TransitionFade");
         }
 
+        /*-------------------------------------------------------------------------
+        | --- CorruptSaveAndBackup: Makes a slot's save and backup unreadable --- |
+        -------------------------------------------------------------------------*/
         private static void CorruptSaveAndBackup(string slot)
         {
             File.WriteAllText(PathFor(slot), kCorruptText);
             File.WriteAllText(PathFor(slot) + ".bak", kCorruptText);
         }
 
+        /*--------------------------------------------------------
+        | --- FadeAlpha: The transition fade's current alpha --- |
+        --------------------------------------------------------*/
         private static float FadeAlpha => TransitionFade.Instance.GetComponent<CanvasGroup>().alpha;
 
+        /*------------------------------------------------------------------
+        | --- MainMenu: The scene's MainMenuUI, failing if it has none --- |
+        ------------------------------------------------------------------*/
         private static MainMenuUI MainMenu()
         {
             MainMenuUI menu = Object.FindFirstObjectByType<MainMenuUI>(FindObjectsInactive.Include);
@@ -103,7 +133,9 @@ namespace PolyQuest.Tests
             return menu;
         }
 
-        // An old playthrough with state in a scene the new game hasn't visited
+        /*--------------------------------------------------------------------------------------------------------------------------------
+        | --- WriteOldPlaythrough: Writes an old playthrough with state in a scene the new game hasn't visited, and returns its text --- |
+        --------------------------------------------------------------------------------------------------------------------------------*/
         private static string WriteOldPlaythrough(string slot)
         {
             JObject old = new JObject { ["old-world-chest"] = new JObject { ["PolyQuest.Inventories.Wallet"] = 500 } };
@@ -111,8 +143,13 @@ namespace PolyQuest.Tests
             return File.ReadAllText(PathFor(slot));
         }
 
-        /* ============================== Nothing can be loaded ============================== */
 
+        /*-------------------------------
+        | --- Nothing Can Be Loaded --- |
+        -------------------------------*/
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Continue_WithNothingReadable_StaysAtTheMainMenu_FadedIn: Continue with a save and backup that are both unreadable stays at the main menu, fades back in and logs a warning naming the slot; the screen is never left black --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Continue with a save and backup that are both unreadable stays at the main menu, fades back in and logs a warning naming the slot; the screen is never left black.")]
         public IEnumerator Continue_WithNothingReadable_StaysAtTheMainMenu_FadedIn()
@@ -128,6 +165,9 @@ namespace PolyQuest.Tests
             Assert.That(FadeAlpha, Is.EqualTo(0f).Within(1e-3f), "the screen was left faded out");
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Respawn_WithNothingReadable_ReturnsToTheMainMenu_FadedIn: Respawning with a save and backup that are both unreadable returns to the main menu, faded in, and logs a warning naming the slot --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Respawning with a save and backup that are both unreadable returns to the main menu, faded in, and logs a warning naming the slot.")]
         public IEnumerator Respawn_WithNothingReadable_ReturnsToTheMainMenu_FadedIn()
@@ -147,8 +187,13 @@ namespace PolyQuest.Tests
             Assert.That(FadeAlpha, Is.EqualTo(0f).Within(1e-3f), "the screen was left faded out");
         }
 
-        /* ============================== New Game ============================== */
 
+        /*------------------
+        | --- New Game --- |
+        ------------------*/
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- NewGame_WithANameInUse_IsRefused: New Game with the name of an existing playthrough is refused with the menu's error message: no game starts and the old save is untouched --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("New Game with the name of an existing playthrough is refused with the menu's error message: no game starts and the old save is untouched.")]
         public IEnumerator NewGame_WithANameInUse_IsRefused()
@@ -167,6 +212,9 @@ namespace PolyQuest.Tests
             Assert.That(File.ReadAllText(PathFor(name)), Is.EqualTo(oldSave));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- NewGame_WithANameThatCantBeAFileName_IsRefused: New Game with a name that can't be a file name is refused with the menu's error message instead of failing --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("New Game with a name that can't be a file name is refused with the menu's error message instead of failing.")]
         public IEnumerator NewGame_WithANameThatCantBeAFileName_IsRefused()
@@ -182,6 +230,9 @@ namespace PolyQuest.Tests
             Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo(kMainMenu));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- NewGame_NeverMergesIntoAnExistingSave: Whatever the menu does, the SaveManager never merges a new game into an existing save: either nothing starts and the old save is untouched, or the new game's save holds none of the old game's state --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Whatever the menu does, the SaveManager never merges a new game into an existing save: either nothing starts and the old save is untouched, or the new game's save holds none of the old game's state.")]
         public IEnumerator NewGame_NeverMergesIntoAnExistingSave()

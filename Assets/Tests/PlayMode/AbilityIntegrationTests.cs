@@ -29,12 +29,18 @@ namespace PolyQuest.Tests
         private PlayerRig m_rig;
         private readonly List<Object> m_created = new();
 
+        /*---------------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for ability integration testing --- |
+        ---------------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
             m_rig = new PlayerRig();
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
@@ -49,11 +55,23 @@ namespace PolyQuest.Tests
             m_rig.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*-------------------------------------------
+        | --- Cooldowns: The Player's Cooldowns --- |
+        -------------------------------------------*/
         private Cooldowns Cooldowns => m_rig.Player.GetComponent<Cooldowns>();
+
+        /*--------------------------------------
+        | --- Bar: The Player's action bar --- |
+        --------------------------------------*/
         private Actions Bar => m_rig.Player.GetComponent<Actions>();
 
+        /*----------------------------------------------------------------------
+        | --- Load: Loads an asset from Resources, failing if it's missing --- |
+        ----------------------------------------------------------------------*/
         private static T Load<T>(string path) where T : Object
         {
             T asset = Resources.Load<T>(path);
@@ -61,6 +79,9 @@ namespace PolyQuest.Tests
             return asset;
         }
 
+        /*--------------------------------------------------------------------------------------
+        | --- WaitUntil: Waits frames until the condition holds, failing after the timeout --- |
+        --------------------------------------------------------------------------------------*/
         private static IEnumerator WaitUntil(System.Func<bool> condition, float timeout, string failure)
         {
             for (float waited = 0f; !condition(); waited += Time.unscaledDeltaTime)
@@ -70,8 +91,13 @@ namespace PolyQuest.Tests
             }
         }
 
-        /* ============================== Cooldowns ============================== */
 
+        /*-------------------
+        | --- Cooldowns --- |
+        -------------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------------------
+        | --- Cooldown_CountsDown_AndEnds: A cooldown counts down from its full length and ends; the remaining share goes from 1 toward 0 --- |
+        -------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("A cooldown counts down from its full length and ends; the remaining share goes from 1 toward 0.")]
         public IEnumerator Cooldown_CountsDown_AndEnds()
@@ -89,6 +115,9 @@ namespace PolyQuest.Tests
             Assert.That(Cooldowns.GetRemainingPercentage(fireball), Is.EqualTo(0f));
         }
 
+        /*-----------------------------------------------------------------------------------------------------
+        | --- DifferentAbilities_HaveIndependentCooldowns: Different abilities have independent cooldowns --- |
+        -----------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Different abilities have independent cooldowns.")]
         public IEnumerator DifferentAbilities_HaveIndependentCooldowns()
@@ -103,6 +132,9 @@ namespace PolyQuest.Tests
             Assert.That(Cooldowns.GetRemainingCooldown(scorch), Is.EqualTo(0f));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------
+        | --- Cooldown_SurvivesASaveAndLoad: A cooldown survives saving and loading: after loading, it resumes with the time it had left --- |
+        ------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("A cooldown survives saving and loading: after loading, it resumes with the time it had left.")]
         public IEnumerator Cooldown_SurvivesASaveAndLoad()
@@ -120,8 +152,13 @@ namespace PolyQuest.Tests
             Assert.That(Cooldowns.GetRemainingCooldown(fireball), Is.InRange(25f, 30f));
         }
 
-        /* ============================== Potions ============================== */
 
+        /*-----------------
+        | --- Potions --- |
+        -----------------*/
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Potions_ShareOneShortCooldown: All potions share one short cooldown: drinking one puts every potion on cooldown, a second potion can't be drunk until it ends, and it ends --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("All potions share one short cooldown: drinking one puts every potion on cooldown, a second potion can't be drunk until it ends, and it ends.")]
         public IEnumerator Potions_ShareOneShortCooldown()
@@ -145,8 +182,13 @@ namespace PolyQuest.Tests
             Assert.That(Bar.GetQuantity(1), Is.EqualTo(1));
         }
 
-        /* ============================== Projectile effects ============================== */
 
+        /*----------------------------
+        | --- Projectile Effects --- |
+        ----------------------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- ProjectileEffect_LaunchesOneProjectilePerTarget: A projectile effect launches one projectile per target, each aimed at its target, owned by the caster and carrying the effect's damage --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("A projectile effect launches one projectile per target, each aimed at its target, owned by the caster and carrying the effect's damage.")]
         public IEnumerator ProjectileEffect_LaunchesOneProjectilePerTarget()

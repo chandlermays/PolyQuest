@@ -13,6 +13,9 @@ namespace PolyQuest.Tests
 {
     public class ConditionTests
     {
+        /*-------------------------------------------------------------------------------------------------
+        | --- StubChecker: A test checker that answers with a supplied function and records each call --- |
+        -------------------------------------------------------------------------------------------------*/
         private sealed class StubChecker : IConditionChecker
         {
             private readonly Func<ConditionType, string[], bool?> m_evaluate;
@@ -34,26 +37,45 @@ namespace PolyQuest.Tests
             }
         }
 
-        /* --- Fixture builders (JSON -> JsonUtility) --- */
 
+        /*--------------------------
+        | --- Fixture Builders --- |
+        --------------------------*/
+        /*--------------------------------------------------------------------------------------------
+        | --- CondJson: Builds the JSON for one condition with its type, negation and parameters --- |
+        --------------------------------------------------------------------------------------------*/
         private static string CondJson(ConditionType type, bool negate, params string[] parameters)
         {
             string quoted = string.Join(",", parameters.Select(p => $"\"{p}\""));
             return $"{{\"m_condition\":{(int)type},\"m_parameters\":[{quoted}],\"m_negate\":{(negate ? "true" : "false")}}}";
         }
 
+        /*---------------------------------------------------------------------------
+        | --- OrJson: Builds the JSON for a disjunction of the given conditions --- |
+        ---------------------------------------------------------------------------*/
         private static string OrJson(params string[] conditions) => $"{{\"m_OR\":[{string.Join(",", conditions)}]}}";
 
+        /*-------------------------------------------------------------
+        | --- Cond: Deserializes a single condition from its JSON --- |
+        -------------------------------------------------------------*/
         private static Conjunction.Condition Cond(ConditionType type, bool negate = false, params string[] parameters)
             => JsonUtility.FromJson<Conjunction.Condition>(CondJson(type, negate, parameters));
 
+        /*------------------------------------------------------------------
+        | --- Or: Deserializes a disjunction from its conditions' JSON --- |
+        ------------------------------------------------------------------*/
         private static Conjunction.Disjunction Or(params string[] conditions)
             => JsonUtility.FromJson<Conjunction.Disjunction>(OrJson(conditions));
 
+        /*---------------------------------------------------------------------
+        | --- And: Deserializes a conjunction from its disjunctions' JSON --- |
+        ---------------------------------------------------------------------*/
         private static Conjunction And(params string[] disjunctions)
             => JsonUtility.FromJson<Conjunction>($"{{\"m_AND\":[{string.Join(",", disjunctions)}]}}");
 
-        // Answers by condition type: kHasQuest -> true, kHasItem -> false, anything else -> null (not handled)
+        /*-----------------------------------------------------------------------------------------------------------------------
+        | --- TypeKeyed: A checker that answers kHasQuest true, kHasItem false, and leaves every other condition unanswered --- |
+        -----------------------------------------------------------------------------------------------------------------------*/
         private static StubChecker TypeKeyed() => new StubChecker((type, _) => type switch
         {
             ConditionType.kHasQuest => true,
@@ -61,10 +83,18 @@ namespace PolyQuest.Tests
             _ => null
         });
 
+        /*--------------------------------------------------------------------
+        | --- Checkers: Packs checkers into the array a Check call takes --- |
+        --------------------------------------------------------------------*/
         private static IConditionChecker[] Checkers(params IConditionChecker[] checkers) => checkers;
 
-        /* ============================== Condition ============================== */
 
+        /*-------------------
+        | --- Condition --- |
+        -------------------*/
+        /*------------------------------------------------------------------------------------------------------------------
+        | --- Condition_TruthTable_WithNegate: A condition returns the checker's answer, inverted when m_negate is set --- |
+        ------------------------------------------------------------------------------------------------------------------*/
         [TestCase(true, false, true)]
         [TestCase(false, false, false)]
         [TestCase(true, true, false)]
@@ -77,6 +107,9 @@ namespace PolyQuest.Tests
             Assert.That(condition.Check(Checkers(StubChecker.Always(checkerResult))), Is.EqualTo(expected));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Condition_NoCheckerAnswersIt_Fails: A condition no checker answers (e.g. kHasLevel, which no system evaluates) fails, whether or not it is negated: negation flips an answer, not the absence of one --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [TestCase(false)]
         [TestCase(true)]
         [Description("A condition no checker answers (e.g. kHasLevel, which no system evaluates) fails, whether or not it is negated: negation flips an answer, not the absence of one.")]
@@ -87,6 +120,9 @@ namespace PolyQuest.Tests
             Assert.That(condition.Check(Checkers(StubChecker.Always(null), StubChecker.Always(null))), Is.False);
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------
+        | --- Condition_PassesTypeAndParametersToCheckers: Checkers receive the condition's type and its parameter array unchanged --- |
+        ------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Checkers receive the condition's type and its parameter array unchanged.")]
         public void Condition_PassesTypeAndParametersToCheckers()
@@ -100,6 +136,9 @@ namespace PolyQuest.Tests
             Assert.That(checker.LastParameters, Is.EqualTo(new[] { "sword", "2" }));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Condition_SkipsCheckersThatDontHandleIt: Checkers that don't handle the condition (null) are skipped; the one checker that answers decides it --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Checkers that don't handle the condition (null) are skipped; the one checker that answers decides it.")]
         public void Condition_SkipsCheckersThatDontHandleIt()
@@ -110,8 +149,13 @@ namespace PolyQuest.Tests
             Assert.That(condition.Check(Checkers(StubChecker.Always(null), StubChecker.Always(false))), Is.False);
         }
 
-        /* ============================= Disjunction ============================= */
 
+        /*---------------------
+        | --- Disjunction --- |
+        ---------------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------
+        | --- Disjunction_IsTrue_WhenAnyConditionIsTrue: A disjunction (OR) is true when at least one of its conditions is true --- |
+        ---------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A disjunction (OR) is true when at least one of its conditions is true.")]
         public void Disjunction_IsTrue_WhenAnyConditionIsTrue()
@@ -121,6 +165,9 @@ namespace PolyQuest.Tests
             Assert.That(disjunction.Check(Checkers(TypeKeyed())), Is.True);
         }
 
+        /*---------------------------------------------------------------------------------------------------------------
+        | --- Disjunction_IsFalse_WhenNoConditionIsTrue: A disjunction is false when none of its conditions is true --- |
+        ---------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A disjunction is false when none of its conditions is true.")]
         public void Disjunction_IsFalse_WhenNoConditionIsTrue()
@@ -130,6 +177,9 @@ namespace PolyQuest.Tests
             Assert.That(disjunction.Check(Checkers(TypeKeyed())), Is.False);
         }
 
+        /*------------------------------------------------------------------------------
+        | --- Disjunction_Empty_IsFalse: A disjunction with no conditions is false --- |
+        ------------------------------------------------------------------------------*/
         [Test]
         [Description("A disjunction with no conditions is false.")]
         public void Disjunction_Empty_IsFalse()
@@ -137,6 +187,9 @@ namespace PolyQuest.Tests
             Assert.That(Or().Check(Checkers(TypeKeyed())), Is.False);
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------
+        | --- Disjunction_StopsAtFirstTrueCondition: A disjunction short-circuits: it stops evaluating at the first true condition --- |
+        ------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A disjunction short-circuits: it stops evaluating at the first true condition.")]
         public void Disjunction_StopsAtFirstTrueCondition()
@@ -149,8 +202,13 @@ namespace PolyQuest.Tests
             Assert.That(checker.Calls, Is.EqualTo(1));
         }
 
-        /* ============================== Conjunction ============================== */
 
+        /*---------------------
+        | --- Conjunction --- |
+        ---------------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------------
+        | --- Conjunction_IsTrue_WhenEveryDisjunctionIsTrue: A conjunction (AND) is true when every one of its disjunctions is true --- |
+        -------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A conjunction (AND) is true when every one of its disjunctions is true.")]
         public void Conjunction_IsTrue_WhenEveryDisjunctionIsTrue()
@@ -162,6 +220,9 @@ namespace PolyQuest.Tests
             Assert.That(conjunction.Check(Checkers(TypeKeyed())), Is.True);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------
+        | --- Conjunction_IsFalse_WhenAnyDisjunctionIsFalse: A conjunction is false when any one of its disjunctions is false --- |
+        -------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A conjunction is false when any one of its disjunctions is false.")]
         public void Conjunction_IsFalse_WhenAnyDisjunctionIsFalse()
@@ -173,6 +234,9 @@ namespace PolyQuest.Tests
             Assert.That(conjunction.Check(Checkers(TypeKeyed())), Is.False);
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------
+        | --- Conjunction_Negation_FlipsOneCondition: Negating a failing condition inside a conjunction makes the whole conjunction pass --- |
+        ------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Negating a failing condition inside a conjunction makes the whole conjunction pass.")]
         public void Conjunction_Negation_FlipsOneCondition()
@@ -184,6 +248,9 @@ namespace PolyQuest.Tests
             Assert.That(conjunction.Check(Checkers(TypeKeyed())), Is.True);
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------
+        | --- Conjunction_StopsAtFirstFalseDisjunction: A conjunction short-circuits: it stops evaluating at the first false disjunction --- |
+        ------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A conjunction short-circuits: it stops evaluating at the first false disjunction.")]
         public void Conjunction_StopsAtFirstFalseDisjunction()
@@ -198,6 +265,9 @@ namespace PolyQuest.Tests
             Assert.That(checker.Calls, Is.EqualTo(1));
         }
 
+        /*-------------------------------------------------------------------------------------------
+        | --- Conjunction_WithNoDisjunctions_IsTrue: A conjunction with no disjunctions is true --- |
+        -------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A conjunction with no disjunctions is true.")]
         public void Conjunction_WithNoDisjunctions_IsTrue()

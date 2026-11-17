@@ -31,6 +31,9 @@ namespace PolyQuest.Tests
 
         private NavMeshDataInstance m_navMesh;
 
+        /*---------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for dropper testing --- |
+        ---------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -45,6 +48,9 @@ namespace PolyQuest.Tests
             m_dropper = dropperObject.GetComponent<ItemDropper>();
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
@@ -54,8 +60,13 @@ namespace PolyQuest.Tests
             m_kit.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*------------------------------------------
+        | --- Entry: Builds a saved drop entry --- |
+        ------------------------------------------*/
         private static JObject Entry(string id, int quantity, Vector3 position, int sceneBuildIndex)
         {
             return new JObject
@@ -67,8 +78,14 @@ namespace PolyQuest.Tests
             };
         }
 
+        /*------------------------------------------------------
+        | --- CurrentScene: The active scene's build index --- |
+        ------------------------------------------------------*/
         private static int CurrentScene => SceneManager.GetActiveScene().buildIndex;
 
+        /*--------------------------------------------------------------------------
+        | --- BuildFlatNavMesh: Builds a flat 50 x 50 NavMesh at ground height --- |
+        --------------------------------------------------------------------------*/
         private void BuildFlatNavMesh()
         {
             var sources = new List<NavMeshBuildSource>
@@ -86,10 +103,13 @@ namespace PolyQuest.Tests
             m_navMesh = NavMesh.AddNavMeshData(data);
         }
 
-        // ================================================================================
-        //  ItemDropper: dropping
-        // ================================================================================
 
+        /*------------------
+        | --- Dropping --- |
+        ------------------*/
+        /*----------------------------------------------------------------------------------------------------------------------------------------------
+        | --- DropItem_SpawnsAPickupAtTheDropperPosition: DropItem spawns one Pickup at the dropper's position holding the given item and quantity --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("DropItem spawns one Pickup at the dropper's position holding the given item and quantity.")]
         public void DropItem_SpawnsAPickupAtTheDropperPosition()
@@ -102,6 +122,9 @@ namespace PolyQuest.Tests
             Assert.That(pickup.transform.position, Is.EqualTo(new Vector3(5f, 0f, 5f)));
         }
 
+        /*------------------------------------------------------------------------------------------------------
+        | --- DropItem_WithoutAQuantity_DropsOne: DropItem with no quantity argument drops a quantity of 1 --- |
+        ------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("DropItem with no quantity argument drops a quantity of 1.")]
         public void DropItem_WithoutAQuantity_DropsOne()
@@ -111,6 +134,9 @@ namespace PolyQuest.Tests
             Assert.That(m_kit.Spawned().Single().Quantity, Is.EqualTo(1));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------
+        | --- DropItem_NonStackable_AlwaysDropsOne: Dropping a non-stackable item with a quantity above 1 still spawns a Pickup holding exactly 1 --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Dropping a non-stackable item with a quantity above 1 still spawns a Pickup holding exactly 1.")]
         public void DropItem_NonStackable_AlwaysDropsOne()
@@ -120,6 +146,9 @@ namespace PolyQuest.Tests
             Assert.That(m_kit.Spawned().Single().Quantity, Is.EqualTo(1));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CreatePickupAtLocation_UsesTheGivenLocation: CreatePickupAtLocation spawns the Pickup at the given position rather than at the dropper's --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("CreatePickupAtLocation spawns the Pickup at the given position rather than at the dropper's.")]
         public void CreatePickupAtLocation_UsesTheGivenLocation()
@@ -129,10 +158,13 @@ namespace PolyQuest.Tests
             Assert.That(m_kit.Spawned().Single().transform.position, Is.EqualTo(new Vector3(1f, 2f, 3f)));
         }
 
-        // ================================================================================
-        //  ItemDropper: save / restore
-        // ================================================================================
 
+        /*----------------
+        | --- Saving --- |
+        ----------------*/
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CaptureState_DescribesEachPickup: CaptureState records each dropped Pickup's item ID, quantity, world position and the current scene's build index --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("CaptureState records each dropped Pickup's item ID, quantity, world position and the current scene's build index.")]
         public void CaptureState_DescribesEachPickup()
@@ -148,6 +180,9 @@ namespace PolyQuest.Tests
             Assert.That(state[0]["SceneBuildIndex"].ToObject<int>(), Is.EqualTo(CurrentScene));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------
+        | --- CaptureState_WithNoDrops_IsAnEmptyArray: CaptureState on a dropper that has dropped nothing returns an empty array --- |
+        ----------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("CaptureState on a dropper that has dropped nothing returns an empty array.")]
         public void CaptureState_WithNoDrops_IsAnEmptyArray()
@@ -155,6 +190,9 @@ namespace PolyQuest.Tests
             Assert.That(((JArray)m_dropper.CaptureState()).Count, Is.EqualTo(0));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CaptureState_IgnoresPickupsThatWereDestroyed: A Pickup destroyed in the world (e.g. picked up) is left out of the next CaptureState --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("A Pickup destroyed in the world (e.g. picked up) is left out of the next CaptureState.")]
         public IEnumerator CaptureState_IgnoresPickupsThatWereDestroyed()
@@ -167,6 +205,9 @@ namespace PolyQuest.Tests
             Assert.That(((JArray)m_dropper.CaptureState()).Count, Is.EqualTo(1));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_RecreatesCurrentScenePickups: RestoreState spawns a Pickup for each current-scene entry with its saved item, quantity and position --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("RestoreState spawns a Pickup for each current-scene entry with its saved item, quantity and position.")]
         public void RestoreState_RecreatesCurrentScenePickups()
@@ -187,6 +228,9 @@ namespace PolyQuest.Tests
             Assert.That(spawned[1].Item, Is.SameAs(m_sword));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CaptureThenRestore_RoundTrips: State captured from the dropper and restored into it is captured again with the same item and quantity --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("State captured from the dropper and restored into it is captured again with the same item and quantity.")]
         public void CaptureThenRestore_RoundTrips()
@@ -200,6 +244,9 @@ namespace PolyQuest.Tests
             Assert.That(recaptured.Any(e => e["ItemID"].ToObject<string>() == "potion" && e["Quantity"].ToObject<int>() == 4));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_ReplacesTheExistingDrops: RestoreState destroys the dropper's existing drops, so after a frame only the restored Pickups remain --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("RestoreState destroys the dropper's existing drops, so after a frame only the restored Pickups remain.")]
         public IEnumerator RestoreState_ReplacesTheExistingDrops()
@@ -215,6 +262,9 @@ namespace PolyQuest.Tests
             Assert.That(spawned[0].Item, Is.SameAs(m_sword));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_CaptureInTheSameFrame_ReportsOnlyTheRestoredDrops: A CaptureState in the same frame as RestoreState (as a load followed by a save does) reports only the restored drops, not the ones they replaced --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A CaptureState in the same frame as RestoreState (as a load followed by a save does) reports only the restored drops, not the ones they replaced.")]
         public void RestoreState_CaptureInTheSameFrame_ReportsOnlyTheRestoredDrops()
@@ -228,6 +278,9 @@ namespace PolyQuest.Tests
             Assert.That(captured[0]["ItemID"].ToObject<string>(), Is.EqualTo("sword"));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_OtherSceneEntries_AreNotSpawned_ButAreKeptForTheNextCapture: Entries saved for another scene are not spawned, but are carried unchanged into the next CaptureState so they survive a save --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Entries saved for another scene are not spawned, but are carried unchanged into the next CaptureState so they survive a save.")]
         public void RestoreState_OtherSceneEntries_AreNotSpawned_ButAreKeptForTheNextCapture()
@@ -244,6 +297,9 @@ namespace PolyQuest.Tests
             Assert.That(captured[0]["WorldPosition"].ToVector3(), Is.EqualTo(new Vector3(9f, 0f, 9f)));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_ForgetsOtherSceneEntriesFromAnEarlierRestore: A later RestoreState discards the other-scene entries kept from an earlier restore --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A later RestoreState discards the other-scene entries kept from an earlier restore.")]
         public void RestoreState_ForgetsOtherSceneEntriesFromAnEarlierRestore()
@@ -255,6 +311,9 @@ namespace PolyQuest.Tests
             Assert.That(((JArray)m_dropper.CaptureState()).Count, Is.EqualTo(0));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_NonArrayState_ChangesNothing: RestoreState given null or a non-array token ignores it and leaves the existing drops in place --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("RestoreState given null or a non-array token ignores it and leaves the existing drops in place.")]
         public void RestoreState_NonArrayState_ChangesNothing()
@@ -268,6 +327,9 @@ namespace PolyQuest.Tests
             Assert.That(m_kit.Spawned().Length, Is.EqualTo(1));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_UnknownItemID_IsSkipped_AndTheValidEntriesStillLoad: A current-scene entry whose item ID is unknown is skipped without throwing; the valid entries after it are still restored --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("A current-scene entry whose item ID is unknown is skipped without throwing; the valid entries after it are still restored.")]
         public IEnumerator RestoreState_UnknownItemID_IsSkipped_AndTheValidEntriesStillLoad()
@@ -287,6 +349,9 @@ namespace PolyQuest.Tests
             Assert.That(spawned[0].Item, Is.SameAs(m_sword));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_UnknownItemID_InAnotherScene_IsKeptWithoutError: An unknown item ID in another scene does not throw, since it is never looked up, and is kept for the next CaptureState --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An unknown item ID in another scene does not throw, since it is never looked up, and is kept for the next CaptureState.")]
         public void RestoreState_UnknownItemID_InAnotherScene_IsKeptWithoutError()
@@ -297,10 +362,13 @@ namespace PolyQuest.Tests
             Assert.That(((JArray)m_dropper.CaptureState()).Count, Is.EqualTo(1));
         }
 
-        // ================================================================================
-        //  Pickup
-        // ================================================================================
 
+        /*----------------
+        | --- Pickup --- |
+        ----------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------
+        | --- Pickup_Setup_SetsTheWorldLabelToTheItemName: A dropped Pickup sets its WorldLabel text to the item's display name --- |
+        ---------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A dropped Pickup sets its WorldLabel text to the item's display name.")]
         public void Pickup_Setup_SetsTheWorldLabelToTheItemName()
@@ -312,6 +380,9 @@ namespace PolyQuest.Tests
             Assert.That(PlayModeTestKit.Get<TextMeshProUGUI>(label, "m_labelText").text, Is.EqualTo("Potion"));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------
+        | --- Pickup_CanBePickedUp_WhenThePlayerHasSpace: CanBePickedUp is true when the Player's inventory has a free slot --- |
+        -----------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("CanBePickedUp is true when the Player's inventory has a free slot.")]
         public void Pickup_CanBePickedUp_WhenThePlayerHasSpace()
@@ -321,6 +392,9 @@ namespace PolyQuest.Tests
             Assert.That(m_kit.Spawned().Single().CanBePickedUp(), Is.True);
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Pickup_CanBePickedUp_FalseWhenTheInventoryIsFullOfOtherItems: CanBePickedUp is false when every inventory slot holds a different item --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("CanBePickedUp is false when every inventory slot holds a different item.")]
         public void Pickup_CanBePickedUp_FalseWhenTheInventoryIsFullOfOtherItems()
@@ -332,6 +406,9 @@ namespace PolyQuest.Tests
             Assert.That(m_kit.Spawned().Single().CanBePickedUp(), Is.False);
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Pickup_CanBePickedUp_TrueForAStackableAlreadyOwned_EvenWhenFull: CanBePickedUp is true for a stackable item the Player already holds, even when every slot is filled, because it stacks onto the existing slot --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("CanBePickedUp is true for a stackable item the Player already holds, even when every slot is filled, because it stacks onto the existing slot.")]
         public void Pickup_CanBePickedUp_TrueForAStackableAlreadyOwned_EvenWhenFull()
@@ -344,6 +421,9 @@ namespace PolyQuest.Tests
             Assert.That(m_kit.Spawned().Single().CanBePickedUp(), Is.True);
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Pickup_PickupItem_AddsToTheInventory_AndDestroysThePickup: PickupItem adds the full quantity to the Player's inventory and destroys the Pickup --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("PickupItem adds the full quantity to the Player's inventory and destroys the Pickup.")]
         public IEnumerator Pickup_PickupItem_AddsToTheInventory_AndDestroysThePickup()
@@ -362,6 +442,9 @@ namespace PolyQuest.Tests
             Assert.That(total, Is.EqualTo(3));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Pickup_PickupItem_WithAFullInventory_NeverLosesTheItem: PickupItem with a full inventory never loses the item: it ends up either in the inventory or still in the world --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("PickupItem with a full inventory never loses the item: it ends up either in the inventory or still in the world.")]
         public IEnumerator Pickup_PickupItem_WithAFullInventory_NeverLosesTheItem()
@@ -379,10 +462,13 @@ namespace PolyQuest.Tests
             Assert.That(exists, Is.True, "the sword is in neither the inventory nor the world");
         }
 
-        // ================================================================================
-        //  RandomDropper
-        // ================================================================================
 
+        /*-----------------------
+        | --- RandomDropper --- |
+        -----------------------*/
+        /*---------------------------------------------------------------------------------------------------
+        | --- BuildEnemy: Creates an enemy at the given level with a RandomDropper using the loot table --- |
+        ---------------------------------------------------------------------------------------------------*/
         private RandomDropper BuildEnemy(EnemyLootTable table, float distanceThreshold = 0.5f, int level = 1)
         {
             GameObject enemy = m_kit.Build("Enemy", go =>
@@ -397,6 +483,9 @@ namespace PolyQuest.Tests
             return enemy.GetComponent<RandomDropper>();
         }
 
+        /*---------------------------------------------------------------------------
+        | --- BuildTable: Creates a loot table and lets the caller configure it --- |
+        ---------------------------------------------------------------------------*/
         private EnemyLootTable BuildTable(Action<EnemyLootTable> configure)
         {
             EnemyLootTable table = m_kit.Track(ScriptableObject.CreateInstance<EnemyLootTable>());
@@ -404,6 +493,9 @@ namespace PolyQuest.Tests
             return table;
         }
 
+        /*-------------------------------------------------------------------------------------
+        | --- Configs: Builds an array of the loot table's private LootItemConfig entries --- |
+        -------------------------------------------------------------------------------------*/
         private static Array Configs(params (InventoryItem item, float[] chance, int[] min, int[] max)[] entries)
         {
             Type configType = typeof(EnemyLootTable).GetNestedType("LootItemConfig", BindingFlags.NonPublic);
@@ -420,6 +512,9 @@ namespace PolyQuest.Tests
             return array;
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RandomDrop_SpawnsOnePickupPerDrop_WithTheRolledQuantity: RandomDrop spawns one Pickup per guaranteed drop, with the rolled quantity for the stackable and 1 when no quantities are configured --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("RandomDrop spawns one Pickup per guaranteed drop, with the rolled quantity for the stackable and 1 when no quantities are configured.")]
         public void RandomDrop_SpawnsOnePickupPerDrop_WithTheRolledQuantity()
@@ -437,6 +532,9 @@ namespace PolyQuest.Tests
             Assert.That(spawned.Single(p => p.Item == m_sword).Quantity, Is.EqualTo(1));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RandomDrop_UsesTheEnemysBaseStatsLevel: Loot quantities are read from the table entry for the enemy's BaseStats level (level 2 uses the second entry) --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Loot quantities are read from the table entry for the enemy's BaseStats level (level 2 uses the second entry).")]
         public void RandomDrop_UsesTheEnemysBaseStatsLevel()
@@ -450,6 +548,9 @@ namespace PolyQuest.Tests
             Assert.That(m_kit.Spawned().Single().Quantity, Is.EqualTo(5));
         }
 
+        /*---------------------------------------------------------------------------------------------------------
+        | --- RandomDrop_WithAnEmptyTable_DropsNothing: RandomDrop with an empty loot table spawns no Pickups --- |
+        ---------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("RandomDrop with an empty loot table spawns no Pickups.")]
         public void RandomDrop_WithAnEmptyTable_DropsNothing()
@@ -462,6 +563,9 @@ namespace PolyQuest.Tests
             Assert.That(m_kit.Spawned(), Is.Empty);
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- DropLocation_OnANavMesh_IsNearTheEnemy_AndOnTheMesh: On a NavMesh, every drop lands horizontally within the distance threshold (plus the 1-unit sampling radius) of the enemy, at ground height --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("On a NavMesh, every drop lands horizontally within the distance threshold (plus the 1-unit sampling radius) of the enemy, at ground height.")]
         public void DropLocation_OnANavMesh_IsNearTheEnemy_AndOnTheMesh()
@@ -484,6 +588,9 @@ namespace PolyQuest.Tests
             }
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- DropLocation_WithoutANavMesh_FallsBackToTheEnemyPosition_AndWarns: With no NavMesh, the drop falls back to the enemy's exact position and logs a failed-to-find-drop-location warning --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("With no NavMesh, the drop falls back to the enemy's exact position and logs a failed-to-find-drop-location warning.")]
         public void DropLocation_WithoutANavMesh_FallsBackToTheEnemyPosition_AndWarns()

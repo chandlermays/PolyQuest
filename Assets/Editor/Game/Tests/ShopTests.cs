@@ -32,6 +32,9 @@ namespace PolyQuest.Tests
 
         private int m_shopUpdated;
 
+        /*------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for shop testing --- |
+        ------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -62,14 +65,22 @@ namespace PolyQuest.Tests
             m_shop.OnShopUpdated += () => ++m_shopUpdated;
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
             m_kit.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*---------------------------------------------------------------------
+        | --- Priced: Creates a registered item with a price and category --- |
+        ---------------------------------------------------------------------*/
         private ActionItem Priced(string id, bool stackable, int price, ItemCategory category)
         {
             ActionItem item = m_kit.Item<ActionItem>(id, stackable);
@@ -78,8 +89,14 @@ namespace PolyQuest.Tests
             return item;
         }
 
+        /*--------------------------------------------------------------------
+        | --- SetSellPercentage: Sets the config's sell price percentage --- |
+        --------------------------------------------------------------------*/
         private void SetSellPercentage(float percentage) => SerializedTestUtil.SetFloat(m_config, "m_sellPricePercentage", percentage);
 
+        /*---------------------------------------------------------------------------
+        | --- SetStock: Sets the config's stocked items and their initial stock --- |
+        ---------------------------------------------------------------------------*/
         private void SetStock(params (InventoryItem item, int stock)[] entries)
         {
             SerializedObject so = new SerializedObject(m_config);
@@ -94,6 +111,9 @@ namespace PolyQuest.Tests
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        /*-------------------------------------------------------------------------------------------------------------
+        | --- BuildShop: Creates a shop from the test config, with an outline and world label, and runs its Awake --- |
+        -------------------------------------------------------------------------------------------------------------*/
         private Shop BuildShop(string name = "Shop")
         {
             GameObject go = m_kit.NewObject(name);
@@ -113,10 +133,19 @@ namespace PolyQuest.Tests
             return shop;
         }
 
+        /*------------------------------------------------
+        | --- Listed: The shop's listing for an item --- |
+        ------------------------------------------------*/
         private ShopItem Listed(InventoryItem item) => m_shop.GetFilteredItems().Single(s => s.Item == item);
 
+        /*-------------------------------------------------------------------------------
+        | --- StockOf: The shop's current stock of an item, read from its save data --- |
+        -------------------------------------------------------------------------------*/
         private int StockOf(InventoryItem item) => m_shop.CaptureState()[item.ID].ToObject<int>();
 
+        /*----------------------------------------------------------------------
+        | --- Owned: Totals an item's quantity across every inventory slot --- |
+        ----------------------------------------------------------------------*/
         private int Owned(InventoryItem item)
         {
             int total = 0;
@@ -125,8 +154,13 @@ namespace PolyQuest.Tests
             return total;
         }
 
-        /* --- Awake / listing --- */
 
+        /*-------------------------
+        | --- Awake & Listing --- |
+        -------------------------*/
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Awake_SeedsStockFromConfig_AndListsEveryEntry: Awake seeds stock from the config and lists every entry in config order, with base prices and nothing in the purchase --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Awake seeds stock from the config and lists every entry in config order, with base prices and nothing in the purchase.")]
         public void Awake_SeedsStockFromConfig_AndListsEveryEntry()
@@ -139,6 +173,9 @@ namespace PolyQuest.Tests
             Assert.That(listed.All(s => s.QuantityToBuy == 0));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Awake_SetsTheWorldLabelToTheConfigName_AndShopNameMatches: Awake sets the world label text to the config's name, and ShopName matches it --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Awake sets the world label text to the config's name, and ShopName matches it.")]
         public void Awake_SetsTheWorldLabelToTheConfigName_AndShopNameMatches()
@@ -147,6 +184,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.ShopName, Is.EqualTo("TestShop"));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------
+        | --- NewShop_StartsInBuyMode_WithNoFilter: A new shop starts in buy mode with no category filter and an empty purchase --- |
+        ---------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A new shop starts in buy mode with no category filter and an empty purchase.")]
         public void NewShop_StartsInBuyMode_WithNoFilter()
@@ -156,6 +196,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.HasItemsInPurchase(), Is.False);
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Awake_ConfigEntryWithNullItem_IsLeftOut: A config entry with no item assigned is left out of the shop; the other entries are still stocked and listed --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A config entry with no item assigned is left out of the shop; the other entries are still stocked and listed.")]
         public void Awake_ConfigEntryWithNullItem_IsLeftOut()
@@ -167,8 +210,13 @@ namespace PolyQuest.Tests
             Assert.That(shop.GetFilteredItems().Select(s => s.Item), Is.EqualTo(new InventoryItem[] { m_potion, m_ore }));
         }
 
-        /* --- Filter / mode --- */
 
+        /*-----------------------
+        | --- Filter & Mode --- |
+        -----------------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------------------
+        | --- SortByFilter_ShowsOnlyThatCategory_AndRaisesTheEvent: SortByFilter lists only items in that category and raises OnShopUpdated --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("SortByFilter lists only items in that category and raises OnShopUpdated.")]
         public void SortByFilter_ShowsOnlyThatCategory_AndRaisesTheEvent()
@@ -179,6 +227,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shopUpdated, Is.EqualTo(1));
         }
 
+        /*--------------------------------------------------------------------------------------
+        | --- SortByFilter_None_ShowsEverything: Filtering by kNone lists every item again --- |
+        --------------------------------------------------------------------------------------*/
         [Test]
         [Description("Filtering by kNone lists every item again.")]
         public void SortByFilter_None_ShowsEverything()
@@ -189,6 +240,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.GetFilteredItems().Count(), Is.EqualTo(3));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------
+        | --- SortByFilter_CategoryWithNoItems_ShowsNothing: Filtering by a category the shop doesn't stock lists nothing --- |
+        ---------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Filtering by a category the shop doesn't stock lists nothing.")]
         public void SortByFilter_CategoryWithNoItems_ShowsNothing()
@@ -198,6 +252,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.GetFilteredItems(), Is.Empty);
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------
+        | --- SelectMode_ClearsThePurchase_RaisesTheEvent: Switching mode clears the current purchase and raises OnShopUpdated --- |
+        --------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Switching mode clears the current purchase and raises OnShopUpdated.")]
         public void SelectMode_ClearsThePurchase_RaisesTheEvent()
@@ -212,6 +269,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shopUpdated, Is.EqualTo(1));
         }
 
+        /*-------------------------------------------------------------------------------------------
+        | --- SelectMode_KeepsTheCurrentFilter: Switching mode keeps the active category filter --- |
+        -------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Switching mode keeps the active category filter.")]
         public void SelectMode_KeepsTheCurrentFilter()
@@ -223,8 +283,13 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.CurrentFilter, Is.EqualTo(ItemCategory.kWeapon));
         }
 
-        /* --- AddToPurchase --- */
 
+        /*-----------------------
+        | --- AddToPurchase --- |
+        -----------------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- AddToPurchase_Buying_AccumulatesAndRaisesTheEvent: Repeated AddToPurchase calls accumulate the quantity and raise OnShopUpdated each time --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Repeated AddToPurchase calls accumulate the quantity and raise OnShopUpdated each time.")]
         public void AddToPurchase_Buying_AccumulatesAndRaisesTheEvent()
@@ -237,6 +302,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shopUpdated, Is.EqualTo(2));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------
+        | --- AddToPurchase_Buying_ClampsToStock: When buying, the purchase quantity is clamped to the shop's stock --- |
+        ---------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("When buying, the purchase quantity is clamped to the shop's stock.")]
         public void AddToPurchase_Buying_ClampsToStock()
@@ -246,6 +314,9 @@ namespace PolyQuest.Tests
             Assert.That(Listed(m_potion).QuantityToBuy, Is.EqualTo(5));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- AddToPurchase_Negative_ReducesAndRemovesAtZero: A negative quantity reduces the purchase; reaching zero removes the item from the purchase --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A negative quantity reduces the purchase; reaching zero removes the item from the purchase.")]
         public void AddToPurchase_Negative_ReducesAndRemovesAtZero()
@@ -260,6 +331,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.HasItemsInPurchase(), Is.False);
         }
 
+        /*----------------------------------------------------------------------------------------------------------
+        | --- AddToPurchase_OutOfStockItem_IsNotKept: Adding an item with zero stock leaves the purchase empty --- |
+        ----------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Adding an item with zero stock leaves the purchase empty.")]
         public void AddToPurchase_OutOfStockItem_IsNotKept()
@@ -273,8 +347,13 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.HasItemsInPurchase(), Is.False);
         }
 
-        /* --- Totals / affordability --- */
 
+        /*--------------------------------
+        | --- Totals & Affordability --- |
+        --------------------------------*/
+        /*----------------------------------------------------------------------------------------------------------------
+        | --- PurchaseTotal_SumsPriceTimesQuantity: PurchaseTotal is the sum of price * quantity across the purchase --- |
+        ----------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("PurchaseTotal is the sum of price * quantity across the purchase.")]
         public void PurchaseTotal_SumsPriceTimesQuantity()
@@ -285,6 +364,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.PurchaseTotal(), Is.EqualTo(70));
         }
 
+        /*-------------------------------------------------------------------------------------
+        | --- CanAffordPurchase_EmptyPurchase_False: An empty purchase can't be completed --- |
+        -------------------------------------------------------------------------------------*/
         [Test]
         [Description("An empty purchase can't be completed.")]
         public void CanAffordPurchase_EmptyPurchase_False()
@@ -292,6 +374,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.CanAffordPurchase(), Is.False);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------
+        | --- CanAffordPurchase_EnoughFundsAndSpace_True: A purchase within the wallet balance and inventory space can be completed --- |
+        -------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A purchase within the wallet balance and inventory space can be completed.")]
         public void CanAffordPurchase_EnoughFundsAndSpace_True()
@@ -301,6 +386,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.CanAffordPurchase(), Is.True);
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CanAffordPurchase_TotalExceedsWallet_False: A total above the wallet balance means insufficient funds, so the purchase can't be completed --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A total above the wallet balance means insufficient funds, so the purchase can't be completed.")]
         public void CanAffordPurchase_TotalExceedsWallet_False()
@@ -312,6 +400,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.CanAffordPurchase(), Is.False);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------
+        | --- CanAffordPurchase_ExactFunds_True: A wallet balance exactly equal to the total counts as sufficient funds --- |
+        -------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A wallet balance exactly equal to the total counts as sufficient funds.")]
         public void CanAffordPurchase_ExactFunds_True()
@@ -322,6 +413,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.HasSufficientFunds(), Is.True);
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------
+        | --- CanAffordPurchase_InventoryFull_False: A full inventory means no space, so the purchase can't be completed --- |
+        --------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A full inventory means no space, so the purchase can't be completed.")]
         public void CanAffordPurchase_InventoryFull_False()
@@ -334,6 +428,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.CanAffordPurchase(), Is.False);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------
+        | --- HasInventorySpace_StackablePurchase_NeedsOneSlot_NotOnePerUnit: Several units of one stackable item need only one free slot --- |
+        -------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Several units of one stackable item need only one free slot.")]
         public void HasInventorySpace_StackablePurchase_NeedsOneSlot_NotOnePerUnit()
@@ -345,6 +442,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.HasInventorySpace(), Is.True);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------
+        | --- HasInventorySpace_NonStackablePurchase_NeedsOneSlotPerUnit: Each unit of a non-stackable item needs its own free slot --- |
+        -------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Each unit of a non-stackable item needs its own free slot.")]
         public void HasInventorySpace_NonStackablePurchase_NeedsOneSlotPerUnit()
@@ -356,8 +456,13 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.HasInventorySpace(), Is.False);
         }
 
-        /* --- Selling mode --- */
 
+        /*-----------------
+        | --- Selling --- |
+        -----------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------------------------
+        | --- SellMode_ListsOnlyItemsTheShopperOwns: Sell mode lists only items the shopper owns, with the owned count shown as available stock --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Sell mode lists only items the shopper owns, with the owned count shown as available stock.")]
         public void SellMode_ListsOnlyItemsTheShopperOwns()
@@ -372,6 +477,9 @@ namespace PolyQuest.Tests
             Assert.That(listed[0].AvailableStock, Is.EqualTo(4), "stock shown is the shopper's owned count");
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------
+        | --- SellMode_PriceIsPercentageOfBasePrice_RoundedUp: Sell price is the base price times the sell percentage, rounded up --- |
+        -----------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Sell price is the base price times the sell percentage, rounded up.")]
         public void SellMode_PriceIsPercentageOfBasePrice_RoundedUp()
@@ -382,6 +490,9 @@ namespace PolyQuest.Tests
             Assert.That(Listed(m_ore).Price, Is.EqualTo(8));
         }
 
+        /*-------------------------------------------------------------------------------------------------
+        | --- SellMode_ZeroPercent_SellsForNothing: A 0% sell percentage makes items sell for nothing --- |
+        -------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A 0% sell percentage makes items sell for nothing.")]
         public void SellMode_ZeroPercent_SellsForNothing()
@@ -393,6 +504,9 @@ namespace PolyQuest.Tests
             Assert.That(Listed(m_ore).Price, Is.EqualTo(0));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------
+        | --- SellMode_AddToPurchase_ClampsToOwned: When selling, the quantity is clamped to how many the shopper owns --- |
+        ------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("When selling, the quantity is clamped to how many the shopper owns.")]
         public void SellMode_AddToPurchase_ClampsToOwned()
@@ -405,6 +519,9 @@ namespace PolyQuest.Tests
             Assert.That(Listed(m_ore).QuantityToBuy, Is.EqualTo(3));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------
+        | --- SellMode_CanAffordPurchase_IgnoresWalletAndSpace: When selling, CanAffordPurchase ignores the wallet balance and inventory space --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("When selling, CanAffordPurchase ignores the wallet balance and inventory space.")]
         public void SellMode_CanAffordPurchase_IgnoresWalletAndSpace()
@@ -417,6 +534,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.CanAffordPurchase(), Is.True);
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- SellMode_Complete_RemovesItems_PaysSilver_RestocksShop: Completing a sale removes the items, pays the sell price, adds them to the shop's stock, and clears the purchase --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Completing a sale removes the items, pays the sell price, adds them to the shop's stock, and clears the purchase.")]
         public void SellMode_Complete_RemovesItems_PaysSilver_RestocksShop()
@@ -433,6 +553,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.HasItemsInPurchase(), Is.False);
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------
+        | --- SellMode_Complete_SellingEverything_LeavesNoPurchase: Selling every unit the shopper owns empties both their stack and the purchase --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Selling every unit the shopper owns empties both their stack and the purchase.")]
         public void SellMode_Complete_SellingEverything_LeavesNoPurchase()
@@ -447,8 +570,13 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.HasItemsInPurchase(), Is.False);
         }
 
-        /* --- Buying: CompletePurchase --- */
 
+        /*----------------
+        | --- Buying --- |
+        ----------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Buy_Complete_AddsItems_ChargesSilver_ReducesStock_ClearsPurchase: Completing a buy adds the items, charges the total, reduces the shop's stock, and clears the purchase --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Completing a buy adds the items, charges the total, reduces the shop's stock, and clears the purchase.")]
         public void Buy_Complete_AddsItems_ChargesSilver_ReducesStock_ClearsPurchase()
@@ -466,6 +594,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.HasItemsInPurchase(), Is.False);
         }
 
+        /*---------------------------------------------------------------------------------------------
+        | --- Buy_Complete_RaisesShopUpdated: Completing a buy raises OnShopUpdated at least once --- |
+        ---------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Completing a buy raises OnShopUpdated at least once.")]
         public void Buy_Complete_RaisesShopUpdated()
@@ -478,6 +609,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shopUpdated, Is.GreaterThanOrEqualTo(1));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------
+        | --- Buy_Complete_AutoSaves: Completing a buy autosaves: it writes the autosave and leaves the Player's own save alone --- |
+        ---------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Completing a buy autosaves: it writes the autosave and leaves the Player's own save alone.")]
         public void Buy_Complete_AutoSaves()
@@ -490,8 +624,13 @@ namespace PolyQuest.Tests
             Assert.That(InventoryTestKit.TestSaveFileExists(), Is.False, "an automatic save wrote the Player's own save");
         }
 
-        /* --- Save / restore --- */
 
+        /*----------------
+        | --- Saving --- |
+        ----------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------
+        | --- CaptureState_StoresStockKeyedByItemID: CaptureState stores one stock count per stocked item, keyed by item ID --- |
+        -----------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("CaptureState stores one stock count per stocked item, keyed by item ID.")]
         public void CaptureState_StoresStockKeyedByItemID()
@@ -504,6 +643,9 @@ namespace PolyQuest.Tests
             Assert.That(state.Count, Is.EqualTo(3));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_OverridesStock: RestoreState overrides stock for the saved items; items missing from the save are re-seeded from the config --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("RestoreState overrides stock for the saved items; items missing from the save are re-seeded from the config.")]
         public void RestoreState_OverridesStock()
@@ -515,6 +657,9 @@ namespace PolyQuest.Tests
             Assert.That(StockOf(m_ore), Is.EqualTo(3), "unmentioned items are re-seeded from the config");
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_UnknownOrUnstockedItems_AreIgnored: Saved IDs that are unknown, or that the shop doesn't stock, are ignored --- |
+        ----------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Saved IDs that are unknown, or that the shop doesn't stock, are ignored.")]
         public void RestoreState_UnknownOrUnstockedItems_AreIgnored()
@@ -524,6 +669,9 @@ namespace PolyQuest.Tests
             Assert.That(m_shop.CaptureState().Count(), Is.EqualTo(3));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_NonObject_IsIgnored: A null or non-object state is ignored, as if the save never held this shop: the current stock is kept --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A null or non-object state is ignored, as if the save never held this shop: the current stock is kept.")]
         public void RestoreState_NonObject_IsIgnored()
@@ -538,6 +686,9 @@ namespace PolyQuest.Tests
             Assert.That(StockOf(m_potion), Is.EqualTo(4));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------
+        | --- CaptureThenRestore_RoundTripsStock: Stock captured from one shop restores correctly into another shop with the same config --- |
+        ------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Stock captured from one shop restores correctly into another shop with the same config.")]
         public void CaptureThenRestore_RoundTripsStock()
@@ -552,8 +703,13 @@ namespace PolyQuest.Tests
             Assert.That(other.CaptureState()["potion"].ToObject<int>(), Is.EqualTo(3));
         }
 
-        /* --- Scene presentation --- */
 
+        /*----------------------------
+        | --- Scene Presentation --- |
+        ----------------------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------
+        | --- ToggleHighlight_EnablesAndDisablesTheOutline: ToggleHighlight enables and disables the shop's Outline component --- |
+        -------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Category("ClickModel")]
         [Description("ToggleHighlight enables and disables the shop's Outline component.")]
@@ -568,6 +724,9 @@ namespace PolyQuest.Tests
             Assert.That(outline.enabled, Is.False);
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------
+        | --- ToggleLabel_ShowsAndHidesTheLabelRoot: ToggleLabel activates and deactivates the world label's root object --- |
+        --------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Category("ClickModel")]
         [Description("ToggleLabel activates and deactivates the world label's root object.")]
@@ -580,6 +739,9 @@ namespace PolyQuest.Tests
             Assert.That(m_labelRoot.activeSelf, Is.True);
         }
 
+        /*-------------------------------------------------------------------------------
+        | --- GetCursorType_IsTargeting: Hovering a shop shows the targeting cursor --- |
+        -------------------------------------------------------------------------------*/
         [Test]
         [Category("ClickModel")]
         [Description("Hovering a shop shows the targeting cursor.")]

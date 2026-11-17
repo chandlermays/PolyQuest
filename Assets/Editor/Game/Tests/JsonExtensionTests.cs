@@ -12,6 +12,9 @@ namespace PolyQuest.Tests
 {
     public class JsonExtensionTests
     {
+        /*--------------------------------------------------------------------------------------------------------
+        | --- ToToken_WritesXYZ_AsFloats: Vector3.ToToken writes an object with exactly x, y and z as floats --- |
+        --------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Vector3.ToToken writes an object with exactly x, y and z as floats.")]
         public void ToToken_WritesXYZ_AsFloats()
@@ -24,6 +27,9 @@ namespace PolyQuest.Tests
             Assert.That(token["z"].Value<float>(), Is.EqualTo(3.25f));
         }
 
+        /*-------------------------------------------------------------------------------------------------
+        | --- RoundTrip_PreservesTheVector: ToToken followed by ToVector3 returns the original vector --- |
+        -------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("ToToken followed by ToVector3 returns the original vector.")]
         public void RoundTrip_PreservesTheVector()

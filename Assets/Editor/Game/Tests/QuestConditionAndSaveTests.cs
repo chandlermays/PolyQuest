@@ -29,6 +29,9 @@ namespace PolyQuest.Tests
         private Quest m_heirloom, m_banditCamp;
         private QuestObjective m_findTheSword, m_returnTheSword;
 
+        /*--------------------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for quest condition and save testing --- |
+        --------------------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -45,15 +48,22 @@ namespace PolyQuest.Tests
             m_manager = NewPlayerQuestManager("Player");
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
             m_kit.Dispose();
         }
 
-        /* --- Helpers --- */
 
-        // Completing a shipped quest pays its shipped rewards, so the owner needs somewhere to put them
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- NewPlayerQuestManager: Creates a Player QuestManager with an inventory and wallet, since completing a shipped quest pays its shipped rewards --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------*/
         private QuestManager NewPlayerQuestManager(string name)
         {
             GameObject player = m_kit.NewObject(name);
@@ -62,24 +72,44 @@ namespace PolyQuest.Tests
             return player.AddComponent<QuestManager>();
         }
 
+        /*-------------------------------------------------------------
+        | --- CompleteAll: Completes every objective of the quest --- |
+        -------------------------------------------------------------*/
         private void CompleteAll(QuestManager manager, Quest quest)
         {
             foreach (QuestObjective objective in quest.Objectives)
                 manager.CompleteObjective(quest, objective);
         }
 
+        /*---------------------------------------------------------------------------
+        | --- Evaluate: Evaluates a condition against the Player's QuestManager --- |
+        ---------------------------------------------------------------------------*/
         private bool? Evaluate(ConditionType condition, params string[] parameters) => m_manager.Evaluate(condition, parameters);
 
+        /*-------------------------------------------------------------------------
+        | --- StatusOf: The quest's active status, or null if it isn't active --- |
+        -------------------------------------------------------------------------*/
         private static QuestStatus StatusOf(QuestManager manager, Quest quest) => manager.ActiveQuests.SingleOrDefault(s => s.Quest == quest);
 
+        /*--------------------------------------------------------------------------------------
+        | --- ActiveEntry: Builds a saved active-quest entry with its completed objectives --- |
+        --------------------------------------------------------------------------------------*/
         private static JObject ActiveEntry(string questName, params string[] completedObjectives)
             => new JObject { ["QuestName"] = questName, ["CompletedObjectives"] = new JArray(completedObjectives) };
 
+        /*------------------------------------------------------------------------------------------------
+        | --- State: Builds a saved QuestManager state from active entries and completed quest names --- |
+        ------------------------------------------------------------------------------------------------*/
         private static JObject State(JObject[] active, params string[] completed)
             => new JObject { ["ActiveQuests"] = new JArray(active), ["CompletedQuests"] = new JArray(completed) };
 
-        /* ============================== Conditions ============================== */
 
+        /*--------------------
+        | --- Conditions --- |
+        --------------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- HasQuest_IsTrueOnlyWhileTheQuestIsActive: kHasQuest is true only while the quest is active: not before it is acquired and not after it is completed --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("kHasQuest is true only while the quest is active: not before it is acquired and not after it is completed.")]
         public void HasQuest_IsTrueOnlyWhileTheQuestIsActive()
@@ -93,6 +123,9 @@ namespace PolyQuest.Tests
             Assert.That(Evaluate(ConditionType.kHasQuest, kHeirloom), Is.False);
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------
+        | --- CompletedQuest_BecomesTrueWhenTheQuestCompletes: kCompletedQuest is false until the quest is completed, then true --- |
+        ---------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("kCompletedQuest is false until the quest is completed, then true.")]
         public void CompletedQuest_BecomesTrueWhenTheQuestCompletes()
@@ -105,6 +138,9 @@ namespace PolyQuest.Tests
             Assert.That(Evaluate(ConditionType.kCompletedQuest, kHeirloom), Is.True);
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CompletedObjective_IsTrueOnceThatObjectiveIsDone: kCompletedObjective is false until that objective is done, then true; other objectives are unaffected --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("kCompletedObjective is false until that objective is done, then true; other objectives are unaffected.")]
         public void CompletedObjective_IsTrueOnceThatObjectiveIsDone()
@@ -118,6 +154,9 @@ namespace PolyQuest.Tests
             Assert.That(Evaluate(ConditionType.kCompletedObjective, kHeirloom, kReturnTheSword), Is.False);
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CompletedObjective_StaysTrueAfterTheQuestIsCompleted: Completed objectives are permanent history: kCompletedObjective stays true after the quest is completed --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Completed objectives are permanent history: kCompletedObjective stays true after the quest is completed.")]
         public void CompletedObjective_StaysTrueAfterTheQuestIsCompleted()
@@ -130,6 +169,9 @@ namespace PolyQuest.Tests
             Assert.That(Evaluate(ConditionType.kCompletedObjective, kHeirloom, kReturnTheSword), Is.True);
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CompletedObjective_IsTrueForWorkDoneBeforeAcquiringTheQuest: An objective done before its quest is acquired is part of the history: kCompletedObjective is true for it --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An objective done before its quest is acquired is part of the history: kCompletedObjective is true for it.")]
         public void CompletedObjective_IsTrueForWorkDoneBeforeAcquiringTheQuest()
@@ -139,6 +181,9 @@ namespace PolyQuest.Tests
             Assert.That(Evaluate(ConditionType.kCompletedObjective, kHeirloom, kFindTheSword), Is.True);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- UnknownQuestName_IsUnanswered: A quest name that matches no quest asset is unanswered (null), so the condition fails closed even when negated --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [TestCase(ConditionType.kHasQuest)]
         [TestCase(ConditionType.kCompletedQuest)]
         [TestCase(ConditionType.kCompletedObjective)]
@@ -148,6 +193,9 @@ namespace PolyQuest.Tests
             Assert.That(Evaluate(condition, "No Such Quest", kFindTheSword), Is.Null);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------
+        | --- UnknownObjectiveName_IsUnanswered: An objective name that matches no objective asset is unanswered (null) --- |
+        -------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An objective name that matches no objective asset is unanswered (null).")]
         public void UnknownObjectiveName_IsUnanswered()
@@ -157,6 +205,9 @@ namespace PolyQuest.Tests
             Assert.That(Evaluate(ConditionType.kCompletedObjective, kHeirloom, "No Such Objective"), Is.Null);
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------
+        | --- MissingParameters_AreUnanswered: A quest condition authored without its parameters is unanswered (null) --- |
+        -----------------------------------------------------------------------------------------------------------------*/
         [TestCase(ConditionType.kHasQuest)]
         [TestCase(ConditionType.kCompletedQuest)]
         [TestCase(ConditionType.kCompletedObjective)]
@@ -166,6 +217,9 @@ namespace PolyQuest.Tests
             Assert.That(Evaluate(condition), Is.Null);
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CompletedObjective_WithoutAnObjectiveParameter_IsUnanswered: kCompletedObjective authored with a quest but no objective is unanswered (null) --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("kCompletedObjective authored with a quest but no objective is unanswered (null).")]
         public void CompletedObjective_WithoutAnObjectiveParameter_IsUnanswered()
@@ -175,6 +229,9 @@ namespace PolyQuest.Tests
             Assert.That(Evaluate(ConditionType.kCompletedObjective, kHeirloom), Is.Null);
         }
 
+        /*----------------------------------------------------------------------------------------------------------------
+        | --- NonQuestCondition_IsNotAnswered: Conditions that aren't about quests are left to other checkers (null) --- |
+        ----------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Conditions that aren't about quests are left to other checkers (null).")]
         public void NonQuestCondition_IsNotAnswered()
@@ -182,8 +239,13 @@ namespace PolyQuest.Tests
             Assert.That(Evaluate(ConditionType.kHasItem, "sword"), Is.Null);
         }
 
-        /* ============================== Save / restore ============================== */
 
+        /*----------------
+        | --- Saving --- |
+        ----------------*/
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CaptureThenRestore_IntoAFreshManager_RestoresProgressAndCompletedQuests: Captured state restored into a fresh QuestManager restores the active quests with their progress and the completed quests --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Captured state restored into a fresh QuestManager restores the active quests with their progress and the completed quests.")]
         public void CaptureThenRestore_IntoAFreshManager_RestoresProgressAndCompletedQuests()
@@ -204,6 +266,9 @@ namespace PolyQuest.Tests
             Assert.That(restored.HasQuest(m_banditCamp), Is.False);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_RaisesOnlyOnQuestsUpdate: RestoreState raises OnQuestsUpdate once and does not raise OnQuestStarted or OnQuestCompleted: loading isn't starting or finishing a quest --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("RestoreState raises OnQuestsUpdate once and does not raise OnQuestStarted or OnQuestCompleted: loading isn't starting or finishing a quest.")]
         public void RestoreState_RaisesOnlyOnQuestsUpdate()
@@ -221,6 +286,9 @@ namespace PolyQuest.Tests
             Assert.That(completed, Is.EqualTo(0));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_ReplacesTheCurrentQuests: RestoreState replaces the current quests; quests absent from the save are no longer active --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("RestoreState replaces the current quests; quests absent from the save are no longer active.")]
         public void RestoreState_ReplacesTheCurrentQuests()
@@ -233,6 +301,9 @@ namespace PolyQuest.Tests
             Assert.That(m_manager.HasQuest(m_heirloom), Is.True);
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_UnknownQuest_IsSkipped_TheRestLoad: A saved active quest whose asset no longer exists is skipped; the other saved quests still load --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A saved active quest whose asset no longer exists is skipped; the other saved quests still load.")]
         public void RestoreState_UnknownQuest_IsSkipped_TheRestLoad()
@@ -246,6 +317,9 @@ namespace PolyQuest.Tests
             Assert.That(m_manager.IsQuestCompleted(m_banditCamp), Is.True);
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_UnknownObjective_IsSkipped_TheRestLoad: A saved completed objective that no longer belongs to its quest is skipped; the quest's other saved objectives still load --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A saved completed objective that no longer belongs to its quest is skipped; the quest's other saved objectives still load.")]
         public void RestoreState_UnknownObjective_IsSkipped_TheRestLoad()
@@ -257,6 +331,9 @@ namespace PolyQuest.Tests
             Assert.That(status.CompletedObjectiveCount, Is.EqualTo(1));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_NonObject_IsIgnored: A null or non-object state is ignored, as if the save never held quests: current quests are kept and no event fires --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A null or non-object state is ignored, as if the save never held quests: current quests are kept and no event fires.")]
         public void RestoreState_NonObject_IsIgnored()
@@ -272,6 +349,9 @@ namespace PolyQuest.Tests
             Assert.That(updated, Is.EqualTo(0));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- WorkDoneBeforeAcquiring_SurvivesSaveAndLoad: Work done before a quest is acquired survives a save and load, and counts when the quest is acquired afterwards --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Work done before a quest is acquired survives a save and load, and counts when the quest is acquired afterwards.")]
         public void WorkDoneBeforeAcquiring_SurvivesSaveAndLoad()

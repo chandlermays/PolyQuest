@@ -33,6 +33,9 @@ namespace PolyQuest.Tests
         private QuestObjective m_first, m_second;
         private Quest m_quest;
 
+        /*------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for quest hook testing --- |
+        ------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -58,14 +61,22 @@ namespace PolyQuest.Tests
             m_manager = m_player.AddComponent<QuestManager>();
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
             m_kit.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*----------------------------------------------------
+        | --- Objective: Creates a named quest objective --- |
+        ----------------------------------------------------*/
         private QuestObjective Objective(string name)
         {
             QuestObjective objective = m_kit.Track(ScriptableObject.CreateInstance<QuestObjective>());
@@ -73,12 +84,18 @@ namespace PolyQuest.Tests
             return objective;
         }
 
+        /*-------------------------------------------------------------------------------------
+        | --- IsDone: Whether the objective is complete in the test quest's active status --- |
+        -------------------------------------------------------------------------------------*/
         private bool IsDone(QuestObjective objective)
         {
             QuestStatus status = m_manager.ActiveQuests.SingleOrDefault(s => s.Quest == m_quest);
             return status != null && status.IsObjectiveComplete(objective);
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------
+        | --- AddObjectiveCompletion: Adds an ObjectiveCompletion wired to the Player's QuestManager, the test quest and the objective --- |
+        ----------------------------------------------------------------------------------------------------------------------------------*/
         private ObjectiveCompletion AddObjectiveCompletion(GameObject go, QuestObjective objective)
         {
             ObjectiveCompletion completion = go.AddComponent<ObjectiveCompletion>();
@@ -89,8 +106,13 @@ namespace PolyQuest.Tests
             return completion;
         }
 
-        /* ============================== Dialogue events ============================== */
 
+        /*-------------------------
+        | --- Dialogue Events --- |
+        -------------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------
+        | --- AssignQuestEvent_GivesTheQuestToTheInstigator: An AssignQuestEvent gives its quest to the instigator's QuestManager --- |
+        -----------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An AssignQuestEvent gives its quest to the instigator's QuestManager.")]
         public void AssignQuestEvent_GivesTheQuestToTheInstigator()
@@ -103,6 +125,9 @@ namespace PolyQuest.Tests
             Assert.That(m_manager.HasQuest(m_quest), Is.True);
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CompleteObjectiveEvent_CompletesTheObjectiveForTheInstigator: A CompleteObjectiveEvent completes its objective in the instigator's QuestManager --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A CompleteObjectiveEvent completes its objective in the instigator's QuestManager.")]
         public void CompleteObjectiveEvent_CompletesTheObjectiveForTheInstigator()
@@ -118,8 +143,13 @@ namespace PolyQuest.Tests
             Assert.That(IsDone(m_first), Is.False);
         }
 
-        /* ============================== QuestAssigner / ObjectiveCompletion ============================== */
 
+        /*---------------------------------------------
+        | --- QuestAssigner & ObjectiveCompletion --- |
+        ---------------------------------------------*/
+        /*------------------------------------------------------------------------------------------------------------------------
+        | --- QuestAssigner_GivesTheQuestToThePlayer: QuestAssigner.AssignQuest gives its quest to the player's QuestManager --- |
+        ------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("QuestAssigner.AssignQuest gives its quest to the player's QuestManager.")]
         public void QuestAssigner_GivesTheQuestToThePlayer()
@@ -133,6 +163,9 @@ namespace PolyQuest.Tests
             Assert.That(m_manager.HasQuest(m_quest), Is.True);
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- ObjectiveCompletion_CompletesItsObjective: ObjectiveCompletion.CompleteObjective completes its configured objective, and only that one --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("ObjectiveCompletion.CompleteObjective completes its configured objective, and only that one.")]
         public void ObjectiveCompletion_CompletesItsObjective()
@@ -146,8 +179,13 @@ namespace PolyQuest.Tests
             Assert.That(IsDone(m_second), Is.False);
         }
 
-        /* ============================== TriggerObjective ============================== */
 
+        /*--------------------------
+        | --- TriggerObjective --- |
+        --------------------------*/
+        /*------------------------------------------------------------------------------------------------
+        | --- BuildTriggerVolume: Creates a trigger volume that completes the objective when entered --- |
+        ------------------------------------------------------------------------------------------------*/
         private GameObject BuildTriggerVolume(QuestObjective objective)
         {
             GameObject volume = m_kit.NewObject("TriggerVolume");
@@ -157,12 +195,18 @@ namespace PolyQuest.Tests
             return volume;
         }
 
+        /*------------------------------------------------------------------------------------
+        | --- Enter: Invokes the volume's private OnTriggerEnter with the given collider --- |
+        ------------------------------------------------------------------------------------*/
         private static void Enter(GameObject volume, Collider other)
         {
             TriggerObjective trigger = volume.GetComponent<TriggerObjective>();
             typeof(TriggerObjective).GetMethod("OnTriggerEnter", kAny).Invoke(trigger, new object[] { other });
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------
+        | --- TriggerObjective_PlayerEntering_CompletesTheObjective: The Player entering a TriggerObjective volume completes the volume's objective --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("The Player entering a TriggerObjective volume completes the volume's objective.")]
         public void TriggerObjective_PlayerEntering_CompletesTheObjective()
@@ -175,6 +219,9 @@ namespace PolyQuest.Tests
             Assert.That(IsDone(m_first), Is.True);
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- TriggerObjective_NonPlayerEntering_CompletesNothing: Anything other than the Player entering a TriggerObjective volume completes nothing --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Anything other than the Player entering a TriggerObjective volume completes nothing.")]
         public void TriggerObjective_NonPlayerEntering_CompletesNothing()
@@ -188,8 +235,13 @@ namespace PolyQuest.Tests
             Assert.That(IsDone(m_first), Is.False);
         }
 
-        /* ============================== EnemyTracker ============================== */
 
+        /*----------------------
+        | --- EnemyTracker --- |
+        ----------------------*/
+        /*----------------------------------------------------------------------------
+        | --- BuildTracker: Creates an EnemyTracker that completes the objective --- |
+        ----------------------------------------------------------------------------*/
         private EnemyTracker BuildTracker(QuestObjective objective)
         {
             GameObject trackerObject = m_kit.NewObject("EnemyTracker");
@@ -199,6 +251,9 @@ namespace PolyQuest.Tests
             return tracker;
         }
 
+        /*--------------------------------------------------------------------------------
+        | --- BuildEnemy: Creates a 10-health enemy with its HealthComponent started --- |
+        --------------------------------------------------------------------------------*/
         private HealthComponent BuildEnemy(string name)
         {
             AIProgression progression = m_kit.Track(ScriptableObject.CreateInstance<AIProgression>());
@@ -215,8 +270,14 @@ namespace PolyQuest.Tests
             return health;
         }
 
+        /*-----------------------------------------------------------------------
+        | --- Kill: Kills an enemy with an overwhelming hit from the Player --- |
+        -----------------------------------------------------------------------*/
         private void Kill(HealthComponent enemy) => enemy.TakeDamage(m_player, 1000f);
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EnemyTracker_CompletesItsObjective_WhenEveryTrackedEnemyIsDead: An EnemyTracker completes its objective when the last of its tracked enemies dies, not before --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An EnemyTracker completes its objective when the last of its tracked enemies dies, not before.")]
         public void EnemyTracker_CompletesItsObjective_WhenEveryTrackedEnemyIsDead()
@@ -235,6 +296,9 @@ namespace PolyQuest.Tests
             Assert.That(IsDone(m_first), Is.True);
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EnemyTracker_EnemiesRestoredDeadFromASave_CountAsKilled: Enemies a save restores as dead count as killed: after a reload, killing the remaining enemies still completes the objective --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Enemies a save restores as dead count as killed: after a reload, killing the remaining enemies still completes the objective.")]
         public void EnemyTracker_EnemiesRestoredDeadFromASave_CountAsKilled()
@@ -252,8 +316,13 @@ namespace PolyQuest.Tests
             Assert.That(IsDone(m_first), Is.True);
         }
 
-        /* ============================== QuestItem ============================== */
 
+        /*-------------------
+        | --- QuestItem --- |
+        -------------------*/
+        /*---------------------------------------------------------------------------------------------------
+        | --- NewQuestItem: Creates a registered quest item that completes the objective when picked up --- |
+        ---------------------------------------------------------------------------------------------------*/
         private QuestItem NewQuestItem(string id, QuestObjective objective)
         {
             QuestItem item = m_kit.Item<QuestItem>(id);
@@ -262,6 +331,9 @@ namespace PolyQuest.Tests
             return item;
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- QuestItem_PickedUp_GoesToTheInventory_AndCompletesItsObjective: Picking up a quest item puts it in the inventory and completes its objective --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Picking up a quest item puts it in the inventory and completes its objective.")]
         public void QuestItem_PickedUp_GoesToTheInventory_AndCompletesItsObjective()
@@ -275,6 +347,9 @@ namespace PolyQuest.Tests
             Assert.That(IsDone(m_first), Is.True);
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- QuestItem_ThatDoesNotFit_DoesNotCompleteItsObjective: A quest item that doesn't fit in the inventory isn't picked up and doesn't complete its objective --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A quest item that doesn't fit in the inventory isn't picked up and doesn't complete its objective.")]
         public void QuestItem_ThatDoesNotFit_DoesNotCompleteItsObjective()

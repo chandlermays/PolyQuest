@@ -14,6 +14,9 @@ namespace PolyQuest.Tests
         private PlayerProgression m_player;
         private AIProgression m_ai;
 
+        /*-------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for progression testing --- |
+        -------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -21,6 +24,9 @@ namespace PolyQuest.Tests
             m_ai = ScriptableObject.CreateInstance<AIProgression>();
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
@@ -28,8 +34,13 @@ namespace PolyQuest.Tests
             Object.DestroyImmediate(m_ai);
         }
 
-        ///* --- Recalculate: growth curve --- *///
 
+        /*----------------------
+        | --- Growth Curve --- |
+        ----------------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RecalculateHealth_FollowsTheExactCurve: Each health row is round(initial * (1 + percentage)^(level - 1)), computed from the exact curve rather than from the previous rounded row --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Each health row is round(initial * (1 + percentage)^(level - 1)), computed from the exact curve rather than from the previous rounded row.")]
         public void RecalculateHealth_FollowsTheExactCurve()
@@ -48,6 +59,9 @@ namespace PolyQuest.Tests
             Assert.That(m_player.GetHealth(5), Is.EqualTo(35f));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Recalculate_OverwritesHandEditedFirstLevel: Recalculating overwrites every entry, including hand-edited ones, starting from the initial value --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Recalculating overwrites every entry, including hand-edited ones, starting from the initial value.")]
         public void Recalculate_OverwritesHandEditedFirstLevel()
@@ -63,6 +77,9 @@ namespace PolyQuest.Tests
             Assert.That(m_player.GetDamage(3), Is.EqualTo(8f));
         }
 
+        /*---------------------------------------------------------------------------------------------------
+        | --- Recalculate_ZeroPercent_KeepsValueFlat: A 0% increase keeps the value flat at every level --- |
+        ---------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A 0% increase keeps the value flat at every level.")]
         public void Recalculate_ZeroPercent_KeepsValueFlat()
@@ -76,6 +93,9 @@ namespace PolyQuest.Tests
             Assert.That(m_player.GetDefense(3), Is.EqualTo(40f));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RecalculateMana_UsesItsOwnPercentage_OnTheExactCurve: Mana follows the exact curve of its own percentage, independent of the other stats' percentages --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Mana follows the exact curve of its own percentage, independent of the other stats' percentages.")]
         public void RecalculateMana_UsesItsOwnPercentage_OnTheExactCurve()
@@ -94,6 +114,9 @@ namespace PolyQuest.Tests
             Assert.That(m_player.GetMana(5), Is.EqualTo(104f));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RecalculateManaRegen_SmallValues_GrowOnTheExactCurve: A small value still grows once the exact curve rounds up: 1 * 1.1^5 = 1.61 rounds to 2 at level 6 --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A small value still grows once the exact curve rounds up: 1 * 1.1^5 = 1.61 rounds to 2 at level 6.")]
         public void RecalculateManaRegen_SmallValues_GrowOnTheExactCurve()
@@ -110,8 +133,13 @@ namespace PolyQuest.Tests
             Assert.That(m_player.GetManaRegenRate(6), Is.EqualTo(2f));
         }
 
-        ///* --- PlayerProgression: experience table --- *///
 
+        /*--------------------------
+        | --- Experience Table --- |
+        --------------------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RecalculateExperience_IsCumulative_AndRoundsHalfToEven: The XP table is cumulative: each level adds round(initial * growth^i), using Mathf.RoundToInt's half-to-even rounding --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("The XP table is cumulative: each level adds round(initial * growth^i), using Mathf.RoundToInt's half-to-even rounding.")]
         public void RecalculateExperience_IsCumulative_AndRoundsHalfToEven()
@@ -130,8 +158,13 @@ namespace PolyQuest.Tests
             Assert.That(m_player.GetExperience(4), Is.EqualTo(813f));
         }
 
-        ///* --- AIProgression: experience reward --- *///
 
+        /*---------------------------
+        | --- Experience Reward --- |
+        ---------------------------*/
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RecalculateExperienceReward_FollowsTheExactCurve: Each XP reward row is round(initial * (1 + percentage)^(level - 1)), computed from the exact curve rather than from the previous rounded row --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Each XP reward row is round(initial * (1 + percentage)^(level - 1)), computed from the exact curve rather than from the previous rounded row.")]
         public void RecalculateExperienceReward_FollowsTheExactCurve()

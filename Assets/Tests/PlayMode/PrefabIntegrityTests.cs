@@ -25,6 +25,9 @@ namespace PolyQuest.Tests
         private PlayerRig m_rig;
         private bool m_loadedAScene;
 
+        /*------------------------------------------------------------------------------------------------------------
+        | --- TearDown: Disposes the rig and unloads any loaded scene so its objects don't leak into later tests --- |
+        ------------------------------------------------------------------------------------------------------------*/
         [UnityTearDown]
         public IEnumerator TearDown()
         {
@@ -51,8 +54,13 @@ namespace PolyQuest.Tests
             PlayerRig.DestroyPersistentObjects();       // a scene load can leave singletons behind in DontDestroyOnLoad
         }
 
-        /* --- Case sources --- */
 
+        /*----------------------
+        | --- Case Sources --- |
+        ----------------------*/
+        /*----------------------------------------------------------
+        | --- GamePrefabs: Every prefab path under Assets/Game --- |
+        ----------------------------------------------------------*/
         private static IEnumerable<string> GamePrefabs()
         {
 #if UNITY_EDITOR
@@ -63,19 +71,30 @@ namespace PolyQuest.Tests
 #endif
         }
 
+        /*----------------------------------------------------------
+        | --- BuildScenes: Every build index in Build Settings --- |
+        ----------------------------------------------------------*/
         private static IEnumerable<int> BuildScenes()
         {
             for (int i = 0; i < SceneManager.sceneCountInBuildSettings; ++i)
                 yield return i;
         }
 
+        /*--------------------------------------------------------------------
+        | --- PathOf: A component's hierarchy path, for failure messages --- |
+        --------------------------------------------------------------------*/
         private static string PathOf(Component component)
         {
             return string.Join("/", component.GetComponentsInParent<Transform>(true).Reverse().Select(t => t.name));
         }
 
-        /* ============================== Every prefab (static checks) ============================== */
 
+        /*----------------------
+        | --- Every Prefab --- |
+        ----------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Prefab_HasNoMissingScripts: No GameObject in any prefab under Assets/Game has a component whose MonoBehaviour script was deleted or renamed --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------*/
         [TestCaseSource(nameof(GamePrefabs))]
         [Description("No GameObject in any prefab under Assets/Game has a component whose MonoBehaviour script was deleted or renamed.")]
         public void Prefab_HasNoMissingScripts(string path)
@@ -95,6 +114,9 @@ namespace PolyQuest.Tests
 #endif
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Prefab_HasNoBrokenObjectReferences: No serialized object reference in any prefab under Assets/Game points to an asset that has since been deleted --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [TestCaseSource(nameof(GamePrefabs))]
         [Description("No serialized object reference in any prefab under Assets/Game points to an asset that has since been deleted.")]
         public void Prefab_HasNoBrokenObjectReferences(string path)
@@ -126,8 +148,13 @@ namespace PolyQuest.Tests
 #endif
         }
 
-        /* ============================== The Player prefab ============================== */
 
+        /*---------------------------
+        | --- The Player Prefab --- |
+        ---------------------------*/
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Player_SpawnsAndRunsAFewFrames_WithoutLoggingErrors: The real Player prefab spawns and runs three frames without any logged error or exception from Awake, OnEnable, Start or Update --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("The real Player prefab spawns and runs three frames without any logged error or exception from Awake, OnEnable, Start or Update.")]
         public IEnumerator Player_SpawnsAndRunsAFewFrames_WithoutLoggingErrors()
@@ -142,6 +169,9 @@ namespace PolyQuest.Tests
             Assert.That(m_rig.Player.activeInHierarchy, Is.True);
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Player_HasAStableSaveIdentifier: The Player has a SaveableEntity with a non-empty UID, so its state is never saved under a blank key --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("The Player has a SaveableEntity with a non-empty UID, so its state is never saved under a blank key.")]
         public void Player_HasAStableSaveIdentifier()
@@ -154,6 +184,9 @@ namespace PolyQuest.Tests
             Assert.That(entity.UID, Is.Not.Null.And.Not.Empty, "an empty UID means the Player's state is saved under a blank key");
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Player_EverySaveableComponent_IsOfADistinctType: No two ISaveable components on the Player share a type, since SaveableEntity keys each component's state by its type name --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("No two ISaveable components on the Player share a type, since SaveableEntity keys each component's state by its type name.")]
         public void Player_EverySaveableComponent_IsOfADistinctType()
@@ -167,6 +200,9 @@ namespace PolyQuest.Tests
             Assert.That(typeNames, Is.Not.Empty);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------
+        | --- Player_StartsAtFullHealth: After Start, a new Player's current health equals its max health from BaseStats, and it is alive --- |
+        -------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("After Start, a new Player's current health equals its max health from BaseStats, and it is alive.")]
         public IEnumerator Player_StartsAtFullHealth()
@@ -179,6 +215,9 @@ namespace PolyQuest.Tests
             Assert.That(m_rig.Health.IsDead, Is.False);
         }
 
+        /*------------------------------------------------------------------------------------------------------------------
+        | --- Player_StartsAtLevelOne_WithAnEmptyWallet: A new Player starts at level 1 with 0 silver and 0 experience --- |
+        ------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("A new Player starts at level 1 with 0 silver and 0 experience.")]
         public IEnumerator Player_StartsAtLevelOne_WithAnEmptyWallet()
@@ -192,8 +231,13 @@ namespace PolyQuest.Tests
             Assert.That(m_rig.Experience.ExperiencePoints, Is.EqualTo(0f));
         }
 
-        /* ============================== Every scene in Build Settings ============================== */
 
+        /*---------------------------------------
+        | --- Every Scene in Build Settings --- |
+        ---------------------------------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Scene_LoadsWithoutErrors_AndEverySaveableEntityHasAUniqueIdentifier: Each scene in Build Settings loads without logged errors, and every SaveableEntity in it (inactive included) has a non-blank UID that no other entity shares --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Each scene in Build Settings loads without logged errors, and every SaveableEntity in it (inactive included) has a non-blank UID that no other entity shares.")]
         public IEnumerator Scene_LoadsWithoutErrors_AndEverySaveableEntityHasAUniqueIdentifier([ValueSource(nameof(BuildScenes))] int buildIndex)
@@ -218,6 +262,9 @@ namespace PolyQuest.Tests
             Assert.That(duplicated, Is.Empty, "SaveableEntities sharing a UID (they overwrite each other's save data):\n" + string.Join("\n", duplicated));
         }
 
+        /*-------------------------------------------------------------------------------
+        | --- PathOfEntity: A SaveableEntity's hierarchy path, for failure messages --- |
+        -------------------------------------------------------------------------------*/
         private static string PathOfEntity(SaveableEntity entity) => PathOf(entity);
     }
 }

@@ -20,6 +20,9 @@ namespace PolyQuest.Tests
         private ActionItem m_potion;
         private ActionItem m_fireball;
 
+        /*------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for action bar testing --- |
+        ------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -34,14 +37,22 @@ namespace PolyQuest.Tests
             m_fireball = m_kit.Item<ActionItem>("test-fireball");
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
             m_kit.Dispose();
         }
 
-        /* ============================== Using ============================== */
 
+        /*---------------
+        | --- Using --- |
+        ---------------*/
+        /*--------------------------------------------------------------------------------------------------------------------------------------------
+        | --- UsingAConsumable_UsesUpOne_AndTheSlotEmptiesAtZero: Using a consumable uses up one, and the slot empties when the last one is used --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Using a consumable uses up one, and the slot empties when the last one is used.")]
         public void UsingAConsumable_UsesUpOne_AndTheSlotEmptiesAtZero()
@@ -56,6 +67,9 @@ namespace PolyQuest.Tests
             Assert.That(m_actions.GetQuantity(0), Is.EqualTo(0));
         }
 
+        /*-------------------------------------------------------------------------------------------
+        | --- UsingANonConsumable_KeepsItInItsSlot: Using a non-consumable keeps it in its slot --- |
+        -------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Using a non-consumable keeps it in its slot.")]
         public void UsingANonConsumable_KeepsItInItsSlot()
@@ -68,8 +82,13 @@ namespace PolyQuest.Tests
             Assert.That(m_actions.GetQuantity(1), Is.EqualTo(1));
         }
 
-        /* ============================== One slot per ability ============================== */
 
+        /*------------------------------
+        | --- One Slot Per Ability --- |
+        ------------------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- PlacingAnAbilityAlreadyOnTheBar_MovesIt: An ability can be in only one slot: placing one that's already on the bar moves it to the new slot --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An ability can be in only one slot: placing one that's already on the bar moves it to the new slot.")]
         public void PlacingAnAbilityAlreadyOnTheBar_MovesIt()
@@ -82,8 +101,13 @@ namespace PolyQuest.Tests
             Assert.That(m_actions.GetActionItem(3), Is.SameAs(m_fireball));
         }
 
-        /* ============================== Saving ============================== */
 
+        /*----------------
+        | --- Saving --- |
+        ----------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------------------
+        | --- CaptureThenRestore_RestoresEachSlot: Capturing the bar and restoring it into a fresh one restores each slot's item and quantity --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Capturing the bar and restoring it into a fresh one restores each slot's item and quantity.")]
         public void CaptureThenRestore_RestoresEachSlot()
@@ -103,6 +127,9 @@ namespace PolyQuest.Tests
             Assert.That(fresh.GetActionItem(1), Is.Null);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_UnknownOrUnreadableSlots_AreSkipped_TheRestLoad: Saved slots with an unknown item or that can't be read are skipped, and the rest load --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Saved slots with an unknown item or that can't be read are skipped, and the rest load.")]
         public void RestoreState_UnknownOrUnreadableSlots_AreSkipped_TheRestLoad()

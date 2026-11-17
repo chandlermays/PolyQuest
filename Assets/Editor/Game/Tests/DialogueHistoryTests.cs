@@ -17,6 +17,9 @@ namespace PolyQuest.Tests
         private GameObject m_player;
         private DialogueHistory m_history;
 
+        /*------------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for dialogue history testing --- |
+        ------------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -24,14 +27,22 @@ namespace PolyQuest.Tests
             m_history = m_player.AddComponent<DialogueHistory>();
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
             Object.DestroyImmediate(m_player);
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*-----------------------------------------------------------------------------------------------------------
+        | --- FreshHistory: Creates a second history parented to the Player so it is destroyed with the fixture --- |
+        -----------------------------------------------------------------------------------------------------------*/
         private DialogueHistory FreshHistory()
         {
             GameObject other = new GameObject("FreshPlayer");
@@ -39,8 +50,13 @@ namespace PolyQuest.Tests
             return other.AddComponent<DialogueHistory>();
         }
 
-        /* ============================== Recording ============================== */
 
+        /*-------------------
+        | --- Recording --- |
+        -------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------
+        | --- RecordConversation_MarksOnlyThatNpc: Recording a conversation marks that NPC, and only that NPC, as spoken to --- |
+        -----------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Recording a conversation marks that NPC, and only that NPC, as spoken to.")]
         public void RecordConversation_MarksOnlyThatNpc()
@@ -51,8 +67,13 @@ namespace PolyQuest.Tests
             Assert.That(m_history.HasSpokenTo("elira"), Is.False);
         }
 
-        /* ============================== kHasSpokenTo ============================== */
 
+        /*----------------------
+        | --- kHasSpokenTo --- |
+        ----------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------------------
+        | --- HasSpokenTo_AnswersForTheNamedNpc: kHasSpokenTo answers true for an NPC the Player has spoken to and false for one they haven't --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("kHasSpokenTo answers true for an NPC the Player has spoken to and false for one they haven't.")]
         public void HasSpokenTo_AnswersForTheNamedNpc()
@@ -63,6 +84,9 @@ namespace PolyQuest.Tests
             Assert.That(m_history.Evaluate(ConditionType.kHasSpokenTo, new[] { "elira" }), Is.False);
         }
 
+        /*---------------------------------------------------------------------------------------------------------
+        | --- HasSpokenTo_WithoutAParameter_IsUnanswered: kHasSpokenTo without an NPC parameter is unanswered --- |
+        ---------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("kHasSpokenTo without an NPC parameter is unanswered.")]
         public void HasSpokenTo_WithoutAParameter_IsUnanswered()
@@ -73,6 +97,9 @@ namespace PolyQuest.Tests
             Assert.That(m_history.Evaluate(ConditionType.kHasSpokenTo, new string[0]), Is.Null);
         }
 
+        /*----------------------------------------------------------------------------------------------------------------
+        | --- NonDialogueCondition_IsNotAnswered: DialogueHistory does not answer conditions other than kHasSpokenTo --- |
+        ----------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("DialogueHistory does not answer conditions other than kHasSpokenTo.")]
         public void NonDialogueCondition_IsNotAnswered()
@@ -82,8 +109,13 @@ namespace PolyQuest.Tests
             Assert.That(m_history.Evaluate(ConditionType.kHasQuest, new[] { "cole" }), Is.Null);
         }
 
-        /* ============================== Saving ============================== */
 
+        /*----------------
+        | --- Saving --- |
+        ----------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CaptureThenRestore_IntoAFreshHistory_RestoresEveryNpc: Capturing the history and restoring it into a fresh one restores every NPC spoken to --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Capturing the history and restoring it into a fresh one restores every NPC spoken to.")]
         public void CaptureThenRestore_IntoAFreshHistory_RestoresEveryNpc()
@@ -99,6 +131,9 @@ namespace PolyQuest.Tests
             Assert.That(fresh.HasSpokenTo("flint"), Is.False);
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_ReplacesTheCurrentHistory: Restoring a save replaces the current history: NPCs spoken to since that save are forgotten --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Restoring a save replaces the current history: NPCs spoken to since that save are forgotten.")]
         public void RestoreState_ReplacesTheCurrentHistory()
@@ -113,6 +148,9 @@ namespace PolyQuest.Tests
             Assert.That(m_history.HasSpokenTo("elira"), Is.False);
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_NotAList_IsIgnored: Save data that isn't a list of NPCs is ignored, as if the save never held a history --- |
+        ------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Save data that isn't a list of NPCs is ignored, as if the save never held a history.")]
         public void RestoreState_NotAList_IsIgnored()
@@ -127,6 +165,9 @@ namespace PolyQuest.Tests
             Assert.That(m_history.HasSpokenTo("elira"), Is.False);
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_UnreadableEntry_IsSkipped_TheRestLoad: An unreadable entry in the saved history is skipped and the rest load --- |
+        -----------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An unreadable entry in the saved history is skipped and the rest load.")]
         public void RestoreState_UnreadableEntry_IsSkipped_TheRestLoad()

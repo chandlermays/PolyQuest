@@ -21,6 +21,9 @@ namespace PolyQuest.Tests
         private Experience m_experience;
         private int m_levelUps, m_xpChanges;
 
+        /*------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for experience testing --- |
+        ------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -32,14 +35,22 @@ namespace PolyQuest.Tests
             m_experience.OnExperienceChanged += () => ++m_xpChanges;
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
             m_kit.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*----------------------------------------------------------------------------------------------------------------------------
+        | --- NewPlayer: Creates a Player with BaseStats on a test progression and an Experience component with its level-up VFX --- |
+        ----------------------------------------------------------------------------------------------------------------------------*/
         private (BaseStats, Experience) NewPlayer(string name)
         {
             PlayerProgression progression = m_kit.Track(ScriptableObject.CreateInstance<PlayerProgression>());
@@ -59,8 +70,13 @@ namespace PolyQuest.Tests
             return (stats, experience);
         }
 
-        /* ============================== Gaining XP ============================== */
 
+        /*--------------------
+        | --- Gaining XP --- |
+        --------------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- GainExperience_BelowTheGoal_AddsIt_WithoutLevelingUp: XP below the next level's goal is added to the total and raises OnExperienceChanged, with no level-up --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("XP below the next level's goal is added to the total and raises OnExperienceChanged, with no level-up.")]
         public void GainExperience_BelowTheGoal_AddsIt_WithoutLevelingUp()
@@ -73,6 +89,9 @@ namespace PolyQuest.Tests
             Assert.That(m_levelUps, Is.EqualTo(0));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------
+        | --- ReachingTheGoal_LevelsUpOnce: Reaching the next level's XP goal levels up once and raises OnLevelUp once --- |
+        ------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Reaching the next level's XP goal levels up once and raises OnLevelUp once.")]
         public void ReachingTheGoal_LevelsUpOnce()
@@ -85,6 +104,9 @@ namespace PolyQuest.Tests
             Assert.That(m_levelUps, Is.EqualTo(1));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------
+        | --- XpForSeveralLevels_LevelsUpOncePerLevel: XP enough for several levels at once gives one level-up per level --- |
+        --------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("XP enough for several levels at once gives one level-up per level.")]
         public void XpForSeveralLevels_LevelsUpOncePerLevel()
@@ -96,8 +118,13 @@ namespace PolyQuest.Tests
             Assert.That(m_experience.ExperiencePoints, Is.EqualTo(300f).Within(kTolerance), "XP is a running total");
         }
 
-        /* ============================== The XP bar ============================== */
 
+        /*--------------------
+        | --- The XP Bar --- |
+        --------------------*/
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CurrentLevelXp_IsProgressWithinTheLevel: The XP bar shows progress within the current level: XP past the previous level's total, out of the XP between that total and this level's --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [TestCase(40f, 40f, 100f)]
         [TestCase(130f, 30f, 150f)]
         [TestCase(300f, 50f, 225f)]
@@ -110,8 +137,13 @@ namespace PolyQuest.Tests
             Assert.That(m_experience.GetCurrentLevelXPRequired, Is.EqualTo(expectedRequired).Within(kTolerance));
         }
 
-        /* ============================== Saving ============================== */
 
+        /*----------------
+        | --- Saving --- |
+        ----------------*/
+        /*------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CaptureThenRestore_RestoresXpAndLevel: Capturing XP and level and restoring them into a fresh Player restores both, without a level-up --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Capturing XP and level and restoring them into a fresh Player restores both, without a level-up.")]
         public void CaptureThenRestore_RestoresXpAndLevel()
@@ -128,6 +160,9 @@ namespace PolyQuest.Tests
             Assert.That(freshLevelUps, Is.EqualTo(0));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_Unreadable_IsIgnored: Experience save data that can't be read is ignored: XP and level are unchanged --- |
+        ---------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Experience save data that can't be read is ignored: XP and level are unchanged.")]
         public void RestoreState_Unreadable_IsIgnored()

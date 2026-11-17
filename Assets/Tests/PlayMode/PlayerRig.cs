@@ -54,9 +54,19 @@ namespace PolyQuest.Tests
         public ActionItem StackableItem { get; private set; }
         public EquipableItem Equipable { get; private set; }
 
+        /*-----------------------------------------------------
+        | --- SavePath: Path of the test slot's main save --- |
+        -----------------------------------------------------*/
         public static string SavePath => PathFor(kSaveSlot);
+
+        /*--------------------------------------------------------
+        | --- AutoSavePath: Path of the test slot's autosave --- |
+        --------------------------------------------------------*/
         public static string AutoSavePath => PathFor(kSaveSlot + kAutoSaveSuffix);
 
+        /*---------------------------------------------------------------------------------------------------------------------
+        | --- PlayerRig: Builds a test world with the real Player, Save System and Input Manager on a throwaway save slot --- |
+        ---------------------------------------------------------------------------------------------------------------------*/
         public PlayerRig()
         {
             Assert.That(kRegistryField, Is.Not.Null, "InventoryItem.m_itemRegistry was not found. Was it renamed?");
@@ -85,9 +95,9 @@ namespace PolyQuest.Tests
             Assert.That(Equipable, Is.Not.Null, "No EquipableItem found under Resources.");
         }
 
-        /*--------------------------------------------------------------------------------------
+        /*-------------------------------------------------------------------------------------------------
         | --- SpawnPlayer: Instantiate a fresh Player (replaces the current one, like a scene reload) --- |
-        --------------------------------------------------------------------------------------*/
+        -------------------------------------------------------------------------------------------------*/
         public void SpawnPlayer()
         {
             if (Player != null)
@@ -102,6 +112,9 @@ namespace PolyQuest.Tests
             Wallet = Require<Wallet>();
         }
 
+        /*-------------------------------------------------------------------------------------------
+        | --- Require: The Player's component of the given type, failing if the prefab lacks it --- |
+        -------------------------------------------------------------------------------------------*/
         private T Require<T>() where T : Component
         {
             T component = Player.GetComponent<T>();
@@ -109,8 +122,13 @@ namespace PolyQuest.Tests
             return component;
         }
 
-        /* --- Gameplay helpers --- */
 
+        /*--------------------------
+        | --- Gameplay Helpers --- |
+        --------------------------*/
+        /*-------------------------------------------------------------------------
+        | --- LevelUpTo: Gives the Player XP until it reaches the given level --- |
+        -------------------------------------------------------------------------*/
         public void LevelUpTo(int level)
         {
             for (int guard = 0; Stats.Level < level; ++guard)
@@ -120,6 +138,9 @@ namespace PolyQuest.Tests
             }
         }
 
+        /*----------------------------------------------------------------------------------
+        | --- Damage: Hurts the Player by the given amount from a factionless attacker --- |
+        ----------------------------------------------------------------------------------*/
         public void Damage(float amount)
         {
             GameObject attacker = new GameObject("Attacker");
@@ -127,6 +148,9 @@ namespace PolyQuest.Tests
             Health.TakeDamage(attacker, amount);
         }
 
+        /*-----------------------------------------------------------------------------------
+        | --- QuantityOf: Totals an item's quantity across the Player's inventory slots --- |
+        -----------------------------------------------------------------------------------*/
         public int QuantityOf(InventoryItem item)
         {
             int total = 0;
@@ -138,6 +162,9 @@ namespace PolyQuest.Tests
             return total;
         }
 
+        /*------------------------------------------------------
+        | --- ClearInventory: Empties every inventory slot --- |
+        ------------------------------------------------------*/
         public void ClearInventory()
         {
             for (int i = 0; i < Inventory.Size; ++i)
@@ -147,8 +174,13 @@ namespace PolyQuest.Tests
             }
         }
 
-        /* --- Environment --- */
 
+        /*---------------------
+        | --- Environment --- |
+        ---------------------*/
+        /*------------------------------------------------------------
+        | --- Spawn: Instantiates a prefab by path and tracks it --- |
+        ------------------------------------------------------------*/
         private GameObject Spawn(string prefabPath)
         {
             GameObject instance = Object.Instantiate(PlayModeAssets.Load<GameObject>(prefabPath));
@@ -156,6 +188,9 @@ namespace PolyQuest.Tests
             return instance;
         }
 
+        /*-----------------------------------------------------------------
+        | --- BuildGround: Creates a large plane with a baked NavMesh --- |
+        -----------------------------------------------------------------*/
         private void BuildGround()
         {
             GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
@@ -167,6 +202,9 @@ namespace PolyQuest.Tests
             surface.BuildNavMesh();
         }
 
+        /*----------------------------------------------
+        | --- BuildCamera: Creates the main camera --- |
+        ----------------------------------------------*/
         private void BuildCamera()
         {
             GameObject cameraObject = new GameObject("Main Camera") { tag = "MainCamera" };
@@ -174,6 +212,9 @@ namespace PolyQuest.Tests
             m_created.Add(cameraObject);
         }
 
+        /*---------------------------------------------------------------
+        | --- BuildEventSystem: Creates an EventSystem for UI input --- |
+        ---------------------------------------------------------------*/
         private void BuildEventSystem()
         {
             GameObject eventSystem = new GameObject("EventSystem");
@@ -181,9 +222,9 @@ namespace PolyQuest.Tests
             m_created.Add(eventSystem);
         }
 
-        /*---------------------------------------------------------------------------------------------
+        /*-----------------------------------------------------------------------------------------------------
         | --- DestroyPersistentObjects: Remove singletons a previous scene load left in DontDestroyOnLoad --- |
-        ---------------------------------------------------------------------------------------------*/
+        -----------------------------------------------------------------------------------------------------*/
         public static void DestroyPersistentObjects()
         {
             GameObject probe = new GameObject("PersistentProbe");
@@ -212,21 +253,32 @@ namespace PolyQuest.Tests
             kPreservedSpawnedField.SetValue(null, false);
         }
 
+        /*-----------------------------------------------------------
+        | --- ClearStatic: Clears a singleton's static Instance --- |
+        -----------------------------------------------------------*/
         private static void ClearStatic(Type type)
         {
             PropertyInfo instance = type.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
             instance.GetSetMethod(true).Invoke(null, new object[] { null });
         }
 
+        /*---------------------------------------------
+        | --- PathFor: Path of a slot's save file --- |
+        ---------------------------------------------*/
         private static string PathFor(string slot) => Path.Combine(Application.persistentDataPath, slot + ".sav");
 
-        // Every file of the test slot: the main save, the autosave, their backups and any moved-aside corrupt file
+        /*-------------------------------------------------------------------------------------------------------------------------------------------
+        | --- DeleteSaveFiles: Deletes every file of the test slot: the main save, the autosave, their backups and any moved-aside corrupt file --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------*/
         private static void DeleteSaveFiles()
         {
             foreach (string path in Directory.GetFiles(Application.persistentDataPath, kSaveSlot + "*"))
                 File.Delete(path);
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------
+        | --- Dispose: Destroys everything created, clears the singletons and test save files, and restores the current save name --- |
+        -----------------------------------------------------------------------------------------------------------------------------*/
         public void Dispose()
         {
             kRegistryField.SetValue(null, null);

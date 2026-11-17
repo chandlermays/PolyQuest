@@ -22,12 +22,18 @@ namespace PolyQuest.Tests
 
         private PlayerRig m_rig;
 
+        /*-------------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for quest integration testing --- |
+        -------------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
             m_rig = new PlayerRig();
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
@@ -37,10 +43,18 @@ namespace PolyQuest.Tests
             m_rig.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*-------------------------------------------
+        | --- Quests: The Player's QuestManager --- |
+        -------------------------------------------*/
         private QuestManager Quests => m_rig.Player.GetComponent<QuestManager>();
 
+        /*---------------------------------------------------------------------------
+        | --- LoadQuest: Loads a shipped quest by name, failing if it's missing --- |
+        ---------------------------------------------------------------------------*/
         private static Quest LoadQuest(string name)
         {
             Quest quest = Quest.GetByName(name);
@@ -48,14 +62,22 @@ namespace PolyQuest.Tests
             return quest;
         }
 
+        /*-------------------------------------------------------------
+        | --- CompleteAll: Completes every objective of the quest --- |
+        -------------------------------------------------------------*/
         private void CompleteAll(Quest quest)
         {
             foreach (QuestObjective objective in quest.Objectives)
                 Quests.CompleteObjective(quest, objective);
         }
 
-        /* ============================== Rewards ============================== */
 
+        /*-----------------
+        | --- Rewards --- |
+        -----------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CompletingAQuest_SavesTheRewardWithTheCompletion: Completing a quest saves the completion together with its reward: loading that save into a fresh Player shows the quest completed and the silver paid --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Completing a quest saves the completion together with its reward: loading that save into a fresh Player shows the quest completed and the silver paid.")]
         public IEnumerator CompletingAQuest_SavesTheRewardWithTheCompletion()
@@ -77,6 +99,9 @@ namespace PolyQuest.Tests
             Assert.That(m_rig.Wallet.CurrentSilver, Is.EqualTo(silverBefore + silverReward));
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- ItemRewardThatDoesNotFit_IsDroppedInTheWorld: An item reward that doesn't fit in a full inventory is dropped in the world for the Player, not lost --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("An item reward that doesn't fit in a full inventory is dropped in the world for the Player, not lost.")]
         public IEnumerator ItemRewardThatDoesNotFit_IsDroppedInTheWorld()

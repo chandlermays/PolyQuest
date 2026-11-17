@@ -17,6 +17,9 @@ namespace PolyQuest.Tests
         public GameObject LastInstigator;
         public GameObject LastTarget;
 
+        /*------------------------------------------------------------------------------------
+        | --- Execute: Records the instigator and target and writes the label to the log --- |
+        ------------------------------------------------------------------------------------*/
         public override void Execute(GameObject instigator, GameObject target)
         {
             LastInstigator = instigator;

@@ -23,13 +23,18 @@ namespace PolyQuest.Tests
 
         private readonly List<Object> m_created = new();
 
+        /*----------------------------------------------------------------------
+        | --- Track: Registers an object for the kit to destroy on Dispose --- |
+        ----------------------------------------------------------------------*/
         public T Track<T>(T obj) where T : Object
         {
             m_created.Add(obj);
             return obj;
         }
 
-        // An entity at level 1 with the given base health and mana. Stat modifiers are on.
+        /*------------------------------------------------------------------------------------------------------
+        | --- Entity: Creates a level-1 entity with the given base health and mana, with stat modifiers on --- |
+        ------------------------------------------------------------------------------------------------------*/
         public GameObject Entity(string name, int health = 100, int mana = 0)
         {
             AIProgression progression = Track(ScriptableObject.CreateInstance<AIProgression>());
@@ -46,7 +51,9 @@ namespace PolyQuest.Tests
             return entity;
         }
 
-        // A plain object that only carries a faction, for use as an attacker.
+        /*----------------------------------------------------------------------------------------------
+        | --- Attacker: Creates a plain object that only carries a faction, for use as an attacker --- |
+        ----------------------------------------------------------------------------------------------*/
         public GameObject Attacker(string name, Faction? faction)
         {
             GameObject attacker = Track(new GameObject(name));
@@ -55,6 +62,9 @@ namespace PolyQuest.Tests
             return attacker;
         }
 
+        /*----------------------------------------------------------------------------------------
+        | --- SetFaction: Sets an object's faction, adding a FactionComponent if it has none --- |
+        ----------------------------------------------------------------------------------------*/
         public static FactionComponent SetFaction(GameObject go, Faction faction)
         {
             if (!go.TryGetComponent(out FactionComponent component))
@@ -63,7 +73,9 @@ namespace PolyQuest.Tests
             return component;
         }
 
-        // Stands in for equipment: an additive modifier on one stat. Change its value, then call NotifyStatModified.
+        /*-----------------------------------------------------------------------------------------------------------------------------
+        | --- Modifier: Stands in for equipment: an additive modifier on one stat; change its value, then call NotifyStatModified --- |
+        -----------------------------------------------------------------------------------------------------------------------------*/
         public static FakeStatModifier Modifier(GameObject entity, Stat stat, float additive)
         {
             FakeStatModifier modifier = entity.AddComponent<FakeStatModifier>();
@@ -72,9 +84,19 @@ namespace PolyQuest.Tests
             return modifier;
         }
 
+        /*--------------------------------------------------------------------------
+        | --- AddHealth: Adds a HealthComponent and runs its lifecycle methods --- |
+        --------------------------------------------------------------------------*/
         public static HealthComponent AddHealth(GameObject entity) => Start(entity.AddComponent<HealthComponent>());
+
+        /*----------------------------------------------------------------------
+        | --- AddMana: Adds a ManaComponent and runs its lifecycle methods --- |
+        ----------------------------------------------------------------------*/
         public static ManaComponent AddMana(GameObject entity) => Start(entity.AddComponent<ManaComponent>());
 
+        /*-----------------------------------------------------------------------------------------------
+        | --- Start: Runs Awake, OnEnable and Start on a component, as Unity would outside EditMode --- |
+        -----------------------------------------------------------------------------------------------*/
         private static T Start<T>(T component) where T : Component
         {
             Run(component, "Awake");
@@ -83,6 +105,9 @@ namespace PolyQuest.Tests
             return component;
         }
 
+        /*------------------------------------------------------------------------------------------------------
+        | --- Run: Invokes a lifecycle method by name, searching base classes, and fails if it was renamed --- |
+        ------------------------------------------------------------------------------------------------------*/
         private static void Run(Component component, string method)
         {
             for (Type type = component.GetType(); type != null; type = type.BaseType)
@@ -97,6 +122,9 @@ namespace PolyQuest.Tests
             Assert.Fail($"{component.GetType().Name}.{method} was not found. Was it renamed?");
         }
 
+        /*--------------------------------------------------------
+        | --- Dispose: Destroys every object the kit created --- |
+        --------------------------------------------------------*/
         public void Dispose()
         {
             for (int i = m_created.Count - 1; i >= 0; --i)

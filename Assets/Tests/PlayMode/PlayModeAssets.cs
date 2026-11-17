@@ -11,6 +11,9 @@ namespace PolyQuest.Tests
     // Loads real project assets (prefabs) by path. Play Mode tests only run inside the Editor, so AssetDatabase is available.
     internal static class PlayModeAssets
     {
+        /*---------------------------------------------------------------------------------
+        | --- Load: Loads a project asset by path, failing if it was moved or renamed --- |
+        ---------------------------------------------------------------------------------*/
         public static T Load<T>(string path) where T : Object
         {
 #if UNITY_EDITOR

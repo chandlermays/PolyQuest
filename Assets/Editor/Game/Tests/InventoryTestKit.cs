@@ -27,6 +27,9 @@ namespace PolyQuest.Tests
         private bool m_hadSaveKey;
         private string m_previousSaveName;
 
+        /*----------------------------------------------------------------------------------------------------------
+        | --- InventoryTestKit: Points the item registry at this kit's own registry and clears any SaveManager --- |
+        ----------------------------------------------------------------------------------------------------------*/
         public InventoryTestKit()
         {
             Assert.That(kRegistryField, Is.Not.Null, "InventoryItem.m_itemRegistry was not found. Was it renamed?");
@@ -52,18 +55,33 @@ namespace PolyQuest.Tests
             return manager;
         }
 
+        /*-------------------------------------------------------------------------
+        | --- TestSaveFileExists: Whether the throwaway test save file exists --- |
+        -------------------------------------------------------------------------*/
         public static bool TestSaveFileExists() => File.Exists(TestSavePath());
+
+        /*---------------------------------------------------------------------------------
+        | --- TestAutoSaveFileExists: Whether the throwaway test autosave file exists --- |
+        ---------------------------------------------------------------------------------*/
         public static bool TestAutoSaveFileExists() => File.Exists(Path.Combine(Application.persistentDataPath, kTestSaveName + "_autosave.sav"));
 
+        /*------------------------------------------------------------
+        | --- TestSavePath: Path of the throwaway test save file --- |
+        ------------------------------------------------------------*/
         private static string TestSavePath() => Path.Combine(Application.persistentDataPath, kTestSaveName + ".sav");
 
-        // Every file of the test slot: the main save, the autosave, their backups and any moved-aside corrupt file
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------
+        | --- DeleteTestSaveFiles: Deletes every file of the test slot: the main save, the autosave, their backups and any moved-aside corrupt file --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------*/
         private static void DeleteTestSaveFiles()
         {
             foreach (string path in Directory.GetFiles(Application.persistentDataPath, kTestSaveName + "*"))
                 File.Delete(path);
         }
 
+        /*------------------------------------------------------------
+        | --- ClearSaveManager: Clears the SaveManager singleton --- |
+        ------------------------------------------------------------*/
         public static void ClearSaveManager()
         {
             PropertyInfo instance = typeof(SaveManager).GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
@@ -102,6 +120,9 @@ namespace PolyQuest.Tests
             return item;
         }
 
+        /*---------------------------------------------------------------------
+        | --- NewObject: Creates a GameObject the kit destroys on Dispose --- |
+        ---------------------------------------------------------------------*/
         public GameObject NewObject(string name)
         {
             GameObject gameObject = new GameObject(name);
@@ -109,12 +130,18 @@ namespace PolyQuest.Tests
             return gameObject;
         }
 
+        /*----------------------------------------------------------------------
+        | --- Track: Registers an object for the kit to destroy on Dispose --- |
+        ----------------------------------------------------------------------*/
         public T Track<T>(T obj) where T : Object
         {
             m_created.Add(obj);
             return obj;
         }
 
+        /*------------------------------------------------------------------------------
+        | --- NewInventory: Adds an Inventory of the given size and runs its Awake --- |
+        ------------------------------------------------------------------------------*/
         public Inventory NewInventory(GameObject gameObject, int size)
         {
             Inventory inventory = gameObject.AddComponent<Inventory>();
@@ -123,6 +150,9 @@ namespace PolyQuest.Tests
             return inventory;
         }
 
+        /*---------------------------------------------------------------------------------------
+        | --- InvokeAwake: Runs a component's Awake, including one declared on a base class --- |
+        ---------------------------------------------------------------------------------------*/
         public static void InvokeAwake(Component component)
         {
             // Awake may be declared on a base class (e.g. DragItem<T>); GetMethod does not return private base members
@@ -136,6 +166,9 @@ namespace PolyQuest.Tests
             awake.Invoke(component, null);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------
+        | --- Dispose: Destroys everything created, clears the item registry and SaveManager, and cleans up any isolated save --- |
+        -------------------------------------------------------------------------------------------------------------------------*/
         public void Dispose()
         {
             kRegistryField.SetValue(null, null);

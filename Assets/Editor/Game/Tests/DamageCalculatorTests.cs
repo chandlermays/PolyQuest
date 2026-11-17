@@ -15,6 +15,9 @@ namespace PolyQuest.Tests
         private const float kCap = 0.75f;
         private const float kTolerance = 1e-5f;
 
+        /*--------------------------------------------------------------------------------------------------------------------------------
+        | --- Mitigation_FollowsTheCurve: Below the cap, mitigation is defense / (defense + K): none at 0 defense, half at defense K --- |
+        --------------------------------------------------------------------------------------------------------------------------------*/
         [TestCase(0f, 0f)]
         [TestCase(10f, 10f / 60f)]
         [TestCase(25f, 25f / 75f)]
@@ -26,6 +29,9 @@ namespace PolyQuest.Tests
             Assert.That(DamageCalculator.CalculateMitigation(defense, kK, kCap), Is.EqualTo(expected).Within(kTolerance));
         }
 
+        /*---------------------------------------------------------------------------------------------------------
+        | --- Mitigation_IsCappedAt75Percent: Mitigation never exceeds the 75% cap, however high defense goes --- |
+        ---------------------------------------------------------------------------------------------------------*/
         [TestCase(150f)]
         [TestCase(1000f)]
         [TestCase(1000000f)]
@@ -35,6 +41,9 @@ namespace PolyQuest.Tests
             Assert.That(DamageCalculator.CalculateMitigation(defense, kK, kCap), Is.EqualTo(kCap).Within(kTolerance));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------
+        | --- Damage_IsReducedByTheMitigation: Damage taken is the raw damage reduced by the mitigation; no raw damage means none taken --- |
+        -----------------------------------------------------------------------------------------------------------------------------------*/
         [TestCase(100f, 0f, 100f)]
         [TestCase(100f, 50f, 50f)]
         [TestCase(100f, 1000f, 25f)]
@@ -45,6 +54,9 @@ namespace PolyQuest.Tests
             Assert.That(DamageCalculator.CalculateDamage(raw, defense, kK, kCap), Is.EqualTo(expected).Within(kTolerance));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- DefenseNeededForCap_IsWhereTheCapIsReached: DefenseNeededForCap is the defense where mitigation first reaches the cap: 3K for a 75% cap --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("DefenseNeededForCap is the defense where mitigation first reaches the cap: 3K for a 75% cap.")]
         public void DefenseNeededForCap_IsWhereTheCapIsReached()

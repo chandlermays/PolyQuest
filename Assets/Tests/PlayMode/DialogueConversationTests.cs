@@ -26,6 +26,9 @@ namespace PolyQuest.Tests
         private PlayerRig m_rig;
         private DialogueTestKit m_kit;
 
+        /*-----------------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for dialogue conversation testing --- |
+        -----------------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -33,6 +36,9 @@ namespace PolyQuest.Tests
             m_kit = new DialogueTestKit();
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
@@ -40,12 +46,28 @@ namespace PolyQuest.Tests
             m_rig.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*-----------------------------------------------------
+        | --- Handler: The Player's PlayerDialogueHandler --- |
+        -----------------------------------------------------*/
         private PlayerDialogueHandler Handler => m_rig.Player.GetComponent<PlayerDialogueHandler>();
+
+        /*-----------------------------------------------
+        | --- History: The Player's DialogueHistory --- |
+        -----------------------------------------------*/
         private DialogueHistory History => m_rig.Player.GetComponent<DialogueHistory>();
+
+        /*-------------------------------------------
+        | --- Quests: The Player's QuestManager --- |
+        -------------------------------------------*/
         private QuestManager Quests => m_rig.Player.GetComponent<QuestManager>();
 
+        /*---------------------------------------------------------------------------
+        | --- LoadQuest: Loads a shipped quest by name, failing if it's missing --- |
+        ---------------------------------------------------------------------------*/
         private static Quest LoadQuest(string name)
         {
             Quest quest = Quest.GetByName(name);
@@ -53,18 +75,35 @@ namespace PolyQuest.Tests
             return quest;
         }
 
+        /*-----------------------------------------------------------------------
+        | --- Npc: Creates an NPC with the given dialogue beside the Player --- |
+        -----------------------------------------------------------------------*/
         private AIDialogueHandler Npc(string speakerName, Dialogue dialogue)
             => m_kit.Npc(speakerName, dialogue, m_rig.Player.transform.position + new Vector3(2f, 0f, 0f));
 
+        /*---------------------------------------------------------------------
+        | --- Talk: Starts a conversation with the NPC, skipping the walk --- |
+        ---------------------------------------------------------------------*/
         private void Talk(AIDialogueHandler npc) => DialogueTestKit.Talk(Handler, npc);
 
+        /*---------------------------------------------------------------------------------------
+        | --- HasQuest: A condition on whether the Player has the quest, optionally negated --- |
+        ---------------------------------------------------------------------------------------*/
         private static Conjunction HasQuest(string questName, bool negate = false)
             => DialogueTestKit.When(ConditionType.kHasQuest, questName, negate);
 
+        /*----------------------------------------------------------------
+        | --- ChoiceTexts: The texts of the Player's current choices --- |
+        ----------------------------------------------------------------*/
         private string[] ChoiceTexts() => Handler.GetChoices().Select(c => c.Text).ToArray();
 
-        /* ============================== Opening lines ============================== */
 
+        /*-----------------------
+        | --- Opening Lines --- |
+        -----------------------*/
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- OpeningLines_TheFirstWhoseConditionPasses_Wins: Opening lines are checked in authored order: the first one whose condition passes opens the conversation, even when a later one passes too --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Opening lines are checked in authored order: the first one whose condition passes opens the conversation, even when a later one passes too.")]
         public IEnumerator OpeningLines_TheFirstWhoseConditionPasses_Wins()
@@ -81,6 +120,9 @@ namespace PolyQuest.Tests
             Assert.That(Handler.GetText(), Is.EqualTo(banditOpener.Text));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- OpeningLines_AnUnconditionedLastOne_CatchesEverythingElse: An unconditioned last opening line opens the conversation when none of the conditioned ones pass --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("An unconditioned last opening line opens the conversation when none of the conditioned ones pass.")]
         public IEnumerator OpeningLines_AnUnconditionedLastOne_CatchesEverythingElse()
@@ -96,6 +138,9 @@ namespace PolyQuest.Tests
             Assert.That(Handler.GetText(), Is.EqualTo(fallback.Text));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- NoOpeningLinePasses_NoConversationStarts_AndAWarningNamesTheDialogue: When no opening line's condition passes, no conversation starts: nothing fires, nothing is raised, and an editor warning names the dialogue asset --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("When no opening line's condition passes, no conversation starts: nothing fires, nothing is raised, and an editor warning names the dialogue asset.")]
         public IEnumerator NoOpeningLinePasses_NoConversationStarts_AndAWarningNamesTheDialogue()
@@ -118,6 +163,9 @@ namespace PolyQuest.Tests
             Assert.That(Handler.IsActive(), Is.False);
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EmptyDialogue_NoConversationStarts_AndNothingThrows: A dialogue with no lines starts no conversation and throws nothing; an editor warning names the dialogue asset --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("A dialogue with no lines starts no conversation and throws nothing; an editor warning names the dialogue asset.")]
         public IEnumerator EmptyDialogue_NoConversationStarts_AndNothingThrows()
@@ -133,8 +181,13 @@ namespace PolyQuest.Tests
             Assert.That(Handler.IsActive(), Is.False);
         }
 
-        /* ============================== Player choices ============================== */
 
+        /*------------------------
+        | --- Player Choices --- |
+        ------------------------*/
+        /*----------------------------------------------------------------------------------------------------------------------------------------------
+        | --- PlayersTurn_ChoicesAreTheRepliesWhoseConditionsPass: On the Player's turn, the choices are exactly the replies whose conditions pass --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("On the Player's turn, the choices are exactly the replies whose conditions pass.")]
         public IEnumerator PlayersTurn_ChoicesAreTheRepliesWhoseConditionsPass()
@@ -151,6 +204,9 @@ namespace PolyQuest.Tests
             Assert.That(ChoiceTexts(), Is.EquivalentTo(new[] { askWork.Text, leave.Text }));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- SelectChoice_LeavesTheLine_EntersTheChoice_ThenTheNpcAnswers: Selecting a choice leaves the current line, enters the choice, then moves on to the NPC's answer, firing each line's events in that order --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Selecting a choice leaves the current line, enters the choice, then moves on to the NPC's answer, firing each line's events in that order.")]
         public IEnumerator SelectChoice_LeavesTheLine_EntersTheChoice_ThenTheNpcAnswers()
@@ -171,6 +227,9 @@ namespace PolyQuest.Tests
             Assert.That(m_kit.Fired, Is.EqualTo(new[] { "exit:" + opener.Text, "enter:" + askWork.Text, "exit:" + askWork.Text, "enter:" + answer.Text }));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EnteringALineThatAssignsAQuest_ChangesTheChoicesThatFollow: Lines are re-checked against the latest state: a quest assigned on entering a line changes the choices that follow it --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Lines are re-checked against the latest state: a quest assigned on entering a line changes the choices that follow it.")]
         public IEnumerator EnteringALineThatAssignsAQuest_ChangesTheChoicesThatFollow()
@@ -191,8 +250,13 @@ namespace PolyQuest.Tests
             Assert.That(ChoiceTexts(), Is.EquivalentTo(new[] { accepted.Text }));
         }
 
-        /* ============================== NPC lines ============================== */
 
+        /*-------------------
+        | --- NPC Lines --- |
+        -------------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- NpcTurn_Next_MovesToALineWhoseConditionPasses: When the NPC has several lines to follow with, Next always moves to one whose condition passes, never to one whose condition fails --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("When the NPC has several lines to follow with, Next always moves to one whose condition passes, never to one whose condition fails.")]
         public IEnumerator NpcTurn_Next_MovesToALineWhoseConditionPasses()
@@ -217,6 +281,9 @@ namespace PolyQuest.Tests
             }
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- LastLine_Next_EndsTheConversation_FiringItsExitEvents: Next on the last line ends the conversation once, firing that line's exit events --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Next on the last line ends the conversation once, firing that line's exit events.")]
         public IEnumerator LastLine_Next_EndsTheConversation_FiringItsExitEvents()
@@ -236,8 +303,13 @@ namespace PolyQuest.Tests
             Assert.That(m_kit.Fired, Is.EqualTo(new[] { "exit:" + opener.Text }));
         }
 
-        /* ============================== Leaving and history ============================== */
 
+        /*---------------------------
+        | --- Leaving & History --- |
+        ---------------------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Quit_MidConversation_FiresTheLinesExitEvents_AndRecordsTheNpc: Quitting mid-conversation leaves the current line: its exit events fire and the NPC is recorded as spoken to --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Quitting mid-conversation leaves the current line: its exit events fire and the NPC is recorded as spoken to.")]
         public IEnumerator Quit_MidConversation_FiresTheLinesExitEvents_AndRecordsTheNpc()
@@ -258,6 +330,9 @@ namespace PolyQuest.Tests
             Assert.That(History.HasSpokenTo(DialogueTestKit.HistoryKey(npc)), Is.True);
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- SpokenTo_IsRecordedWhenTheConversationEnds: Spoken-to is recorded only when the conversation ends: a line gated on it is unavailable during the first conversation and available in the next --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Spoken-to is recorded only when the conversation ends: a line gated on it is unavailable during the first conversation and available in the next.")]
         public IEnumerator SpokenTo_IsRecordedWhenTheConversationEnds()
@@ -280,6 +355,9 @@ namespace PolyQuest.Tests
             Assert.That(ChoiceTexts(), Is.EquivalentTo(new[] { again.Text, hello.Text }));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EndingAConversation_SavesTheHistory: Ending a conversation saves the game: loading that save into a fresh Player shows the NPC as spoken to --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Ending a conversation saves the game: loading that save into a fresh Player shows the NPC as spoken to.")]
         public IEnumerator EndingAConversation_SavesTheHistory()
@@ -298,8 +376,13 @@ namespace PolyQuest.Tests
             Assert.That(History.HasSpokenTo(key), Is.True);
         }
 
-        /* ============================== Dialogue events ============================== */
 
+        /*-------------------------
+        | --- Dialogue Events --- |
+        -------------------------*/
+        /*--------------------------------------------------------------------------------------------------------------------------
+        | --- HealPlayerEvent_FullyHealsThePlayer: A HealPlayerEvent on a line fully heals the Player when the line is entered --- |
+        --------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("A HealPlayerEvent on a line fully heals the Player when the line is entered.")]
         public IEnumerator HealPlayerEvent_FullyHealsThePlayer()

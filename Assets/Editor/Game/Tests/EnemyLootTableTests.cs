@@ -21,6 +21,9 @@ namespace PolyQuest.Tests
         private InventoryItem m_gold, m_gem, m_trinket;
         private EquipableItem m_sword;
 
+        /*------------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for enemy loot table testing --- |
+        ------------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -38,14 +41,22 @@ namespace PolyQuest.Tests
             InventoryTestKit.InvokeAwake(m_equipment);
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
             m_kit.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*--------------------------------------------------------------------------------------------
+        | --- Entry: One loot-table entry: its item and its per-level chance and quantity arrays --- |
+        --------------------------------------------------------------------------------------------*/
         private struct Entry
         {
             public InventoryItem Item;
@@ -54,9 +65,15 @@ namespace PolyQuest.Tests
             public int[] Max;
         }
 
+        /*-----------------------------------------------------------------
+        | --- E: Builds an entry, treating any omitted array as empty --- |
+        -----------------------------------------------------------------*/
         private static Entry E(InventoryItem item, float[] chance = null, int[] min = null, int[] max = null)
             => new Entry { Item = item, Chance = chance ?? new float[0], Min = min ?? new int[0], Max = max ?? new int[0] };
 
+        /*-----------------------------------------------------------------------------
+        | --- Configure: Writes the given entries into the named loot-table array --- |
+        -----------------------------------------------------------------------------*/
         private void Configure(string arrayField, params Entry[] entries)
         {
             SerializedObject so = new SerializedObject(m_table);
@@ -74,6 +91,9 @@ namespace PolyQuest.Tests
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        /*--------------------------------------------------------------------------------
+        | --- ConfigureRolls: Sets the per-level drop chance and min/max drop counts --- |
+        --------------------------------------------------------------------------------*/
         private void ConfigureRolls(float[] chance, int[] min, int[] max)
         {
             SerializedObject so = new SerializedObject(m_table);
@@ -83,22 +103,36 @@ namespace PolyQuest.Tests
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        /*--------------------------------------------------------------------------
+        | --- SetFloats: Writes a float array into a serialized array property --- |
+        --------------------------------------------------------------------------*/
         private static void SetFloats(SerializedProperty p, float[] v)
         {
             p.arraySize = v.Length;
             for (int i = 0; i < v.Length; ++i) p.GetArrayElementAtIndex(i).floatValue = v[i];
         }
 
+        /*-----------------------------------------------------------------------
+        | --- SetInts: Writes an int array into a serialized array property --- |
+        -----------------------------------------------------------------------*/
         private static void SetInts(SerializedProperty p, int[] v)
         {
             p.arraySize = v.Length;
             for (int i = 0; i < v.Length; ++i) p.GetArrayElementAtIndex(i).intValue = v[i];
         }
 
+        /*----------------------------------------------------------
+        | --- Roll: Rolls the table's drops at the given level --- |
+        ----------------------------------------------------------*/
         private EnemyLootTable.Dropped[] Roll(int level) => m_table.GetRandomDrops(level, m_equipment).ToArray();
 
-        /* --- Weapon --- */
 
+        /*----------------
+        | --- Weapon --- |
+        ----------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EquippedWeapon_AlwaysDrops_EvenWithAnEmptyTable: The enemy's equipped weapon always drops (quantity 1), even when the loot table is empty --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("The enemy's equipped weapon always drops (quantity 1), even when the loot table is empty.")]
         public void EquippedWeapon_AlwaysDrops_EvenWithAnEmptyTable()
@@ -112,6 +146,9 @@ namespace PolyQuest.Tests
             Assert.That(drops[0].Quantity, Is.EqualTo(1));
         }
 
+        /*-----------------------------------------------------------------------------------------------------
+        | --- NoWeapon_EmptyTable_DropsNothing: With no weapon equipped and an empty table, nothing drops --- |
+        -----------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("With no weapon equipped and an empty table, nothing drops.")]
         public void NoWeapon_EmptyTable_DropsNothing()
@@ -119,8 +156,13 @@ namespace PolyQuest.Tests
             Assert.That(Roll(1), Is.Empty);
         }
 
-        /* --- Guaranteed drops --- */
 
+        /*--------------------------
+        | --- Guaranteed Drops --- |
+        --------------------------*/
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- GuaranteedDrop_StackableItem_UsesQuantityRangeForTheLevel: A stackable guaranteed drop takes its quantity from the min/max range for the level --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A stackable guaranteed drop takes its quantity from the min/max range for the level.")]
         public void GuaranteedDrop_StackableItem_UsesQuantityRangeForTheLevel()
@@ -134,6 +176,9 @@ namespace PolyQuest.Tests
             Assert.That(drops[0].Quantity, Is.EqualTo(3));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- GuaranteedDrop_NonStackableItem_AlwaysQuantityOne: A non-stackable guaranteed drop always has quantity 1, whatever its configured range --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A non-stackable guaranteed drop always has quantity 1, whatever its configured range.")]
         public void GuaranteedDrop_NonStackableItem_AlwaysQuantityOne()
@@ -143,6 +188,9 @@ namespace PolyQuest.Tests
             Assert.That(Roll(1)[0].Quantity, Is.EqualTo(1));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------
+        | --- GuaranteedDrop_NullItem_IsSkipped: Guaranteed entries with a null item are skipped; the rest still drop --- |
+        -----------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Guaranteed entries with a null item are skipped; the rest still drop.")]
         public void GuaranteedDrop_NullItem_IsSkipped()
@@ -155,6 +203,9 @@ namespace PolyQuest.Tests
             Assert.That(drops[0].Item, Is.SameAs(m_gold));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------
+        | --- GuaranteedDrop_IgnoresDropChance: Guaranteed drops are not subject to the drop-chance roll; they drop at 0% chance --- |
+        ----------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Guaranteed drops are not subject to the drop-chance roll; they drop at 0% chance.")]
         public void GuaranteedDrop_IgnoresDropChance()
@@ -165,6 +216,9 @@ namespace PolyQuest.Tests
             Assert.That(Roll(1).Length, Is.EqualTo(1));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Weapon_Guaranteed_AndRandomDrops_AllDropTogether: The equipped weapon, the guaranteed drops and the random drops all drop together from one roll --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("The equipped weapon, the guaranteed drops and the random drops all drop together from one roll.")]
         public void Weapon_Guaranteed_AndRandomDrops_AllDropTogether()
@@ -179,6 +233,9 @@ namespace PolyQuest.Tests
             Assert.That(items, Is.EquivalentTo(new InventoryItem[] { m_sword, m_gold, m_gem }));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- GuaranteedDrop_StackableRollingZero_DropsNothing: A stackable guaranteed drop whose quantity rolls 0 drops nothing; no drop ever has quantity 0 --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A stackable guaranteed drop whose quantity rolls 0 drops nothing; no drop ever has quantity 0.")]
         public void GuaranteedDrop_StackableRollingZero_DropsNothing()
@@ -188,6 +245,9 @@ namespace PolyQuest.Tests
             Assert.That(Roll(1), Is.Empty);
         }
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RandomDrop_StackableRollingZero_IsLeftOut: A random drop of a stackable whose quantity rolls 0 is left out; the other drops of the roll still drop --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A random drop of a stackable whose quantity rolls 0 is left out; the other drops of the roll still drop.")]
         public void RandomDrop_StackableRollingZero_IsLeftOut()
@@ -201,8 +261,13 @@ namespace PolyQuest.Tests
             Assert.That(drops.Select(d => d.Item), Is.EqualTo(new InventoryItem[] { m_gem }));
         }
 
-        /* --- Random drops --- */
 
+        /*----------------------
+        | --- Random Drops --- |
+        ----------------------*/
+        /*-------------------------------------------------------------------------------------
+        | --- DropChanceZero_NoRandomDrops: At 0% drop chance, no random drops are rolled --- |
+        -------------------------------------------------------------------------------------*/
         [Test]
         [Description("At 0% drop chance, no random drops are rolled.")]
         public void DropChanceZero_NoRandomDrops()
@@ -213,6 +278,9 @@ namespace PolyQuest.Tests
             Assert.That(Roll(1), Is.Empty);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- DropChance100_YieldsMinMaxManyDrops: At 100% drop chance, the drop count comes from the min/max drops range and each drop uses the entry's quantity range --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("At 100% drop chance, the drop count comes from the min/max drops range and each drop uses the entry's quantity range.")]
         public void DropChance100_YieldsMinMaxManyDrops()
@@ -226,6 +294,9 @@ namespace PolyQuest.Tests
             Assert.That(drops.All(d => d.Item == m_gem && d.Quantity == 2));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------
+        | --- SelectRandomItem_ZeroWeightEntryIsNeverChosen: An entry with a relative chance of 0 is never selected --- |
+        ---------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An entry with a relative chance of 0 is never selected.")]
         public void SelectRandomItem_ZeroWeightEntryIsNeverChosen()
@@ -241,6 +312,9 @@ namespace PolyQuest.Tests
             Assert.That(drops.All(d => d.Item == m_gold));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------
+        | --- NoPossibleDrops_DropsNothing: A table that rolls random drops but has no possible drops to pick from drops nothing --- |
+        ----------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A table that rolls random drops but has no possible drops to pick from drops nothing.")]
         public void NoPossibleDrops_DropsNothing()
@@ -250,6 +324,9 @@ namespace PolyQuest.Tests
             Assert.That(Roll(1), Is.Empty);
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------
+        | --- PossibleDrop_WithNullItem_DropsNothing: A possible-drop entry with no item assigned drops nothing when it is selected --- |
+        -------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("A possible-drop entry with no item assigned drops nothing when it is selected.")]
         public void PossibleDrop_WithNullItem_DropsNothing()
@@ -260,8 +337,13 @@ namespace PolyQuest.Tests
             Assert.That(Roll(1), Is.Empty);
         }
 
-        /* --- GetByLevel behaviour (observed through the public API) --- */
 
+        /*--------------------------
+        | --- Per-Level Arrays --- |
+        --------------------------*/
+        /*--------------------------------------------------------------------------------------------
+        | --- Level_SelectsArrayIndexLevelMinusOne: Per-level arrays are read at index level - 1 --- |
+        --------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Per-level arrays are read at index level - 1.")]
         public void Level_SelectsArrayIndexLevelMinusOne()
@@ -273,6 +355,9 @@ namespace PolyQuest.Tests
             Assert.That(Roll(3)[0].Quantity, Is.EqualTo(3));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------
+        | --- Level_BeyondArrayLength_UsesLastEntry: An enemy level past the end of a per-level array uses the array's last entry --- |
+        -----------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("An enemy level past the end of a per-level array uses the array's last entry.")]
         public void Level_BeyondArrayLength_UsesLastEntry()
@@ -282,6 +367,9 @@ namespace PolyQuest.Tests
             Assert.That(Roll(3)[0].Quantity, Is.EqualTo(7));
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EmptyOrNullArrays_ReadAsDefault: Empty per-level arrays read as their default value, so an empty drop-chance array means 0% chance --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Empty per-level arrays read as their default value, so an empty drop-chance array means 0% chance.")]
         public void EmptyOrNullArrays_ReadAsDefault()

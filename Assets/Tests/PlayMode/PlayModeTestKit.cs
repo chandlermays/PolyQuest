@@ -31,15 +31,18 @@ namespace PolyQuest.Tests
         public Inventory PlayerInventory { get; private set; }
         public Pickup PickupTemplate { get; private set; }
 
+        /*------------------------------------------------------------------------------
+        | --- PlayModeTestKit: Points the item registry at this kit's own registry --- |
+        ------------------------------------------------------------------------------*/
         public PlayModeTestKit()
         {
             Assert.That(kRegistryField, Is.Not.Null, "InventoryItem.m_itemRegistry was not found. Was it renamed?");
             kRegistryField.SetValue(null, m_registry);
         }
 
-        /*---------------------------------------------------------------------
-        | --- Set:
-        ---------------------------------------------------------------------*/
+        /*----------------------------------------------------------------------------------------------
+        | --- Set: Sets a field by reflection, searching base classes, and fails if it was renamed --- |
+        ----------------------------------------------------------------------------------------------*/
         public static void Set(object target, string field, object value)
         {
             for (Type type = target.GetType(); type != null; type = type.BaseType)
@@ -54,6 +57,9 @@ namespace PolyQuest.Tests
             Assert.Fail($"'{field}' was not found on {target.GetType().Name}. Was it renamed?");
         }
 
+        /*-----------------------------------------------------------------------------------------------
+        | --- Get: Reads a field by reflection, searching base classes, and fails if it was renamed --- |
+        -----------------------------------------------------------------------------------------------*/
         public static T Get<T>(object target, string field)
         {
             for (Type type = target.GetType(); type != null; type = type.BaseType)
@@ -66,15 +72,18 @@ namespace PolyQuest.Tests
             return default;
         }
 
+        /*----------------------------------------------------------------------
+        | --- Track: Registers an object for the kit to destroy on Dispose --- |
+        ----------------------------------------------------------------------*/
         public T Track<T>(T obj) where T : Object
         {
             m_created.Add(obj);
             return obj;
         }
 
-        /*-----------------------------------------------------------------------------
-        | --- Build:
-        -----------------------------------------------------------------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------
+        | --- Build: Creates an inactive GameObject, configures it, then activates it so Awake sees the configuration --- |
+        -----------------------------------------------------------------------------------------------------------------*/
         public GameObject Build(string name, Action<GameObject> configure, Vector3? position = null)
         {
             GameObject go = new GameObject(name);
@@ -87,9 +96,9 @@ namespace PolyQuest.Tests
             return Track(go);
         }
 
-        /*-----------------------------------------------------------------------------------------
-        | --- BuildPlayer:
-        -----------------------------------------------------------------------------------------*/
+        /*-----------------------------------------------------------------------------------------------
+        | --- BuildPlayer: Builds a Player with an inventory of the given size and an ActionManager --- |
+        -----------------------------------------------------------------------------------------------*/
         public void BuildPlayer(int inventorySize = 4)
         {
             Player = Build("Player", go =>
@@ -101,9 +110,9 @@ namespace PolyQuest.Tests
             });
         }
 
-        /*---------------------------------------------------------------------------------------------
-        | --- BuildPickupTemplate:
-        ---------------------------------------------------------------------------------------------*/
+        /*----------------------------------------------------------------------------------------------------
+        | --- BuildPickupTemplate: Builds the stand-in Pickup prefab that dropped items are spawned from --- |
+        ----------------------------------------------------------------------------------------------------*/
         public Pickup BuildPickupTemplate()
         {
             Assert.That(Player, Is.Not.Null, "Call BuildPlayer() before BuildPickupTemplate().");
@@ -127,9 +136,9 @@ namespace PolyQuest.Tests
             return PickupTemplate;
         }
 
-        /*-------------------------------------------------------------------
-        | --- Item:
-        -------------------------------------------------------------------*/
+        /*---------------------------------------------------------------------------------
+        | --- Item: Creates a registered ActionItem that drops as the pickup template --- |
+        ---------------------------------------------------------------------------------*/
         public ActionItem Item(string id, bool stackable = false, string itemName = null)
         {
             ActionItem item = Track(ScriptableObject.CreateInstance<ActionItem>());
@@ -143,8 +152,14 @@ namespace PolyQuest.Tests
             return item;
         }
 
+        /*-----------------------------------------------
+        | --- AllPickups: Every Pickup in the world --- |
+        -----------------------------------------------*/
         public static Pickup[] AllPickups() => Object.FindObjectsByType<Pickup>(FindObjectsSortMode.None);
 
+        /*----------------------------------------------------------------
+        | --- Spawned: Every Pickup in the world except the template --- |
+        ----------------------------------------------------------------*/
         public Pickup[] Spawned()
         {
             List<Pickup> result = new();
@@ -156,6 +171,9 @@ namespace PolyQuest.Tests
             return result.ToArray();
         }
 
+        /*------------------------------------------------------------------------------------------------
+        | --- Dispose: Destroys every Pickup and object the kit created and clears the item registry --- |
+        ------------------------------------------------------------------------------------------------*/
         public void Dispose()
         {
             kRegistryField.SetValue(null, null);

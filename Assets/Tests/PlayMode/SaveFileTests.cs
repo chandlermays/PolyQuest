@@ -32,6 +32,9 @@ namespace PolyQuest.Tests
         private GameObject m_saveSystem;
         private readonly List<GameObject> m_entities = new();
 
+        /*-----------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for save file testing --- |
+        -----------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -43,6 +46,9 @@ namespace PolyQuest.Tests
             StartSaveSystem();
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
@@ -60,28 +66,63 @@ namespace PolyQuest.Tests
                 PlayerPrefs.DeleteKey(kCurrentSaveKey);
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*----------------------------------------
+        | --- Saves: The current SaveManager --- |
+        ----------------------------------------*/
         private static SaveManager Saves => SaveManager.Instance;
+
+        /*---------------------------------------------------
+        | --- Dir: The folder save files are written to --- |
+        ---------------------------------------------------*/
         private static string Dir => Application.persistentDataPath;
+
+        /*-------------------------------------------------------
+        | --- MainPath: Path of the test slot's manual save --- |
+        -------------------------------------------------------*/
         private static string MainPath => Path.Combine(Dir, kSlot + ".sav");
+
+        /*----------------------------------------------------------
+        | --- MainBackupPath: Path of the manual save's backup --- |
+        ----------------------------------------------------------*/
         private static string MainBackupPath => MainPath + ".bak";
+
+        /*----------------------------------------------------
+        | --- AutoPath: Path of the test slot's autosave --- |
+        ----------------------------------------------------*/
         private static string AutoPath => Path.Combine(Dir, kSlot + "_autosave.sav");
+
+        /*-------------------------------------------------------
+        | --- AutoBackupPath: Path of the autosave's backup --- |
+        -------------------------------------------------------*/
         private static string AutoBackupPath => AutoPath + ".bak";
 
-        // Every file whose name starts with the test slot, including slots made by the list test
+        /*-----------------------------------------------------------------------------------------------------------
+        | --- SlotFiles: Every file whose name starts with the test slot, including slots made by the list test --- |
+        -----------------------------------------------------------------------------------------------------------*/
         private static string[] SlotFiles() => Directory.GetFiles(Dir, kSlot + "*");
 
+        /*--------------------------------------------------------------
+        | --- DeleteSlotFiles: Deletes every file of the test slot --- |
+        --------------------------------------------------------------*/
         private static void DeleteSlotFiles()
         {
             foreach (string path in SlotFiles())
                 File.Delete(path);
         }
 
-        // Unreadable files moved aside keep the slot's name and say "corrupt"
+        /*-----------------------------------------------------------------------------------------------------
+        | --- MovedAsideFiles: Unreadable files moved aside, which keep the slot's name and say "corrupt" --- |
+        -----------------------------------------------------------------------------------------------------*/
         private static string[] MovedAsideFiles()
             => SlotFiles().Where(p => Path.GetFileName(p).ToLowerInvariant().Contains("corrupt")).ToArray();
 
+        /*----------------------------------------------------------------
+        | --- StartSaveSystem: Starts a SaveManager and SavingSystem --- |
+        ----------------------------------------------------------------*/
         private void StartSaveSystem()
         {
             m_saveSystem = new GameObject("TestSaveSystem");
@@ -90,13 +131,18 @@ namespace PolyQuest.Tests
             Assert.That(SaveManager.Instance, Is.Not.Null, "fixture: the SaveManager did not start");
         }
 
-        // As if the game had been closed and started again
+        /*--------------------------------------------------------------------------------------------------------------------
+        | --- RestartSaveSystem: Destroys and restarts the save system, as if the game had been closed and started again --- |
+        --------------------------------------------------------------------------------------------------------------------*/
         private void RestartSaveSystem()
         {
             Object.DestroyImmediate(m_saveSystem);
             StartSaveSystem();
         }
 
+        /*--------------------------------------------------------------------------------------------------------------------------------------
+        | --- Entity: Creates a saveable entity with a Wallet holding the given silver, optionally with a component that throws on restore --- |
+        --------------------------------------------------------------------------------------------------------------------------------------*/
         private Wallet Entity(string uid, int silver, bool throwsOnRestore = false)
         {
             GameObject entity = new GameObject("Entity " + uid);
@@ -111,6 +157,9 @@ namespace PolyQuest.Tests
             return wallet;
         }
 
+        /*----------------------------------------------------------------------------
+        | --- EmptyEntity: Creates a saveable entity with no saveable components --- |
+        ----------------------------------------------------------------------------*/
         private GameObject EmptyEntity(string uid)
         {
             GameObject entity = new GameObject("Entity " + uid);
@@ -121,8 +170,14 @@ namespace PolyQuest.Tests
             return entity;
         }
 
+        /*--------------------------------------------
+        | --- SetSilver: Sets a wallet's balance --- |
+        --------------------------------------------*/
         private static void SetSilver(Wallet wallet, int silver) => wallet.UpdateSilver(silver - wallet.CurrentSilver);
 
+        /*--------------------------------------------------------------------
+        | --- ReadFile: Parses a save file, failing if it isn't readable --- |
+        --------------------------------------------------------------------*/
         private static JObject ReadFile(string path)
         {
             JObject file = null;
@@ -130,15 +185,28 @@ namespace PolyQuest.Tests
             return file;
         }
 
+        /*--------------------------------------------------------------------
+        | --- SavedSilver: The silver saved for an entity in a save file --- |
+        --------------------------------------------------------------------*/
         private static int SavedSilver(JObject file, string uid) => file[uid][kWalletKey].ToObject<int>();
 
+        /*---------------------------------------------------------
+        | --- Corrupt: Overwrites a file with unreadable text --- |
+        ---------------------------------------------------------*/
         private static void Corrupt(string path) => File.WriteAllText(path, kCorruptText);
 
-        // Long enough for any file-time resolution to tell two saves apart
+        /*---------------------------------------------------------------------------------------
+        | --- Later: Waits long enough for any file-time resolution to tell two saves apart --- |
+        ---------------------------------------------------------------------------------------*/
         private static IEnumerator Later() { yield return new WaitForSecondsRealtime(1.1f); }
 
-        /* ============================== Backups ============================== */
 
+        /*-----------------
+        | --- Backups --- |
+        -----------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Save_KeepsThePreviousSaveAsTheBackup: Saving keeps the previous good save as slot.sav.bak, and leaves no other file behind: no temporary file survives the swap --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Saving keeps the previous good save as slot.sav.bak, and leaves no other file behind: no temporary file survives the swap.")]
         public IEnumerator Save_KeepsThePreviousSaveAsTheBackup()
@@ -156,6 +224,9 @@ namespace PolyQuest.Tests
             Assert.That(SlotFiles().Select(Path.GetFileName), Is.EquivalentTo(new[] { kSlot + ".sav", kSlot + ".sav.bak" }));
         }
 
+        /*--------------------------------------------------------------------------------------------------------
+        | --- AutoSave_KeepsItsOwnBackup: The autosave keeps its own backup, the same way the main save does --- |
+        --------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("The autosave keeps its own backup, the same way the main save does.")]
         public IEnumerator AutoSave_KeepsItsOwnBackup()
@@ -171,8 +242,13 @@ namespace PolyQuest.Tests
             Assert.That(SavedSilver(ReadFile(AutoBackupPath), "hero"), Is.EqualTo(10));
         }
 
-        /* ============================== Loading an unreadable save ============================== */
 
+        /*------------------------------------
+        | --- Loading an Unreadable Save --- |
+        ------------------------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------
+        | --- SaveTwiceThenCorruptTheMainFile: Saves twice, corrupts the main save, then changes the silver so a load can be seen --- |
+        -----------------------------------------------------------------------------------------------------------------------------*/
         private Wallet SaveTwiceThenCorruptTheMainFile()
         {
             Wallet wallet = Entity("hero", 10);
@@ -184,6 +260,9 @@ namespace PolyQuest.Tests
             return wallet;
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Load_UnreadableSave_FallsBackToTheBackup_AndWarns: Loading when the main save is unreadable falls back to its backup and logs a warning naming the slot --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Loading when the main save is unreadable falls back to its backup and logs a warning naming the slot.")]
         public IEnumerator Load_UnreadableSave_FallsBackToTheBackup_AndWarns()
@@ -197,6 +276,9 @@ namespace PolyQuest.Tests
             Assert.That(wallet.CurrentSilver, Is.EqualTo(10));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Load_UnreadableSave_IsMovedAside_Intact: An unreadable save found while loading is moved aside, kept intact for bug reports, not overwritten or deleted --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("An unreadable save found while loading is moved aside, kept intact for bug reports, not overwritten or deleted.")]
         public IEnumerator Load_UnreadableSave_IsMovedAside_Intact()
@@ -210,8 +292,13 @@ namespace PolyQuest.Tests
             Assert.That(MovedAsideFiles().Select(File.ReadAllText), Has.Member(kCorruptText));
         }
 
-        /* ============================== Saving over an unreadable save ============================== */
 
+        /*----------------------------------------
+        | --- Saving Over an Unreadable Save --- |
+        ----------------------------------------*/
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- SaveOverAnUnreadableSave_KeepsOtherScenesState_FromThisSession: Saving over an unreadable save keeps other scenes' state from the last save made this session, and moves the unreadable file aside --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Saving over an unreadable save keeps other scenes' state from the last save made this session, and moves the unreadable file aside.")]
         public IEnumerator SaveOverAnUnreadableSave_KeepsOtherScenesState_FromThisSession()
@@ -233,6 +320,9 @@ namespace PolyQuest.Tests
             Assert.That(MovedAsideFiles().Select(File.ReadAllText), Has.Member(kCorruptText));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- AfterARestart_SaveOverAnUnreadableSave_KeepsOtherScenesState_FromTheBackup: After a restart, saving over an unreadable save keeps other scenes' state from the backup --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("After a restart, saving over an unreadable save keeps other scenes' state from the backup.")]
         public IEnumerator AfterARestart_SaveOverAnUnreadableSave_KeepsOtherScenesState_FromTheBackup()
@@ -255,8 +345,13 @@ namespace PolyQuest.Tests
             Assert.That(file.ContainsKey("other-scene-chest"), Is.True, "the other scene's state was lost");
         }
 
-        /* ============================== Manual saves and autosaves ============================== */
 
+        /*----------------------------------
+        | --- Manual Saves & Autosaves --- |
+        ----------------------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------
+        | --- Load_UsesTheNewerOfTheManualSaveAndTheAutosave: Loading uses whichever of the manual save and the autosave is newer --- |
+        -----------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Loading uses whichever of the manual save and the autosave is newer.")]
         public IEnumerator Load_UsesTheNewerOfTheManualSaveAndTheAutosave()
@@ -281,8 +376,13 @@ namespace PolyQuest.Tests
             Assert.That(wallet.CurrentSilver, Is.EqualTo(30), "the manual save is newer");
         }
 
-        /* ============================== Deleting and listing ============================== */
 
+        /*----------------------------
+        | --- Deleting & Listing --- |
+        ----------------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Delete_RemovesEveryFileOfThePlaythrough_ButKeepsMovedAsideFiles: Deleting a playthrough removes its manual save, autosave and both backups, and keeps any moved-aside unreadable file --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Deleting a playthrough removes its manual save, autosave and both backups, and keeps any moved-aside unreadable file.")]
         public IEnumerator Delete_RemovesEveryFileOfThePlaythrough_ButKeepsMovedAsideFiles()
@@ -298,6 +398,9 @@ namespace PolyQuest.Tests
             Assert.That(SlotFiles(), Is.EquivalentTo(new[] { movedAside }));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- ListSaveFiles_ShowsEachPlaythroughOnce: The saves list shows each playthrough once, whether it has a manual save, an autosave or both, and never lists backups or moved-aside files --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("The saves list shows each playthrough once, whether it has a manual save, an autosave or both, and never lists backups or moved-aside files.")]
         public IEnumerator ListSaveFiles_ShowsEachPlaythroughOnce()
@@ -313,8 +416,13 @@ namespace PolyQuest.Tests
             Assert.That(listed, Is.EquivalentTo(new[] { both, manual, auto }));
         }
 
-        /* ============================== One bad entry costs only itself ============================== */
 
+        /*-----------------------------------------
+        | --- One Bad Entry Costs Only Itself --- |
+        -----------------------------------------*/
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EmptyOrUnreadableEntityEntries_AreSkipped_TheRestLoad: Entities with no saveable components save and load, and an entity entry that isn't an object is skipped; every other entity still loads --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("Entities with no saveable components save and load, and an entity entry that isn't an object is skipped; every other entity still loads.")]
         public IEnumerator EmptyOrUnreadableEntityEntries_AreSkipped_TheRestLoad()
@@ -336,6 +444,9 @@ namespace PolyQuest.Tests
             Assert.That(damaged.CurrentSilver, Is.EqualTo(3));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- AComponentThatThrowsOnRestore_CostsOnlyItself: A component whose RestoreState throws costs only itself: the other components on its entity and every other entity still restore --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
         [Description("A component whose RestoreState throws costs only itself: the other components on its entity and every other entity still restore.")]
         public IEnumerator AComponentThatThrowsOnRestore_CostsOnlyItself()

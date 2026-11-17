@@ -21,6 +21,9 @@ namespace PolyQuest.Tests
         private FakeStatModifier m_item;
         private ManaComponent m_mana;
 
+        /*----------------------------------------------------------------------------------
+        | --- SetUp: Initialize and clean up tests fixtures for mana component testing --- |
+        ----------------------------------------------------------------------------------*/
         [SetUp]
         public void SetUp()
         {
@@ -30,18 +33,31 @@ namespace PolyQuest.Tests
             m_mana = EntityTestKit.AddMana(m_mage);
         }
 
+        /*-------------------------------------------------------------------
+        | --- TearDown: Release test fixtures and game object resources --- |
+        -------------------------------------------------------------------*/
         [TearDown]
         public void TearDown()
         {
             m_kit.Dispose();
         }
 
-        /* --- Helpers --- */
 
+        /*-----------------
+        | --- Helpers --- |
+        -----------------*/
+        /*-------------------------------------
+        | --- Stats: The mage's BaseStats --- |
+        -------------------------------------*/
         private BaseStats Stats => m_mage.GetComponent<BaseStats>();
 
-        /* ============================== Spending ============================== */
 
+        /*------------------
+        | --- Spending --- |
+        ------------------*/
+        /*---------------------------------------------------------------------------------------------
+        | --- UseMana_WithEnough_SpendsIt: UseMana with enough mana spends it and reports success --- |
+        ---------------------------------------------------------------------------------------------*/
         [Test]
         [Description("UseMana with enough mana spends it and reports success.")]
         public void UseMana_WithEnough_SpendsIt()
@@ -50,6 +66,9 @@ namespace PolyQuest.Tests
             Assert.That(m_mana.CurrentMana, Is.EqualTo(70f).Within(kTolerance));
         }
 
+        /*------------------------------------------------------------------------------------------------------------
+        | --- UseMana_WithTooLittle_FailsAndSpendsNothing: UseMana with too little mana fails and spends nothing --- |
+        ------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("UseMana with too little mana fails and spends nothing.")]
         public void UseMana_WithTooLittle_FailsAndSpendsNothing()
@@ -60,8 +79,13 @@ namespace PolyQuest.Tests
             Assert.That(m_mana.CurrentMana, Is.EqualTo(20f).Within(kTolerance));
         }
 
-        /* ============================== Replenishing ============================== */
 
+        /*----------------------
+        | --- Replenishing --- |
+        ----------------------*/
+        /*---------------------------------------------------------------------------------------------
+        | --- ReplenishMana_StopsAtTheMaximum: ReplenishMana adds mana but never past the maximum --- |
+        ---------------------------------------------------------------------------------------------*/
         [Test]
         [Description("ReplenishMana adds mana but never past the maximum.")]
         public void ReplenishMana_StopsAtTheMaximum()
@@ -75,8 +99,13 @@ namespace PolyQuest.Tests
             Assert.That(m_mana.CurrentMana, Is.EqualTo(100f).Within(kTolerance));
         }
 
-        /* ============================== Max-mana changes ============================== */
 
+        /*--------------------------
+        | --- Max-Mana Changes --- |
+        --------------------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- MaxManaChange_KeepsTheSamePercentage_BothWays: When the maximum changes, mana keeps the same percentage: at 20/100, losing a +50 item gives 10/50, and getting it back gives 20/100 --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("When the maximum changes, mana keeps the same percentage: at 20/100, losing a +50 item gives 10/50, and getting it back gives 20/100.")]
         public void MaxManaChange_KeepsTheSamePercentage_BothWays()
@@ -94,8 +123,13 @@ namespace PolyQuest.Tests
             Assert.That(m_mana.CurrentMana, Is.EqualTo(20f).Within(kTolerance), "after getting the item back");
         }
 
-        /* ============================== Saving ============================== */
 
+        /*----------------
+        | --- Saving --- |
+        ----------------*/
+        /*--------------------------------------------------------------------------------------------------------------------
+        | --- CaptureThenRestore_RestoresTheMana: Capturing mana and restoring it into a fresh entity restores that mana --- |
+        --------------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Capturing mana and restoring it into a fresh entity restores that mana.")]
         public void CaptureThenRestore_RestoresTheMana()
@@ -110,6 +144,9 @@ namespace PolyQuest.Tests
             Assert.That(fresh.CurrentMana, Is.EqualTo(37f).Within(kTolerance));
         }
 
+        /*------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_Unreadable_IsIgnored: Mana save data that can't be read is ignored: mana is unchanged --- |
+        ------------------------------------------------------------------------------------------------------------*/
         [Test]
         [Description("Mana save data that can't be read is ignored: mana is unchanged.")]
         public void RestoreState_Unreadable_IsIgnored()
