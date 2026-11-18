@@ -1,3 +1,4 @@
+
 /*---------------------------
 | File: ConditionPropertyDrawer.cs
 | Author: Chandler Mays
@@ -23,6 +24,9 @@ namespace PolyQuest.Edit
         // Persists the selected quest filter per-property across repaints (editor session only)
         private readonly Dictionary<string, string> m_itemQuestFilter = new();
 
+        // Height of the warning shown under the dropdown when the condition can never pass
+        private static float WarningHeight => EditorGUIUtility.singleLineHeight * 2f;
+
         /*-------------------------------------------------------------
         | --- OnGUI: Called for rendering and handling GUI events --- |
         -------------------------------------------------------------*/
@@ -35,6 +39,17 @@ namespace PolyQuest.Edit
             float propertyHeight = EditorGUI.GetPropertyHeight(condition);
             position.height = propertyHeight;
             EditorGUI.PropertyField(position, condition);
+
+            // A condition left on Select, or missing a parameter it reads, can never pass: say so under the dropdown
+            string problem = ConditionValidation.Problem(property);
+            if (problem != null)
+            {
+                Rect warning = new Rect(position.x, position.y + propertyHeight, position.width, WarningHeight);
+                EditorGUI.HelpBox(warning, problem, MessageType.Error);
+
+                // The rows below start under the warning instead of under the dropdown
+                position.y += WarningHeight;
+            }
 
             ConditionType selectedCondition = (ConditionType)condition.enumValueIndex;
 
@@ -62,7 +77,7 @@ namespace PolyQuest.Edit
                 }
             }
 
-            // ---- Item conditions — quest-filtered item list ----
+            // ---- Item conditions ï¿½ quest-filtered item list ----
             if (selectedCondition == ConditionType.kHasItem ||
                 selectedCondition == ConditionType.kHasItems ||
                 selectedCondition == ConditionType.kHasItemEquipped)
@@ -106,6 +121,15 @@ namespace PolyQuest.Edit
         | --- GetProperyHeight: Returns the height of the property in pixels --- |
         ------------------------------------------------------------------------*/
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            float warningHeight = ConditionValidation.Problem(property) != null ? WarningHeight : 0f;
+            return GetFieldsHeight(property) + warningHeight;
+        }
+
+        /*---------------------------------------------------------------------------------
+        | --- GetFieldsHeight: Returns the height of the condition's fields in pixels --- |
+        ---------------------------------------------------------------------------------*/
+        private static float GetFieldsHeight(SerializedProperty property)
         {
             SerializedProperty condition = property.FindPropertyRelative("m_condition");
             float propertyHeight = EditorGUI.GetPropertyHeight(condition);

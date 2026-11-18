@@ -29,6 +29,9 @@ namespace PolyQuest.Tools
         --------------------------------------------------------------------------*/
         public bool Check(IEnumerable<IConditionChecker> objects)
         {
+            if (m_AND == null)
+                return true;
+
             foreach (Disjunction disjunction in m_AND)
             {
                 if (!disjunction.Check(objects))
@@ -47,6 +50,9 @@ namespace PolyQuest.Tools
             --------------------------------------------------------------------------*/
             public bool Check(IEnumerable<IConditionChecker> objects)
             {
+                if (m_OR == null)
+                    return false;
+
                 foreach (Condition condition in m_OR)
                 {
                     if (condition.Check(objects))
@@ -63,11 +69,13 @@ namespace PolyQuest.Tools
             [SerializeField] private string[] m_parameters;
             [SerializeField] private bool m_negate = false;
 
-            /*------------------------------------------------------------------------
-            | --- Check: Evaluates the condition against a collection of objects --- |
-            ------------------------------------------------------------------------*/
+            /*-------------------------------------------------------------------------------------------
+            | --- Check: Evaluates the condition; one that no checker answers fails, negated or not --- |
+            -------------------------------------------------------------------------------------------*/
             public bool Check(IEnumerable<IConditionChecker> objects)
             {
+                bool answered = false;
+
                 foreach (var obj in objects)
                 {
                     bool? result = obj.Evaluate(m_condition, m_parameters);
@@ -75,8 +83,21 @@ namespace PolyQuest.Tools
                     if (result == null)
                         continue;
 
+                    answered = true;
+
+                    // Any checker that disagrees fails the condition
                     if (result == m_negate)
                         return false;
+                }
+
+                // Negation flips an answer, never the absence of one
+                if (!answered)
+                {
+#if UNITY_EDITOR
+                    string parameters = m_parameters == null ? "" : string.Join(", ", m_parameters);
+                    Debug.LogWarning($"Condition {(m_negate ? "NOT " : "")}{m_condition}({parameters}) wasn't answered by any checker, so it fails. Check the content that uses it.");
+#endif
+                    return false;
                 }
                 return true;
             }

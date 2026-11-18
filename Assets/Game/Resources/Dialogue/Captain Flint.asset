@@ -357,8 +357,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Dialogues.DialogueNode
   m_rect:
     serializedVersion: 2
-    x: 750
-    y: 1000
+    x: 558
+    y: 1002
     width: 200
     height: 100
   m_text: Either way, the job's done, and that counts for something.
@@ -433,6 +433,12 @@ MonoBehaviour:
         - Clear the Bandit Camp
         - 
         m_negate: 0
+    - m_OR:
+      - m_condition: 3
+        m_parameters:
+        - Clear the Bandit Camp
+        - 
+        m_negate: 1
 --- !u!114 &-3313404035935606827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -759,11 +765,11 @@ MonoBehaviour:
   m_condition:
     m_AND:
     - m_OR:
-      - m_condition: 0
+      - m_condition: 1
         m_parameters:
         - Clear the Bandit Camp
         - 
-        m_negate: 0
+        m_negate: 1
 --- !u!114 &927102588575684454
 MonoBehaviour:
   m_ObjectHideFlags: 0
