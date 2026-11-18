@@ -2,6 +2,7 @@
 | File: Ability.cs
 | Author: Chandler Mays
 ----------------------------*/
+using System;
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Inventories;
@@ -16,14 +17,18 @@ namespace PolyQuest.Abilities
         [Header("Ability Config")]
         [SerializeField] private float m_manaCost = 10f;
         [SerializeField] private float m_cooldownTime = 5f;
+        [Tooltip("Abilities with the same group share one cooldown (e.g. Potions). Leave empty for a cooldown of its own.")]
+        [SerializeField] private string m_cooldownGroup = "";
         [SerializeField] private TargetingStrategy m_targetingStrategy;
         [SerializeField] private EffectStrategy[] m_effects;
         [SerializeField] private FilteringStrategy[] m_filters;
 
-        /*-------------------------------------------------------------- 
+        public string CooldownGroup => m_cooldownGroup;
+
+        /*--------------------------------------------------------------
         | --- Use: Initiates the targeting process for the ability --- |
         --------------------------------------------------------------*/
-        public override bool Use(GameObject user)
+        public override bool Use(GameObject user, Action onUsed)
         {
             ManaComponent mana = user.GetComponent<ManaComponent>();
             Utilities.CheckForNull(mana, nameof(mana));
@@ -44,14 +49,14 @@ namespace PolyQuest.Abilities
 
             actionManager.StartAction(config);
 
-            m_targetingStrategy.StartTargeting(config, () => TargetAcquired(config));
+            m_targetingStrategy.StartTargeting(config, () => TargetAcquired(config, onUsed));
             return true;
         }
 
-        /*------------------------------------------------------------------------------------------------ 
+        /*------------------------------------------------------------------------------------------------
         | --- TargetAcquired: Applies filters to the acquired targets and starts the effects on them --- |
         ------------------------------------------------------------------------------------------------*/
-        private void TargetAcquired(AbilityConfig config)
+        private void TargetAcquired(AbilityConfig config, Action onUsed)
         {
             if (config.IsCancelled)
                 return;
@@ -62,6 +67,9 @@ namespace PolyQuest.Abilities
 
             Cooldowns cooldowns = config.User.GetComponent<Cooldowns>();
             cooldowns.StartCooldown(this, m_cooldownTime);
+
+            // The cast is happening: a consumable is used up now, not when targeting started
+            onUsed?.Invoke();
 
             foreach (FilteringStrategy filterStrategy in m_filters)
             {
@@ -74,7 +82,7 @@ namespace PolyQuest.Abilities
             }
         }
 
-        /*------------------------------------------------------------------- 
+        /*-------------------------------------------------------------------
         | --- EffectCompleted: Callback for when an effect is completed --- |
         -------------------------------------------------------------------*/
         private void EffectCompleted()

@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa1a21cc1330f1a4f80ee2cb794a9f14, type: 3}
   m_Name: Clear the Bandit Camp
   m_EditorClassIdentifier: 
+  m_region: 0
   m_objectives:
   - {fileID: 11400000, guid: 84db0dc5474f4c94195dc58476aededd, type: 2}
   - {fileID: 11400000, guid: e891d9fb18d91ff44887800d11fb6c29, type: 2}
   - {fileID: 11400000, guid: a710067ce83c60148a0ce62146fe9b2b, type: 2}
   m_rewards:
-  - m_item: {fileID: 11400000, guid: ad99bf7cafdc1f841bc7753d73a5118b, type: 2}
+  - m_item: {fileID: 11400000, guid: 5701041e516b0bb429fe9fbf6edf2aeb, type: 2}
     m_amount: 2
   - m_item: {fileID: 11400000, guid: 1516eee75c96ae442a680af3e164a10b, type: 2}
     m_amount: 100

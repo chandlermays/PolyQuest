@@ -2,6 +2,7 @@
 | File: ActionItem.cs
 | Author: Chandler Mays
 ----------------------------*/
+using System;
 using UnityEngine;
 //---------------------------------
 
@@ -18,17 +19,36 @@ namespace PolyQuest.Inventories
         /*-----------------------------------------------------------------
         | --- Use: Defines the action performed when the item is used --- |
         -----------------------------------------------------------------*/
-        public virtual bool Use(GameObject user)
+        public bool Use(GameObject user)
         {
+            return Use(user, null);
+        }
+
+        /*-----------------------------------------------------------------------------------------------------------------
+        | --- Use: Starts using the item; onUsed runs once the use actually happens (never if targeting is cancelled) --- |
+        -----------------------------------------------------------------------------------------------------------------*/
+        public virtual bool Use(GameObject user, Action onUsed)
+        {
+            onUsed?.Invoke();
             return true;
         }
 
+        /*------------------------------------------------------------------------------------------
+        | --- OnUse: Uses the item from the inventory; a consumable is used up once it is used --- |
+        ------------------------------------------------------------------------------------------*/
         public override void OnUse(Inventory inventory, int slotIndex)
         {
-            if (Use(inventory.gameObject))
+            Use(inventory.gameObject, () =>
             {
-                inventory.RemoveItemsFromSlot(slotIndex, 1);
-            }
+                if (!m_isConsumable)
+                    return;
+
+                // The player may have moved the item while targeting; only take it from the slot it was used from
+                if (inventory.GetItemAtSlot(slotIndex) == this)
+                {
+                    inventory.RemoveItemsFromSlot(slotIndex, 1);
+                }
+            });
         }
     }
 }

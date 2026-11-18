@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa1a21cc1330f1a4f80ee2cb794a9f14, type: 3}
   m_Name: A Family Heirloom
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Quests.Quest
+  m_region: 0
   m_objectives:
   - {fileID: 11400000, guid: 9dfe1329cf7e3924db9f84a89eae3b3a, type: 2}
   - {fileID: 11400000, guid: af44e699d05cced44837ce8920edacb7, type: 2}
   m_rewards:
-  - m_item: {fileID: 11400000, guid: 969a495089f91be4897ab1d54aa212bb, type: 2}
+  - m_item: {fileID: 11400000, guid: 5701041e516b0bb429fe9fbf6edf2aeb, type: 2}
     m_amount: 1
   - m_item: {fileID: 11400000, guid: 1516eee75c96ae442a680af3e164a10b, type: 2}
     m_amount: 60

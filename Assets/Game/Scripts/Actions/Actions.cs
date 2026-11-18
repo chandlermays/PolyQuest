@@ -128,6 +128,18 @@ namespace PolyQuest.Inventories
             var actionItem = item as ActionItem;
             if (actionItem == null) return;
 
+            // An ability (anything not consumable) lives in one slot only: placing it again moves it here
+            if (!actionItem.IsConsumable)
+            {
+                foreach (int otherIndex in new List<int>(m_actionSlots.Keys))
+                {
+                    if (otherIndex != index && ReferenceEquals(m_actionSlots[otherIndex].Item, actionItem))
+                    {
+                        m_actionSlots.Remove(otherIndex);
+                    }
+                }
+            }
+
             if (m_actionSlots.TryGetValue(index, out var slot))
             {
                 if (ReferenceEquals(actionItem, slot.Item))
@@ -189,11 +201,16 @@ namespace PolyQuest.Inventories
         {
             if (m_actionSlots.TryGetValue(index, out var slot))
             {
-                bool used = slot.Item.Use(user);
-                if (used && slot.Item.IsConsumable)
+                ActionItem item = slot.Item;
+
+                // A consumable is used up when the use actually happens (after any targeting), never if it's cancelled
+                item.Use(user, () =>
                 {
-                    RemoveItems(index, 1);
-                }
+                    if (item.IsConsumable && ReferenceEquals(GetActionItem(index), item))
+                    {
+                        RemoveItems(index, 1);
+                    }
+                });
                 return true;
             }
             return false;
@@ -224,13 +241,29 @@ namespace PolyQuest.Inventories
             {
                 m_actionSlots.Clear();
 
+                // A slot that can't be read, or holds an unknown item, is skipped and the rest load
                 foreach (var pair in stateObject)
                 {
-                    int key = int.Parse(pair.Key);
-                    ActionSlotData slotData = pair.Value.ToObject<ActionSlotData>();
+                    if (!int.TryParse(pair.Key, out int key))
+                        continue;
 
-                    InventoryItem item = InventoryItem.FindByID(slotData.ItemID);
-                    AddActionItem(item, key, slotData.Quantity);
+                    if (pair.Value is not JObject slotObject)
+                        continue;
+
+                    JToken itemID = slotObject["ItemID"];
+                    JToken quantity = slotObject["Quantity"];
+                    if (itemID?.Type != JTokenType.String || quantity?.Type != JTokenType.Integer)
+                        continue;
+
+                    int amount = quantity.Value<int>();
+                    if (amount <= 0)
+                        continue;
+
+                    InventoryItem item = InventoryItem.FindByID(itemID.Value<string>());
+                    if (item == null)
+                        continue;
+
+                    AddActionItem(item, key, amount);
                 }
             }
         }

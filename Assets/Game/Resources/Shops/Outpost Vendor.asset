@@ -20,7 +20,7 @@ MonoBehaviour:
     m_initialStock: 3
   - m_item: {fileID: 11400000, guid: 6019290b88e43b54eba95f8276020ffb, type: 2}
     m_initialStock: 3
-  - m_item: {fileID: 11400000, guid: ad99bf7cafdc1f841bc7753d73a5118b, type: 2}
+  - m_item: {fileID: 11400000, guid: 5701041e516b0bb429fe9fbf6edf2aeb, type: 2}
     m_initialStock: 5
-  - m_item: {fileID: 11400000, guid: 16745bb5b07e473409293d3799b80d73, type: 2}
+  - m_item: {fileID: 11400000, guid: ae3e6e5a6c7b1b5448cde3e0473fa787, type: 2}
     m_initialStock: 5
