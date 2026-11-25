@@ -3,9 +3,12 @@
 | Author: Chandler Mays
 ----------------------------*/
 using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.TestTools;
 //---------------------------------
 using PolyQuest.Attributes;
 using PolyQuest.Inventories;
@@ -125,6 +128,16 @@ namespace PolyQuest.Tests
         | --- Roll: Rolls the table's drops at the given level --- |
         ----------------------------------------------------------*/
         private EnemyLootTable.Dropped[] Roll(int level) => m_table.GetRandomDrops(level, m_equipment).ToArray();
+
+        /*---------------------------------------------------------------------------
+        | --- Validate: Runs the table's editor-only OnValidate, as Unity would --- |
+        ---------------------------------------------------------------------------*/
+        private void Validate()
+        {
+            MethodInfo onValidate = typeof(EnemyLootTable).GetMethod("OnValidate", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(onValidate, Is.Not.Null, "EnemyLootTable.OnValidate was not found. Was it renamed?");
+            onValidate.Invoke(m_table, null);
+        }
 
 
         /*----------------
@@ -312,6 +325,38 @@ namespace PolyQuest.Tests
             Assert.That(drops.All(d => d.Item == m_gold));
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EveryWeightZeroAtTheLevel_DropsNothing: When every entry has weight 0 at a level, that level's pool drops nothing; other levels still drop --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("When every entry has weight 0 at a level, that level's pool drops nothing (no fallback to an entry); levels with weight still drop.")]
+        public void EveryWeightZeroAtTheLevel_DropsNothing()
+        {
+            Configure("m_possibleDrops",
+                E(m_gem, chance: new[] { 0f, 1f }, min: new[] { 1, 1 }, max: new[] { 1, 1 }),
+                E(m_gold, chance: new[] { 0f, 1f }, min: new[] { 1, 1 }, max: new[] { 1, 1 }));
+            ConfigureRolls(new[] { 100f, 100f }, new[] { 5, 5 }, new[] { 5, 5 });
+
+            Assert.That(Roll(1), Is.Empty);
+            Assert.That(Roll(2).Length, Is.EqualTo(5));
+        }
+
+        /*--------------------------------------------------------------------------------------------------------------------------------------------
+        | --- MaxBelowMin_IsClampedToMin: A max below the min (for a quantity or the drop count) is read as the min instead of an inverted range --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("A max below the min, for a quantity or for the number of drops, is read as the min instead of passing an inverted range.")]
+        public void MaxBelowMin_IsClampedToMin()
+        {
+            Configure("m_possibleDrops", E(m_gem, chance: new[] { 1f }, min: new[] { 3 }, max: new[] { 1 }));
+            ConfigureRolls(new[] { 100f }, new[] { 2 }, new[] { 1 });
+
+            var drops = Roll(1);
+
+            Assert.That(drops.Length, Is.EqualTo(2));
+            Assert.That(drops.All(d => d.Item == m_gem && d.Quantity == 3));
+        }
+
         /*----------------------------------------------------------------------------------------------------------------------------
         | --- NoPossibleDrops_DropsNothing: A table that rolls random drops but has no possible drops to pick from drops nothing --- |
         ----------------------------------------------------------------------------------------------------------------------------*/
@@ -378,6 +423,64 @@ namespace PolyQuest.Tests
             Configure("m_possibleDrops", E(m_gem, chance: new[] { 1f }));
 
             Assert.That(Roll(1), Is.Empty, "0% chance by default");
+        }
+
+
+        /*-------------------------------------
+        | --- Authoring Warnings (Editor) --- |
+        -------------------------------------*/
+        /*----------------------------------------------------------------------------------------------------------------------------------
+        | --- OnValidate_GuaranteedDropThatCanOnlyRollZero_Warns: A guaranteed stackable whose quantity is 0 at every level is flagged --- |
+        ----------------------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("A guaranteed stackable whose quantity is 0 at every level (like an unfilled entry) gets an editor warning naming it.")]
+        public void OnValidate_GuaranteedDropThatCanOnlyRollZero_Warns()
+        {
+            Configure("m_guaranteedDrops", E(m_gold, min: new[] { 0, 0 }, max: new[] { 0, 0 }));
+            LogAssert.Expect(LogType.Warning, new Regex("gold-ish.*can only roll a quantity of 0"));
+
+            Validate();
+        }
+
+        /*---------------------------------------------------------------------------------------------------------
+        | --- OnValidate_MaxBelowMin_Warns: A quantity range whose max is below its min at a level is flagged --- |
+        ---------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("A quantity range whose max is below its min at a level gets an editor warning naming the entry and the level.")]
+        public void OnValidate_MaxBelowMin_Warns()
+        {
+            Configure("m_possibleDrops", E(m_gem, chance: new[] { 1f, 1f }, min: new[] { 1, 4 }, max: new[] { 2, 3 }));
+            LogAssert.Expect(LogType.Warning, new Regex("gem.*max quantity below its min at level 2"));
+
+            Validate();
+        }
+
+        /*--------------------------------------------------------------------------------------------------------------------
+        | --- OnValidate_MismatchedQuantityArrays_Warns: A stackable with different min and max array lengths is flagged --- |
+        --------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("A stackable entry with a different number of min and max quantities gets an editor warning naming it.")]
+        public void OnValidate_MismatchedQuantityArrays_Warns()
+        {
+            Configure("m_guaranteedDrops", E(m_gold, min: new[] { 1, 1, 1 }, max: new[] { 2, 2 }));
+            LogAssert.Expect(LogType.Warning, new Regex("gold-ish.*3 min quantities but 2 max quantities"));
+
+            Validate();
+        }
+
+        /*-----------------------------------------------------------------------------------------------------------------------
+        | --- OnValidate_PossibleDropsAllWeightZero_Warns: Possible drops that all have weight 0 at every level are flagged --- |
+        -----------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("A table whose possible drops all have weight 0 at every level gets an editor warning: none of them can ever drop.")]
+        public void OnValidate_PossibleDropsAllWeightZero_Warns()
+        {
+            Configure("m_possibleDrops",
+                E(m_gem, chance: new[] { 0f, 0f }, min: new[] { 1 }, max: new[] { 1 }),
+                E(m_gold, chance: new[] { 0f }, min: new[] { 1 }, max: new[] { 1 }));
+            LogAssert.Expect(LogType.Warning, new Regex("every one has a weight of 0 at every level"));
+
+            Validate();
         }
     }
 }

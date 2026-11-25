@@ -37,12 +37,13 @@ namespace PolyQuest.Inventories
             ---------------------------------------------------------------------------*/
             public int GetRandomNumber(int level)
             {
+                if (m_item == null)
+                    return 0;
+
                 if (!m_item.IsStackable)
                     return 1;
 
-                int min = GetByLevel(m_minQuantity, level);
-                int max = GetByLevel(m_maxQuantity, level);
-                return Random.Range(min, max + 1);
+                return RollInclusive(GetByLevel(m_minQuantity, level), GetByLevel(m_maxQuantity, level));
             }
         }
 
@@ -74,17 +75,13 @@ namespace PolyQuest.Inventories
                 };
             }
 
-            // Guaranteed drops — always yield, no roll
+            // Guaranteed drops: no drop-chance roll, but an unassigned entry or a quantity of 0 still drops nothing
             if (m_guaranteedDrops != null)
             {
                 foreach (var drop in m_guaranteedDrops)
                 {
-                    if (drop.Item == null) continue;
-                    yield return new Dropped
-                    {
-                        Item = drop.Item,
-                        Quantity = drop.GetRandomNumber(level)
-                    };
+                    if (TryRoll(drop, level, out Dropped dropped))
+                        yield return dropped;
                 }
             }
 
@@ -92,61 +89,63 @@ namespace PolyQuest.Inventories
             {
                 yield break;
             }
-            for (int i = 0; i < GetRandomNumberOfDrops(level); ++i)
+
+            int count = GetRandomNumberOfDrops(level);
+            for (int i = 0; i < count; ++i)
             {
-                yield return GetRandomDrop(level);
+                // The pick can come up empty (an unassigned entry, or no entry can drop at this level): that drop is nothing
+                if (TryRoll(SelectRandomItem(level), level, out Dropped dropped))
+                    yield return dropped;
             }
         }
 
-        /*---------------------------------------------------------
-        | --- GetRandomDrop: Get a random drop based on level --- |
-        ---------------------------------------------------------*/
-        private Dropped GetRandomDrop(int level)
+        /*-----------------------------------------------------------------------------------------------------
+        | --- TryRoll: Rolls an entry's quantity; false for no entry, no item, or a quantity of 0 or less --- |
+        -----------------------------------------------------------------------------------------------------*/
+        private static bool TryRoll(LootItemConfig drop, int level, out Dropped dropped)
         {
-            LootItemConfig drop = SelectRandomItem(level);
+            dropped = default;
             if (drop == null || drop.Item == null)
-            {
-                Debug.LogWarning($"EnemyLootTable '{name}': no drop selected for level {level}.");
-                return default;
-            }
+                return false;
 
-            Dropped result = new()
-            {
-                Item = drop.Item,
-                Quantity = drop.GetRandomNumber(level)
-            };
-            return result;
+            int quantity = drop.GetRandomNumber(level);
+            if (quantity <= 0)
+                return false;
+
+            dropped = new Dropped { Item = drop.Item, Quantity = quantity };
+            return true;
         }
 
-        /*--------------------------------------------------------------------------
-        | --- SelectRandomItem: Select a random item based on relative chances --- |
-        --------------------------------------------------------------------------*/
+        /*----------------------------------------------------------------------------------------------------
+        | --- SelectRandomItem: Picks an entry by weight at the level; null when no entry can drop there --- |
+        ----------------------------------------------------------------------------------------------------*/
         private LootItemConfig SelectRandomItem(int level)
         {
-            if (m_possibleDrops == null || m_possibleDrops.Length == 0)
-                return null;
-
+            // Weight 0 means "can't drop at this level": if nothing has weight, the pool drops nothing (no fallback)
             float totalChance = GetTotalChance(level);
             if (totalChance <= 0f)
-            {
-                // No defined chance values -> fall back to first configured drop to avoid returning null
-                return m_possibleDrops[0];
-            }
+                return null;
 
+            // Random.Range(0, total) can return total itself: skip weight-0 entries and compare with <, so neither
+            // boundary roll can pick an entry that can't drop, and fall back to the last entry that can
             float randomRoll = Random.Range(0f, totalChance);
             float chanceTotal = 0f;
+            LootItemConfig lastThatCanDrop = null;
             foreach (var drop in m_possibleDrops)
             {
-                chanceTotal += GetByLevel(drop.RelativeChance, level);
-                // return when the cumulative chance reaches/exceeds the roll
-                if (randomRoll <= chanceTotal)
+                float weight = GetByLevel(drop.RelativeChance, level);
+                if (weight <= 0f)
+                    continue;
+
+                lastThatCanDrop = drop;
+                chanceTotal += weight;
+                if (randomRoll < chanceTotal)
                 {
                     return drop;
                 }
             }
 
-            // Fallback: if floating point edge cases prevent a return, return last entry
-            return m_possibleDrops[m_possibleDrops.Length - 1];
+            return lastThatCanDrop;
         }
 
         /*------------------------------------------------------------------------------
@@ -162,8 +161,17 @@ namespace PolyQuest.Inventories
         -----------------------------------------------------------------------------*/
         private int GetRandomNumberOfDrops(int level)
         {
-            int min = GetByLevel(m_minDrops, level);
-            int max = GetByLevel(m_maxDrops, level);
+            return RollInclusive(GetByLevel(m_minDrops, level), GetByLevel(m_maxDrops, level));
+        }
+
+        /*--------------------------------------------------------------------------------------
+        | --- RollInclusive: A whole number from min to max; a max below min counts as min --- |
+        --------------------------------------------------------------------------------------*/
+        private static int RollInclusive(int min, int max)
+        {
+            if (max < min)
+                max = min;
+
             return Random.Range(min, max + 1);
         }
 
@@ -178,7 +186,7 @@ namespace PolyQuest.Inventories
 
             foreach (var drop in m_possibleDrops)
             {
-                total += GetByLevel(drop.RelativeChance, level);
+                total += Mathf.Max(0f, GetByLevel(drop.RelativeChance, level));
             }
             return total;
         }
@@ -199,5 +207,106 @@ namespace PolyQuest.Inventories
 
             return values[level - 1];
         }
+
+#if UNITY_EDITOR
+        /*----------------------------------------------------------------------------------------------
+        | --- OnValidate: Editor warnings for tables that can't drop what they look like they drop --- |
+        ----------------------------------------------------------------------------------------------*/
+        private void OnValidate()
+        {
+            if (m_guaranteedDrops != null)
+            {
+                for (int i = 0; i < m_guaranteedDrops.Length; ++i)
+                {
+                    LootItemConfig drop = m_guaranteedDrops[i];
+                    if (drop?.Item == null)
+                        continue;
+
+                    // Empty arrays read as 0 at every level, so they count too
+                    if (drop.Item.IsStackable && AllLevels(drop.MinQuantity, drop.MaxQuantity, (min, max) => Mathf.Max(min, max) <= 0))
+                    {
+                        Warn($"guaranteed drop {Describe(drop, i)} can only roll a quantity of 0, so it never drops. Fill in its per-level quantities.");
+                    }
+
+                    CheckQuantities("guaranteed drop", drop, i);
+                }
+            }
+
+            if (m_possibleDrops != null && m_possibleDrops.Length > 0)
+            {
+                for (int i = 0; i < m_possibleDrops.Length; ++i)
+                {
+                    if (m_possibleDrops[i] != null)
+                        CheckQuantities("possible drop", m_possibleDrops[i], i);
+                }
+
+                int levels = 0;
+                foreach (LootItemConfig drop in m_possibleDrops)
+                    levels = Mathf.Max(levels, drop?.RelativeChance?.Length ?? 0);
+
+                bool anyCanDrop = false;
+                for (int level = 1; level <= levels && !anyCanDrop; ++level)
+                    anyCanDrop = GetTotalChance(level) > 0f;
+
+                if (!anyCanDrop)
+                    Warn("has possible drops, but every one has a weight of 0 at every level, so none of them can ever drop.");
+            }
+
+            string inverted = InvertedLevels(m_minDrops, m_maxDrops);
+            if (inverted != null)
+                Warn($"max drops is below min drops at level {inverted}; the count is clamped to min there.");
+        }
+
+        /*-------------------------------------------------------------------------------------------------
+        | --- CheckQuantities: Warns about a stackable entry's min/max arrays: inverted or mismatched --- |
+        -------------------------------------------------------------------------------------------------*/
+        private void CheckQuantities(string kind, LootItemConfig drop, int index)
+        {
+            if (drop.Item == null || !drop.Item.IsStackable)
+                return;
+
+            int minLength = drop.MinQuantity?.Length ?? 0;
+            int maxLength = drop.MaxQuantity?.Length ?? 0;
+            if (minLength != maxLength)
+                Warn($"{kind} {Describe(drop, index)} has {minLength} min quantities but {maxLength} max quantities; give both one value per level.");
+
+            string inverted = InvertedLevels(drop.MinQuantity, drop.MaxQuantity);
+            if (inverted != null)
+                Warn($"{kind} {Describe(drop, index)} has a max quantity below its min at level {inverted}; the quantity is clamped to min there.");
+        }
+
+        /*------------------------------------------------------------------------------------------------
+        | --- InvertedLevels: The levels (as text) where max is below min, or null if there are none --- |
+        ------------------------------------------------------------------------------------------------*/
+        private static string InvertedLevels(int[] min, int[] max)
+        {
+            List<int> levels = new();
+            for (int level = 1; level <= LevelCount(min, max); ++level)
+            {
+                if (GetByLevel(max, level) < GetByLevel(min, level))
+                    levels.Add(level);
+            }
+            return levels.Count > 0 ? string.Join(", ", levels) : null;
+        }
+
+        /*-----------------------------------------------------------------------------------------
+        | --- AllLevels: Whether every level's min and max (read as the game reads them) pass --- |
+        -----------------------------------------------------------------------------------------*/
+        private static bool AllLevels(int[] min, int[] max, System.Func<int, int, bool> test)
+        {
+            for (int level = 1; level <= LevelCount(min, max); ++level)
+            {
+                if (!test(GetByLevel(min, level), GetByLevel(max, level)))
+                    return false;
+            }
+            return true;
+        }
+
+        private static int LevelCount(int[] min, int[] max) => Mathf.Max(min?.Length ?? 0, max?.Length ?? 0);
+
+        private static string Describe(LootItemConfig drop, int index) => $"#{index} ({drop.Item.name})";
+
+        private void Warn(string problem) => Debug.LogWarning($"EnemyLootTable '{name}': {problem}", this);
+#endif
     }
 }
