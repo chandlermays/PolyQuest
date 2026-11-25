@@ -110,9 +110,9 @@ namespace PolyQuest.Inventories
             }
         }
 
-        /*-------------------------------------------------------------------------------
+        /*------------------------------------------------------------------------------
         | --- CaptureState: Capture the current state of equipped items for saving --- |
-        -------------------------------------------------------------------------------*/
+        ------------------------------------------------------------------------------*/
         public JToken CaptureState()
         {
             JObject state = new();
@@ -125,30 +125,48 @@ namespace PolyQuest.Inventories
             return state;
         }
 
-        /*----------------------------------------------------------------------------
-        | --- RestoreState: Restore the state of equipped items from saved data --- |
-        ----------------------------------------------------------------------------*/
+        /*----------------------------------------------------------------------------------------------
+        | --- RestoreState: Restores the saved equipment; a slot that can't be restored is skipped --- |
+        ----------------------------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
-            if (state is JObject stateObject)
+            // The whole save is the wrong shape: ignore it, keep what's equipped, and raise nothing
+            if (state is not JObject stateObject)
+                return;
+
+            m_equippedItems.Clear();
+
+            foreach (KeyValuePair<string, JToken> pair in stateObject)
             {
-                m_equippedItems.Clear();
-
-                IDictionary<string, JToken> stateDict = stateObject;
-
-                foreach (var pair in stateObject)
+                // One bad slot is skipped; the other slots load
+                if (!Enum.TryParse(pair.Key, true, out EquipmentSlot slot))
                 {
-                    if (Enum.TryParse(pair.Key, true, out EquipmentSlot key))
-                    {
-                        if (InventoryItem.FindByID(pair.Value.ToObject<string>()) is EquipableItem item)
-                        {
-                            m_equippedItems[key] = item;
-                        }
-                    }
+                    WarnSkippedSlot(pair.Key, pair.Value, "it isn't an equipment slot");
+                    continue;
                 }
+
+                string itemID = pair.Value != null && pair.Value.Type == JTokenType.String ? pair.Value.Value<string>() : null;
+                if (InventoryItem.FindByID(itemID) is not EquipableItem item)
+                {
+                    WarnSkippedSlot(pair.Key, pair.Value, itemID == null ? "its item ID can't be read" : "no equipable item has that ID");
+                    continue;
+                }
+
+                m_equippedItems[slot] = item;
             }
+
+            // Once, after the whole restore: stats update, and an empty weapon slot falls back to Unarmed
             OnEquipmentChanged?.Invoke();
             m_baseStats.NotifyStatModified();
+        }
+
+        /*---------------------------------------------------------------------------------------------
+        | --- WarnSkippedSlot: Editor warning naming a saved slot and item ID that weren't loaded --- |
+        ---------------------------------------------------------------------------------------------*/
+        [System.Diagnostics.Conditional("UNITY_EDITOR")]
+        private void WarnSkippedSlot(string slot, JToken itemID, string reason)
+        {
+            Debug.LogWarning($"Equipment on '{name}': skipped saved slot '{slot}' with item ID '{itemID}' because {reason}. The other slots loaded.", this);
         }
 
         /*----------------------------------------------------------------

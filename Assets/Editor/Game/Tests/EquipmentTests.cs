@@ -296,13 +296,13 @@ namespace PolyQuest.Tests
         | --- RestoreState_UnknownItemId_IsDropped_ButEventsStillFire: An unknown item ID in the save is dropped, but OnEquipmentChanged and OnStatModified still fire --- |
         ------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("An unknown item ID in the save is dropped, but OnEquipmentChanged and OnStatModified still fire.")]
+        [Description("An unknown item ID in the save drops only that slot: the other slots load, and OnEquipmentChanged and OnStatModified still fire once.")]
         public void RestoreState_UnknownItemId_IsDropped_ButEventsStillFire()
         {
-            m_equipment.RestoreState(new JObject { ["kWeapon"] = "gone" });
+            m_equipment.RestoreState(new JObject { ["kWeapon"] = "gone", ["kHelmet"] = m_helm.ID });
 
             Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kWeapon), Is.Null);
-            Assert.That(m_equipment.OccupiedSlots, Is.Empty);
+            Assert.That(m_equipment.GetItemInSlot(EquipmentSlot.kHelmet), Is.SameAs(m_helm));
             Assert.That(m_equipmentChanged, Is.EqualTo(1));
             Assert.That(m_statsModified, Is.EqualTo(1));
         }
@@ -311,10 +311,10 @@ namespace PolyQuest.Tests
         | --- RestoreState_UnknownItemId_LogsAWarningNamingIt: Restoring an unknown item ID logs a warning that names the missing ID --- |
         --------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("Restoring an unknown item ID logs a warning that names the missing ID.")]
+        [Description("Restoring an unknown item ID logs a warning that names the slot and the missing ID.")]
         public void RestoreState_UnknownItemId_LogsAWarningNamingIt()
         {
-            LogAssert.Expect(LogType.Warning, new Regex("gone"));
+            LogAssert.Expect(LogType.Warning, new Regex("kWeapon.*gone"));
 
             m_equipment.RestoreState(new JObject { ["kWeapon"] = "gone" });
         }
@@ -323,12 +323,22 @@ namespace PolyQuest.Tests
         | --- RestoreState_NonEquipableItem_OrUnknownSlot_IsDropped: Saved entries whose item isn't equipable, or whose key isn't a valid slot name, are dropped --- |
         ------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("Saved entries whose item isn't equipable, or whose key isn't a valid slot name, are dropped.")]
+        [Description("Saved entries whose item isn't equipable, whose item ID can't be read, or whose key isn't a valid slot name, are dropped with a warning naming each; the other slots load.")]
         public void RestoreState_NonEquipableItem_OrUnknownSlot_IsDropped()
         {
-            m_equipment.RestoreState(new JObject { ["kWeapon"] = m_potion.ID, ["kTail"] = m_sword.ID });
+            LogAssert.Expect(LogType.Warning, new Regex("kWeapon.*" + Regex.Escape(m_potion.ID)));
+            LogAssert.Expect(LogType.Warning, new Regex("kTail.*" + Regex.Escape(m_sword.ID)));
+            LogAssert.Expect(LogType.Warning, new Regex("kChest"));
 
-            Assert.That(m_equipment.OccupiedSlots, Is.Empty);
+            m_equipment.RestoreState(new JObject
+            {
+                ["kWeapon"] = m_potion.ID,
+                ["kTail"] = m_sword.ID,
+                ["kChest"] = new JObject { ["id"] = "chest" },
+                ["kHelmet"] = m_helm.ID,
+            });
+
+            Assert.That(m_equipment.OccupiedSlots, Is.EquivalentTo(new[] { EquipmentSlot.kHelmet }));
         }
 
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------
