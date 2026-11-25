@@ -149,12 +149,23 @@ namespace PolyQuest.Saving
         ---------------------------------------------------------------------*/
         private void RestoreEntities(SaveState state)
         {
+            List<SaveableEntity> restored = new();
             foreach (SaveableEntity saveable in m_registeredEntities)
             {
                 string ID = saveable.UID;
                 if (state.ContainsKey(ID))
                 {
                     saveable.Restore(state[ID]);
+                    restored.Add(saveable);
+                }
+            }
+
+            // Only once everything is restored: values that depend on other components (health, mana) are put back exactly
+            foreach (SaveableEntity saveable in restored)
+            {
+                if (saveable != null)
+                {
+                    saveable.CompleteRestore();
                 }
             }
         }

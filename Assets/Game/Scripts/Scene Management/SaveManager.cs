@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 //---------------------------------
+using PolyQuest.Components;
 using PolyQuest.SceneManagement;
 
 namespace PolyQuest.Saving
@@ -28,6 +29,7 @@ namespace PolyQuest.Saving
 
         private const string kCurrentSaveKey = "CurrentSaveName";
         private const string kAutoSaveSuffix = "_autosave";
+        private const string kPlayerTag = "Player";
 
         /* --- kCurrentSaveKey Bindings --- */
         [SerializeField] private SceneField m_firstSceneIndex;
@@ -181,7 +183,37 @@ namespace PolyQuest.Saving
         -----------------------------------------------------------*/
         public void RespawnCheckpoint()
         {
-            StartCoroutine(LoadLastScene());
+            StartCoroutine(RespawnRoutine());
+        }
+
+        /*---------------------------------------------------------------------------------------------
+        | --- RespawnRoutine: Reloads the last save, then brings the Player back at full strength --- |
+        ---------------------------------------------------------------------------------------------*/
+        private IEnumerator RespawnRoutine()
+        {
+            yield return TransitionFade.Instance.FadeOut();
+            yield return m_saveSystem.LoadLastScene(GetCurrentSave());
+
+            // Only after the load has completely finished, so the restored health and mana can't overwrite the refill
+            RefillPlayer();
+
+            yield return TransitionFade.Instance.FadeIn();
+        }
+
+        /*-----------------------------------------------------------------
+        | --- RefillPlayer: Sets the Player's health and mana to full --- |
+        -----------------------------------------------------------------*/
+        private static void RefillPlayer()
+        {
+            GameObject player = GameObject.FindWithTag(kPlayerTag);
+            if (player == null)
+                return;
+
+            if (player.TryGetComponent(out HealthComponent health))
+                health.FullyReplenishHealth();
+
+            if (player.TryGetComponent(out ManaComponent mana))
+                mana.FullyReplenishMana();
         }
     }
 }

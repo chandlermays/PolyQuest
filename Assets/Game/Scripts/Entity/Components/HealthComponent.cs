@@ -21,7 +21,7 @@ namespace PolyQuest.Components
      *      - Grants experience to the instigator on death.                                        *
      *      - Supports saving and restoring health state.                                          *
      * ------------------------------------------------------------------------------------------- */
-    public class HealthComponent : EntityComponent, ISaveable
+    public class HealthComponent : EntityComponent, ISaveable, IRestoreCompleted
     {
         [Header("Health Settings")]
         [SerializeField] private float m_health;
@@ -43,6 +43,7 @@ namespace PolyQuest.Components
 
         private bool m_hasBeenInitialized = false;
         private float m_lastKnownMaxHealth = 0f;
+        private float? m_restoredHealth = null;     // The saved health, put back exactly once the whole load is done
 
         /* --- Components --- */
         private BaseStats m_stats;
@@ -112,27 +113,20 @@ namespace PolyQuest.Components
             }
         }
 
-        /*------------------------------------------------------------------
-        | --- RecalculateMaxHealth: Recalculate Health on Stat Changes --- |
-        ------------------------------------------------------------------*/
+        /*------------------------------------------------------------------------------------------------
+        | --- RecalculateMaxHealth: When the maximum changes, health keeps the same percentage of it --- |
+        ------------------------------------------------------------------------------------------------*/
         public void RecalculateMaxHealth()
         {
             float newMaxHealth = m_stats.GetHealth();
 
-            if (m_lastKnownMaxHealth <= 0f)
+            if (m_hasBeenInitialized)
             {
-                m_lastKnownMaxHealth = newMaxHealth;
-
-                if (m_hasBeenInitialized)
-                {
-                    m_health = Mathf.Clamp(m_health, 0f, newMaxHealth);
-                    OnHealthChanged?.Invoke();
-                }
-                return;
+                // 20/100 becomes 10/50 and back to 20/100; a living entity at any health above 0 stays above 0
+                float scaled = m_lastKnownMaxHealth > 0f ? m_health / m_lastKnownMaxHealth * newMaxHealth : m_health;
+                m_health = Mathf.Clamp(scaled, 0f, newMaxHealth);
             }
 
-            float delta = newMaxHealth - m_lastKnownMaxHealth;
-            m_health = Mathf.Clamp(m_health + delta, 0f, newMaxHealth);
             m_lastKnownMaxHealth = newMaxHealth;
             OnHealthChanged?.Invoke();
         }
@@ -155,7 +149,7 @@ namespace PolyQuest.Components
                     return;
             }
 
-            m_health -= damage;
+            m_health = Mathf.Max(m_health - damage, 0f);     // Health stops at 0
 
             OnHealthChanged?.Invoke();
             OnHit?.Invoke(instigator);
@@ -242,16 +236,19 @@ namespace PolyQuest.Components
             return JToken.FromObject(data);
         }
 
-        /*--------------------------------------------------------------------------
-        | --- RestoreState: Restores the Entity's Health state from saved data --- |
-        --------------------------------------------------------------------------*/
+        /*------------------------------------------------------------------------------------------------------
+        | --- RestoreState: Restores the Entity's Health state from saved data; unreadable data is ignored --- |
+        ------------------------------------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
-            HealthSaveData data = state.ToObject<HealthSaveData>();
+            if (!TryRead(state, out HealthSaveData data))
+                return;
+
             m_health = data.health;
             m_isDead = data.isDead;
             m_hasBeenInitialized = true;
             m_lastKnownMaxHealth = m_stats.GetHealth();
+            m_restoredHealth = data.health;      // Other components may still change the maximum during this load
             OnHealthChanged?.Invoke();
 
             if (m_isDead)
@@ -270,6 +267,42 @@ namespace PolyQuest.Components
                     m_capsuleCollider.enabled = true;
                 }
             }
+        }
+
+        /*---------------------------------------------------------------------------------------------------
+        | --- OnRestoreCompleted: Puts the saved health back exactly, now that the maximum is final too --- |
+        ---------------------------------------------------------------------------------------------------*/
+        public void OnRestoreCompleted()
+        {
+            if (m_restoredHealth == null)
+                return;
+
+            m_lastKnownMaxHealth = m_stats.GetHealth();
+            m_health = Mathf.Clamp(m_restoredHealth.Value, 0f, m_lastKnownMaxHealth);
+            m_restoredHealth = null;
+            OnHealthChanged?.Invoke();
+        }
+
+        /*--------------------------------------------------------------------------------------------
+        | --- TryRead: Reads saved health data; false when it isn't an object of the right shape --- |
+        --------------------------------------------------------------------------------------------*/
+        private static bool TryRead(JToken state, out HealthSaveData data)
+        {
+            data = default;
+            if (state is not JObject stateObject)
+                return false;
+
+            JToken health = stateObject["health"];
+            if (health == null || (health.Type != JTokenType.Float && health.Type != JTokenType.Integer))
+                return false;
+
+            JToken isDead = stateObject["isDead"];
+            if (isDead != null && isDead.Type != JTokenType.Boolean)
+                return false;
+
+            data.health = health.Value<float>();
+            data.isDead = isDead != null && isDead.Value<bool>();
+            return true;
         }
     }
 }

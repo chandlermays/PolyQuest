@@ -86,6 +86,23 @@ namespace PolyQuest.Saving
             }
         }
 
+        /*----------------------------------------------------------------------------------------------------
+        | --- CompleteRestore: Tells the components that reapply their saved value that the load is done --- |
+        ----------------------------------------------------------------------------------------------------*/
+        public void CompleteRestore()
+        {
+            if (m_saveables == null)
+                return;
+
+            foreach (ISaveable saveable in m_saveables)
+            {
+                if (saveable is IRestoreCompleted completed)
+                {
+                    completed.OnRestoreCompleted();
+                }
+            }
+        }
+
 #if UNITY_EDITOR
         /*-----------------------------------------
         | --- Update: Called upon every frame --- |

@@ -11,7 +11,7 @@ using PolyQuest.Saving;
 
 namespace PolyQuest.Components
 {
-    public class ManaComponent : EntityComponent, ISaveable
+    public class ManaComponent : EntityComponent, ISaveable, IRestoreCompleted
     {
         [Header("Mana Settings")]
         [SerializeField] private float m_mana;
@@ -27,6 +27,7 @@ namespace PolyQuest.Components
         private Experience m_experienceComponent;
 
         private bool m_hasBeenInitialized = false;
+        private float? m_restoredMana = null;       // The saved mana, put back exactly once the whole load is done
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -98,31 +99,19 @@ namespace PolyQuest.Components
             }
         }
 
-        /*------------------------------------------------------------------------------
-        | --- RecalculateMaxMana: Recalculate the Entity's Max Mana and Regen Rate --- |
-        ------------------------------------------------------------------------------*/
+        /*------------------------------------------------------------------------------------------------------------
+        | --- RecalculateMana: Updates the maximum and regen rate; mana keeps the same percentage of the maximum --- |
+        ------------------------------------------------------------------------------------------------------------*/
         public void RecalculateMana()
         {
             float newMaxMana = m_stats.GetMana();
-            float newRegenRate = m_stats.GetManaRegenRate();
 
-            // First-time initialization safeguard
-            if (m_maxMana <= 0f)
-            {
-                m_maxMana = newMaxMana;
-                m_manaRegenRate = newRegenRate;
-                m_mana = Mathf.Clamp(m_mana, 0f, newMaxMana);
-                OnManaChanged?.Invoke();
-                return;
-            }
-
-            if (m_mana > newMaxMana)
-            {
-                m_mana = newMaxMana; // Clamp down if necessary
-            }
+            // 20/100 becomes 10/50 and back to 20/100; before the first maximum is known there's nothing to scale from
+            float scaled = m_maxMana > 0f ? m_mana / m_maxMana * newMaxMana : m_mana;
+            m_mana = Mathf.Clamp(scaled, 0f, newMaxMana);
 
             m_maxMana = newMaxMana;
-            m_manaRegenRate = newRegenRate;
+            m_manaRegenRate = m_stats.GetManaRegenRate();
 
             OnManaChanged?.Invoke();
         }
@@ -160,21 +149,42 @@ namespace PolyQuest.Components
             OnManaChanged?.Invoke();
         }
 
-        /*------------------------------------------------------------------------
+        /*-----------------------------------------------------------------------
         | --- CaptureState: Captures the current state of the Entity's Mana --- |
-        ------------------------------------------------------------------------*/
+        -----------------------------------------------------------------------*/
         public JToken CaptureState()
         {
             return JToken.FromObject(m_mana);
         }
 
-        /*---------------------------------------------------------------
-        | --- RestoreState: Restores the state from the saved data --- |
-        ---------------------------------------------------------------*/
+        /*------------------------------------------------------------------------------------------
+        | --- RestoreState: Restores the state from the saved data; unreadable data is ignored --- |
+        ------------------------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
-            m_mana = state.ToObject<float>();
+            if (state == null || (state.Type != JTokenType.Float && state.Type != JTokenType.Integer))
+                return;
+
+            m_maxMana = m_stats.GetMana();
+            m_manaRegenRate = m_stats.GetManaRegenRate();
+            m_mana = state.Value<float>();
+            m_restoredMana = m_mana;             // Other components may still change the maximum during this load
             m_hasBeenInitialized = true;
+            OnManaChanged?.Invoke();
+        }
+
+        /*-------------------------------------------------------------------------------------------------
+        | --- OnRestoreCompleted: Puts the saved mana back exactly, now that the maximum is final too --- |
+        -------------------------------------------------------------------------------------------------*/
+        public void OnRestoreCompleted()
+        {
+            if (m_restoredMana == null)
+                return;
+
+            m_maxMana = m_stats.GetMana();
+            m_manaRegenRate = m_stats.GetManaRegenRate();
+            m_mana = Mathf.Clamp(m_restoredMana.Value, 0f, m_maxMana);
+            m_restoredMana = null;
             OnManaChanged?.Invoke();
         }
     }

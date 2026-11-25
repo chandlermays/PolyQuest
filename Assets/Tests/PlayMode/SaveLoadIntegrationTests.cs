@@ -43,6 +43,11 @@ namespace PolyQuest.Tests
         /*-----------------
         | --- Helpers --- |
         -----------------*/
+        /*--------------------------------------------------
+        | --- Mana: The current Player's ManaComponent --- |
+        --------------------------------------------------*/
+        private ManaComponent Mana => m_rig.Player.GetComponent<ManaComponent>();
+
         /*-----------------------------------------------------------------------------------------------------------------------------
         | --- Seed: Gives the Player something to lose: items, silver, XP and levels, and some damage; returns the damaged health --- |
         -----------------------------------------------------------------------------------------------------------------------------*/
@@ -161,6 +166,30 @@ namespace PolyQuest.Tests
 
             Assert.That(m_rig.Health.CurrentHealth, Is.EqualTo(savedHealth).Within(1e-3f),
                         $"saved {savedHealth}/{savedMax}, loaded {m_rig.Health.CurrentHealth}");
+        }
+
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- Load_IntoAFreshPlayer_DoesNotChangeTheSavedMana: Loading a level-3 save with mana spent into a fresh level-1 Player restores exactly the saved mana, whatever order the Player's components restore in --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        [UnityTest]
+        [Description("Loading a level-3 save with mana spent into a fresh level-1 Player restores exactly the saved mana, whatever order the Player's components restore in.")]
+        public IEnumerator Load_IntoAFreshPlayer_DoesNotChangeTheSavedMana()
+        {
+            yield return null;
+            Seed();
+            float savedMax = m_rig.Stats.GetMana();
+            Assert.That(Mana.UseMana(savedMax * 0.4f), Is.True, "fixture: the Player must be able to spend mana");
+            float savedMana = Mana.CurrentMana;
+            SaveManager.Instance.Save();
+
+            m_rig.SpawnPlayer();
+            yield return null;
+            Assume.That(m_rig.Stats.GetMana(), Is.LessThan(savedMax), "fixture: level 1 must have less max mana than level 3");
+
+            SaveManager.Instance.Load();
+
+            Assert.That(Mana.CurrentMana, Is.EqualTo(savedMana).Within(1e-3f),
+                        $"saved {savedMana}/{savedMax}, loaded {Mana.CurrentMana}");
         }
 
 
