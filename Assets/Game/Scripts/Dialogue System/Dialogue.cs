@@ -83,20 +83,25 @@ namespace PolyQuest.Dialogues
             }
         }
 
-        /*-----------------------------------------------------
-        | --- GetRootNode: Returns the Root Dialogue Node --- |
-        -----------------------------------------------------*/
+        /*-----------------------------------------------------------------------------------------------------------
+        | --- GetRootNode: Returns the first opening line, in authored order, whose condition passes; else null --- |
+        -----------------------------------------------------------------------------------------------------------*/
         public DialogueNode GetRootNode(IEnumerable<IConditionChecker> evaluators)
         {
-            // Check all potential root nodes for valid conditions
+            // Authored order decides: put the most specific opening lines first and an unconditioned one last as the default
             foreach (DialogueNode node in m_nodes)
             {
-                if (IsRootNode(node) && node.CheckCondition(evaluators))
+                if (node != null && IsRootNode(node) && node.CheckCondition(evaluators))
                 {
                     return node;
                 }
             }
-            return m_nodes[0]; // Fallback to default root
+
+#if UNITY_EDITOR
+            string reason = m_nodes.Count == 0 ? "has no lines" : "has no opening line whose condition passes";
+            Debug.LogWarning($"Dialogue '{name}' {reason}, so no conversation starts. Add an unconditioned opening line last as the default.", this);
+#endif
+            return null;
         }
 
         /*-------------------------------------------------------
@@ -107,7 +112,7 @@ namespace PolyQuest.Dialogues
             // A root node is one that no other node references as a child
             foreach (DialogueNode otherNode in m_nodes)
             {
-                if (otherNode.Children.Contains(node.name))
+                if (otherNode != null && otherNode.Children.Contains(node.name))
                     return false;
             }
             return true;

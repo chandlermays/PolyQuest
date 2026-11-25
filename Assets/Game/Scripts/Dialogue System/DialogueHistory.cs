@@ -1,5 +1,5 @@
 ﻿/*---------------------------
-| File: Conjunction.cs
+| File: DialogueHistory.cs
 | Author: Chandler Mays
 ----------------------------*/
 using System.Collections.Generic;
@@ -15,11 +15,14 @@ namespace PolyQuest.Dialogues
     {
         private readonly HashSet<string> m_spokenTo = new();
 
-        /*------------------------------------------------------------------
-        | --- RecordConversation: Mark an NPC as having been spoken to --- |
-        ------------------------------------------------------------------*/
+        /*----------------------------------------------------------------------
+        | --- RecordConversation: Mark an NPC, by its NPC ID, as spoken to --- |
+        ----------------------------------------------------------------------*/
         public void RecordConversation(string npcID)
         {
+            if (string.IsNullOrWhiteSpace(npcID))
+                return;
+
             m_spokenTo.Add(npcID);
         }
 
@@ -39,7 +42,7 @@ namespace PolyQuest.Dialogues
             if (predicate != ConditionType.kHasSpokenTo)
                 return null;
 
-            if (parameters == null || parameters.Length == 0)
+            if (parameters == null || parameters.Length == 0 || string.IsNullOrWhiteSpace(parameters[0]))
                 return null;
 
             return m_spokenTo.Contains(parameters[0]);
@@ -53,15 +56,23 @@ namespace PolyQuest.Dialogues
             return JToken.FromObject(new List<string>(m_spokenTo));
         }
 
-        /*--------------------------------------------------------------------------
-        | --- RestoreState: Restore the dialogue history state from saved data --- |
-        --------------------------------------------------------------------------*/
+        /*---------------------------------------------------------------------------------------------
+        | --- RestoreState: Restores the saved history; data that can't be read is left out of it --- |
+        ---------------------------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
+            // The whole save is the wrong shape: ignore it and keep the current history
+            if (state is not JArray entries)
+                return;
+
             m_spokenTo.Clear();
-            foreach (string id in state.ToObject<List<string>>())
+            foreach (JToken entry in entries)
             {
-                m_spokenTo.Add(id);
+                // An entry that isn't an NPC ID is skipped; the rest load
+                if (entry.Type != JTokenType.String)
+                    continue;
+
+                RecordConversation(entry.Value<string>());
             }
         }
     }

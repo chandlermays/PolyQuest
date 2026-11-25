@@ -99,6 +99,11 @@ namespace PolyQuest.Tests
             yield return new WaitForSecondsRealtime(seconds);
         }
 
+        /*-----------------------------------------------------------------
+        | --- LockCount: How many locks the InputGuard is holding now --- |
+        -----------------------------------------------------------------*/
+        private int LockCount => PlayModeTestKit.Get<int>(m_inputGuard, "m_lockCount");
+
 
         /*---------------
         | --- Tests --- |
@@ -107,17 +112,19 @@ namespace PolyQuest.Tests
         | --- AfterTheConversationEnds_InputIsUnlocked: After a conversation ends and the camera has returned, input is unlocked --- |
         ----------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
-        [Description("After a conversation ends and the camera has returned, input is unlocked.")]
+        [Description("After a conversation ends and the camera has returned, input is unlocked: the lock count is back where it started.")]
         public IEnumerator AfterTheConversationEnds_InputIsUnlocked()
         {
             yield return null;
+            int before = LockCount;
             DialogueTestKit.Talk(Handler, m_npc);
             yield return WaitRealtime(kSettleTime);
+            Assert.That(m_inputGuard.IsInputLocked, Is.True, "input is locked during the conversation");
 
             Handler.EndDialogue();
             yield return WaitRealtime(kSettleTime);
 
-            Assert.That(m_inputGuard.IsInputLocked, Is.False);
+            Assert.That(LockCount, Is.EqualTo(before));
         }
 
         /*---------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -128,6 +135,7 @@ namespace PolyQuest.Tests
         public IEnumerator QuittingDuringTheFadeIn_ExitsCleanly()
         {
             yield return null;                              // DialogueUI.Start hides the panel before the conversation
+            int before = LockCount;
             DialogueTestKit.Talk(Handler, m_npc);
             for (float waited = 0f; !m_ui.UI.gameObject.activeSelf; waited += Time.unscaledDeltaTime)
             {
@@ -139,7 +147,7 @@ namespace PolyQuest.Tests
             m_ui.Quit.onClick.Invoke();
             yield return WaitRealtime(kSettleTime);
 
-            Assert.That(m_inputGuard.IsInputLocked, Is.False);
+            Assert.That(LockCount, Is.EqualTo(before));
             Assert.That(m_hud.activeSelf, Is.True);
         }
     }

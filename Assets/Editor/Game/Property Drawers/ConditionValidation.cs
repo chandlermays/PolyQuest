@@ -10,8 +10,9 @@ using PolyQuest.Tools;
 
 namespace PolyQuest.Edit
 {
-    // Authoring rules for a Conjunction.Condition: a real condition type, with every parameter that type reads filled in.
-    // Shared by the ConditionPropertyDrawer's warning and the content test that checks every condition in the game.
+    // Authoring rules for a Conjunction.Condition: a real condition type, with every parameter that type reads filled in,
+    // and a kHasSpokenTo that names an NPC who exists. Shared by the ConditionPropertyDrawer's warning and the content test
+    // that checks every condition in the game.
     public static class ConditionValidation
     {
         /*-----------------------------------------------------------------------------------
@@ -63,9 +64,9 @@ namespace PolyQuest.Edit
             return null;
         }
 
-        /*----------------------------------------------------------------------------------------
-        | --- Problem: The same check, read from a serialized Conjunction.Condition property --- |
-        ----------------------------------------------------------------------------------------*/
+        /*---------------------------------------------------------------------------------------------------------------
+        | --- Problem: The same check, read from a serialized Conjunction.Condition, plus whether its NPC ID exists --- |
+        ---------------------------------------------------------------------------------------------------------------*/
         public static string Problem(SerializedProperty condition)
         {
             SerializedProperty type = condition.FindPropertyRelative("m_condition");
@@ -77,7 +78,15 @@ namespace PolyQuest.Edit
             for (int i = 0; i < parameters.arraySize; ++i)
                 values.Add(parameters.GetArrayElementAtIndex(i).stringValue);
 
-            return Problem((ConditionType)type.enumValueIndex, values);
+            ConditionType conditionType = (ConditionType)type.enumValueIndex;
+            string problem = Problem(conditionType, values);
+            if (problem != null)
+                return problem;
+
+            if (conditionType == ConditionType.kHasSpokenTo && !NpcCatalog.Exists(values[0]))
+                return $"No NPC has the ID '{values[0]}' — this condition will never pass.";
+
+            return null;
         }
     }
 }

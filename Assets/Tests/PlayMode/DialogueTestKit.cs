@@ -147,10 +147,10 @@ namespace PolyQuest.Tests
         /*-------------
         | --- NPC --- |
         -------------*/
-        /*---------------------------------------------------------------------------------------------------
-        | --- Npc: Creates an NPC with a label, outline and dialogue, optionally with a dialogue camera --- |
-        ---------------------------------------------------------------------------------------------------*/
-        public AIDialogueHandler Npc(string speakerName, Dialogue dialogue, Vector3 position, bool withDialogueCamera = false)
+        /*----------------------------------------------------------------------------------------------------------------------
+        | --- Npc: Creates an NPC with a label, outline and dialogue, optionally with a dialogue camera and its own NPC ID --- |
+        ----------------------------------------------------------------------------------------------------------------------*/
+        public AIDialogueHandler Npc(string speakerName, Dialogue dialogue, Vector3 position, bool withDialogueCamera = false, string npcID = null)
         {
             GameObject go = new GameObject(speakerName);
             go.SetActive(false);
@@ -168,6 +168,7 @@ namespace PolyQuest.Tests
             AIDialogueHandler npc = go.AddComponent<AIDialogueHandler>();
             PlayModeTestKit.Set(npc, "m_dialogue", dialogue);
             PlayModeTestKit.Set(npc, "m_speakerName", speakerName);
+            PlayModeTestKit.Set(npc, "m_npcID", npcID ?? speakerName.ToLowerInvariant().Replace(' ', '-'));   // never the display name
 
             if (withDialogueCamera)
             {
@@ -185,7 +186,7 @@ namespace PolyQuest.Tests
         /*----------------------------------------------------------------
         | --- HistoryKey: The key DialogueHistory records for an NPC --- |
         ----------------------------------------------------------------*/
-        public static string HistoryKey(AIDialogueHandler npc) => npc.SpeakerName;
+        public static string HistoryKey(AIDialogueHandler npc) => npc.NpcID;
 
         /*------------------------------------------------------------------------------------------
         | --- Talk: Starts the conversation the way arriving at the NPC does, without the walk --- |

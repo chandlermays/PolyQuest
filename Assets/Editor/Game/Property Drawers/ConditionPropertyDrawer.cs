@@ -1,4 +1,3 @@
-
 /*---------------------------
 | File: ConditionPropertyDrawer.cs
 | Author: Chandler Mays
@@ -340,13 +339,35 @@ namespace PolyQuest.Edit
             EditorGUI.EndProperty();
         }
 
+        /*--------------------------------------------------------------------------------
+        | --- DrawNpcIdField: Draws a dropdown of the NPC IDs that exist in the game --- |
+        --------------------------------------------------------------------------------*/
         private void DrawNpcIdField(Rect position, SerializedProperty element)
         {
+            // Index 0 is "nothing chosen"; then every NPC; then the current value if no NPC has it, so it isn't lost silently
+            List<string> values = new() { "" };
+            List<string> labels = new() { "Select NPC" };
+            foreach (NpcCatalog.Entry npc in NpcCatalog.All.OrderBy(n => n.ID))
+            {
+                if (string.IsNullOrWhiteSpace(npc.ID) || values.Contains(npc.ID))
+                    continue;
+
+                values.Add(npc.ID);
+                labels.Add($"{npc.ID}  ({npc.DisplayName})");
+            }
+
+            string current = element.stringValue;
+            if (!values.Contains(current))
+            {
+                values.Add(current);
+                labels.Add($"{current}  (no NPC has this ID)");
+            }
+
             EditorGUI.BeginProperty(position, new GUIContent("NPC ID:"), element);
             EditorGUI.BeginChangeCheck();
-            string newValue = EditorGUI.TextField(position, "NPC ID:", element.stringValue);
+            int selected = EditorGUI.Popup(position, "NPC ID:", values.IndexOf(current), labels.ToArray());
             if (EditorGUI.EndChangeCheck())
-                element.stringValue = newValue;
+                element.stringValue = values[selected];
             EditorGUI.EndProperty();
         }
     }

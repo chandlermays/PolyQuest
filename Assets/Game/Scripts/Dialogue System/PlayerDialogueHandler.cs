@@ -84,8 +84,17 @@ namespace PolyQuest.Dialogues
         -----------------------------------------------------------*/
         private void BeginDialogue()
         {
+            DialogueNode openingLine = m_activeDialogue != null ? m_activeDialogue.GetRootNode(GetEvaluators()) : null;
+            if (openingLine == null)
+            {
+                // Nothing to say: no conversation starts, and the Player stops walking over to start one
+                m_activeNPC = null;
+                m_activeDialogue = null;
+                return;
+            }
+
             m_inActiveDialogue = true;
-            m_currentNode = m_activeDialogue.GetRootNode(GetEvaluators());
+            m_currentNode = openingLine;
             TriggerEnterAction();
 
             OnDialogueStarted?.Invoke();
@@ -109,7 +118,7 @@ namespace PolyQuest.Dialogues
         {
             m_inActiveDialogue = false;
             m_activeDialogue = null;
-            m_history.RecordConversation(m_activeNPC.SpeakerName);
+            m_history.RecordConversation(m_activeNPC.NpcID);
             TriggerExitAction();
             m_currentNode = null;
             m_activeNPC = null;
@@ -250,9 +259,9 @@ namespace PolyQuest.Dialogues
             return validChildren;
         }
 
-        /*------------------------------------------------------------------------- 
+        /*---------------------------------------------------------------------------
         | --- GetEvaluators: Returns all Conjunction Checkers on the active NPC --- |
-        -------------------------------------------------------------------------*/
+        ---------------------------------------------------------------------------*/
         private IEnumerable<IConditionChecker> GetEvaluators()
         {
             return GetComponents<IConditionChecker>();

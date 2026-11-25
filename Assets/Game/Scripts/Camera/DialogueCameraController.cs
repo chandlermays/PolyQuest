@@ -24,6 +24,7 @@ namespace PolyQuest.Core
         private CinemachineCamera m_dialogueCamera;
         private bool m_isDialogueCameraActive = false;
         private bool m_isTransitioning = false;
+        private bool m_holdsInputLock = false;          // One lock for the whole conversation, released exactly once
 
         private QuestManager m_questManager;
 
@@ -58,6 +59,7 @@ namespace PolyQuest.Core
         {
             m_playerDialogueHandler.OnDialogueStarted -= HandleDialogueStarted;
             m_playerDialogueHandler.OnDialogueEnded -= HandleDialogueEnded;
+            ReleaseInputLock();
         }
 
         /*------------------------------------------------------------------------------------- 
@@ -93,7 +95,8 @@ namespace PolyQuest.Core
 
             m_isTransitioning = true;
             m_playerController.ToggleInput(false);
-            InputGuard.Instance.LockInput();
+            if (toDialogue)
+                TakeInputLock();
 
             var fade = TransitionFade.Instance;
 
@@ -125,7 +128,7 @@ namespace PolyQuest.Core
                 {
                     m_playerController.SetPlayerVisibility(true);
                     m_playerController.ToggleInput(true);
-                    InputGuard.Instance.UnlockInput();
+                    ReleaseInputLock();
                 }
 
                 // Clear the transitioning flag BEFORE the fade-in so that
@@ -146,13 +149,44 @@ namespace PolyQuest.Core
                 m_isTransitioning = false;
 
                 if (toDialogue)
+                {
                     SetDialogueUIVisibility(true);
+                }
                 else
+                {
                     m_playerController.SetPlayerVisibility(true);
+                    m_playerController.ToggleInput(true);
+                    ReleaseInputLock();
+                }
             }
 
             if (!toDialogue)
                 m_questManager.FlushCompletionNotifs();
+        }
+
+        /*-------------------------------------------------------------------------------------
+        | --- TakeInputLock: Locks input for the conversation, unless it's already locked --- |
+        -------------------------------------------------------------------------------------*/
+        private void TakeInputLock()
+        {
+            if (m_holdsInputLock || InputGuard.Instance == null)
+                return;
+
+            InputGuard.Instance.LockInput();
+            m_holdsInputLock = true;
+        }
+
+        /*-------------------------------------------------------------------------------
+        | --- ReleaseInputLock: Gives back the conversation's lock, if it holds one --- |
+        -------------------------------------------------------------------------------*/
+        private void ReleaseInputLock()
+        {
+            if (!m_holdsInputLock)
+                return;
+
+            m_holdsInputLock = false;
+            if (InputGuard.Instance != null)
+                InputGuard.Instance.UnlockInput();
         }
 
         /*-------------------------------------------------------------------------- 

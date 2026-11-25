@@ -25,9 +25,13 @@ namespace PolyQuest.Dialogues
     {
         [SerializeField] private CinemachineCamera m_dialogueCamera;
         [SerializeField] private Dialogue m_dialogue;
+        [Tooltip("The name shown in the world label and the dialogue panel. For the UI only.")]
         [SerializeField] private string m_speakerName;
+        [Tooltip("A stable, unique ID for this NPC (e.g. flint). Dialogue history and kHasSpokenTo use it, so don't change it once content refers to it.")]
+        [SerializeField] private string m_npcID;
 
         public string SpeakerName => m_speakerName;
+        public string NpcID => m_npcID;
         public CinemachineCamera DialogueCamera => m_dialogueCamera;
 
         private Outline m_outline;

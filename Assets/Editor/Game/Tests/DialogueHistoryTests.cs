@@ -88,13 +88,14 @@ namespace PolyQuest.Tests
         | --- HasSpokenTo_WithoutAParameter_IsUnanswered: kHasSpokenTo without an NPC parameter is unanswered --- |
         ---------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("kHasSpokenTo without an NPC parameter is unanswered.")]
+        [Description("kHasSpokenTo without an NPC parameter, or with an empty one, is unanswered.")]
         public void HasSpokenTo_WithoutAParameter_IsUnanswered()
         {
             m_history.RecordConversation("cole");
 
             Assert.That(m_history.Evaluate(ConditionType.kHasSpokenTo, null), Is.Null);
             Assert.That(m_history.Evaluate(ConditionType.kHasSpokenTo, new string[0]), Is.Null);
+            Assert.That(m_history.Evaluate(ConditionType.kHasSpokenTo, new[] { "" }), Is.Null);
         }
 
         /*----------------------------------------------------------------------------------------------------------------
@@ -172,10 +173,11 @@ namespace PolyQuest.Tests
         [Description("An unreadable entry in the saved history is skipped and the rest load.")]
         public void RestoreState_UnreadableEntry_IsSkipped_TheRestLoad()
         {
-            m_history.RestoreState(new JArray("cole", new JObject { ["npc"] = "flint" }, "elira"));
+            m_history.RestoreState(new JArray("cole", new JObject { ["npc"] = "flint" }, JValue.CreateNull(), "", "elira"));
 
             Assert.That(m_history.HasSpokenTo("cole"), Is.True);
             Assert.That(m_history.HasSpokenTo("elira"), Is.True);
+            Assert.That(m_history.CaptureState(), Has.Count.EqualTo(2), "only the readable entries are kept");
         }
     }
 }

@@ -13,8 +13,8 @@ using PolyQuest.Tools;
 namespace PolyQuest.Tests
 {
     // Every condition authored in the game's assets (dialogue nodes, equipable items, anything holding a Conjunction)
-    // has a real condition type and every parameter that type reads. A condition left on Select or missing a parameter
-    // can never pass, so it is broken content.
+    // has a real condition type and every parameter that type reads, and a kHasSpokenTo names an NPC who exists.
+    // A condition that breaks any of these can never pass, so it is broken content. Every NPC's ID is unique.
     public class ContentConditionTests
     {
         private const string kGameFolder = "Assets/Game";
@@ -59,7 +59,7 @@ namespace PolyQuest.Tests
         | --- EveryAuthoredCondition_HasAConditionType_AndItsRequiredParameters: Lists every broken condition in one go --- |
         -------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("Every condition in the game's assets has a condition type other than Select, and every parameter its type reads is filled in.")]
+        [Description("Every condition in the game's assets has a condition type other than Select, every parameter its type reads is filled in, and every kHasSpokenTo names an existing NPC ID.")]
         public void EveryAuthoredCondition_HasAConditionType_AndItsRequiredParameters()
         {
             int checkedCount = 0;
@@ -75,6 +75,40 @@ namespace PolyQuest.Tests
 
             Assert.That(checkedCount, Is.GreaterThan(0), "fixture: no authored conditions were found, so nothing was checked");
             Assert.That(problems, Is.Empty, "Broken conditions:\n" + string.Join("\n", problems));
+        }
+
+        /*-------------------------------------------------------------------------------------------------------------------
+        | --- EveryNpc_HasAUniqueNonEmptyID: Dialogue history and kHasSpokenTo find an NPC by its ID, so it must be one --- |
+        -------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("Every NPC in the game's prefabs has a non-empty NPC ID, and no two NPCs share one.")]
+        public void EveryNpc_HasAUniqueNonEmptyID()
+        {
+            List<NpcCatalog.Entry> npcs = NpcCatalog.FindAll();
+            Assert.That(npcs, Is.Not.Empty, "fixture: no NPCs were found, so nothing was checked");
+
+            List<string> problems = new();
+            Dictionary<string, List<string>> prefabsByID = new();
+            foreach (NpcCatalog.Entry npc in npcs)
+            {
+                if (string.IsNullOrWhiteSpace(npc.ID))
+                {
+                    problems.Add($"{npc.PrefabPath}: {npc.DisplayName} has no NPC ID");
+                    continue;
+                }
+
+                if (!prefabsByID.TryGetValue(npc.ID, out List<string> prefabs))
+                    prefabsByID[npc.ID] = prefabs = new List<string>();
+                prefabs.Add(npc.PrefabPath);
+            }
+
+            foreach (KeyValuePair<string, List<string>> pair in prefabsByID)
+            {
+                if (pair.Value.Count > 1)
+                    problems.Add($"'{pair.Key}' is the ID of {pair.Value.Count} NPCs: {string.Join(", ", pair.Value)}");
+            }
+
+            Assert.That(problems, Is.Empty, "NPC ID problems:\n" + string.Join("\n", problems));
         }
 
         /*--------------------------------------------------------------------------------------------------------------
@@ -101,7 +135,7 @@ namespace PolyQuest.Tests
         [TestCase(ConditionType.kHasQuest, new[] { "Clear the Bandit Camp", "" })]
         [TestCase(ConditionType.kCompletedObjective, new[] { "Clear the Bandit Camp", "Kill the Bandits" })]
         [TestCase(ConditionType.kHasItems, new[] { "potion-id", "3" })]
-        [TestCase(ConditionType.kHasSpokenTo, new[] { "Elira" })]
+        [TestCase(ConditionType.kHasSpokenTo, new[] { "elira" })]
         [Description("A condition with a type and every parameter that type reads is accepted; an unused empty second parameter is fine.")]
         public void Validation_AcceptsACompleteCondition(ConditionType type, string[] parameters)
         {

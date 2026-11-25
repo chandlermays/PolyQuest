@@ -330,6 +330,24 @@ namespace PolyQuest.Tests
             Assert.That(History.HasSpokenTo(DialogueTestKit.HistoryKey(npc)), Is.True);
         }
 
+        /*----------------------------------------------------------------------------------------------------------------------------------------
+        | --- History_RecordsTheNpcsID_NotItsDisplayName: The history knows an NPC by its stable NPC ID; the display name is for the UI only --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------*/
+        [UnityTest]
+        [Description("The history knows an NPC by its stable NPC ID; the display name is for the UI only.")]
+        public IEnumerator History_RecordsTheNpcsID_NotItsDisplayName()
+        {
+            yield return null;
+            AIDialogueHandler npc = m_kit.Npc("Captain Flint", m_kit.Dialogue("ID Dialogue", m_kit.NpcLine("At ease.")),
+                                              m_rig.Player.transform.position + new Vector3(2f, 0f, 0f), npcID: "flint");
+            Talk(npc);
+
+            Handler.EndDialogue();
+
+            Assert.That(History.HasSpokenTo("flint"), Is.True);
+            Assert.That(History.HasSpokenTo("Captain Flint"), Is.False);
+        }
+
         /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         | --- SpokenTo_IsRecordedWhenTheConversationEnds: Spoken-to is recorded only when the conversation ends: a line gated on it is unavailable during the first conversation and available in the next --- |
         ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
