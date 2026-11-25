@@ -35,12 +35,16 @@ namespace PolyQuest.Inventories
             return JToken.FromObject(m_currentSilver);
         }
 
-        /*---------------------------------------------------------------------
-        | --- RestoreState: Restores the wallet state from the saved data --- |
-        ---------------------------------------------------------------------*/
+        /*-------------------------------------------------------------------------------------------------------
+        | --- RestoreState: Restores the saved balance; anything but a whole number of 0 or more is ignored --- |
+        -------------------------------------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
-            m_currentSilver = state.ToObject<int>();
+            // Unreadable or negative: keep the current balance and raise nothing
+            if (state == null || state.Type != JTokenType.Integer || state.Value<long>() < 0 || state.Value<long>() > int.MaxValue)
+                return;
+
+            m_currentSilver = state.Value<int>();
             OnWalletUpdated?.Invoke();
         }
     }

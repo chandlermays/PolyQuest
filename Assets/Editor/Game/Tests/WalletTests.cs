@@ -70,20 +70,25 @@ namespace PolyQuest.Tests
             Assert.That(freshUpdates, Is.EqualTo(1));
         }
 
-        /*---------------------------------------------------------------------------------------------------------------------
-        | --- RestoreState_Unreadable_IsIgnored: Wallet save data that can't be read is ignored: the balance is unchanged --- |
-        ---------------------------------------------------------------------------------------------------------------------*/
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_Unreadable_IsIgnored: Wallet save data that can't be read, or is negative, is ignored: the balance is unchanged and nothing is raised --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("Wallet save data that can't be read is ignored: the balance is unchanged.")]
+        [Description("Wallet save data that isn't a whole number, or is negative, is ignored: the balance is unchanged, OnWalletUpdated isn't raised, and nothing throws.")]
         public void RestoreState_Unreadable_IsIgnored()
         {
             m_wallet.UpdateSilver(40);
+            int updates = 0;
+            m_wallet.OnWalletUpdated += () => ++updates;
 
             m_wallet.RestoreState(new JValue("lots"));
             m_wallet.RestoreState(new JObject { ["silver"] = 10 });
             m_wallet.RestoreState(new JArray(1, 2));
+            m_wallet.RestoreState(JValue.CreateNull());
+            m_wallet.RestoreState(new JValue(-25));
 
             Assert.That(m_wallet.CurrentSilver, Is.EqualTo(40));
+            Assert.That(updates, Is.EqualTo(0));
         }
     }
 }
