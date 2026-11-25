@@ -52,7 +52,30 @@ namespace PolyQuest.Shops
 
             m_worldLabel.SetLabel(m_shopConfig.name);
 
+            SeedStockFromConfig();
+        }
+
+        /*---------------------------------------------------------------------------------------------------
+        | --- StockedEntries: The config's entries the shop can sell; an entry with no item is left out --- |
+        ---------------------------------------------------------------------------------------------------*/
+        private IEnumerable<ShopConfig.ShopItemEntry> StockedEntries()
+        {
+            if (m_shopConfig == null || m_shopConfig.ShopInventory == null)
+                yield break;
+
             foreach (ShopConfig.ShopItemEntry entry in m_shopConfig.ShopInventory)
+            {
+                if (entry != null && entry.Item != null)
+                    yield return entry;
+            }
+        }
+
+        /*--------------------------------------------------------------------------------------------
+        | --- SeedStockFromConfig: Sets every stocked item to its starting stock from the config --- |
+        --------------------------------------------------------------------------------------------*/
+        private void SeedStockFromConfig()
+        {
+            foreach (ShopConfig.ShopItemEntry entry in StockedEntries())
             {
                 m_currentStock[entry.Item] = entry.InitialStock;
             }
@@ -330,23 +353,24 @@ namespace PolyQuest.Shops
         ----------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
-            // Re-seed from config first so new items are always present
-            foreach (ShopConfig.ShopItemEntry entry in m_shopConfig.ShopInventory)
-            {
-                m_currentStock[entry.Item] = entry.InitialStock;
-            }
+            // The whole save is the wrong shape: ignore it and keep the current stock
+            if (state is not JObject stateObject)
+                return;
 
-            if (state is JObject stateObject)
+            // Re-seed from config first, so items added to the config since the save are always present
+            SeedStockFromConfig();
+
+            foreach (KeyValuePair<string, JToken> pair in stateObject)
             {
-                IDictionary<string, JToken> stateDict = stateObject;
-                foreach (var pair in stateDict)
-                {
-                    InventoryItem item = InventoryItem.FindByID(pair.Key);
-                    if (item != null && m_currentStock.ContainsKey(item))
-                    {
-                        m_currentStock[item] = pair.Value.ToObject<int>();
-                    }
-                }
+                // An unknown or unstocked item, or a stock that isn't a whole number of 0 or more, is skipped; the rest load
+                InventoryItem item = InventoryItem.FindByID(pair.Key);
+                if (item == null || !m_currentStock.ContainsKey(item))
+                    continue;
+
+                if (pair.Value == null || pair.Value.Type != JTokenType.Integer || pair.Value.Value<int>() < 0)
+                    continue;
+
+                m_currentStock[item] = pair.Value.Value<int>();
             }
         }
 
@@ -355,7 +379,7 @@ namespace PolyQuest.Shops
         --------------------------------------------------------------*/
         private IEnumerable<ShopItem> GetAllItems()
         {
-            foreach (ShopConfig.ShopItemEntry entry in m_shopConfig.ShopInventory)
+            foreach (ShopConfig.ShopItemEntry entry in StockedEntries())
             {
                 int price = GetPrice(entry);
                 int stock = GetStock(entry);

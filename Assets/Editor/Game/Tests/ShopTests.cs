@@ -3,11 +3,14 @@
 | Author: Chandler Mays
 ----------------------------*/
 using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.TestTools;
 //---------------------------------
 using PolyQuest.Inventories;
 using PolyQuest.Shops;
@@ -208,6 +211,19 @@ namespace PolyQuest.Tests
             Shop shop = BuildShop("Broken");
 
             Assert.That(shop.GetFilteredItems().Select(s => s.Item), Is.EqualTo(new InventoryItem[] { m_potion, m_ore }));
+        }
+
+        /*----------------------------------------------------------------------------------------------------------------------------
+        | --- OnValidate_ConfigEntryWithNullItem_Warns: An entry with no item gets an editor warning naming the config and entry --- |
+        ----------------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("A config entry with no item gets an editor warning naming the config and the empty entry.")]
+        public void OnValidate_ConfigEntryWithNullItem_Warns()
+        {
+            SetStock((m_potion, 5), (null, 1), (m_ore, 3));
+            LogAssert.Expect(LogType.Warning, new Regex("TestShop.*entry #1 has no item"));
+
+            typeof(ShopConfig).GetMethod("OnValidate", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(m_config, null);
         }
 
 
@@ -667,6 +683,20 @@ namespace PolyQuest.Tests
             m_shop.RestoreState(new JObject { ["nope"] = 9, ["junk"] = 9 });
 
             Assert.That(m_shop.CaptureState().Count(), Is.EqualTo(3));
+        }
+
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_UnreadableStockEntry_IsSkipped_TheRestLoad: A stock that isn't a whole number of 0 or more is skipped (config stock kept); the rest load --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("A saved stock that isn't a whole number of 0 or more is skipped, leaving that item at its config stock; the other entries load.")]
+        public void RestoreState_UnreadableStockEntry_IsSkipped_TheRestLoad()
+        {
+            m_shop.RestoreState(new JObject { ["potion"] = "lots", ["sword"] = -2, ["ore"] = 1 });
+
+            Assert.That(StockOf(m_potion), Is.EqualTo(5), "config stock");
+            Assert.That(StockOf(m_sword), Is.EqualTo(2), "config stock");
+            Assert.That(StockOf(m_ore), Is.EqualTo(1));
         }
 
         /*-------------------------------------------------------------------------------------------------------------------------------------------------

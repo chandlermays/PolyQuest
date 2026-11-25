@@ -10,6 +10,7 @@ using UnityEngine;
 //---------------------------------
 using PolyQuest.Edit;
 using PolyQuest.Quests;
+using PolyQuest.Shops;
 using PolyQuest.Tools;
 
 namespace PolyQuest.Tests
@@ -248,6 +249,31 @@ namespace PolyQuest.Tests
                                         .ToList();
 
             Assert.That(problems, Is.Empty, "Turn-in problems:\n" + string.Join("\n", problems));
+        }
+
+
+        /*---------------
+        | --- Shops --- |
+        ---------------*/
+        /*------------------------------------------------------------------------------------------------------------------
+        | --- EveryShopConfig_HasAnItemInEveryEntry: An entry with no item is left out of the shop, so it's a mistake --- |
+        ------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("No ShopConfig in the game's assets has an entry with no item; the shop would leave it out.")]
+        public void EveryShopConfig_HasAnItemInEveryEntry()
+        {
+            List<string> problems = new();
+            foreach (ShopConfig config in LoadAll<ShopConfig>())
+            {
+                ShopConfig.ShopItemEntry[] entries = config.ShopInventory ?? new ShopConfig.ShopItemEntry[0];
+                for (int i = 0; i < entries.Length; ++i)
+                {
+                    if (entries[i] == null || entries[i].Item == null)
+                        problems.Add($"{AssetDatabase.GetAssetPath(config)}: entry #{i} has no item");
+                }
+            }
+
+            Assert.That(problems, Is.Empty, "Shop config problems:\n" + string.Join("\n", problems));
         }
 
         /*--------------------------------------------------------------------------------------------------------------

@@ -27,5 +27,22 @@ namespace PolyQuest.Shops
             public InventoryItem Item => m_item;
             public int InitialStock => m_initialStock;
         }
+
+#if UNITY_EDITOR
+        /*-----------------------------------------------------------------------------------------
+        | --- OnValidate: Editor warning for an entry with no item, which the shop leaves out --- |
+        -----------------------------------------------------------------------------------------*/
+        private void OnValidate()
+        {
+            if (m_shopInventory == null)
+                return;
+
+            for (int i = 0; i < m_shopInventory.Length; ++i)
+            {
+                if (m_shopInventory[i] == null || m_shopInventory[i].Item == null)
+                    Debug.LogWarning($"ShopConfig '{name}': entry #{i} has no item, so the shop leaves it out. Assign an item or remove the entry.", this);
+            }
+        }
+#endif
     }
 }
