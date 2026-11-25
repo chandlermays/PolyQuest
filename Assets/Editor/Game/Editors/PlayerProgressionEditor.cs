@@ -99,33 +99,9 @@ namespace PolyQuest.Edit
         ---------------------------------------------------------------------------*/
         protected override void AddLevelToSubclassArrays(int newIndex)
         {
+            // The values come from RecalculateAllRows once the row is added
             m_maxExperienceAmounts.InsertArrayElementAtIndex(newIndex);
-
-            if (newIndex == 0)
-            {
-                m_maxExperienceAmounts.GetArrayElementAtIndex(newIndex).intValue = 0;
-            }
-            else
-            {
-                int previousGoal = m_maxExperienceAmounts.GetArrayElementAtIndex(newIndex - 1).intValue;
-                int newGoal = Mathf.RoundToInt(m_initialExperience.intValue *
-                    Mathf.Pow(1 + m_experienceIncreasePercentage.floatValue / 100f, newIndex));
-                m_maxExperienceAmounts.GetArrayElementAtIndex(newIndex).intValue = previousGoal + newGoal;
-            }
-
             m_maxAttributePoints.InsertArrayElementAtIndex(newIndex);
-
-            if (newIndex == 0)
-            {
-                m_maxAttributePoints.GetArrayElementAtIndex(newIndex).intValue = 0;
-            }
-            else
-            {
-                int previousPoints = m_maxAttributePoints.GetArrayElementAtIndex(newIndex - 1).intValue;
-                int newPoints = Mathf.RoundToInt(m_initialAttributePoints.intValue *
-                    Mathf.Pow(1 + m_attributePointIncreasePercentage.floatValue / 100f, newIndex));
-                m_maxAttributePoints.GetArrayElementAtIndex(newIndex).intValue = previousPoints + newPoints;
-            }
         }
 
         /*-------------------------------------------------------------------------------------

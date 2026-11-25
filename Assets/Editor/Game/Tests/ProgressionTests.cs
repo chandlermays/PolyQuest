@@ -114,23 +114,23 @@ namespace PolyQuest.Tests
             Assert.That(m_player.GetMana(5), Is.EqualTo(104f));
         }
 
-        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-        | --- RecalculateManaRegen_SmallValues_GrowOnTheExactCurve: A small value still grows once the exact curve rounds up: 1 * 1.1^5 = 1.61 rounds to 2 at level 6 --- |
-        -----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RecalculateManaRegen_FollowsTheExactCurve_Unrounded: Mana regen rows are the exact curve, not rounded, so a small rate grows every level --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("A small value still grows once the exact curve rounds up: 1 * 1.1^5 = 1.61 rounds to 2 at level 6.")]
-        public void RecalculateManaRegen_SmallValues_GrowOnTheExactCurve()
+        [Description("Mana regen rows are initial * (1 + percentage)^(level - 1) exactly, not rounded, so a small rate grows every level.")]
+        public void RecalculateManaRegen_FollowsTheExactCurve_Unrounded()
         {
             SerializedTestUtil.SetInt(m_player, "m_initialManaRegenRate", 1);
             SerializedTestUtil.SetFloat(m_player, "m_manaRegenIncreasePercentage", 10f);
-            SerializedTestUtil.SetIntArray(m_player, "m_manaRegenRates", 0, 0, 0, 0, 0, 0);
+            SerializedTestUtil.SetFloatArray(m_player, "m_manaRegenRates", 0f, 0f, 0f, 0f, 0f, 0f);
 
             m_player.RecalculateManaRegenRates();
 
-            // 1 * 1.1^(0..5) = 1, 1.1, 1.21, 1.33, 1.46, 1.61
-            for (int level = 1; level <= 5; ++level)
-                Assert.That(m_player.GetManaRegenRate(level), Is.EqualTo(1f), $"level {level}");
-            Assert.That(m_player.GetManaRegenRate(6), Is.EqualTo(2f));
+            // 1 * 1.1^(0..5) = 1, 1.1, 1.21, 1.331, 1.4641, 1.61051
+            float[] expected = { 1f, 1.1f, 1.21f, 1.331f, 1.4641f, 1.61051f };
+            for (int level = 1; level <= expected.Length; ++level)
+                Assert.That(m_player.GetManaRegenRate(level), Is.EqualTo(expected[level - 1]).Within(1e-4f), $"level {level}");
         }
 
 

@@ -26,17 +26,17 @@ namespace PolyQuest.Attributes
 
         private Dictionary<Attribute, int> m_assignedPoints = new();
         private readonly Dictionary<Attribute, int> m_pendingPoints = new();
-        
+
         private readonly Dictionary<Stat, Dictionary<Attribute, float>> m_additiveModifiers = new();
         private readonly Dictionary<Stat, Dictionary<Attribute, float>> m_percentageModifiers = new();
 
         private BaseStats m_baseStats;
 
-        public int GetAssignedPoints(Attribute attribute)       =>      m_assignedPoints.GetValueOrDefault(attribute);
-        public int GetPendingPoints(Attribute attribute)        =>      m_pendingPoints.GetValueOrDefault(attribute);
-        public int GetTotalAvailablePoints()                    =>      (int)m_baseStats.GetStat(Stat.kTotalAttributePoints);
-        public int GetRemainingPoints()                         =>      GetTotalAvailablePoints() - CalculateTotalAllocatedPoints();
-        public int GetTotalPoints(Attribute attribute)          =>      GetAssignedPoints(attribute) + GetPendingPoints(attribute);
+        public int GetAssignedPoints(Attribute attribute) => m_assignedPoints.GetValueOrDefault(attribute);
+        public int GetPendingPoints(Attribute attribute) => m_pendingPoints.GetValueOrDefault(attribute);
+        public int GetTotalAvailablePoints() => (int)m_baseStats.GetStat(Stat.kTotalAttributePoints);
+        public int GetRemainingPoints() => GetTotalAvailablePoints() - CalculateTotalAllocatedPoints();
+        public int GetTotalPoints(Attribute attribute) => GetAssignedPoints(attribute) + GetPendingPoints(attribute);
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
@@ -128,8 +128,9 @@ namespace PolyQuest.Attributes
 
             foreach (Attribute attribute in m_additiveModifiers[stat].Keys)
             {
+                // Only confirmed points count; a preview of pending ones belongs to the UI
                 float bonus = m_additiveModifiers[stat][attribute];
-                yield return bonus * GetTotalPoints(attribute);
+                yield return bonus * GetAssignedPoints(attribute);
             }
         }
 
@@ -143,14 +144,15 @@ namespace PolyQuest.Attributes
 
             foreach (Attribute attribute in m_percentageModifiers[stat].Keys)
             {
+                // Only confirmed points count; a preview of pending ones belongs to the UI
                 float bonus = m_percentageModifiers[stat][attribute];
-                yield return bonus * GetTotalPoints(attribute);
+                yield return bonus * GetAssignedPoints(attribute);
             }
         }
 
-        /*--------------------------------------------------------------------------------
+        /*-------------------------------------------------------------------------------
         | --- CaptureState: Captures the current state of assigned attribute points --- |
-        --------------------------------------------------------------------------------*/
+        -------------------------------------------------------------------------------*/
         public JToken CaptureState()
         {
             JObject state = new();
@@ -163,9 +165,9 @@ namespace PolyQuest.Attributes
             return state;
         }
 
-        /*------------------------------------------------------------------------
+        /*-----------------------------------------------------------------------
         | --- RestoreState: Restores the state of assigned attribute points --- |
-        ------------------------------------------------------------------------*/
+        -----------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
             if (state is JObject stateObject)
@@ -175,13 +177,34 @@ namespace PolyQuest.Attributes
 
                 foreach (var pair in stateDict)
                 {
-                    if (Enum.TryParse(pair.Key, true, out Attribute attribute))
-                    {
-                        m_assignedPoints[attribute] = pair.Value.ToObject<int>();
-                    }
+                    // An unknown attribute name or a value that isn't a whole number of 0 or more is skipped; the rest load
+                    if (!TryParseAttributeName(pair.Key, out Attribute attribute))
+                        continue;
+
+                    if (pair.Value == null || pair.Value.Type != JTokenType.Integer || pair.Value.Value<int>() < 0)
+                        continue;
+
+                    m_assignedPoints[attribute] = pair.Value.Value<int>();
                 }
                 m_baseStats.NotifyStatModified();
             }
+        }
+
+        /*-----------------------------------------------------------------------------------------------
+        | --- TryParseAttributeName: Reads a saved attribute by its name only (never by its number) --- |
+        -----------------------------------------------------------------------------------------------*/
+        private static bool TryParseAttributeName(string key, out Attribute attribute)
+        {
+            attribute = default;
+            foreach (string name in Enum.GetNames(typeof(Attribute)))
+            {
+                if (string.Equals(name, key, StringComparison.OrdinalIgnoreCase))
+                {
+                    attribute = (Attribute)Enum.Parse(typeof(Attribute), name);
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

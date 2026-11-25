@@ -2,6 +2,7 @@
 | File: BaseProgression.cs
 | Author: Chandler Mays
 ----------------------------*/
+using System.Collections.Generic;
 using UnityEngine;
 //---------------------------------
 
@@ -27,7 +28,13 @@ namespace PolyQuest.Attributes
 
         [SerializeField] private float m_manaRegenIncreasePercentage;
         [SerializeField] private int m_initialManaRegenRate;
-        [SerializeField] private int[] m_manaRegenRates;
+        [Tooltip("Generated, unrounded. After this field changed from whole numbers, press Recalculate Mana Regen Rates to regenerate it.")]
+        [SerializeField] private float[] m_manaRegenRates;
+
+        /*-------------------------------------------------------------------------------------------------------
+        | --- MaxLevel: The progression table's row count (its health rows); every other table should match --- |
+        -------------------------------------------------------------------------------------------------------*/
+        public int MaxLevel => Mathf.Max(1, m_maxHealthAmounts?.Length ?? 0);
 
         /*------------------------------------------------------------------------ 
         | --- OnEnable: Called when the Object becomes Enabled and is Active --- |
@@ -56,83 +63,60 @@ namespace PolyQuest.Attributes
 
             if (m_manaRegenRates == null || m_manaRegenRates.Length == 0)
             {
-                m_manaRegenRates = new int[1] { m_initialManaRegenRate };
+                m_manaRegenRates = new float[1] { m_initialManaRegenRate };
             }
         }
 
-        /*----------------------------------------------------------------------------------------------- 
-        | --- RecalculateMaxHealthAmounts: Recalculate the Health Amounts for the Class Progression --- |
-        -----------------------------------------------------------------------------------------------*/
+        /*----------------------------------------------------------------------------------------------
+        | --- RecalculateMaxHealthAmounts: Regenerates the health rows from the exact growth curve --- |
+        ----------------------------------------------------------------------------------------------*/
         public void RecalculateMaxHealthAmounts()
         {
-            if (m_maxHealthAmounts.Length == 0)
-                return;
-
-            m_maxHealthAmounts[0] = m_initialHealth;
-            for (int i = 1; i < m_maxHealthAmounts.Length; ++i)
-            {
-                m_maxHealthAmounts[i] = Mathf.RoundToInt(m_maxHealthAmounts[i - 1] * (1 + m_healthIncreasePercentage / 100f));
-            }
+            GrowthCurve.Fill(m_maxHealthAmounts, m_initialHealth, m_healthIncreasePercentage);
         }
 
-        /*-------------------------------------------------------------------------------------------- 
-        | --- RecalculateDamageAmounts: Recalculate the Damage Amounts for the Class Progression --- |
-        --------------------------------------------------------------------------------------------*/
+        /*-------------------------------------------------------------------------------------------
+        | --- RecalculateDamageAmounts: Regenerates the damage rows from the exact growth curve --- |
+        -------------------------------------------------------------------------------------------*/
         public void RecalculateDamageAmounts()
         {
-            if (m_damageAmounts.Length == 0)
-                return;
-
-            m_damageAmounts[0] = m_initialDamage;
-            for (int i = 1; i < m_damageAmounts.Length; ++i)
-            {
-                m_damageAmounts[i] = Mathf.RoundToInt(m_damageAmounts[i - 1] * (1 + m_damageIncreasePercentage / 100f));
-            }
+            GrowthCurve.Fill(m_damageAmounts, m_initialDamage, m_damageIncreasePercentage);
         }
 
-        /*---------------------------------------------------------------------------------------------- 
-        | --- RecalculateDefenseAmounts: Recalculate the Defense Amounts for the Class Progression --- |
-        ----------------------------------------------------------------------------------------------*/
+        /*---------------------------------------------------------------------------------------------
+        | --- RecalculateDefenseAmounts: Regenerates the defense rows from the exact growth curve --- |
+        ---------------------------------------------------------------------------------------------*/
         public void RecalculateDefenseAmounts()
         {
-            if (m_defenseAmounts.Length == 0)
-                return;
-
-            m_defenseAmounts[0] = m_initialDefense;
-            for (int i = 1; i < m_defenseAmounts.Length; ++i)
-            {
-                m_defenseAmounts[i] = Mathf.RoundToInt(m_defenseAmounts[i - 1] * (1 + m_defenseIncreasePercentage / 100f));
-            }
+            GrowthCurve.Fill(m_defenseAmounts, m_initialDefense, m_defenseIncreasePercentage);
         }
 
-        /*------------------------------------------------------------------------------------------- 
-        | --- RecalculateMaxManaAmounts: Recalculate the Mana Amounts for the Class Progression --- |
-        -------------------------------------------------------------------------------------------*/
+        /*------------------------------------------------------------------------------------------
+        | --- RecalculateMaxManaAmounts: Regenerates the mana rows from the exact growth curve --- |
+        ------------------------------------------------------------------------------------------*/
         public void RecalculateMaxManaAmounts()
         {
-            if (m_manaAmounts.Length == 0)
-                return;
-
-            m_manaAmounts[0] = m_initialMana;
-            for (int i = 1; i < m_manaAmounts.Length; ++i)
-            {
-                m_manaAmounts[i] = Mathf.RoundToInt(m_manaAmounts[i - 1] * (1 + m_manaIncreasePercentage / 100f));
-            }
+            GrowthCurve.Fill(m_manaAmounts, m_initialMana, m_manaIncreasePercentage);
         }
 
-        /*----------------------------------------------------------------------------------------------- 
-        | --- RecalculateManaRegenRates: Recalculate the Mana Regen Rates for the Class Progression --- |
-        -----------------------------------------------------------------------------------------------*/
+        /*----------------------------------------------------------------------------------------------------
+        | --- RecalculateManaRegenRates: Regenerates the mana regen rows from the exact curve, unrounded --- |
+        ----------------------------------------------------------------------------------------------------*/
         public void RecalculateManaRegenRates()
         {
-            if (m_manaRegenRates.Length == 0)
-                return;
+            GrowthCurve.Fill(m_manaRegenRates, m_initialManaRegenRate, m_manaRegenIncreasePercentage);
+        }
 
-            m_manaRegenRates[0] = m_initialManaRegenRate;
-            for (int i = 1; i < m_manaRegenRates.Length; ++i)
-            {
-                m_manaRegenRates[i] = Mathf.RoundToInt(m_manaRegenRates[i - 1] * (1 + m_manaRegenIncreasePercentage / 100f));
-            }
+        /*-----------------------------------------------------------------------------------------------
+        | --- RecalculateAllRows: Regenerates every table (used after adding a level in the editor) --- |
+        -----------------------------------------------------------------------------------------------*/
+        public virtual void RecalculateAllRows()
+        {
+            RecalculateMaxHealthAmounts();
+            RecalculateDamageAmounts();
+            RecalculateDefenseAmounts();
+            RecalculateMaxManaAmounts();
+            RecalculateManaRegenRates();
         }
 
         /*---------------------------------------------------------------------- 
@@ -204,5 +188,34 @@ namespace PolyQuest.Attributes
 
             return m_manaRegenRates[level - 1];
         }
+
+        /*------------------------------------------------------------------------------------------------
+        | --- TableLengths: Every per-level table and its row count; subclasses add their own tables --- |
+        ------------------------------------------------------------------------------------------------*/
+        protected virtual IEnumerable<(string table, int rows)> TableLengths()
+        {
+            yield return ("Damage", m_damageAmounts?.Length ?? 0);
+            yield return ("Defense", m_defenseAmounts?.Length ?? 0);
+            yield return ("Mana", m_manaAmounts?.Length ?? 0);
+            yield return ("Mana Regen", m_manaRegenRates?.Length ?? 0);
+        }
+
+#if UNITY_EDITOR
+        /*------------------------------------------------------------------------------------------------------
+        | --- OnValidate: Editor warning when a table has a different row count than the max level's table --- |
+        ------------------------------------------------------------------------------------------------------*/
+        protected virtual void OnValidate()
+        {
+            List<string> mismatched = new();
+            foreach ((string table, int rows) in TableLengths())
+            {
+                if (rows != MaxLevel)
+                    mismatched.Add($"{table} has {rows}");
+            }
+
+            if (mismatched.Count > 0)
+                Debug.LogWarning($"Progression '{name}': the max level is {MaxLevel} (the health rows), but {string.Join(", ", mismatched)}. Give every table one row per level.", this);
+        }
+#endif
     }
 }

@@ -104,13 +104,18 @@ namespace PolyQuest.Attributes
         --------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
-            if (state is JObject stateObj)
-            {
-                m_experiencePoints = stateObj["experiencePoints"]?.ToObject<float>() ?? 0f;
-                int savedLevel = stateObj["level"]?.ToObject<int>() ?? 1;
+            // Data that can't be read is ignored: XP and level stay as they are, and nothing is raised
+            if (state is not JObject stateObj)
+                return;
 
-                m_stats.SetLevel(savedLevel);
-            }
+            JToken experience = stateObj["experiencePoints"];
+            JToken level = stateObj["level"];
+            if (experience == null || (experience.Type != JTokenType.Float && experience.Type != JTokenType.Integer) ||
+                level == null || level.Type != JTokenType.Integer)
+                return;
+
+            m_experiencePoints = experience.Value<float>();
+            m_stats.SetLevel(level.Value<int>());
 
             OnExperienceChanged?.Invoke();
         }
@@ -120,14 +125,10 @@ namespace PolyQuest.Attributes
         --------------------------------------------------------------*/
         private void CheckForLevelUp()
         {
-            float experienceToLevelUp = m_playerProgression.GetExperience(m_stats.Level);
-
-            while (m_experiencePoints >= experienceToLevelUp)
+            // At the max level, XP still adds to the total (for rewards past the cap, later) but levels nothing up
+            while (m_stats.Level < m_stats.MaxLevel && m_experiencePoints >= m_playerProgression.GetExperience(m_stats.Level))
             {
                 LevelUp();
-
-                // Update the experience goal for the next level
-                experienceToLevelUp = m_playerProgression.GetExperience(m_stats.Level);
             }
         }
 

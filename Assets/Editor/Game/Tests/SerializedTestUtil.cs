@@ -74,6 +74,19 @@ namespace PolyQuest.Tests
             });
         }
 
+        /*--------------------------------------------------------------------------------
+        | --- SetFloatArray: Sets a serialized float array field to the given values --- |
+        --------------------------------------------------------------------------------*/
+        public static void SetFloatArray(Object target, string field, params float[] values)
+        {
+            Apply(target, field, p =>
+            {
+                p.arraySize = values.Length;
+                for (int i = 0; i < values.Length; ++i)
+                    p.GetArrayElementAtIndex(i).floatValue = values[i];
+            });
+        }
+
         /*--------------------------------------------------------
         | --- SetArraySize: Resizes a serialized array field --- |
         --------------------------------------------------------*/

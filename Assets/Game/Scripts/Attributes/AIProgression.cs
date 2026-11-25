@@ -2,6 +2,7 @@
 | File: AIProgression.cs
 | Author: Chandler Mays
 ----------------------------*/
+using System.Collections.Generic;
 using UnityEngine;
 //---------------------------------
 
@@ -27,23 +28,37 @@ namespace PolyQuest.Attributes
             }
         }
 
-        /*----------------------------------------------------------------------------------------------------------------- 
+        /*--------------------------------------------------------------------------------------------------------------
         | --- RecalculateExperienceRewardAmounts: Recalculate the Experience Reward Amounts for the AI Progression --- |
-        -----------------------------------------------------------------------------------------------------------------*/
+        --------------------------------------------------------------------------------------------------------------*/
         public void RecalculateExperienceRewardAmounts()
         {
-            if (m_experienceRewardAmounts.Length == 0) return;
-
-            m_experienceRewardAmounts[0] = m_initialExperienceReward;
-            for (int i = 1; i < m_experienceRewardAmounts.Length; ++i)
-            {
-                m_experienceRewardAmounts[i] = Mathf.RoundToInt(m_experienceRewardAmounts[i - 1] * (1 + m_experienceRewardIncreasePercentage / 100f));
-            }
+            GrowthCurve.Fill(m_experienceRewardAmounts, m_initialExperienceReward, m_experienceRewardIncreasePercentage);
         }
 
-        /*-------------------------------------------------------------------------------------------------------- 
+        /*-------------------------------------------------------------------
+        | --- RecalculateAllRows: Regenerates every table, the AI's too --- |
+        -------------------------------------------------------------------*/
+        public override void RecalculateAllRows()
+        {
+            base.RecalculateAllRows();
+            RecalculateExperienceRewardAmounts();
+        }
+
+        /*----------------------------------------------------------------
+        | --- TableLengths: Every per-level table, the AI's included --- |
+        ----------------------------------------------------------------*/
+        protected override IEnumerable<(string table, int rows)> TableLengths()
+        {
+            foreach ((string table, int rows) length in base.TableLengths())
+                yield return length;
+
+            yield return ("Experience Reward", m_experienceRewardAmounts?.Length ?? 0);
+        }
+
+        /*-----------------------------------------------------------------------------------------------------
         | --- GetExperienceReward: Returns the Experience Reward Amount for the Specified Level of the AI --- |
-        --------------------------------------------------------------------------------------------------------*/
+        -----------------------------------------------------------------------------------------------------*/
         public float GetExperienceReward(int level)
         {
             if (level < 1 || level > m_experienceRewardAmounts.Length)

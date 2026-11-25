@@ -11,7 +11,8 @@ using PolyQuest.Attributes;
 namespace PolyQuest.Tests
 {
     // Gaining XP, leveling up, the XP bar's per-level values and the save data. XP is a running total; the table holds
-    // the total needed for each level. Nothing here gains XP at the max level.
+    // the total needed for each level. At the max level XP still adds up, but the bar and any rewards past the cap
+    // aren't designed yet, so they aren't tested here.
     public class ExperienceTests
     {
         private const float kTolerance = 1e-4f;
@@ -116,6 +117,25 @@ namespace PolyQuest.Tests
             Assert.That(m_stats.Level, Is.EqualTo(3));
             Assert.That(m_levelUps, Is.EqualTo(2));
             Assert.That(m_experience.ExperiencePoints, Is.EqualTo(300f).Within(kTolerance), "XP is a running total");
+        }
+
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- GainExperience_AtMaxLevel_AddsToTheTotal_WithoutLevelingUp: At the max level, XP is added to the total and nothing else happens: no level past the cap, no level-up --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("Reaching the max level stops there, and XP gained at the max level is added to the total with no level past the cap and no OnLevelUp.")]
+        public void GainExperience_AtMaxLevel_AddsToTheTotal_WithoutLevelingUp()
+        {
+            m_experience.GainExperience(1300f);                 // exactly the last row: reaches the max level, 5
+            Assert.That(m_stats.Level, Is.EqualTo(m_stats.MaxLevel));
+            Assert.That(m_levelUps, Is.EqualTo(m_stats.MaxLevel - 1));
+            m_levelUps = 0;
+
+            m_experience.GainExperience(5000f);
+
+            Assert.That(m_stats.Level, Is.EqualTo(m_stats.MaxLevel));
+            Assert.That(m_levelUps, Is.EqualTo(0));
+            Assert.That(m_experience.ExperiencePoints, Is.EqualTo(6300f).Within(kTolerance));
         }
 
 

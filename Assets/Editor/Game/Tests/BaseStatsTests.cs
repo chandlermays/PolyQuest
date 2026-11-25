@@ -28,7 +28,7 @@ namespace PolyQuest.Tests
             SerializedTestUtil.SetIntArray(m_player, "m_damageAmounts", 10, 11, 12, 13, 14);
             SerializedTestUtil.SetIntArray(m_player, "m_defenseAmounts", 5, 6, 7, 8, 9);
             SerializedTestUtil.SetIntArray(m_player, "m_manaAmounts", 50, 55, 60, 65, 70);
-            SerializedTestUtil.SetIntArray(m_player, "m_manaRegenRates", 1, 1, 2, 2, 3);
+            SerializedTestUtil.SetFloatArray(m_player, "m_manaRegenRates", 1f, 1.1f, 1.21f, 1.33f, 1.46f);
             SerializedTestUtil.SetIntArray(m_player, "m_maxExperienceAmounts", 100, 250, 475, 813, 1300);
             SerializedTestUtil.SetIntArray(m_player, "m_maxAttributePoints", 5, 10, 15, 20, 25);
 
@@ -37,7 +37,7 @@ namespace PolyQuest.Tests
             SerializedTestUtil.SetIntArray(m_ai, "m_damageAmounts", 4, 5);
             SerializedTestUtil.SetIntArray(m_ai, "m_defenseAmounts", 1, 2);
             SerializedTestUtil.SetIntArray(m_ai, "m_manaAmounts", 0, 0);
-            SerializedTestUtil.SetIntArray(m_ai, "m_manaRegenRates", 0, 0);
+            SerializedTestUtil.SetFloatArray(m_ai, "m_manaRegenRates", 0f, 0f);
             SerializedTestUtil.SetIntArray(m_ai, "m_experienceRewardAmounts", 15, 20);
 
             m_gameObject = new GameObject("BaseStatsTestSubject");

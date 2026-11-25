@@ -278,68 +278,13 @@ namespace PolyQuest.Edit
             m_manaAmounts.InsertArrayElementAtIndex(newIndex);
             m_manaRegenRates.InsertArrayElementAtIndex(newIndex);
 
-            // Calculate Health
-            if (newIndex == 0)
-            {
-                m_maxHealthAmounts.GetArrayElementAtIndex(newIndex).intValue = m_initialHealth.intValue;
-            }
-            else
-            {
-                int previousHealth = m_maxHealthAmounts.GetArrayElementAtIndex(newIndex - 1).intValue;
-                float increaseFactor = 1 + m_healthIncreasePercentage.floatValue / 100f;
-                m_maxHealthAmounts.GetArrayElementAtIndex(newIndex).intValue = Mathf.RoundToInt(previousHealth * increaseFactor);
-            }
-
-            // Calculate Damage
-            if (newIndex == 0)
-            {
-                m_damageAmounts.GetArrayElementAtIndex(newIndex).intValue = m_initialDamage.intValue;
-            }
-            else
-            {
-                int previousDamage = m_damageAmounts.GetArrayElementAtIndex(newIndex - 1).intValue;
-                float increaseFactor = 1 + m_damageIncreasePercentage.floatValue / 100f;
-                m_damageAmounts.GetArrayElementAtIndex(newIndex).intValue = Mathf.RoundToInt(previousDamage * increaseFactor);
-            }
-
-            // Calculate Defense
-            if (newIndex == 0)
-            {
-                m_defenseAmounts.GetArrayElementAtIndex(newIndex).intValue = m_initialDefense.intValue;
-            }
-            else
-            {
-                int previousDefense = m_defenseAmounts.GetArrayElementAtIndex(newIndex - 1).intValue;
-                float increaseFactor = 1 + m_defenseIncreasePercentage.floatValue / 100f;
-                m_defenseAmounts.GetArrayElementAtIndex(newIndex).intValue = Mathf.RoundToInt(previousDefense * increaseFactor);
-            }
-
-            // Calculate Mana
-            if (newIndex == 0)
-            {
-                m_manaAmounts.GetArrayElementAtIndex(newIndex).intValue = m_initialMana.intValue;
-            }
-            else
-            {
-                int previousMana = m_manaAmounts.GetArrayElementAtIndex(newIndex - 1).intValue;
-                float increaseFactor = 1 + m_manaIncreasePercentage.floatValue / 100f;
-                m_manaAmounts.GetArrayElementAtIndex(newIndex).intValue = Mathf.RoundToInt(previousMana * increaseFactor);
-            }
-
-            // Calculate Mana Regen Rates
-            if (newIndex == 0)
-            {
-                m_manaRegenRates.GetArrayElementAtIndex(newIndex).intValue = m_initialManaRegenRate.intValue;
-            }
-            else
-            {
-                int previousManaRegen = m_manaRegenRates.GetArrayElementAtIndex(newIndex - 1).intValue;
-                float increaseFactor = 1 + m_manaRegenIncreasePercentage.floatValue / 100f;
-                m_manaRegenRates.GetArrayElementAtIndex(newIndex).intValue = Mathf.RoundToInt(previousManaRegen * increaseFactor);
-            }
-
             // Add to subclass arrays
             AddLevelToSubclassArrays(newIndex);
+
+            // Every row, the new one included, comes from the exact growth curve
+            serializedObject.ApplyModifiedProperties();
+            ((BaseProgression)target).RecalculateAllRows();
+            serializedObject.Update();
 
             EditorUtility.SetDirty(target);
         }
@@ -369,10 +314,10 @@ namespace PolyQuest.Edit
         {
             int expectedSize = m_maxHealthAmounts.arraySize;
 
-            return m_damageAmounts.arraySize   ==  expectedSize &&
-                   m_defenseAmounts.arraySize  ==  expectedSize &&
-                   m_manaAmounts.arraySize     ==  expectedSize &&
-                   m_manaRegenRates.arraySize  ==  expectedSize;
+            return m_damageAmounts.arraySize == expectedSize &&
+                   m_defenseAmounts.arraySize == expectedSize &&
+                   m_manaAmounts.arraySize == expectedSize &&
+                   m_manaRegenRates.arraySize == expectedSize;
         }
 
         // Abstract methods for subclasses to implement

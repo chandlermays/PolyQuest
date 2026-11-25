@@ -40,7 +40,7 @@ namespace PolyQuest.Tests
             AIProgression progression = Track(ScriptableObject.CreateInstance<AIProgression>());
             SerializedTestUtil.SetIntArray(progression, "m_maxHealthAmounts", health);
             SerializedTestUtil.SetIntArray(progression, "m_manaAmounts", mana);
-            SerializedTestUtil.SetIntArray(progression, "m_manaRegenRates", 0);
+            SerializedTestUtil.SetFloatArray(progression, "m_manaRegenRates", 0f);
 
             GameObject entity = Track(new GameObject(name));
             entity.AddComponent<Animator>();

@@ -2,6 +2,7 @@
 | File: PlayerProgression.cs
 | Author: Chandler Mays
 ----------------------------*/
+using System.Collections.Generic;
 using UnityEngine;
 //---------------------------------
 
@@ -41,15 +42,8 @@ namespace PolyQuest.Attributes
         -------------------------------------------------------------------------------------------------------*/
         public void RecalculateMaxExperienceAmounts()
         {
-            if (m_maxExperienceAmounts.Length == 0) return;
-
-            m_maxExperienceAmounts[0] = m_initialExperience;
-            for (int i = 1; i < m_maxExperienceAmounts.Length; i++)
-            {
-                int previousGoal = m_maxExperienceAmounts[i - 1];
-                int newGoal = Mathf.RoundToInt(m_initialExperience * Mathf.Pow(1 + m_experienceIncreasePercentage / 100f, i));
-                m_maxExperienceAmounts[i] = previousGoal + newGoal;
-            }
+            // Cumulative: each level's total adds that level's step on the curve
+            GrowthCurve.FillCumulative(m_maxExperienceAmounts, m_initialExperience, m_experienceIncreasePercentage);
         }
 
         /*------------------------------------------------------------------------------------------------------ 
@@ -71,14 +65,30 @@ namespace PolyQuest.Attributes
         -----------------------------------------------------------------------------------------------------------*/
         public void RecalculateTotalAttributePoints()
         {
-            if (m_maxAttributePoints.Length == 0) return;
+            // Cumulative: each level's total adds the points gained at that level
+            GrowthCurve.FillCumulative(m_maxAttributePoints, m_initialAttributePoints, m_attributePointIncreasePercentage);
+        }
 
-            m_maxAttributePoints[0] = m_initialAttributePoints;
-            for (int i = 1; i < m_maxAttributePoints.Length; i++)
-            {
-                int gainedThisLevel = Mathf.RoundToInt(m_initialAttributePoints * Mathf.Pow(1 + m_attributePointIncreasePercentage / 100f, i));
-                m_maxAttributePoints[i] = m_maxAttributePoints[i - 1] + gainedThisLevel;
-            }
+        /*-----------------------------------------------------------------------
+        | --- RecalculateAllRows: Regenerates every table, the Player's too --- |
+        -----------------------------------------------------------------------*/
+        public override void RecalculateAllRows()
+        {
+            base.RecalculateAllRows();
+            RecalculateMaxExperienceAmounts();
+            RecalculateTotalAttributePoints();
+        }
+
+        /*--------------------------------------------------------------------
+        | --- TableLengths: Every per-level table, the Player's included --- |
+        --------------------------------------------------------------------*/
+        protected override IEnumerable<(string table, int rows)> TableLengths()
+        {
+            foreach ((string table, int rows) length in base.TableLengths())
+                yield return length;
+
+            yield return ("Experience", m_maxExperienceAmounts?.Length ?? 0);
+            yield return ("Attribute Points", m_maxAttributePoints?.Length ?? 0);
         }
 
         /*----------------------------------------------------------------------------------------------- 
