@@ -31,13 +31,13 @@ namespace PolyQuest.Inventories
 
         private static Dictionary<string, InventoryItem> m_itemRegistry;
 
-        public string ID                    => m_itemID;                // Get the m_item ID
-        public string Name                  => m_itemName;              // Get the m_item name
-        public string Description           => m_itemDescription;       // Get the m_item description
-        public Sprite Icon                  => m_itemIcon;              // Get the m_item icon
-        public bool IsStackable             => m_isStackable;           // Check if the m_item is stackable
-        public ItemCategory Category        => m_category;              // Get the m_item category
-        public int Price                    => m_itemPrice;             // Get the m_item price
+        public string ID => m_itemID;                // Get the m_item ID
+        public string Name => m_itemName;              // Get the m_item name
+        public string Description => m_itemDescription;       // Get the m_item description
+        public Sprite Icon => m_itemIcon;              // Get the m_item icon
+        public bool IsStackable => m_isStackable;           // Check if the m_item is stackable
+        public ItemCategory Category => m_category;              // Get the m_item category
+        public int Price => m_itemPrice;             // Get the m_item price
 
         /*-------------------------------------------------------------------------
         | --- FindByID: Retrieve an InventoryItem by its ID from the registry --- |
@@ -75,9 +75,12 @@ namespace PolyQuest.Inventories
             return pickup;
         }
 
-        public virtual void OnPickup(Inventory inventory, int quantity)
+        /*-------------------------------------------------------------------------------------------------
+        | --- OnPickup: Takes the picked-up item; false when there's no room, so the pickup stays put --- |
+        -------------------------------------------------------------------------------------------------*/
+        public virtual bool OnPickup(Inventory inventory, int quantity)
         {
-            inventory.TryAddToAvailableSlot(this, quantity);
+            return inventory.TryAddToAvailableSlot(this, quantity);
         }
 
         public virtual void OnUse(Inventory inventory, int slotIndex) { }

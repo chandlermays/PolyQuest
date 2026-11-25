@@ -37,6 +37,7 @@ namespace PolyQuest.Pickups
 
         public InventoryItem Item => m_item;
         public int Quantity => m_quantity;
+        public bool IsCollected { get; private set; } = false;     // Set the moment it's taken, before Destroy runs
 
         private const string kPlayerTag = "Player";
 
@@ -119,12 +120,22 @@ namespace PolyQuest.Pickups
             m_actionManager.StartAction(this);
         }
 
-        /*--------------------------------------------------------------------------
-        | --- PickupItem: Add the item to the inventory and destroy the Pickup --- |
-        --------------------------------------------------------------------------*/
+        /*--------------------------------------------------------------------------------------------------------------
+        | --- PickupItem: Add the item to the inventory and destroy the Pickup; without room it stays in the world --- |
+        --------------------------------------------------------------------------------------------------------------*/
         public void PickupItem()
         {
-            m_item.OnPickup(m_inventory, m_quantity);
+            if (IsCollected)
+                return;
+
+            if (!m_item.OnPickup(m_inventory, m_quantity))
+            {
+                // Nothing is lost: the pickup stays where it is, untouched, to be collected once there's room
+                Debug.Log($"Pickup: no room in the inventory for {m_item.Name}; it stays in the world.", this);
+                return;
+            }
+
+            IsCollected = true;
             Destroy(gameObject);
         }
 

@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using TMPro;
@@ -205,6 +206,24 @@ namespace PolyQuest.Tests
             Assert.That(((JArray)m_dropper.CaptureState()).Count, Is.EqualTo(1));
         }
 
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- CaptureState_InTheSameFrameAsAPickup_LeavesItOut: A save in the same frame as a pickup (as a quest item's autosave does) doesn't report the picked-up drop, so it can't come back --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("A save in the same frame as a pickup (as a quest item's autosave does) doesn't report the picked-up drop, so it can't come back.")]
+        public void CaptureState_InTheSameFrameAsAPickup_LeavesItOut()
+        {
+            m_dropper.DropItem(m_potion, 1);
+            m_dropper.DropItem(m_sword, 1);
+            Pickup potion = m_kit.Spawned().Single(p => p.Item == m_potion);
+
+            potion.PickupItem();
+            JArray captured = (JArray)m_dropper.CaptureState();
+
+            Assert.That(captured.Count, Is.EqualTo(1));
+            Assert.That(captured[0]["ItemID"].ToObject<string>(), Is.EqualTo(m_sword.ID));
+        }
+
         /*---------------------------------------------------------------------------------------------------------------------------------------------------------
         | --- RestoreState_RecreatesCurrentScenePickups: RestoreState spawns a Pickup for each current-scene entry with its saved item, quantity and position --- |
         ---------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -331,15 +350,18 @@ namespace PolyQuest.Tests
         | --- RestoreState_UnknownItemID_IsSkipped_AndTheValidEntriesStillLoad: A current-scene entry whose item ID is unknown is skipped without throwing; the valid entries after it are still restored --- |
         -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
-        [Description("A current-scene entry whose item ID is unknown is skipped without throwing; the valid entries after it are still restored.")]
+        [Description("A current-scene entry whose item ID is unknown, or that can't be read, is skipped without throwing; an unknown ID logs a warning naming it, and the valid entries after it are still restored.")]
         public IEnumerator RestoreState_UnknownItemID_IsSkipped_AndTheValidEntriesStillLoad()
         {
             m_dropper.DropItem(m_potion, 1);
             JArray state = new JArray
             {
                 Entry("does-not-exist", 1, Vector3.zero, CurrentScene),
+                new JObject { ["ItemID"] = "sword", ["Quantity"] = "one" },
+                new JValue("sword"),
                 Entry("sword", 1, Vector3.zero, CurrentScene)
             };
+            LogAssert.Expect(LogType.Warning, new Regex("does-not-exist"));
 
             Assert.DoesNotThrow(() => m_dropper.RestoreState(state));
             yield return null;
@@ -446,7 +468,7 @@ namespace PolyQuest.Tests
         | --- Pickup_PickupItem_WithAFullInventory_NeverLosesTheItem: PickupItem with a full inventory never loses the item: it ends up either in the inventory or still in the world --- |
         ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [UnityTest]
-        [Description("PickupItem with a full inventory never loses the item: it ends up either in the inventory or still in the world.")]
+        [Description("PickupItem with a full inventory never loses the item: the Pickup stays in the world, untouched, to be collected later.")]
         public IEnumerator Pickup_PickupItem_WithAFullInventory_NeverLosesTheItem()
         {
             for (int i = 0; i < 4; ++i)
@@ -456,10 +478,13 @@ namespace PolyQuest.Tests
             Assert.That(pickup.CanBePickedUp(), Is.False, "fixture: the inventory must be full");
 
             pickup.PickupItem();
-            yield return null;                                      // let Destroy() run
+            yield return null;                                      // let a Destroy() run, if there was one
 
-            bool exists = m_kit.PlayerInventory.ContainsItem(m_sword) || m_kit.Spawned().Any(p => p.Item == m_sword);
-            Assert.That(exists, Is.True, "the sword is in neither the inventory nor the world");
+            Assert.That(pickup != null, Is.True, "the Pickup was destroyed without its item being taken");
+            Assert.That(pickup.Item, Is.SameAs(m_sword));
+            Assert.That(pickup.Quantity, Is.EqualTo(1));
+            Assert.That(m_kit.PlayerInventory.ContainsItem(m_sword), Is.False);
+            Assert.That(((JArray)m_dropper.CaptureState()).Count, Is.EqualTo(1), "a save must still report the Pickup");
         }
 
 

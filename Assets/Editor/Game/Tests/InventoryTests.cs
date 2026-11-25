@@ -1117,7 +1117,7 @@ namespace PolyQuest.Tests
             CurrencyItem coin = m_kit.Item<CurrencyItem>("coin", stackable: true);
             FillWithDistinctItems();
 
-            coin.OnPickup(m_inventory, 15);
+            Assert.That(coin.OnPickup(m_inventory, 15), Is.True, "currency must always be taken");
 
             Assert.That(m_wallet.CurrentSilver, Is.EqualTo(15));
         }
@@ -1142,14 +1142,32 @@ namespace PolyQuest.Tests
         | --- ItemOnPickup_FullInventory_SilentlyDoesNothing: Picking up an item with a full inventory silently does nothing: no error, no event --- |
         --------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("Picking up an item with a full inventory silently does nothing: no error, no event.")]
+        [Description("Picking up an item with a full inventory does nothing and reports it wasn't taken: no error, no event.")]
         public void ItemOnPickup_FullInventory_SilentlyDoesNothing()
         {
             FillWithDistinctItems();
+            bool taken = true;
 
-            Assert.DoesNotThrow(() => m_scroll.OnPickup(m_inventory, 1));
+            Assert.DoesNotThrow(() => taken = m_scroll.OnPickup(m_inventory, 1));
 
+            Assert.That(taken, Is.False);
             Assert.That(m_inventory.ContainsItem(m_scroll), Is.False);
+            Assert.That(m_changedCount, Is.EqualTo(0));
+        }
+
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- QuestItemOnPickup_FullInventory_IsNotTaken: A quest item follows the same rule: with a full inventory it isn't taken, so it stays in the world --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("A quest item follows the same rule: with a full inventory it isn't taken, so it stays in the world.")]
+        public void QuestItemOnPickup_FullInventory_IsNotTaken()
+        {
+            QuestItem letter = m_kit.Item<QuestItem>("letter");
+            FillWithDistinctItems();
+
+            Assert.That(letter.OnPickup(m_inventory, 1), Is.False);
+
+            Assert.That(m_inventory.ContainsItem(letter), Is.False);
             Assert.That(m_changedCount, Is.EqualTo(0));
         }
 

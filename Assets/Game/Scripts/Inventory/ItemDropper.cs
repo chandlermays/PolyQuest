@@ -3,6 +3,7 @@
 | Author: Chandler Mays
 ----------------------------*/
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -86,7 +87,8 @@ namespace PolyQuest.Inventories
 
             foreach (var droppedItem in m_droppedItems)
             {
-                if (droppedItem == null)
+                // Picked up or destroyed: it's no longer in the world, even if Destroy hasn't run yet this frame
+                if (droppedItem == null || droppedItem.IsCollected)
                     continue;
 
                 DroppedItemData data = new()
@@ -106,7 +108,7 @@ namespace PolyQuest.Inventories
         ---------------------------------------------------------------------------------*/
         private void CleanUpDroppedItems()
         {
-            m_droppedItems.RemoveAll(item => item == null);
+            m_droppedItems.RemoveAll(item => item == null || item.IsCollected);
         }
 
         /*------------------------------------------------------------------
@@ -122,12 +124,14 @@ namespace PolyQuest.Inventories
                 }
             }
 
+            // Forget them now: Destroy only runs at the end of the frame, and a save in this frame must not report them
+            m_droppedItems.Clear();
             m_otherSceneDroppedItems.Clear();
         }
 
-        /*----------------------------------------------------------------------
+        /*---------------------------------------------------------------------
         | --- CaptureState: Capture the state of dropped items for saving --- |
-        ----------------------------------------------------------------------*/
+        ---------------------------------------------------------------------*/
         public JToken CaptureState()
         {
             CleanUpDroppedItems();
@@ -149,45 +153,102 @@ namespace PolyQuest.Inventories
             return state;
         }
 
-        /*---------------------------------------------------------------------------
-        | --- RestoreState: Restore the state of dropped items from saved data --- |
-        ---------------------------------------------------------------------------*/
+        /*--------------------------------------------------------------------------------------------
+        | --- RestoreState: Restores the saved drops; an entry that can't be restored is skipped --- |
+        --------------------------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
-            if (state is JArray stateArray)
+            // The whole save is the wrong shape: ignore it and keep the drops in place
+            if (state is not JArray stateArray)
+                return;
+
+            int currentScene = SceneManager.GetActiveScene().buildIndex;
+            ClearExistingDrops();
+
+            foreach (JToken entry in stateArray)
             {
-                int currentScene = SceneManager.GetActiveScene().buildIndex;
-                ClearExistingDrops();
-
-                foreach (var entry in stateArray)
+                // One bad entry is skipped; the rest load
+                if (!TryReadDrop(entry, out DroppedItemData data))
                 {
-                    if (entry is JObject dropState)
-                    {
-                        string itemID = dropState[kItemIDKey].ToObject<string>();
-                        int quantity = dropState[kQuantityKey].ToObject<int>();
-                        Vector3 worldPosition = dropState[kWorldPositionKey].ToObject<Vector3>();
-                        int sceneBuildIndex = dropState[kSceneBuildIndexKey].ToObject<int>();
-
-                        InventoryItem item = InventoryItem.FindByID(itemID);
-
-                        if (sceneBuildIndex == currentScene)
-                        {
-                            CreatePickupAtLocation(item, worldPosition, quantity);
-                        }
-                        else
-                        {
-                            DroppedItemData data = new()
-                            {
-                                ItemID = itemID,
-                                Quantity = quantity,
-                                WorldPosition = worldPosition,
-                                SceneBuildIndex = sceneBuildIndex
-                            };
-                            m_otherSceneDroppedItems.Add(data);
-                        }
-                    }
+                    WarnSkippedDrop(entry.ToString(Formatting.None), "the entry can't be read");
+                    continue;
                 }
+
+                // Drops for other scenes stay as saved; they're spawned when their own scene loads
+                if (data.SceneBuildIndex != currentScene)
+                {
+                    m_otherSceneDroppedItems.Add(data);
+                    continue;
+                }
+
+                InventoryItem item = InventoryItem.FindByID(data.ItemID);
+                if (item == null)
+                {
+                    WarnSkippedDrop(data.ItemID, "no item has that ID");
+                    continue;
+                }
+
+                CreatePickupAtLocation(item, data.WorldPosition, data.Quantity);
             }
+        }
+
+        /*---------------------------------------------------------------------------------------------------
+        | --- TryReadDrop: Reads a saved drop; false unless every field is there with the expected type --- |
+        ---------------------------------------------------------------------------------------------------*/
+        private static bool TryReadDrop(JToken entry, out DroppedItemData data)
+        {
+            data = default;
+            if (entry is not JObject dropState)
+                return false;
+
+            JToken itemID = dropState[kItemIDKey];
+            JToken quantity = dropState[kQuantityKey];
+            JToken sceneBuildIndex = dropState[kSceneBuildIndexKey];
+            if (itemID == null || itemID.Type != JTokenType.String ||
+                quantity == null || quantity.Type != JTokenType.Integer ||
+                sceneBuildIndex == null || sceneBuildIndex.Type != JTokenType.Integer)
+                return false;
+
+            if (!TryReadPosition(dropState[kWorldPositionKey], out Vector3 worldPosition))
+                return false;
+
+            data = new DroppedItemData
+            {
+                ItemID = itemID.Value<string>(),
+                Quantity = quantity.Value<int>(),
+                WorldPosition = worldPosition,
+                SceneBuildIndex = sceneBuildIndex.Value<int>()
+            };
+            return !string.IsNullOrWhiteSpace(data.ItemID) && data.Quantity > 0;
+        }
+
+        /*-----------------------------------------------------------------------------
+        | --- TryReadPosition: Reads a saved position with a number for each axis --- |
+        -----------------------------------------------------------------------------*/
+        private static bool TryReadPosition(JToken token, out Vector3 position)
+        {
+            position = default;
+            if (token is not JObject axes)
+                return false;
+
+            foreach (string axis in new[] { "x", "y", "z" })
+            {
+                JToken value = axes[axis];
+                if (value == null || (value.Type != JTokenType.Float && value.Type != JTokenType.Integer))
+                    return false;
+            }
+
+            position = new Vector3(axes["x"].Value<float>(), axes["y"].Value<float>(), axes["z"].Value<float>());
+            return true;
+        }
+
+        /*----------------------------------------------------------------------------------
+        | --- WarnSkippedDrop: Editor warning naming a saved drop that wasn't restored --- |
+        ----------------------------------------------------------------------------------*/
+        [System.Diagnostics.Conditional("UNITY_EDITOR")]
+        private void WarnSkippedDrop(string itemID, string reason)
+        {
+            Debug.LogWarning($"ItemDropper on '{name}': skipped a saved drop with item ID '{itemID}' because {reason}. The other drops loaded.", this);
         }
     }
 }

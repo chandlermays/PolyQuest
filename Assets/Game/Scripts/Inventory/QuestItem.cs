@@ -17,7 +17,10 @@ namespace PolyQuest.Inventories
         public Quest Quest => m_quest;
         public QuestObjective Objective => m_objective;
 
-        public override void OnPickup(Inventory inventory, int quantity)
+        /*--------------------------------------------------------------------------------------------------
+        | --- OnPickup: Takes the item and completes its objective; without room it stays in the world --- |
+        --------------------------------------------------------------------------------------------------*/
+        public override bool OnPickup(Inventory inventory, int quantity)
         {
             bool added = inventory.TryAddToAvailableSlot(this, quantity);
             if (added)
@@ -25,6 +28,7 @@ namespace PolyQuest.Inventories
                 QuestManager questManager = inventory.GetComponent<QuestManager>();
                 questManager.CompleteObjective(m_quest, m_objective);
             }
+            return added;
         }
     }
 }
