@@ -24,6 +24,8 @@ namespace PolyQuest.Tools
     {
         [SerializeField] private Disjunction[] m_AND;
 
+        public bool IsEmpty => m_AND == null || m_AND.Length == 0;     // Nothing authored: Check passes trivially
+
         /*--------------------------------------------------------------------------
         | --- Check: Evaluates the conjunction against a collection of objects --- |
         --------------------------------------------------------------------------*/

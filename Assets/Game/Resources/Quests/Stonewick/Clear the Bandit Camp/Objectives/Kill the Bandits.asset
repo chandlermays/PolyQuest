@@ -13,3 +13,14 @@ MonoBehaviour:
   m_Name: Kill the Bandits
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.QuestObjective
   m_description: Kill all of the bandits
+  m_isTurnIn: 0
+  m_alreadySatisfied:
+    m_AND:
+    - m_OR:
+      - m_condition: 9
+        m_parameters:
+        - camp_cleared
+        - 
+        m_negate: 0
+  m_implies:
+  - {fileID: 11400000, guid: 84db0dc5474f4c94195dc58476aededd, type: 2}

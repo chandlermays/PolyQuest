@@ -4,12 +4,16 @@
 ----------------------------*/
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Inventories;
+using PolyQuest.Quests;
 using PolyQuest.Saving;
+using PolyQuest.Tools;
 
 namespace PolyQuest.Tests
 {
@@ -18,8 +22,12 @@ namespace PolyQuest.Tests
         private static readonly FieldInfo kRegistryField =
             typeof(InventoryItem).GetField("m_itemRegistry", BindingFlags.NonPublic | BindingFlags.Static);
 
+        private static readonly FieldInfo kFlagRegistryField =
+            typeof(WorldFlag).GetField("m_flagRegistry", BindingFlags.NonPublic | BindingFlags.Static);
+
         private readonly List<Object> m_created = new();
         private readonly Dictionary<string, InventoryItem> m_registry = new();
+        private readonly Dictionary<string, WorldFlag> m_flagRegistry = new();
 
         private const string kTestSaveName = "__polyquest_characterization_test__";
         private const string kCurrentSaveKey = "CurrentSaveName";
@@ -34,12 +42,14 @@ namespace PolyQuest.Tests
         {
             Assert.That(kRegistryField, Is.Not.Null, "InventoryItem.m_itemRegistry was not found. Was it renamed?");
             kRegistryField.SetValue(null, m_registry);
+            Assert.That(kFlagRegistryField, Is.Not.Null, "WorldFlag.m_flagRegistry was not found. Was it renamed?");
+            kFlagRegistryField.SetValue(null, m_flagRegistry);
             ClearSaveManager();
         }
 
-        /*-------------------------------------------------------------------------------------
+        /*--------------------------------------------------------------------------------------
         | --- IsolateSaves: Provide a SaveManager that only ever writes the throwaway save --- |
-        -------------------------------------------------------------------------------------*/
+        --------------------------------------------------------------------------------------*/
         public SaveManager IsolateSaves()
         {
             m_hadSaveKey = PlayerPrefs.HasKey(kCurrentSaveKey);
@@ -88,9 +98,9 @@ namespace PolyQuest.Tests
             instance.GetSetMethod(true).Invoke(null, new object[] { null });
         }
 
-        /*---------------------------------------------------------------------
+        /*----------------------------------------------------------------------
         | --- Item: Create a registered item with a fixed ID and stackable --- |
-        ---------------------------------------------------------------------*/
+        ----------------------------------------------------------------------*/
         public T Item<T>(string id, bool stackable = false) where T : InventoryItem
         {
             T item = ScriptableObject.CreateInstance<T>();
@@ -110,9 +120,44 @@ namespace PolyQuest.Tests
             return item;
         }
 
-        /*-------------------------------------------------------------------------
+        /*---------------------------------------------------------------
+        | --- Flag: Create a registered WorldFlag with the given ID --- |
+        ---------------------------------------------------------------*/
+        public WorldFlag Flag(string id)
+        {
+            WorldFlag flag = ScriptableObject.CreateInstance<WorldFlag>();
+            flag.name = id;
+            SerializedTestUtil.SetString(flag, "m_flagID", id);
+
+            m_created.Add(flag);
+            m_flagRegistry[id] = flag;
+            return flag;
+        }
+
+        /*--------------------------------------------------------------------------------
+        | --- When: A conjunction holding one condition, as an authored one would be --- |
+        --------------------------------------------------------------------------------*/
+        public static Conjunction When(ConditionType type, params string[] parameters)
+        {
+            string parameterList = string.Join(",", parameters.Select(p => JsonConvert.ToString(p)));
+            string condition = $"{{\"m_condition\":{(int)type},\"m_parameters\":[{parameterList}],\"m_negate\":false}}";
+            return JsonUtility.FromJson<Conjunction>($"{{\"m_AND\":[{{\"m_OR\":[{condition}]}}]}}");
+        }
+
+        /*-------------------------------------------------------------------------------------------------------------------
+        | --- ConfigureObjective: Sets an objective's Is Turn-In, Complete When condition and Also Completes objectives --- |
+        -------------------------------------------------------------------------------------------------------------------*/
+        public static void ConfigureObjective(QuestObjective objective, Conjunction completeWhen = null, bool isTurnIn = false, params QuestObjective[] alsoCompletes)
+        {
+            const BindingFlags kField = BindingFlags.Instance | BindingFlags.NonPublic;
+            typeof(QuestObjective).GetField("m_completeWhen", kField).SetValue(objective, completeWhen ?? new Conjunction());
+            typeof(QuestObjective).GetField("m_isTurnIn", kField).SetValue(objective, isTurnIn);
+            typeof(QuestObjective).GetField("m_alsoCompletes", kField).SetValue(objective, alsoCompletes.ToList());
+        }
+
+        /*------------------------------------------------------------------------
         | --- Equipable: Create a registered EquipableItem for a target slot --- |
-        -------------------------------------------------------------------------*/
+        ------------------------------------------------------------------------*/
         public T Equipable<T>(string id, EquipmentSlot slot) where T : EquipableItem
         {
             T item = Item<T>(id);
@@ -172,6 +217,7 @@ namespace PolyQuest.Tests
         public void Dispose()
         {
             kRegistryField.SetValue(null, null);
+            kFlagRegistryField.SetValue(null, null);
 
             for (int i = m_created.Count - 1; i >= 0; --i)
             {

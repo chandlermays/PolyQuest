@@ -1354,7 +1354,6 @@ GameObject:
   m_Component:
   - component: {fileID: 527429094}
   - component: {fileID: 527429096}
-  - component: {fileID: 527429095}
   m_Layer: 0
   m_Name: Enemy Tracker
   m_TagString: Untagged
@@ -1377,21 +1376,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 215765899}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &527429095
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 527429093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b6d6456125244a4ca248484be9364b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_questManager: {fileID: 1960663760}
-  m_quest: {fileID: 11400000, guid: 5b14a68c783e1f548826848aff6c19e6, type: 2}
-  m_objective: {fileID: 11400000, guid: e891d9fb18d91ff44887800d11fb6c29, type: 2}
 --- !u!114 &527429096
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1404,6 +1388,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99162a3df6a445f40a26ef474825a6d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_clearedFlag: {fileID: 11400000, guid: 05e1a16f935e13c40be547192b12f338, type: 2}
 --- !u!1001 &531796360
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5050,7 +5035,6 @@ GameObject:
   - component: {fileID: 1548179683}
   - component: {fileID: 1548179682}
   - component: {fileID: 1548179681}
-  - component: {fileID: 1548179680}
   m_Layer: 0
   m_Name: Bandit Camp Trigger
   m_TagString: Untagged
@@ -5073,21 +5057,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 146447304}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1548179680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1548179678}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b6d6456125244a4ca248484be9364b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_questManager: {fileID: 1960663760}
-  m_quest: {fileID: 11400000, guid: 5b14a68c783e1f548826848aff6c19e6, type: 2}
-  m_objective: {fileID: 11400000, guid: 84db0dc5474f4c94195dc58476aededd, type: 2}
 --- !u!114 &1548179681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5100,6 +5069,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3a8df58f302231489bb42aabfbfc8b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_flag: {fileID: 11400000, guid: 74a3b6f0264367b499a90fc0f8d40dca, type: 2}
 --- !u!114 &1548179682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7518,7 +7488,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6866855087299853756, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -114.99963
+      value: -114.999084
       objectReference: {fileID: 0}
     - target: {fileID: 6963727198884903383, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_IsActive

@@ -13,3 +13,7 @@ MonoBehaviour:
   m_Name: Return to Captain Flint
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.QuestObjective
   m_description: Report back to Captain Flint
+  m_isTurnIn: 1
+  m_alreadySatisfied:
+    m_AND: []
+  m_implies: []

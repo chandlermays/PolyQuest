@@ -17,7 +17,7 @@ namespace PolyQuest.Quests
      *      - Provides methods to check, complete, and count objectives.                           *
      *      - Determines if the quest is fully complete.                                           *
      *      - Supports saving and loading quest progress for persistence.                          *
-     *      - Can be constructed from a Quest asset or a saved state for restoration.              *
+     *      - Can be constructed from a Quest asset or restored from a saved state.                *
      * ------------------------------------------------------------------------------------------- */
     public class QuestStatus
     {
@@ -29,7 +29,7 @@ namespace PolyQuest.Quests
 
         public Quest Quest => m_quest;
         public int CompletedObjectiveCount => m_completedObjectives.Count;
-        public bool IsObjectiveComplete(QuestObjective objective) => m_completedObjectives.Contains(objective);
+        public bool IsObjectiveComplete(QuestObjective objective) => objective != null && m_completedObjectives.Contains(objective);
 
         /*---------------------------------------------------------------------
         | --- Constructor: Initialize the QuestStatus from a Quest object --- |
@@ -39,48 +39,54 @@ namespace PolyQuest.Quests
             this.m_quest = quest;
         }
 
-        /*--------------------------------------------------------------------
-        | --- Constructor: Initialize the QuestStatus from a saved state --- |
-        --------------------------------------------------------------------*/
-        public QuestStatus(JToken objectState)
+        /*------------------------------------------------------------------------------------------------------------
+        | --- Restore: Rebuilds a status from saved data; null if it can't be read or its quest no longer exists --- |
+        ------------------------------------------------------------------------------------------------------------*/
+        public static QuestStatus Restore(JToken objectState)
         {
-            if (objectState is JObject state)
-            {
-                m_quest = Quest.GetByName(state[kQuestNameKey].ToObject<string>());
-                m_completedObjectives.Clear();
+            if (objectState is not JObject state)
+                return null;
 
-                if (state[kCompletedObjectivesKey] is JArray completedState)
+            JToken questName = state[kQuestNameKey];
+            if (questName == null || questName.Type != JTokenType.String)
+                return null;
+
+            Quest quest = Quest.GetByName(questName.Value<string>());
+            if (quest == null)
+                return null;
+
+            // Objectives the quest no longer has are dropped; ones it gained since the save start incomplete
+            QuestStatus status = new(quest);
+            if (state[kCompletedObjectivesKey] is JArray completedState)
+            {
+                foreach (JToken token in completedState)
                 {
-                    foreach (JToken token in completedState)
+                    if (token.Type != JTokenType.String)
+                        continue;
+
+                    string savedName = token.Value<string>();
+                    foreach (QuestObjective objective in quest.Objectives)
                     {
-                        string savedName = token.ToObject<string>();
-                        QuestObjective obj = null;
-                        foreach (QuestObjective objective in m_quest.Objectives)
+                        if (objective != null && objective.name == savedName)
                         {
-                            if (objective.name == savedName)
-                            {
-                                obj = objective;
-                                break;
-                            }
-                        }
-                        if (obj != null)
-                        {
-                            m_completedObjectives.Add(obj);
+                            status.m_completedObjectives.Add(objective);
+                            break;
                         }
                     }
                 }
             }
+            return status;
         }
 
-        /*--------------------------------------------------------------------
-        | --- CompleteObjective: Adds an objective to the completed list --- |
-        --------------------------------------------------------------------*/
-        public void CompleteObjective(QuestObjective objective)
+        /*----------------------------------------------------------------------------------------------------
+        | --- CompleteObjective: Adds an objective of this quest to the completed list; true if it's new --- |
+        ----------------------------------------------------------------------------------------------------*/
+        public bool CompleteObjective(QuestObjective objective)
         {
-            if (m_quest.HasObjective(objective) && !m_completedObjectives.Contains(objective))
-            {
-                m_completedObjectives.Add(objective);
-            }
+            if (objective == null || !m_quest.HasObjective(objective))
+                return false;
+
+            return m_completedObjectives.Add(objective);
         }
 
         /*-----------------------------------------------------------------------

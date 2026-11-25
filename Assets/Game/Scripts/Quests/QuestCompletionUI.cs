@@ -3,9 +3,11 @@
 | Author: Chandler Mays
 ----------------------------*/
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 //---------------------------------
+using PolyQuest.Dialogues;
 using PolyQuest.Quests;
 
 namespace PolyQuest.UI
@@ -23,6 +25,9 @@ namespace PolyQuest.UI
         private CanvasGroup m_canvasGroup;
         private Coroutine m_activeCoroutine;
 
+        private PlayerDialogueHandler m_dialogueHandler;            // Notices wait while a conversation is on screen
+        private readonly Queue<Quest> m_pendingQuests = new();
+
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
@@ -35,6 +40,8 @@ namespace PolyQuest.UI
             m_canvasGroup = GetComponent<CanvasGroup>();
             Utilities.CheckForNull(m_canvasGroup, nameof(m_canvasGroup));
 
+            m_dialogueHandler = m_questManager.GetComponent<PlayerDialogueHandler>();
+
             Hide();
         }
 
@@ -44,6 +51,8 @@ namespace PolyQuest.UI
         private void OnEnable()
         {
             m_questManager.OnQuestCompleted += HandleQuestCompleted;
+            if (m_dialogueHandler != null)
+                m_dialogueHandler.OnDialogueEnded += ShowPending;
         }
 
         /*---------------------------------------------------------------------------
@@ -52,6 +61,8 @@ namespace PolyQuest.UI
         private void OnDisable()
         {
             m_questManager.OnQuestCompleted -= HandleQuestCompleted;
+            if (m_dialogueHandler != null)
+                m_dialogueHandler.OnDialogueEnded -= ShowPending;
         }
 
         /*---------------------------------
@@ -66,23 +77,48 @@ namespace PolyQuest.UI
             m_titleCanvasGroup.alpha = 0f;
         }
 
-        /*-------------------------------------------------------------------------
-        | --- HandleQuestStarted: Initiate the quest completion UI sequence --- |
-        -------------------------------------------------------------------------*/
+        /*---------------------------------------------------------------------------------------------
+        | --- HandleQuestCompleted: Shows the notice now, or once the conversation on screen ends --- |
+        ---------------------------------------------------------------------------------------------*/
         private void HandleQuestCompleted(Quest quest)
         {
-            if (m_activeCoroutine != null)
-            {
-                StopCoroutine(m_activeCoroutine);
-            }
-
-            m_questTitle.text = quest.Title;
-            m_activeCoroutine = StartCoroutine(PlayQuestCompleteSequence());
+            m_pendingQuests.Enqueue(quest);
+            ShowPending();
         }
 
-        /*--------------------------------------------------------------------------------------------
+        /*---------------------------------------------------------------------------------------------
+        | --- ShowPending: Starts showing the waiting notices, unless a conversation is on screen --- |
+        ---------------------------------------------------------------------------------------------*/
+        private void ShowPending()
+        {
+            if (m_activeCoroutine != null || m_pendingQuests.Count == 0 || IsDialogueActive())
+                return;
+
+            m_activeCoroutine = StartCoroutine(PlayPendingNotices());
+        }
+
+        /*------------------------------------------------------------------------------------------
+        | --- PlayPendingNotices: Shows each waiting notice in turn, pausing for conversations --- |
+        ------------------------------------------------------------------------------------------*/
+        private IEnumerator PlayPendingNotices()
+        {
+            while (m_pendingQuests.Count > 0 && !IsDialogueActive())
+            {
+                m_questTitle.text = m_pendingQuests.Dequeue().Title;
+                yield return StartCoroutine(PlayQuestCompleteSequence());
+            }
+
+            m_activeCoroutine = null;
+        }
+
+        /*-------------------------------------------------------------------------
+        | --- IsDialogueActive: Whether a conversation is on screen right now --- |
+        -------------------------------------------------------------------------*/
+        private bool IsDialogueActive() => m_dialogueHandler != null && m_dialogueHandler.IsActive();
+
+        /*-------------------------------------------------------------------------------------------
         | --- PlayQuestStartedSequence: Fade in, hold, then fade out the quest completion panel --- |
-        --------------------------------------------------------------------------------------------*/
+        -------------------------------------------------------------------------------------------*/
         private IEnumerator PlayQuestCompleteSequence()
         {
             Hide();
@@ -95,7 +131,6 @@ namespace PolyQuest.UI
             yield return titleSequence;
 
             Hide();
-            m_activeCoroutine = null;
         }
 
         /*--------------------------------------------------------------------

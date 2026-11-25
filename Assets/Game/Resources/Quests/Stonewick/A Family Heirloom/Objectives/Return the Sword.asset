@@ -13,3 +13,7 @@ MonoBehaviour:
   m_Name: Return the Sword
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Quests.QuestObjective
   m_description: Return the sword to Cole the Guard
+  m_isTurnIn: 1
+  m_alreadySatisfied:
+    m_AND: []
+  m_implies: []

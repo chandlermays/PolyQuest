@@ -169,18 +169,6 @@ namespace PolyQuest.Tests
             Assert.That(Evaluate(ConditionType.kCompletedObjective, kHeirloom, kReturnTheSword), Is.True);
         }
 
-        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        | --- CompletedObjective_IsTrueForWorkDoneBeforeAcquiringTheQuest: An objective done before its quest is acquired is part of the history: kCompletedObjective is true for it --- |
-        --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        [Test]
-        [Description("An objective done before its quest is acquired is part of the history: kCompletedObjective is true for it.")]
-        public void CompletedObjective_IsTrueForWorkDoneBeforeAcquiringTheQuest()
-        {
-            m_manager.CompleteObjective(m_heirloom, m_findTheSword);
-
-            Assert.That(Evaluate(ConditionType.kCompletedObjective, kHeirloom, kFindTheSword), Is.True);
-        }
-
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------
         | --- UnknownQuestName_IsUnanswered: A quest name that matches no quest asset is unanswered (null), so the condition fails closed even when negated --- |
         -------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -349,21 +337,22 @@ namespace PolyQuest.Tests
             Assert.That(updated, Is.EqualTo(0));
         }
 
-        /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        | --- WorkDoneBeforeAcquiring_SurvivesSaveAndLoad: Work done before a quest is acquired survives a save and load, and counts when the quest is acquired afterwards --- |
-        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- RestoreState_QuestThatGainedAnObjectiveSinceTheSave_ActiveGetsItIncomplete_CompletedStaysCompleted: An objective added after the save starts incomplete in an active quest; a completed quest stays completed --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("Work done before a quest is acquired survives a save and load, and counts when the quest is acquired afterwards.")]
-        public void WorkDoneBeforeAcquiring_SurvivesSaveAndLoad()
+        [Description("An objective added to a quest after the save starts incomplete in an active quest, which stays active; a completed quest stays completed.")]
+        public void RestoreState_QuestThatGainedAnObjectiveSinceTheSave_ActiveGetsItIncomplete_CompletedStaysCompleted()
         {
-            m_manager.CompleteObjective(m_heirloom, m_findTheSword);
-            JToken saved = JToken.Parse(m_manager.CaptureState().ToString());
+            QuestObjective added = m_banditCamp.Objectives.Last();
+            string[] savedBeforeThePatch = m_banditCamp.Objectives.Where(o => o != added).Select(o => o.name).ToArray();
 
-            QuestManager restored = NewPlayerQuestManager("FreshPlayer");
-            restored.RestoreState(saved);
-            restored.AddQuest(m_heirloom);
+            m_manager.RestoreState(State(new[] { ActiveEntry(kBanditCamp, savedBeforeThePatch) }, kHeirloom));
 
-            Assert.That(StatusOf(restored, m_heirloom).IsObjectiveComplete(m_findTheSword), Is.True);
+            Assert.That(m_manager.HasQuest(m_banditCamp), Is.True);
+            Assert.That(StatusOf(m_manager, m_banditCamp).IsObjectiveComplete(added), Is.False);
+            Assert.That(StatusOf(m_manager, m_banditCamp).CompletedObjectiveCount, Is.EqualTo(savedBeforeThePatch.Length));
+            Assert.That(m_manager.IsQuestCompleted(m_heirloom), Is.True);
         }
     }
 }

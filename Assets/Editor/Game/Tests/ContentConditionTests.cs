@@ -3,18 +3,22 @@
 | Author: Chandler Mays
 ----------------------------*/
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Edit;
+using PolyQuest.Quests;
 using PolyQuest.Tools;
 
 namespace PolyQuest.Tests
 {
     // Every condition authored in the game's assets (dialogue nodes, equipable items, anything holding a Conjunction)
     // has a real condition type and every parameter that type reads, every item ID resolves through FindByID, a kHasItems
-    // quantity is a whole number above 0, and a kHasSpokenTo names an NPC who exists.
+    // quantity is a whole number above 0, a kHasSpokenTo names an NPC who exists, and a kWorldFlag names a WorldFlag in
+    // Resources. Every NPC's and every WorldFlag's ID is unique, and quests are well formed: each objective belongs to one
+    // quest, its Also Completes stays in that quest without cycles, and a turn-in has no Complete When condition.
     // A condition that breaks any of these can never pass, so it is broken content. Every NPC's ID is unique.
     public class ContentConditionTests
     {
@@ -60,7 +64,7 @@ namespace PolyQuest.Tests
         | --- EveryAuthoredCondition_HasAConditionType_AndItsRequiredParameters: Lists every broken condition in one go --- |
         -------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("Every condition in the game's assets has a condition type other than Select, every parameter its type reads is filled in, every item ID resolves through FindByID, every kHasItems quantity is a whole number above 0, and every kHasSpokenTo names an existing NPC ID.")]
+        [Description("Every condition in the game's assets has a condition type other than Select, every parameter its type reads is filled in, every item ID resolves through FindByID, every kHasItems quantity is a whole number above 0, every kHasSpokenTo names an existing NPC ID, and every kWorldFlag names a WorldFlag in Resources.")]
         public void EveryAuthoredCondition_HasAConditionType_AndItsRequiredParameters()
         {
             int checkedCount = 0;
@@ -112,6 +116,140 @@ namespace PolyQuest.Tests
             Assert.That(problems, Is.Empty, "NPC ID problems:\n" + string.Join("\n", problems));
         }
 
+        /*---------------------------------------------------------------------------------------------------------------------------------
+        | --- EveryWorldFlag_HasAUniqueNonEmptyID_AndIsInResources: Saves and kWorldFlag find a flag by its ID, and only in Resources --- |
+        ---------------------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("Every WorldFlag in the game's assets has a non-empty ID that no other flag shares, and lives under a Resources folder so the game can find it.")]
+        public void EveryWorldFlag_HasAUniqueNonEmptyID_AndIsInResources()
+        {
+            List<string> problems = new();
+            Dictionary<string, List<string>> pathsByID = new();
+            foreach (WorldFlag flag in ConditionValidation.FindWorldFlags(resourcesOnly: false))
+            {
+                string path = AssetDatabase.GetAssetPath(flag);
+                if (!path.Contains("/Resources/"))
+                    problems.Add($"{path}: isn't under a Resources folder, so the game can't find it");
+
+                if (string.IsNullOrWhiteSpace(flag.ID))
+                {
+                    problems.Add($"{path}: has no ID");
+                    continue;
+                }
+
+                if (!pathsByID.TryGetValue(flag.ID, out List<string> paths))
+                    pathsByID[flag.ID] = paths = new List<string>();
+                paths.Add(path);
+            }
+
+            foreach (KeyValuePair<string, List<string>> pair in pathsByID.Where(p => p.Value.Count > 1))
+                problems.Add($"'{pair.Key}' is the ID of {pair.Value.Count} flags: {string.Join(", ", pair.Value)}");
+
+            Assert.That(problems, Is.Empty, "WorldFlag problems:\n" + string.Join("\n", problems));
+        }
+
+
+        /*----------------
+        | --- Quests --- |
+        ----------------*/
+        /*-------------------------------------------------------------
+        | --- LoadAll: Every asset of a type in the game's folder --- |
+        -------------------------------------------------------------*/
+        private static List<T> LoadAll<T>() where T : Object
+        {
+            return AssetDatabase.FindAssets($"t:{typeof(T).Name}", new[] { kGameFolder })
+                                .Select(guid => AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guid)))
+                                .Where(asset => asset != null)
+                                .ToList();
+        }
+
+        /*----------------------------------------------------------------------------------------------------------------------------------
+        | --- EveryObjective_BelongsToExactlyOneQuest: An objective's Also Completes and progress are per quest, so it can't be shared --- |
+        ----------------------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("Every quest objective in the game's assets is listed by exactly one quest, and no quest lists an empty objective slot.")]
+        public void EveryObjective_BelongsToExactlyOneQuest()
+        {
+            List<Quest> quests = LoadAll<Quest>();
+            Assert.That(quests, Is.Not.Empty, "fixture: no quests were found, so nothing was checked");
+            List<string> problems = new();
+
+            foreach (Quest quest in quests.Where(q => q.Objectives.Any(o => o == null)))
+                problems.Add($"{quest.name}: has an empty objective slot");
+
+            foreach (QuestObjective objective in LoadAll<QuestObjective>())
+            {
+                List<string> owners = quests.Where(q => q.HasObjective(objective)).Select(q => q.name).ToList();
+                if (owners.Count != 1)
+                    problems.Add($"{objective.name}: is listed by {owners.Count} quests{(owners.Count > 0 ? ": " + string.Join(", ", owners) : "")}");
+            }
+
+            Assert.That(problems, Is.Empty, "Objective problems:\n" + string.Join("\n", problems));
+        }
+
+        /*----------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EveryAlsoCompletes_StaysInItsQuest_WithNoCycles: An objective only also completes objectives of its own quest, and never (through others) itself --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("An objective's Also Completes only lists objectives of its own quest, and never leads back to itself, directly or through others.")]
+        public void EveryAlsoCompletes_StaysInItsQuest_WithNoCycles()
+        {
+            List<string> problems = new();
+            foreach (Quest quest in LoadAll<Quest>())
+            {
+                foreach (QuestObjective objective in quest.Objectives.Where(o => o != null))
+                {
+                    foreach (QuestObjective alsoCompleted in objective.AlsoCompletes)
+                    {
+                        if (alsoCompleted == null || !quest.HasObjective(alsoCompleted))
+                            problems.Add($"{quest.name} › {objective.name}: Also Completes {(alsoCompleted == null ? "an empty slot" : alsoCompleted.name)}, which isn't in {quest.name}");
+                    }
+
+                    if (AlsoCompletesItself(objective))
+                        problems.Add($"{quest.name} › {objective.name}: Also Completes leads back to itself through a cycle");
+                }
+            }
+
+            Assert.That(problems, Is.Empty, "Also Completes problems:\n" + string.Join("\n", problems));
+        }
+
+        /*---------------------------------------------------------------------------------------
+        | --- AlsoCompletesItself: Whether following Also Completes leads back to the start --- |
+        ---------------------------------------------------------------------------------------*/
+        private static bool AlsoCompletesItself(QuestObjective start)
+        {
+            HashSet<QuestObjective> visited = new();
+            Stack<QuestObjective> toVisit = new(start.AlsoCompletes.Where(o => o != null));
+            while (toVisit.Count > 0)
+            {
+                QuestObjective next = toVisit.Pop();
+                if (next == start)
+                    return true;
+
+                if (!visited.Add(next))
+                    continue;
+
+                foreach (QuestObjective alsoCompleted in next.AlsoCompletes.Where(o => o != null))
+                    toVisit.Push(alsoCompleted);
+            }
+            return false;
+        }
+
+        /*----------------------------------------------------------------------------------------------------------------------------
+        | --- EveryTurnIn_HasNoCompleteWhenCondition: A turn-in is never completed in advance, so a condition on it is a mistake --- |
+        ----------------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("A turn-in objective has no Complete When condition: a turn-in is never completed in advance.")]
+        public void EveryTurnIn_HasNoCompleteWhenCondition()
+        {
+            List<string> problems = LoadAll<QuestObjective>()
+                                        .Where(o => o.IsTurnIn && o.HasCompleteWhenCondition)
+                                        .Select(o => $"{AssetDatabase.GetAssetPath(o)}: is a turn-in with a Complete When condition")
+                                        .ToList();
+
+            Assert.That(problems, Is.Empty, "Turn-in problems:\n" + string.Join("\n", problems));
+        }
+
         /*--------------------------------------------------------------------------------------------------------------
         | --- Validation_FlagsSelect_AndEachMissingRequiredParameter: The rule the content test and the drawer use --- |
         --------------------------------------------------------------------------------------------------------------*/
@@ -126,6 +264,7 @@ namespace PolyQuest.Tests
         [TestCase(ConditionType.kHasItems, new[] { "potion-id", "0" })]
         [TestCase(ConditionType.kHasItemEquipped, new string[0])]
         [TestCase(ConditionType.kHasSpokenTo, new[] { "" })]
+        [TestCase(ConditionType.kWorldFlag, new[] { "" })]
         [Description("A condition left on Select, missing any parameter its type reads, or with a kHasItems quantity that isn't a whole number above 0, is flagged.")]
         public void Validation_FlagsSelect_AndEachMissingRequiredParameter(ConditionType type, string[] parameters)
         {

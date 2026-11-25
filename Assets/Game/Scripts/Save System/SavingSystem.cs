@@ -2,6 +2,7 @@
 | File: SavingSystem.cs
 | Author: Chandler Mays
 ----------------------------*/
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -21,6 +22,11 @@ namespace PolyQuest.Saving
         private const string kSaveFileExtension = ".sav";
 
         private static readonly HashSet<SaveableEntity> m_registeredEntities = new();
+
+        // True while a load is putting saved state back, component by component. Systems that react to changes
+        // (re-checking quests, clearing encounters) wait for RestoreFinished instead of acting on a half-loaded world.
+        public static bool IsRestoring { get; private set; } = false;
+        public static event Action RestoreFinished;
 
         /*-----------------------------------------------------------------------
         | --- RegisterSaveableEntity: Register a Saveable Entity for Saving --- |
@@ -150,24 +156,35 @@ namespace PolyQuest.Saving
         private void RestoreEntities(SaveState state)
         {
             List<SaveableEntity> restored = new();
-            foreach (SaveableEntity saveable in m_registeredEntities)
+            IsRestoring = true;
+            try
             {
-                string ID = saveable.UID;
-                if (state.ContainsKey(ID))
+                foreach (SaveableEntity saveable in m_registeredEntities)
                 {
-                    saveable.Restore(state[ID]);
-                    restored.Add(saveable);
+                    string ID = saveable.UID;
+                    if (state.ContainsKey(ID))
+                    {
+                        saveable.Restore(state[ID]);
+                        restored.Add(saveable);
+                    }
                 }
+
+                // Only once everything is restored: values that depend on other components (health, mana) are put back exactly
+                foreach (SaveableEntity saveable in restored)
+                {
+                    if (saveable != null)
+                    {
+                        saveable.CompleteRestore();
+                    }
+                }
+            }
+            finally
+            {
+                IsRestoring = false;
             }
 
-            // Only once everything is restored: values that depend on other components (health, mana) are put back exactly
-            foreach (SaveableEntity saveable in restored)
-            {
-                if (saveable != null)
-                {
-                    saveable.CompleteRestore();
-                }
-            }
+            // The load is completely finished: now the world may react to it
+            RestoreFinished?.Invoke();
         }
 
         /*------------------------------------------------------------------

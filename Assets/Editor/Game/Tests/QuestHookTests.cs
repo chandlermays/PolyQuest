@@ -16,11 +16,12 @@ using PolyQuest.Core;
 using PolyQuest.Dialogues;
 using PolyQuest.Inventories;
 using PolyQuest.Quests;
+using PolyQuest.Tools;
 
 namespace PolyQuest.Tests
 {
-    // Everything in the game that acquires a quest or completes an objective: dialogue events, assigners,
-    // trigger volumes, enemy trackers and quest items.
+    // Everything in the game that acquires a quest, completes an objective or records a fact objectives read:
+    // dialogue events, assigners, flag trigger volumes, enemy trackers and quest items.
     public class QuestHookTests
     {
         private const BindingFlags kAny = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
@@ -30,6 +31,8 @@ namespace PolyQuest.Tests
         private QuestManager m_manager;
         private Inventory m_inventory;
 
+        private WorldFlags m_flags;
+        private WorldFlag m_campEntered, m_campCleared;
         private QuestObjective m_first, m_second;
         private Quest m_quest;
 
@@ -44,6 +47,12 @@ namespace PolyQuest.Tests
 
             m_first = Objective("First Objective");
             m_second = Objective("Second Objective");
+
+            // The first objective reads "camp entered", the second "camp cleared"
+            m_campEntered = m_kit.Flag("camp_entered");
+            m_campCleared = m_kit.Flag("camp_cleared");
+            InventoryTestKit.ConfigureObjective(m_first, InventoryTestKit.When(ConditionType.kWorldFlag, m_campEntered.ID));
+            InventoryTestKit.ConfigureObjective(m_second, InventoryTestKit.When(ConditionType.kWorldFlag, m_campCleared.ID));
             m_quest = m_kit.Track(ScriptableObject.CreateInstance<Quest>());
             m_quest.name = "Hook Test Quest";
             SerializedObject so = new SerializedObject(m_quest);
@@ -58,7 +67,9 @@ namespace PolyQuest.Tests
             m_player.tag = "Player";
             m_inventory = m_kit.NewInventory(m_player, 2);
             m_player.AddComponent<Wallet>();
+            m_flags = m_player.AddComponent<WorldFlags>();
             m_manager = m_player.AddComponent<QuestManager>();
+            InventoryTestKit.InvokeAwake(m_manager);            // listens for flags and inventory changes
         }
 
         /*-------------------------------------------------------------------
@@ -181,17 +192,17 @@ namespace PolyQuest.Tests
 
 
         /*--------------------------
-        | --- TriggerObjective --- |
+        | --- WorldFlagTrigger --- |
         --------------------------*/
-        /*------------------------------------------------------------------------------------------------
-        | --- BuildTriggerVolume: Creates a trigger volume that completes the objective when entered --- |
-        ------------------------------------------------------------------------------------------------*/
-        private GameObject BuildTriggerVolume(QuestObjective objective)
+        /*-----------------------------------------------------------------------------------
+        | --- BuildFlagVolume: Creates a trigger volume that sets the flag when entered --- |
+        -----------------------------------------------------------------------------------*/
+        private GameObject BuildFlagVolume(WorldFlag flag)
         {
-            GameObject volume = m_kit.NewObject("TriggerVolume");
+            GameObject volume = m_kit.NewObject("FlagVolume");
             volume.AddComponent<BoxCollider>().isTrigger = true;
-            AddObjectiveCompletion(volume, objective);
-            volume.AddComponent<TriggerObjective>();
+            WorldFlagTrigger trigger = volume.AddComponent<WorldFlagTrigger>();
+            SerializedTestUtil.SetObject(trigger, "m_flag", flag);
             return volume;
         }
 
@@ -200,38 +211,56 @@ namespace PolyQuest.Tests
         ------------------------------------------------------------------------------------*/
         private static void Enter(GameObject volume, Collider other)
         {
-            TriggerObjective trigger = volume.GetComponent<TriggerObjective>();
-            typeof(TriggerObjective).GetMethod("OnTriggerEnter", kAny).Invoke(trigger, new object[] { other });
+            WorldFlagTrigger trigger = volume.GetComponent<WorldFlagTrigger>();
+            typeof(WorldFlagTrigger).GetMethod("OnTriggerEnter", kAny).Invoke(trigger, new object[] { other });
         }
 
-        /*-----------------------------------------------------------------------------------------------------------------------------------------------
-        | --- TriggerObjective_PlayerEntering_CompletesTheObjective: The Player entering a TriggerObjective volume completes the volume's objective --- |
-        -----------------------------------------------------------------------------------------------------------------------------------------------*/
+        /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- WorldFlagTrigger_PlayerEntering_SetsItsFlag_AndTheObjectiveReadingItCompletes: The Player entering the volume records its fact, and the active objective that reads it completes --- |
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("The Player entering a TriggerObjective volume completes the volume's objective.")]
-        public void TriggerObjective_PlayerEntering_CompletesTheObjective()
+        [Description("The Player entering a WorldFlagTrigger volume records its fact, and the active objective that reads it completes.")]
+        public void WorldFlagTrigger_PlayerEntering_SetsItsFlag_AndTheObjectiveReadingItCompletes()
         {
             m_manager.AddQuest(m_quest);
-            GameObject volume = BuildTriggerVolume(m_first);
+            GameObject volume = BuildFlagVolume(m_campEntered);
 
             Enter(volume, m_player.AddComponent<CapsuleCollider>());
+
+            Assert.That(m_flags.IsSet(m_campEntered), Is.True);
+            Assert.That(IsDone(m_first), Is.True);
+            Assert.That(IsDone(m_second), Is.False);
+        }
+
+        /*---------------------------------------------------------------------------------------------------------------------------------------
+        | --- WorldFlagTrigger_BeforeTheQuest_RecordsTheFact_ForWhenItIsAcquired: Entering before the quest still counts once it's acquired --- |
+        ---------------------------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("Entering the volume before the quest is acquired records the fact, so the objective completes when the quest is acquired.")]
+        public void WorldFlagTrigger_BeforeTheQuest_RecordsTheFact_ForWhenItIsAcquired()
+        {
+            GameObject volume = BuildFlagVolume(m_campEntered);
+            Enter(volume, m_player.AddComponent<CapsuleCollider>());
+
+            m_manager.AddQuest(m_quest);
 
             Assert.That(IsDone(m_first), Is.True);
         }
 
-        /*--------------------------------------------------------------------------------------------------------------------------------------------------
-        | --- TriggerObjective_NonPlayerEntering_CompletesNothing: Anything other than the Player entering a TriggerObjective volume completes nothing --- |
-        --------------------------------------------------------------------------------------------------------------------------------------------------*/
+        /*----------------------------------------------------------------------------------------------------------------------------------------
+        | --- WorldFlagTrigger_NonPlayerEntering_SetsNothing: Anything other than the Player entering a WorldFlagTrigger volume sets nothing --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("Anything other than the Player entering a TriggerObjective volume completes nothing.")]
-        public void TriggerObjective_NonPlayerEntering_CompletesNothing()
+        [Description("Anything other than the Player entering a WorldFlagTrigger volume sets nothing and completes nothing.")]
+        public void WorldFlagTrigger_NonPlayerEntering_SetsNothing()
         {
             m_manager.AddQuest(m_quest);
-            GameObject volume = BuildTriggerVolume(m_first);
+            GameObject volume = BuildFlagVolume(m_campEntered);
             GameObject wanderer = m_kit.NewObject("Wanderer");
 
             Enter(volume, wanderer.AddComponent<CapsuleCollider>());
 
+            Assert.That(m_flags.IsSet(m_campEntered), Is.False);
             Assert.That(IsDone(m_first), Is.False);
         }
 
@@ -239,14 +268,14 @@ namespace PolyQuest.Tests
         /*----------------------
         | --- EnemyTracker --- |
         ----------------------*/
-        /*----------------------------------------------------------------------------
-        | --- BuildTracker: Creates an EnemyTracker that completes the objective --- |
-        ----------------------------------------------------------------------------*/
-        private EnemyTracker BuildTracker(QuestObjective objective)
+        /*----------------------------------------------------------------------------------
+        | --- BuildTracker: Creates an EnemyTracker that records its flag once cleared --- |
+        ----------------------------------------------------------------------------------*/
+        private EnemyTracker BuildTracker(WorldFlag clearedFlag)
         {
             GameObject trackerObject = m_kit.NewObject("EnemyTracker");
-            AddObjectiveCompletion(trackerObject, objective);
             EnemyTracker tracker = trackerObject.AddComponent<EnemyTracker>();
+            SerializedTestUtil.SetObject(tracker, "m_clearedFlag", clearedFlag);
             InventoryTestKit.InvokeAwake(tracker);
             return tracker;
         }
@@ -275,45 +304,67 @@ namespace PolyQuest.Tests
         -----------------------------------------------------------------------*/
         private void Kill(HealthComponent enemy) => enemy.TakeDamage(m_player, 1000f);
 
-        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        | --- EnemyTracker_CompletesItsObjective_WhenEveryTrackedEnemyIsDead: An EnemyTracker completes its objective when the last of its tracked enemies dies, not before --- |
-        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EnemyTracker_SetsItsFlag_WhenEveryTrackedEnemyIsDead: An EnemyTracker records its fact when the last of its enemies dies, not before, and the objective reading it completes --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("An EnemyTracker completes its objective when the last of its tracked enemies dies, not before.")]
-        public void EnemyTracker_CompletesItsObjective_WhenEveryTrackedEnemyIsDead()
+        [Description("An EnemyTracker records its fact when the last of its tracked enemies dies, not before, and the active objective reading it completes.")]
+        public void EnemyTracker_SetsItsFlag_WhenEveryTrackedEnemyIsDead()
         {
             m_manager.AddQuest(m_quest);
-            EnemyTracker tracker = BuildTracker(m_first);
+            EnemyTracker tracker = BuildTracker(m_campCleared);
             HealthComponent a = BuildEnemy("BanditA");
             HealthComponent b = BuildEnemy("BanditB");
             tracker.RegisterEnemy(a);
             tracker.RegisterEnemy(b);
 
             Kill(a);
-            Assert.That(IsDone(m_first), Is.False, "one enemy is still alive");
+            Assert.That(m_flags.IsSet(m_campCleared), Is.False, "one enemy is still alive");
 
             Kill(b);
-            Assert.That(IsDone(m_first), Is.True);
+            Assert.That(m_flags.IsSet(m_campCleared), Is.True);
+            Assert.That(IsDone(m_second), Is.True);
         }
 
-        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        | --- EnemyTracker_EnemiesRestoredDeadFromASave_CountAsKilled: Enemies a save restores as dead count as killed: after a reload, killing the remaining enemies still completes the objective --- |
-        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- EnemyTracker_EnemiesRestoredDeadFromASave_CountAsKilled: Enemies a save restores as dead count as killed: after a reload, killing the remaining enemies still clears the encounter --- |
+        --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("Enemies a save restores as dead count as killed: after a reload, killing the remaining enemies still completes the objective.")]
+        [Description("Enemies a save restores as dead count as killed: after a reload, killing the remaining enemies still clears the encounter.")]
         public void EnemyTracker_EnemiesRestoredDeadFromASave_CountAsKilled()
         {
             m_manager.AddQuest(m_quest);
-            EnemyTracker tracker = BuildTracker(m_first);
+            EnemyTracker tracker = BuildTracker(m_campCleared);
             HealthComponent killedLastSession = BuildEnemy("BanditA");
             HealthComponent stillAlive = BuildEnemy("BanditB");
             tracker.RegisterEnemy(killedLastSession);           // enemies register in Awake, before the save is applied
             tracker.RegisterEnemy(stillAlive);
 
             killedLastSession.RestoreState(new JObject { ["health"] = 0f, ["isDead"] = true });
+            Assert.That(m_flags.IsSet(m_campCleared), Is.False, "one enemy is still alive");
             Kill(stillAlive);
 
-            Assert.That(IsDone(m_first), Is.True);
+            Assert.That(m_flags.IsSet(m_campCleared), Is.True);
+            Assert.That(IsDone(m_second), Is.True);
+        }
+
+        /*---------------------------------------------------------------------------------------------------------------------------------
+        | --- EnemyTracker_EveryEnemyRestoredDead_IsCleared: When a restore leaves every tracked enemy dead, the encounter is cleared --- |
+        ---------------------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("When a restore leaves every tracked enemy dead, the encounter is cleared without anything dying now.")]
+        public void EnemyTracker_EveryEnemyRestoredDead_IsCleared()
+        {
+            EnemyTracker tracker = BuildTracker(m_campCleared);
+            HealthComponent a = BuildEnemy("BanditA");
+            HealthComponent b = BuildEnemy("BanditB");
+            tracker.RegisterEnemy(a);
+            tracker.RegisterEnemy(b);
+
+            a.RestoreState(new JObject { ["health"] = 0f, ["isDead"] = true });
+            b.RestoreState(new JObject { ["health"] = 0f, ["isDead"] = true });
+
+            Assert.That(m_flags.IsSet(m_campCleared), Is.True);
         }
 
 

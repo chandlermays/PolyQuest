@@ -13,3 +13,13 @@ MonoBehaviour:
   m_Name: Find the Sword
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.Quests.QuestObjective
   m_description: Recover the lost sword along the route
+  m_isTurnIn: 0
+  m_alreadySatisfied:
+    m_AND:
+    - m_OR:
+      - m_condition: 5
+        m_parameters:
+        - 03bea15d-3acc-4f77-afda-ed14ab0807ad
+        - 
+        m_negate: 0
+  m_implies: []

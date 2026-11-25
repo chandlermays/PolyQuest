@@ -9,7 +9,6 @@ using UnityEngine;
 using PolyQuest.SceneManagement;
 using PolyQuest.Dialogues;
 using PolyQuest.Player;
-using PolyQuest.Quests;
 
 namespace PolyQuest.Core
 {
@@ -26,8 +25,6 @@ namespace PolyQuest.Core
         private bool m_isTransitioning = false;
         private bool m_holdsInputLock = false;          // One lock for the whole conversation, released exactly once
 
-        private QuestManager m_questManager;
-
         /*---------------------------------------------------------------- 
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
@@ -38,9 +35,6 @@ namespace PolyQuest.Core
             Utilities.CheckForNull(m_playerDialogueHandler, nameof(m_playerDialogueHandler));
             Utilities.CheckForNull(m_dialogueUI, nameof(m_dialogueUI));
             Utilities.CheckForNull(m_playerHUD, nameof(m_playerHUD));
-
-            m_questManager = m_playerController.GetComponent<QuestManager>();
-            Utilities.CheckForNull(m_questManager, nameof(m_questManager));
         }
 
         /*--------------------------------------------------------------------- 
@@ -159,9 +153,6 @@ namespace PolyQuest.Core
                     ReleaseInputLock();
                 }
             }
-
-            if (!toDialogue)
-                m_questManager.FlushCompletionNotifs();
         }
 
         /*-------------------------------------------------------------------------------------

@@ -4,6 +4,7 @@
 ----------------------------*/
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 //---------------------------------
@@ -21,11 +22,12 @@ namespace PolyQuest.Quests
      * Responsibilities:                                                                           *
      *      - Tracks all active quests and their statuses for the player.                          *
      *      - Tracks all completed quests to prevent re-assignment.                                *
-     *      - Adds new quests and checks for quest existence.                                      *
-     *      - Handles objective completion and triggers reward distribution when quests complete.  *
-     *      - Provides access to quest statuses for UI and other systems.                          *
+     *      - Adds new quests and catches up objectives the world already satisfies.               *
+     *      - Completes objectives (and the ones they imply), and completes quests in one step:    *
+     *        mark complete, grant rewards, raise the event, then autosave.                        *
+     *      - Re-checks active objectives when the world changes (flags, inventory, quests, load). *
      *      - Supports saving and restoring quest progress for persistence.                        *
-     *      - Implements condition checking for quest-related predicates (e.g., for dialogue).     *
+     *      - Implements condition checking for quest-related conditions (e.g., for dialogue).     *
      *      - Raises update events to notify UI or other systems of quest changes.                 *
      * ------------------------------------------------------------------------------------------- */
     public class QuestManager : MonoBehaviour, ISaveable, IConditionChecker
@@ -36,9 +38,10 @@ namespace PolyQuest.Quests
         private const string kActiveQuestsKey = "ActiveQuests";
         private const string kCompletedQuestsKey = "CompletedQuests";
 
-        private readonly Queue<Quest> m_pendingStartNotifs = new();
-        private readonly Queue<Quest> m_pendingCompletionNotifs = new();
-        private readonly Queue<Quest> m_pendingRewards = new();
+        private WorldFlags m_worldFlags;
+        private Inventory m_inventory;
+        private bool m_isRechecking = false;
+        private int m_completionDepth = 0;          // Inside CompleteObjective: re-checks wait until the step is done
 
         public IEnumerable<QuestStatus> ActiveQuests => m_activeQuests.Values;
 
@@ -46,11 +49,48 @@ namespace PolyQuest.Quests
         public event Action<Quest> OnQuestStarted;
         public event Action OnQuestsUpdate;
 
+        /*----------------------------------------------------------------
+        | --- Awake: Called when the script instance is being loaded --- |
+        ----------------------------------------------------------------*/
+        private void Awake()
+        {
+            // The world changing can satisfy an active objective: re-check when it does
+            m_worldFlags = GetComponent<WorldFlags>();
+            if (m_worldFlags != null)
+                m_worldFlags.OnFlagSet += HandleFlagSet;
+
+            m_inventory = GetComponent<Inventory>();
+            if (m_inventory != null)
+                m_inventory.OnInventoryChanged += RecheckActiveObjectives;
+
+            SavingSystem.RestoreFinished += HandleRestoreFinished;
+        }
+
+        /*--------------------------------------------------------------------
+        | --- OnDestroy: Called when the MonoBehaviour will be destroyed --- |
+        --------------------------------------------------------------------*/
+        private void OnDestroy()
+        {
+            if (m_worldFlags != null)
+                m_worldFlags.OnFlagSet -= HandleFlagSet;
+
+            if (m_inventory != null)
+                m_inventory.OnInventoryChanged -= RecheckActiveObjectives;
+
+            SavingSystem.RestoreFinished -= HandleRestoreFinished;
+        }
+
         /*--------------------------------------------------
         | --- AddQuest: Add a new quest to the manager --- |
         --------------------------------------------------*/
         public void AddQuest(Quest quest)
         {
+            if (quest == null)
+            {
+                WarnInEditor($"QuestManager on '{name}': AddQuest was given no quest, so nothing was added. Check the assigner or dialogue event that called it.");
+                return;
+            }
+
             // Don't add if already completed
             if (IsQuestCompleted(quest))
             {
@@ -66,8 +106,11 @@ namespace PolyQuest.Quests
             }
 
             m_activeQuests[quest] = new QuestStatus(quest);
-            m_pendingStartNotifs.Enqueue(quest);
+            OnQuestStarted?.Invoke(quest);
             OnQuestsUpdate?.Invoke();
+
+            // Catch up: objectives the world already satisfies complete now, after "started"
+            RecheckActiveObjectives();
         }
 
         /*-------------------------------------------------------
@@ -86,44 +129,90 @@ namespace PolyQuest.Quests
             return quest != null && m_completedQuests.Contains(quest.name);
         }
 
-        /*--------------------------------------------------------------------------------------------------
-        | --- CompleteObjective: Mark an objective as complete and grants rewards if quest is complete --- |
-        --------------------------------------------------------------------------------------------------*/
+        /*---------------------------------------------------------------------------------------------------------------
+        | --- CompleteObjective: Marks an objective (and its Also Completes) complete, completing the quest if done --- |
+        ---------------------------------------------------------------------------------------------------------------*/
         public void CompleteObjective(Quest quest, QuestObjective objective)
         {
+            if (quest == null || objective == null)
+            {
+                WarnInEditor($"QuestManager on '{name}': CompleteObjective was given no {(quest == null ? "quest" : "objective")}, so nothing was completed. Check the trigger, item or dialogue event that called it.");
+                return;
+            }
+
+            // Not active (not received yet, or already finished): nothing to do. The world state the event left
+            // behind (a flag, an item) completes the objective through its condition once the quest is received.
             QuestStatus status = GetQuestStatus(quest);
             if (status == null)
                 return;
 
-            status.CompleteObjective(objective);
-            SaveManager.Instance.Save();        // Auto-save after completing an objective
-
-            if (status.IsQuestComplete())
+            ++m_completionDepth;
+            try
             {
-                CompleteQuest(quest);
+                if (!CompleteWithAlsoCompletes(status, objective))
+                    return;
+
+                if (status.IsQuestComplete())
+                {
+                    CompleteQuest(quest);
+                }
+
+                SaveManager.Instance.Save();        // Auto-save once the step is done, rewards included
+                OnQuestsUpdate?.Invoke();
+            }
+            finally
+            {
+                --m_completionDepth;
             }
 
-            OnQuestsUpdate?.Invoke();
+            // Quest state (and possibly the inventory, through rewards) changed: other objectives may now pass
+            RecheckActiveObjectives();
         }
 
-        /*-------------------------------------------------------------------------------------------------------------------------------------
-        | --- FlushCompletionNotifs: Process any pending quest completion notifications to ensure they are raised at the appropriate time --- |
-        -------------------------------------------------------------------------------------------------------------------------------------*/
-        public void FlushCompletionNotifs()
+        /*----------------------------------------------------------------------------------------------------------------
+        | --- RecheckActiveObjectives: Completes active, non-turn-in objectives whose Complete When condition passes --- |
+        ----------------------------------------------------------------------------------------------------------------*/
+        public void RecheckActiveObjectives()
         {
-            while (m_pendingStartNotifs.Count > 0)
-            {
-                OnQuestStarted?.Invoke(m_pendingStartNotifs.Dequeue());
-            }
+            // Already re-checking (its loop picks the change up), mid-step (CompleteObjective re-checks when it's
+            // done), or mid-load (SavingSystem.RestoreFinished re-checks once the whole load is done)
+            if (m_isRechecking || m_completionDepth > 0 || SavingSystem.IsRestoring)
+                return;
 
-            while (m_pendingCompletionNotifs.Count > 0)
+            m_isRechecking = true;
+            try
             {
-                OnQuestCompleted?.Invoke(m_pendingCompletionNotifs.Dequeue());
-            }
+                // Completing one objective can satisfy another (rewards, Also Completes): loop until a pass adds nothing
+                bool progressed = true;
+                while (progressed)
+                {
+                    progressed = false;
+                    IConditionChecker[] checkers = GetComponents<IConditionChecker>();
 
-            while (m_pendingRewards.Count > 0)
+                    foreach (QuestStatus status in m_activeQuests.Values.ToList())
+                    {
+                        if (!m_activeQuests.ContainsKey(status.Quest))
+                            continue;
+
+                        foreach (QuestObjective objective in status.Quest.Objectives)
+                        {
+                            if (objective == null || status.IsObjectiveComplete(objective))
+                                continue;
+
+                            // One way: a condition that later turns false never reverts a completed objective
+                            if (!objective.IsCompleteWhenMet(checkers))
+                                continue;
+
+                            CompleteObjective(status.Quest, objective);
+                            progressed = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            finally
             {
-                GrantReward(m_pendingRewards.Dequeue());
+                m_isRechecking = false;
             }
         }
 
@@ -153,83 +242,134 @@ namespace PolyQuest.Quests
             return state;
         }
 
-        /*-------------------------------------------------------------------
-        | --- RestoreState: Load the Current State of the Quest Manager --- |
-        -------------------------------------------------------------------*/
+        /*--------------------------------------------------------------------------------------------------
+        | --- RestoreState: Load the quests; a quest that can't be read or no longer exists is skipped --- |
+        --------------------------------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
-            if (state is JObject stateObject)
+            // The whole save is the wrong shape: ignore it, keep the current quests, and raise nothing
+            if (state is not JObject stateObject)
+                return;
+
+            m_activeQuests.Clear();
+            m_completedQuests.Clear();
+
+            // Restore active quests
+            if (stateObject[kActiveQuestsKey] is JArray activeQuestsArray)
             {
-                m_activeQuests.Clear();
-                m_completedQuests.Clear();
-
-                // Restore active quests
-                if (stateObject[kActiveQuestsKey] is JArray activeQuestsArray)
+                foreach (JToken token in activeQuestsArray)
                 {
-                    foreach (JToken token in activeQuestsArray)
+                    QuestStatus status = QuestStatus.Restore(token);
+                    if (status == null)
                     {
-                        QuestStatus status = new QuestStatus(token);
-                        Quest quest = status.Quest;
-                        if (quest != null)
-                        {
-                            m_activeQuests[quest] = status;
-                        }
+                        WarnInEditor($"QuestManager on '{name}': skipped a saved active quest that can't be read or no longer exists ({token["QuestName"]}). The other quests loaded.");
+                        continue;
                     }
-                }
 
-                // Restore completed quests
-                if (stateObject[kCompletedQuestsKey] is JArray completedQuestsArray)
-                {
-                    foreach (JToken token in completedQuestsArray)
-                    {
-                        string questName = token.ToString();
-                        m_completedQuests.Add(questName);
-                    }
+                    m_activeQuests[status.Quest] = status;
                 }
-
-                OnQuestsUpdate?.Invoke();
             }
+
+            // Restore completed quests: a quest gained objectives in a patch stays completed
+            if (stateObject[kCompletedQuestsKey] is JArray completedQuestsArray)
+            {
+                foreach (JToken token in completedQuestsArray)
+                {
+                    string questName = token.Type == JTokenType.String ? token.Value<string>() : null;
+                    if (Quest.GetByName(questName) == null)
+                    {
+                        WarnInEditor($"QuestManager on '{name}': skipped saved completed quest '{token}' because no quest has that name. The other quests loaded.");
+                        continue;
+                    }
+
+                    m_completedQuests.Add(questName);
+                }
+            }
+
+            OnQuestsUpdate?.Invoke();
         }
 
-        /*-------------------------------------------------------------------
-        | --- Evaluate: Check if the quest manager has a specific quest --- |
-        -------------------------------------------------------------------*/
+        /*-------------------------------------------------------------------------------------------------------
+        | --- Evaluate: Answers quest conditions; unknown names or missing parameters are unanswered (null) --- |
+        -------------------------------------------------------------------------------------------------------*/
         public bool? Evaluate(ConditionType predicate, string[] parameters)
         {
+            if (predicate != ConditionType.kHasQuest && predicate != ConditionType.kCompletedQuest && predicate != ConditionType.kCompletedObjective)
+                return null;
+
+            if (parameters == null || parameters.Length == 0 || string.IsNullOrWhiteSpace(parameters[0]))
+                return null;
+
+            Quest quest = Quest.GetByName(parameters[0]);
+            if (quest == null)
+                return null;
+
             switch (predicate)
             {
-                case ConditionType.kCompletedObjective:
-                    QuestStatus questStatus = GetQuestStatus(Quest.GetByName(parameters[0]));
-                    if (questStatus == null)
-                        return false;
-
-                    QuestObjective objective = QuestObjective.GetByName(parameters[1]);
-                    if (objective == null)
-                        return false;
-
-                    return questStatus.IsObjectiveComplete(objective);
-
+                // Active: received and not yet finished
                 case ConditionType.kHasQuest:
-                    return HasQuest(Quest.GetByName(parameters[0]));
+                    return HasQuest(quest);
 
+                // Finished
                 case ConditionType.kCompletedQuest:
-                    return IsQuestCompleted(Quest.GetByName(parameters[0]));
+                    return IsQuestCompleted(quest);
+
+                // Done, including after the quest itself is finished
+                case ConditionType.kCompletedObjective:
+                    {
+                        if (parameters.Length < 2 || string.IsNullOrWhiteSpace(parameters[1]))
+                            return null;
+
+                        QuestObjective objective = quest.Objectives.FirstOrDefault(o => o != null && o.name == parameters[1]);
+                        if (objective == null)
+                            return null;
+
+                        if (IsQuestCompleted(quest))
+                            return true;
+
+                        QuestStatus status = GetQuestStatus(quest);
+                        return status != null && status.IsObjectiveComplete(objective);
+                    }
 
                 default:
                     return null;
             }
         }
 
-        /*------------------------------------------------------------------------------------------------------------
-        | --- CompleteQuest: Mark a quest as complete, grant rewards, and update the manager's state accordingly --- |
-        ------------------------------------------------------------------------------------------------------------*/
+        /*-----------------------------------------------------------------------------------------------------------------------
+        | --- CompleteWithAlsoCompletes: Completes the objective and, transitively, the ones it also completes in its quest --- |
+        -----------------------------------------------------------------------------------------------------------------------*/
+        private static bool CompleteWithAlsoCompletes(QuestStatus status, QuestObjective objective)
+        {
+            bool completedAny = false;
+            Stack<QuestObjective> toComplete = new();
+            toComplete.Push(objective);
+
+            while (toComplete.Count > 0)
+            {
+                QuestObjective next = toComplete.Pop();
+                if (!status.CompleteObjective(next))
+                    continue;       // already done, or not part of this quest
+
+                completedAny = true;
+                foreach (QuestObjective alsoCompleted in next.AlsoCompletes)
+                {
+                    if (alsoCompleted != null)
+                        toComplete.Push(alsoCompleted);
+                }
+            }
+            return completedAny;
+        }
+
+        /*------------------------------------------------------------------------------------------------------
+        | --- CompleteQuest: In one step: mark the quest complete, grant its rewards, then raise the event --- |
+        ------------------------------------------------------------------------------------------------------*/
         private void CompleteQuest(Quest quest)
         {
             m_completedQuests.Add(quest.name);
             m_activeQuests.Remove(quest);
-            m_pendingRewards.Enqueue(quest);
-            m_pendingCompletionNotifs.Enqueue(quest);
-            SaveManager.Instance.Save();
+            GrantReward(quest);
+            OnQuestCompleted?.Invoke(quest);
         }
 
         /*-----------------------------------------------------------------
@@ -237,18 +377,21 @@ namespace PolyQuest.Quests
         -----------------------------------------------------------------*/
         private QuestStatus GetQuestStatus(Quest quest)
         {
+            if (quest == null)
+                return null;
+
             m_activeQuests.TryGetValue(quest, out var status);
             return status;
         }
 
-        /*------------------------------------------------------------------
-        | --- GrantReward: Distribute the rewards of a completed quest --- |
-        ------------------------------------------------------------------*/
+        /*---------------------------------------------------------------------------------------------
+        | --- GrantReward: Distribute the rewards; items that don't fit drop at the Player's feet --- |
+        ---------------------------------------------------------------------------------------------*/
         private void GrantReward(Quest quest)
         {
             foreach (Quest.Reward reward in quest.Rewards)
             {
-                if (reward.Item == null)
+                if (reward.Item == null || reward.Amount <= 0)
                     continue;
 
                 if (reward.Item is CurrencyItem)
@@ -257,12 +400,59 @@ namespace PolyQuest.Quests
                     continue;
                 }
 
-                bool success = GetComponent<Inventory>().TryAddToAvailableSlot(reward.Item, reward.Amount);
-                if (!success)
+                if (GetComponent<Inventory>().TryAddToAvailableSlot(reward.Item, reward.Amount))
+                    continue;
+
+                ItemDropper dropper = GetComponent<ItemDropper>();
+                if (dropper == null)
                 {
-                    GetComponent<ItemDropper>().DropItem(reward.Item, reward.Amount);
+                    WarnInEditor($"QuestManager on '{name}': '{quest.Title}' rewards {reward.Amount} x {reward.Item.Name}, which didn't fit, and there's no ItemDropper to drop it.");
+                    continue;
+                }
+
+                // A stack drops as one pickup; each copy of a non-stackable needs its own
+                if (reward.Item.IsStackable)
+                {
+                    dropper.DropItem(reward.Item, reward.Amount);
+                }
+                else
+                {
+                    for (int i = 0; i < reward.Amount; ++i)
+                        dropper.DropItem(reward.Item);
                 }
             }
+        }
+
+        /*--------------------------------------------------------------------------------
+        | --- HandleFlagSet: A fact about the world changed: re-check the objectives --- |
+        --------------------------------------------------------------------------------*/
+        private void HandleFlagSet(WorldFlag flag)
+        {
+            RecheckActiveObjectives();
+        }
+
+        /*----------------------------------------------------------------------------------------------------
+        | --- HandleRestoreFinished: The whole load is done: objectives the world now satisfies complete --- |
+        ----------------------------------------------------------------------------------------------------*/
+        private void HandleRestoreFinished()
+        {
+            // A static event can outlive a manager that was destroyed without OnDestroy running
+            if (this == null)
+            {
+                SavingSystem.RestoreFinished -= HandleRestoreFinished;
+                return;
+            }
+
+            RecheckActiveObjectives();
+        }
+
+        /*-------------------------------------------
+        | --- WarnInEditor: Editor-only warning --- |
+        -------------------------------------------*/
+        [System.Diagnostics.Conditional("UNITY_EDITOR")]
+        private void WarnInEditor(string message)
+        {
+            Debug.LogWarning(message, this);
         }
     }
 }

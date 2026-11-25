@@ -8,16 +8,52 @@ using UnityEditor;
 using UnityEngine;
 //---------------------------------
 using PolyQuest.Inventories;
+using PolyQuest.Quests;
 using PolyQuest.Tools;
 
 namespace PolyQuest.Edit
 {
     // Authoring rules for a Conjunction.Condition: a real condition type, with every parameter that type reads filled in,
-    // a kHasItems quantity that's a whole number above 0, every item ID resolving to an item, and a kHasSpokenTo that
-    // names an NPC who exists. Shared by the ConditionPropertyDrawer's warning and the content test that checks every
-    // condition in the game.
+    // a kHasItems quantity that's a whole number above 0, every item ID resolving to an item, a kHasSpokenTo that
+    // names an NPC who exists, and a kWorldFlag that names a WorldFlag in Resources. Shared by the
+    // ConditionPropertyDrawer's warning and the content test that checks every condition in the game.
+    [InitializeOnLoad]
     public static class ConditionValidation
     {
+        private static List<WorldFlag> s_worldFlags;
+
+        /*----------------------------------------------------------------------------------------
+        | --- ConditionValidation: Drops the cached world flags whenever the project changes --- |
+        ----------------------------------------------------------------------------------------*/
+        static ConditionValidation()
+        {
+            EditorApplication.projectChanged += () => s_worldFlags = null;
+        }
+
+        /*--------------------------------------------------------------------------------------------------------
+        | --- WorldFlags: Every WorldFlag the game can find at runtime (in Resources), cached for the drawer --- |
+        --------------------------------------------------------------------------------------------------------*/
+        public static IReadOnlyList<WorldFlag> WorldFlags => s_worldFlags ??= FindWorldFlags(resourcesOnly: true);
+
+        /*-------------------------------------------------------------------------------------------
+        | --- FindWorldFlags: Scans the game's assets for WorldFlags, bypassing the cached list --- |
+        -------------------------------------------------------------------------------------------*/
+        public static List<WorldFlag> FindWorldFlags(bool resourcesOnly)
+        {
+            List<WorldFlag> flags = new();
+            foreach (string guid in AssetDatabase.FindAssets("t:WorldFlag", new[] { "Assets/Game" }))
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                if (resourcesOnly && !path.Contains("/Resources/"))
+                    continue;
+
+                WorldFlag flag = AssetDatabase.LoadAssetAtPath<WorldFlag>(path);
+                if (flag != null)
+                    flags.Add(flag);
+            }
+            return flags;
+        }
+
         /*-----------------------------------------------------------------------------------
         | --- RequiredParameters: The parameters a condition type reads, in their order --- |
         -----------------------------------------------------------------------------------*/
@@ -44,6 +80,9 @@ namespace PolyQuest.Edit
 
                 case ConditionType.kHasSpokenTo:
                     return new[] { "NPC ID" };
+
+                case ConditionType.kWorldFlag:
+                    return new[] { "Flag" };
 
                 default:
                     return Array.Empty<string>();
@@ -93,6 +132,9 @@ namespace PolyQuest.Edit
             if (conditionType == ConditionType.kHasSpokenTo && !NpcCatalog.Exists(values[0]))
                 return $"No NPC has the ID '{values[0]}' — this condition will never pass.";
 
+            if (conditionType == ConditionType.kWorldFlag && !WorldFlagExists(values[0]))
+                return $"No WorldFlag in Resources has the ID '{values[0]}' — this condition will never pass.";
+
             if (IsItemCondition(conditionType) && !ItemExists(values[0]))
                 return $"No item has the ID '{values[0]}' — this condition will never pass.";
 
@@ -105,6 +147,19 @@ namespace PolyQuest.Edit
         private static bool IsItemCondition(ConditionType type)
         {
             return type == ConditionType.kHasItem || type == ConditionType.kHasItems || type == ConditionType.kHasItemEquipped;
+        }
+
+        /*----------------------------------------------------------------------
+        | --- WorldFlagExists: Whether a WorldFlag in Resources has the ID --- |
+        ----------------------------------------------------------------------*/
+        private static bool WorldFlagExists(string flagID)
+        {
+            foreach (WorldFlag flag in WorldFlags)
+            {
+                if (flag != null && flag.ID == flagID)
+                    return true;
+            }
+            return false;
         }
 
         /*--------------------------------------------------------------------------------------------------------------

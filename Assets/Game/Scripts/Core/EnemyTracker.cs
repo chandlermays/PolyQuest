@@ -7,32 +7,38 @@ using UnityEngine;
 //---------------------------------
 using PolyQuest.Components;
 using PolyQuest.Quests;
+using PolyQuest.Saving;
 
 namespace PolyQuest.Core
 {
     /* ---------------------------------------------------------------------------------------------
-     * Role: Tracks and manages the health state of registered enemies for objective completion.    *
+     * Role: Tracks an encounter's enemies and records it as cleared once every one of them is dead. *
      *                                                                                              *
      * Responsibilities:                                                                            *
      *      - Registers and unregisters enemies to monitor their alive/dead state.                  *
-     *      - Listens for enemy death events.                                                       *
-     *      - Updates the count of alive enemies in real time.                                      *
-     *      - Notifies the ObjectiveCompletion component when all enemies are defeated.             *
+     *      - Counts enemies by whether they're dead, so ones a save restores dead count too.       *
+     *      - Sets its WorldFlag (e.g. camp_cleared) on the player when the last enemy is dead;     *
+     *        quest objectives read the flag, and the flag is saved.                                *
      * -------------------------------------------------------------------------------------------- */
     public class EnemyTracker : MonoBehaviour
     {
-        private ObjectiveCompletion m_objectiveCompletion;
+        [Tooltip("The fact this encounter records once every tracked enemy is dead, e.g. camp_cleared.")]
+        [SerializeField] private WorldFlag m_clearedFlag;
 
         private readonly HashSet<HealthComponent> m_enemies = new();
-        private int m_aliveEnemyCount = 0;
+        private bool m_isCleared = false;
+
+        private const string kPlayerTag = "Player";
 
         /*----------------------------------------------------------------
         | --- Awake: Called when the script instance is being loaded --- |
         ----------------------------------------------------------------*/
         private void Awake()
         {
-            m_objectiveCompletion = GetComponent<ObjectiveCompletion>();
-            Utilities.CheckForNull(m_objectiveCompletion, nameof(m_objectiveCompletion));
+            Utilities.CheckForNull(m_clearedFlag, nameof(m_clearedFlag));
+
+            // A load can leave every enemy dead without any of them dying now
+            SavingSystem.RestoreFinished += HandleRestoreFinished;
         }
 
         /*-----------------------------------------------------------------------
@@ -45,12 +51,8 @@ namespace PolyQuest.Core
 
             if (m_enemies.Add(enemy))
             {
-                if (!enemy.IsDead)
-                {
-                    ++m_aliveEnemyCount;
-                }
-
-                enemy.OnDeath += OnEnemyDeath;
+                enemy.OnDeath += CheckCleared;
+                enemy.OnHealthChanged += HandleHealthChanged;
             }
         }
 
@@ -64,26 +66,63 @@ namespace PolyQuest.Core
 
             if (m_enemies.Remove(enemy))
             {
-                if (!enemy.IsDead)
-                {
-                    --m_aliveEnemyCount;
-                }
-
-                enemy.OnDeath -= OnEnemyDeath;
+                enemy.OnDeath -= CheckCleared;
+                enemy.OnHealthChanged -= HandleHealthChanged;
             }
         }
 
-        /*-----------------------------------------------------------
-        | --- OnEnemyDeath: Called when a registered enemy dies --- |
-        -----------------------------------------------------------*/
-        private void OnEnemyDeath()
+        /*------------------------------------------------------------------------------------------------
+        | --- HandleHealthChanged: A restore outside a full load can leave enemies dead: check again --- |
+        ------------------------------------------------------------------------------------------------*/
+        private void HandleHealthChanged()
         {
-            --m_aliveEnemyCount;
-
-            if (m_aliveEnemyCount <= 0)
+            // Mid-load, wait for RestoreFinished: the rest of the world (the Player's flags) isn't loaded yet
+            if (!SavingSystem.IsRestoring)
             {
-                m_objectiveCompletion.CompleteObjective();
+                CheckCleared();
             }
+        }
+
+        /*-----------------------------------------------------------------------------------
+        | --- HandleRestoreFinished: The whole load is done: enemies it left dead count --- |
+        -----------------------------------------------------------------------------------*/
+        private void HandleRestoreFinished()
+        {
+            // A static event can outlive a tracker that was destroyed without OnDestroy running
+            if (this == null)
+            {
+                SavingSystem.RestoreFinished -= HandleRestoreFinished;
+                return;
+            }
+
+            CheckCleared();
+        }
+
+        /*-------------------------------------------------------------------------------------------
+        | --- CheckCleared: Once every tracked enemy is dead, sets the cleared flag (only once) --- |
+        -------------------------------------------------------------------------------------------*/
+        private void CheckCleared()
+        {
+            if (m_isCleared || m_enemies.Count == 0)
+                return;
+
+            foreach (HealthComponent enemy in m_enemies)
+            {
+                if (enemy != null && !enemy.IsDead)
+                    return;
+            }
+
+            m_isCleared = true;
+
+            GameObject player = GameObject.FindWithTag(kPlayerTag);
+            WorldFlags flags = player != null ? player.GetComponent<WorldFlags>() : null;
+            if (flags == null)
+            {
+                Debug.LogWarning($"EnemyTracker on '{name}': every enemy is dead, but the Player has no WorldFlags to record '{(m_clearedFlag != null ? m_clearedFlag.ID : "no flag")}'.", this);
+                return;
+            }
+
+            flags.Set(m_clearedFlag);
         }
 
         /*--------------------------------------------------------------------
@@ -91,11 +130,14 @@ namespace PolyQuest.Core
         --------------------------------------------------------------------*/
         private void OnDestroy()
         {
+            SavingSystem.RestoreFinished -= HandleRestoreFinished;
+
             foreach (var enemy in m_enemies)
             {
                 if (enemy != null)
                 {
-                    enemy.OnDeath -= OnEnemyDeath;
+                    enemy.OnDeath -= CheckCleared;
+                    enemy.OnHealthChanged -= HandleHealthChanged;
                 }
             }
             m_enemies.Clear();

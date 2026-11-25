@@ -13,3 +13,13 @@ MonoBehaviour:
   m_Name: Find the Bandit Camp
   m_EditorClassIdentifier: Assembly-CSharp::PolyQuest.QuestObjective
   m_description: Find the Eastern Bandit Camp
+  m_isTurnIn: 0
+  m_alreadySatisfied:
+    m_AND:
+    - m_OR:
+      - m_condition: 9
+        m_parameters:
+        - camp_entered
+        - 
+        m_negate: 0
+  m_implies: []

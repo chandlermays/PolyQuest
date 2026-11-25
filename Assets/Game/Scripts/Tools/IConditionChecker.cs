@@ -15,7 +15,8 @@ namespace PolyQuest.Tools
         kHasItems,
         kHasItemEquipped,
         kHasSpokenTo,
-        //... add more as needed
+        kWorldFlag,
+        //... add more at the end only: assets store these by number, so never insert or reorder
     }
 
     public interface IConditionChecker

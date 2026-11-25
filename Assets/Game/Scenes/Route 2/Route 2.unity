@@ -237805,7 +237805,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1707456356}
   - component: {fileID: 1707456358}
-  - component: {fileID: 1707456357}
   m_Layer: 0
   m_Name: Enemy Tracker
   m_TagString: Untagged
@@ -237828,21 +237827,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 776134457}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1707456357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1707456355}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b6d6456125244a4ca248484be9364b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_questManager: {fileID: 7892778310908833466}
-  m_quest: {fileID: 11400000, guid: 5b14a68c783e1f548826848aff6c19e6, type: 2}
-  m_objective: {fileID: 11400000, guid: e891d9fb18d91ff44887800d11fb6c29, type: 2}
 --- !u!114 &1707456358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237855,6 +237839,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99162a3df6a445f40a26ef474825a6d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_clearedFlag: {fileID: 11400000, guid: 05e1a16f935e13c40be547192b12f338, type: 2}
 --- !u!1001 &1707869728
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -257268,7 +257253,6 @@ GameObject:
   - component: {fileID: 1858132983}
   - component: {fileID: 1858132982}
   - component: {fileID: 1858132985}
-  - component: {fileID: 1858132984}
   - component: {fileID: 1858132986}
   - component: {fileID: 1858132987}
   m_Layer: 0
@@ -257327,21 +257311,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 50, y: 1, z: 50}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1858132984
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1858132979}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b6d6456125244a4ca248484be9364b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_questManager: {fileID: 7892778310908833466}
-  m_quest: {fileID: 11400000, guid: 5b14a68c783e1f548826848aff6c19e6, type: 2}
-  m_objective: {fileID: 11400000, guid: 84db0dc5474f4c94195dc58476aededd, type: 2}
 --- !u!114 &1858132985
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257354,6 +257323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3a8df58f302231489bb42aabfbfc8b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_flag: {fileID: 11400000, guid: 74a3b6f0264367b499a90fc0f8d40dca, type: 2}
 --- !u!114 &1858132986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295857,7 +295827,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6866855087299853756, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -114.9999
+      value: -114.99993
       objectReference: {fileID: 0}
     - target: {fileID: 7109608900201789735, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
       propertyPath: m_AnchorMax.x
@@ -296391,17 +296361,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 7892778310908833469}
   m_SourcePrefab: {fileID: 100100000, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
---- !u!114 &7892778310908833466 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 766926249126215248, guid: 64108a73ea5b53444b50ea282104f068, type: 3}
-  m_PrefabInstance: {fileID: 7892778310908833465}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7892778310908833467}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 223c4ceaa83ca5d449cc2990665b8196, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7892778310908833467 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8644276066086435053, guid: 64108a73ea5b53444b50ea282104f068, type: 3}

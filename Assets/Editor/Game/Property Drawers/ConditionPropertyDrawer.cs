@@ -112,6 +112,12 @@ namespace PolyQuest.Edit
                 DrawNpcIdField(position, param0);
             }
 
+            if (selectedCondition == ConditionType.kWorldFlag)
+            {
+                position.y += propertyHeight;
+                DrawWorldFlagField(position, param0);
+            }
+
             position.y += propertyHeight;
             EditorGUI.PropertyField(position, negate);
         }
@@ -158,8 +164,12 @@ namespace PolyQuest.Edit
                 case ConditionType.kCompletedObjective:
                     return propertyHeight * 4.0f;
 
-                // Condition + Text Field (NPC ID)
+                // Condition + NPC ID dropdown
                 case ConditionType.kHasSpokenTo:
+                    return propertyHeight * 3.0f;
+
+                // Condition + World Flag dropdown
+                case ConditionType.kWorldFlag:
                     return propertyHeight * 3.0f;
             }
 
@@ -336,6 +346,38 @@ namespace PolyQuest.Edit
             if (EditorGUI.EndChangeCheck())
                 intParam.stringValue = $"{result}";
 
+            EditorGUI.EndProperty();
+        }
+
+        /*-------------------------------------------------------------------------------------------------
+        | --- DrawWorldFlagField: Draws a dropdown of the WorldFlags the game can find (in Resources) --- |
+        -------------------------------------------------------------------------------------------------*/
+        private void DrawWorldFlagField(Rect position, SerializedProperty element)
+        {
+            // Index 0 is "nothing chosen"; then every flag; then the current value if no flag has it, so it isn't lost silently
+            List<string> values = new() { "" };
+            List<string> labels = new() { "Select World Flag" };
+            foreach (WorldFlag flag in ConditionValidation.WorldFlags.Where(f => f != null).OrderBy(f => f.ID))
+            {
+                if (string.IsNullOrWhiteSpace(flag.ID) || values.Contains(flag.ID))
+                    continue;
+
+                values.Add(flag.ID);
+                labels.Add(flag.ID);
+            }
+
+            string current = element.stringValue;
+            if (!values.Contains(current))
+            {
+                values.Add(current);
+                labels.Add($"{current}  (no WorldFlag has this ID)");
+            }
+
+            EditorGUI.BeginProperty(position, new GUIContent("Flag:"), element);
+            EditorGUI.BeginChangeCheck();
+            int selected = EditorGUI.Popup(position, "Flag:", values.IndexOf(current), labels.ToArray());
+            if (EditorGUI.EndChangeCheck())
+                element.stringValue = values[selected];
             EditorGUI.EndProperty();
         }
 
