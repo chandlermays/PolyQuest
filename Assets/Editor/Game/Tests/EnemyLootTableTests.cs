@@ -437,7 +437,7 @@ namespace PolyQuest.Tests
         public void OnValidate_GuaranteedDropThatCanOnlyRollZero_Warns()
         {
             Configure("m_guaranteedDrops", E(m_gold, min: new[] { 0, 0 }, max: new[] { 0, 0 }));
-            LogAssert.Expect(LogType.Warning, new Regex("gold-ish.*can only roll a quantity of 0"));
+            LogAssert.Expect(LogType.Warning, new Regex(@"guaranteed drop #0\b.*can only roll a quantity of 0"));
 
             Validate();
         }
@@ -450,7 +450,7 @@ namespace PolyQuest.Tests
         public void OnValidate_MaxBelowMin_Warns()
         {
             Configure("m_possibleDrops", E(m_gem, chance: new[] { 1f, 1f }, min: new[] { 1, 4 }, max: new[] { 2, 3 }));
-            LogAssert.Expect(LogType.Warning, new Regex("gem.*max quantity below its min at level 2"));
+            LogAssert.Expect(LogType.Warning, new Regex(@"possible drop #0\b.*max quantity below its min at level 2"));
 
             Validate();
         }
@@ -463,7 +463,7 @@ namespace PolyQuest.Tests
         public void OnValidate_MismatchedQuantityArrays_Warns()
         {
             Configure("m_guaranteedDrops", E(m_gold, min: new[] { 1, 1, 1 }, max: new[] { 2, 2 }));
-            LogAssert.Expect(LogType.Warning, new Regex("gold-ish.*3 min quantities but 2 max quantities"));
+            LogAssert.Expect(LogType.Warning, new Regex(@"guaranteed drop #0\b.*3 min quantities but 2 max quantities"));
 
             Validate();
         }
