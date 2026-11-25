@@ -336,7 +336,7 @@ MonoBehaviour:
     - m_OR:
       - m_condition: 8
         m_parameters:
-        - Elira
+        - elira
         - 
         m_negate: 1
 --- !u!114 &2857783022282843786
@@ -558,7 +558,7 @@ MonoBehaviour:
     - m_OR:
       - m_condition: 8
         m_parameters:
-        - Elira
+        - elira
         - 
         m_negate: 0
 --- !u!114 &5804843982460076690

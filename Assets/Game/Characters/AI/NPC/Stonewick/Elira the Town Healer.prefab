@@ -299,6 +299,7 @@ MonoBehaviour:
   m_dialogueCamera: {fileID: 8858836850515526276}
   m_dialogue: {fileID: 11400000, guid: 005c1c1fe48a26f49bdd45a86c97010f, type: 2}
   m_speakerName: Elira
+  m_npcID: elira
 --- !u!4 &8237314535180649052 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1303518321023554304, guid: 13e7621a05c15824bbcce21a6ff48b7a, type: 3}

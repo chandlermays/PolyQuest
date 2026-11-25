@@ -184,7 +184,7 @@ namespace PolyQuest.Tests
                 Assert.That(m_inventory.GetItemAtSlot(slot), Is.SameAs(m_sword), $"slot {slot}");
                 Assert.That(m_inventory.GetQuantityAtSlot(slot), Is.EqualTo(1), $"slot {slot}");
             }
-            Assert.That(m_added, Is.EqualTo(new[] { (m_sword, 3) }));
+            Assert.That(m_added, Is.EqualTo(new[] { ((InventoryItem)m_sword, 3) }));
             Assert.That(m_changedCount, Is.EqualTo(1));
             AssertDerivedStateIsConsistent();
         }
