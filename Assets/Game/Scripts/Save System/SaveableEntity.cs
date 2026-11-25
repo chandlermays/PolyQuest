@@ -68,20 +68,30 @@ namespace PolyQuest.Saving
             return state;
         }
 
-        /*------------------------------------------------------------------
-        | --- Restore: Restores the Entity's State from a given JToken --- |
-        ------------------------------------------------------------------*/
+        /*-------------------------------------------------------------------------------------------
+        | --- Restore: Restores each component from its entry; one that fails costs only itself --- |
+        -------------------------------------------------------------------------------------------*/
         public void Restore(JToken s)
         {
-            JObject state = s.ToObject<JObject>();
+            // An empty or unreadable entry has nothing to restore
+            if (s is not JObject state || m_saveables == null)
+                return;
+
             SaveState stateDict = state;
 
             foreach (ISaveable saveable in m_saveables)
             {
                 string component = saveable.GetType().ToString();
-                if (stateDict.ContainsKey(component))
+                if (!stateDict.TryGetValue(component, out JToken componentState))
+                    continue;
+
+                try
                 {
-                    saveable.RestoreState(stateDict[component]);
+                    saveable.RestoreState(componentState);
+                }
+                catch (System.Exception exception)
+                {
+                    Debug.LogError($"SaveableEntity '{name}' ({m_uniqueIdentifier}): {component} failed to restore and kept its current state; the other components still loaded. {exception}", this);
                 }
             }
         }
@@ -96,9 +106,16 @@ namespace PolyQuest.Saving
 
             foreach (ISaveable saveable in m_saveables)
             {
-                if (saveable is IRestoreCompleted completed)
+                if (saveable is not IRestoreCompleted completed)
+                    continue;
+
+                try
                 {
                     completed.OnRestoreCompleted();
+                }
+                catch (System.Exception exception)
+                {
+                    Debug.LogError($"SaveableEntity '{name}' ({m_uniqueIdentifier}): {saveable.GetType()} failed to finish restoring; the other components are unaffected. {exception}", this);
                 }
             }
         }

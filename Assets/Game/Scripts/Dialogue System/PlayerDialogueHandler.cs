@@ -125,7 +125,7 @@ namespace PolyQuest.Dialogues
 
             OnDialogueEnded?.Invoke();
             OnDialogueUpdated?.Invoke();
-            SaveManager.Instance.Save();        // Auto-save after ending a dialogue
+            SaveManager.Instance.AutoSave();        // Auto-save after ending a dialogue
         }
 
         /*-------------------------------------------------------- 

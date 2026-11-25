@@ -61,7 +61,7 @@ namespace PolyQuest.Inventories
             }
 
             m_hasGivenItem = true;
-            SaveManager.Instance.Save();
+            SaveManager.Instance.AutoSave();        // Auto-save after receiving the item
         }
 
         /*-------------------------------------------------------------------

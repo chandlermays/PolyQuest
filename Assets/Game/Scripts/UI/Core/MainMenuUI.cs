@@ -31,14 +31,9 @@ namespace PolyQuest.UI.Core
         -------------------------------------------------------*/
         public void NewGame()
         {
-            if (string.IsNullOrWhiteSpace(m_newGameText.text))
-            {
-                m_errorMessage.SetActive(true);
-                return;
-            }
-
-            m_errorMessage.SetActive(false);
-            SaveManager.Instance.NewGame(m_newGameText.text);
+            // An empty name, a name in use, or one that can't be a file name: refused with the error message
+            bool started = !string.IsNullOrWhiteSpace(m_newGameText.text) && SaveManager.Instance.NewGame(m_newGameText.text);
+            m_errorMessage.SetActive(!started);
         }
 
         /*----------------------------------------

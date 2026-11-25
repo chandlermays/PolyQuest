@@ -157,7 +157,7 @@ namespace PolyQuest.Quests
                     CompleteQuest(quest);
                 }
 
-                SaveManager.Instance.Save();        // Auto-save once the step is done, rewards included
+                SaveManager.Instance.AutoSave();        // Auto-save once the step is done, rewards included
                 OnQuestsUpdate?.Invoke();
             }
             finally

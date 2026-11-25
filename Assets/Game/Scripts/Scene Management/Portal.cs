@@ -102,7 +102,7 @@ namespace PolyQuest.SceneManagement
             yield return TransitionFade.Instance.FadeOut();
 
             // Checkpoint before scene transition
-            SaveManager.Instance.Save();
+            SaveManager.Instance.AutoSave();
 
             yield return SceneManager.LoadSceneAsync(m_sceneField.SceneName);
 
@@ -122,9 +122,9 @@ namespace PolyQuest.SceneManagement
             }
 #endif
             UpdatePlayer(destination);
-            
+
             // Checkpoint after scene transition
-            SaveManager.Instance.Save();
+            SaveManager.Instance.AutoSave();
 
             yield return TransitionFade.Instance.Wait();
             yield return TransitionFade.Instance.FadeIn();

@@ -53,5 +53,25 @@ namespace PolyQuest.Saving
             }
             return vector;
         }
+
+        /*-------------------------------------------------------------------------------------------------------
+        | --- TryToVector3: Reads a saved Vector3; false unless it's an object with a number for x, y and z --- |
+        -------------------------------------------------------------------------------------------------------*/
+        public static bool TryToVector3(this JToken state, out Vector3 vector)
+        {
+            vector = default;
+            if (state is not JObject axes)
+                return false;
+
+            foreach (string axis in new[] { "x", "y", "z" })
+            {
+                JToken value = axes[axis];
+                if (value == null || (value.Type != JTokenType.Float && value.Type != JTokenType.Integer))
+                    return false;
+            }
+
+            vector = new Vector3(axes["x"].Value<float>(), axes["y"].Value<float>(), axes["z"].Value<float>());
+            return true;
+        }
     }
 }

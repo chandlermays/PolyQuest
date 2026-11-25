@@ -222,8 +222,12 @@ namespace PolyQuest.Components
         --------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
+            // A position that can't be read is ignored: the Player stays at the spawn point, never the world origin
+            if (!state.TryToVector3(out Vector3 position))
+                return;
+
             NavMeshAgent.enabled = false;
-            Transform.position = state.ToVector3();
+            Transform.position = position;
             NavMeshAgent.enabled = true;
             m_actionManager.CancelCurrentAction();
         }
