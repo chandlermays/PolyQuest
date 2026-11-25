@@ -51,17 +51,17 @@ namespace PolyQuest.UI.Dragging
             transform.SetParent(m_parentCanvas.transform, true);
         }
 
-        /*-----------------------------------------------------------
+        /*-------------------------------------------------------------
         | --- OnDrag: Called when the user is dragging the m_item --- |
-        -----------------------------------------------------------*/
+        -------------------------------------------------------------*/
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
             transform.position = eventData.position;
         }
 
-        /*-----------------------------------------------------------------
+        /*-------------------------------------------------------------------
         | --- OnEndDrag: Called when the user stops dragging the m_item --- |
-        -----------------------------------------------------------------*/
+        -------------------------------------------------------------------*/
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
         {
             transform.position = m_startPosition;
@@ -101,9 +101,9 @@ namespace PolyQuest.UI.Dragging
             return null;
         }
 
-        /*---------------------------------------------------------------------------
+        /*-----------------------------------------------------------------------------
         | --- DropItemIntoContainer: Handles dropping the m_item into a container --- |
-        ---------------------------------------------------------------------------*/
+        -----------------------------------------------------------------------------*/
         private void DropItemIntoContainer(IDragDestination<T> destContainer)
         {
             if (object.ReferenceEquals(destContainer, m_dragSource))
@@ -134,6 +134,15 @@ namespace PolyQuest.UI.Dragging
 
             source.RemoveItems(prevSourceQuantity);
             destination.RemoveItems(prevDestinationQuantity);
+
+            // It's only a swap if the destination takes the dragged item (e.g. it fits that equipment slot and its
+            // equip condition passes); otherwise the drop is refused and both items go back where they were
+            if (destination.GetMaxItemsCapacity(prevSourceItem) <= 0)
+            {
+                destination.AddItems(prevDestinationItem, prevDestinationQuantity);
+                source.AddItems(prevSourceItem, prevSourceQuantity);
+                return;
+            }
 
             int sourceSplitQuantity = CalculateSplit(prevSourceItem, prevSourceQuantity, source, destination);
             int destinationSplitQuantity = CalculateSplit(prevDestinationItem, prevDestinationQuantity, destination, source);

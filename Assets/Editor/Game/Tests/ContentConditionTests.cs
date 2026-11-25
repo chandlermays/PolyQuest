@@ -13,7 +13,8 @@ using PolyQuest.Tools;
 namespace PolyQuest.Tests
 {
     // Every condition authored in the game's assets (dialogue nodes, equipable items, anything holding a Conjunction)
-    // has a real condition type and every parameter that type reads, and a kHasSpokenTo names an NPC who exists.
+    // has a real condition type and every parameter that type reads, every item ID resolves through FindByID, a kHasItems
+    // quantity is a whole number above 0, and a kHasSpokenTo names an NPC who exists.
     // A condition that breaks any of these can never pass, so it is broken content. Every NPC's ID is unique.
     public class ContentConditionTests
     {
@@ -59,7 +60,7 @@ namespace PolyQuest.Tests
         | --- EveryAuthoredCondition_HasAConditionType_AndItsRequiredParameters: Lists every broken condition in one go --- |
         -------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("Every condition in the game's assets has a condition type other than Select, every parameter its type reads is filled in, and every kHasSpokenTo names an existing NPC ID.")]
+        [Description("Every condition in the game's assets has a condition type other than Select, every parameter its type reads is filled in, every item ID resolves through FindByID, every kHasItems quantity is a whole number above 0, and every kHasSpokenTo names an existing NPC ID.")]
         public void EveryAuthoredCondition_HasAConditionType_AndItsRequiredParameters()
         {
             int checkedCount = 0;
@@ -121,9 +122,11 @@ namespace PolyQuest.Tests
         [TestCase(ConditionType.kHasLevel, new[] { " " })]
         [TestCase(ConditionType.kHasItem, new[] { "" })]
         [TestCase(ConditionType.kHasItems, new[] { "potion-id", "" })]
+        [TestCase(ConditionType.kHasItems, new[] { "potion-id", "lots" })]
+        [TestCase(ConditionType.kHasItems, new[] { "potion-id", "0" })]
         [TestCase(ConditionType.kHasItemEquipped, new string[0])]
         [TestCase(ConditionType.kHasSpokenTo, new[] { "" })]
-        [Description("A condition left on Select, or missing any parameter its type reads, is flagged.")]
+        [Description("A condition left on Select, missing any parameter its type reads, or with a kHasItems quantity that isn't a whole number above 0, is flagged.")]
         public void Validation_FlagsSelect_AndEachMissingRequiredParameter(ConditionType type, string[] parameters)
         {
             Assert.That(ConditionValidation.Problem(type, parameters), Is.Not.Null);

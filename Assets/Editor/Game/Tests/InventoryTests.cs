@@ -170,6 +170,44 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.GetEmptySlotCount(), Is.EqualTo(kSlots - 2));
         }
 
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- TryAdd_SeveralNonStackables_EachTakesItsOwnSlot: Adding several copies of a non-stackable item puts each in its own slot with quantity 1, reported as one add --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("Adding several copies of a non-stackable item puts each in its own slot with quantity 1, reported as one add.")]
+        public void TryAdd_SeveralNonStackables_EachTakesItsOwnSlot()
+        {
+            Assert.That(m_inventory.TryAddToAvailableSlot(m_sword, 3), Is.True);
+
+            for (int slot = 0; slot < 3; ++slot)
+            {
+                Assert.That(m_inventory.GetItemAtSlot(slot), Is.SameAs(m_sword), $"slot {slot}");
+                Assert.That(m_inventory.GetQuantityAtSlot(slot), Is.EqualTo(1), $"slot {slot}");
+            }
+            Assert.That(m_added, Is.EqualTo(new[] { (m_sword, 3) }));
+            Assert.That(m_changedCount, Is.EqualTo(1));
+            AssertDerivedStateIsConsistent();
+        }
+
+        /*-----------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- TryAdd_SeveralNonStackables_WithoutRoomForAll_AddsNone: Without a free slot for every copy, adding several non-stackables adds none of them --- |
+        -----------------------------------------------------------------------------------------------------------------------------------------------------*/
+        [Test]
+        [Description("Without a free slot for every copy, adding several non-stackables adds none of them: it reports failure and raises no events.")]
+        public void TryAdd_SeveralNonStackables_WithoutRoomForAll_AddsNone()
+        {
+            for (int i = 0; i < kSlots - 2; ++i)
+                m_inventory.TryAddToAvailableSlot(m_scroll);
+            ResetEventCounts();
+
+            Assert.That(m_inventory.TryAddToAvailableSlot(m_sword, 3), Is.False);
+
+            Assert.That(m_inventory.ContainsItem(m_sword), Is.False);
+            Assert.That(m_inventory.GetEmptySlotCount(), Is.EqualTo(2));
+            Assert.That(m_added, Is.Empty);
+            Assert.That(m_changedCount, Is.EqualTo(0));
+        }
+
         /*------------------------------------------------------------------------------------------------------------------------------
         | --- TryAdd_Stackable_MergesIntoExistingStack: Adding a stackable item that's already held merges into the existing stack --- |
         ------------------------------------------------------------------------------------------------------------------------------*/
@@ -223,15 +261,18 @@ namespace PolyQuest.Tests
         | --- TryAdd_ZeroQuantity_DoesNotOccupyASlot: Adding with quantity 0 is a no-op: no slot is occupied and no OnItemAdded is raised --- |
         -------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("Adding with quantity 0 is a no-op: no slot is occupied and no OnItemAdded is raised.")]
+        [Description("Adding with quantity 0 is a no-op: it reports nothing added, no slot is occupied and no event is raised.")]
         public void TryAdd_ZeroQuantity_DoesNotOccupyASlot()
         {
-            m_inventory.TryAddToAvailableSlot(m_potion, 0);
+            Assert.That(m_inventory.TryAddToAvailableSlot(m_potion, 0), Is.False, "a zero-quantity add reported success");
+            Assert.That(m_inventory.TryAddItemToSlot(1, m_sword, 0), Is.False, "a zero-quantity add to a slot reported success");
 
             Assert.That(m_inventory.GetItemAtSlot(0), Is.Null, "a zero-quantity add occupied a slot");
+            Assert.That(m_inventory.GetItemAtSlot(1), Is.Null, "a zero-quantity add occupied the slot it was aimed at");
             Assert.That(m_inventory.ContainsItem(m_potion), Is.False);
             Assert.That(m_inventory.GetEmptySlotCount(), Is.EqualTo(kSlots));
             Assert.That(m_added, Is.Empty, "OnItemAdded reported an add of nothing");
+            Assert.That(m_changedCount, Is.EqualTo(0), "OnInventoryChanged was raised for an add of nothing");
         }
 
         /*-----------------------------------------------------------------------------------------------
@@ -707,19 +748,19 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.Evaluate(ConditionType.kHasItem, new[] { m_shield.ID }), Is.False);
         }
 
-        /*-------------------------------------------------------------------------------------------------------------------------------
-        | --- HasItem_UnknownItemId_IsFalse_NotAnException: kHasItem with an unregistered item ID returns false instead of throwing --- |
-        -------------------------------------------------------------------------------------------------------------------------------*/
+        /*------------------------------------------------------------------------------------------------------------------------------------
+        | --- HasItem_UnknownItemId_IsUnanswered_NotAnException: kHasItem with an unregistered item ID is unanswered instead of throwing --- |
+        ------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("kHasItem with an unregistered item ID returns false instead of throwing.")]
-        public void HasItem_UnknownItemId_IsFalse_NotAnException()
+        [Description("kHasItem with an unregistered item ID is unanswered instead of throwing.")]
+        public void HasItem_UnknownItemId_IsUnanswered_NotAnException()
         {
-            bool? result = null;
+            bool? result = true;
 
             Assert.DoesNotThrow(() => result = m_inventory.Evaluate(ConditionType.kHasItem, new[] { "missing" }),
                                 "kHasItem threw on an unknown item ID");
 
-            Assert.That(result, Is.False);
+            Assert.That(result, Is.Null);
         }
 
         /*----------------------------------------------------------------------------------------------------------------------------------------------
@@ -759,45 +800,45 @@ namespace PolyQuest.Tests
             Assert.That(m_inventory.Evaluate(ConditionType.kHasItems, new[] { m_sword.ID, "1" }), Is.False);
         }
 
-        /*----------------------------------------------------------------------------------------------
-        | --- HasItems_UnknownItemId_IsFalse: kHasItems with an unregistered item ID returns false --- |
-        ----------------------------------------------------------------------------------------------*/
+        /*---------------------------------------------------------------------------------------------------
+        | --- HasItems_UnknownItemId_IsUnanswered: kHasItems with an unregistered item ID is unanswered --- |
+        ---------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("kHasItems with an unregistered item ID returns false.")]
-        public void HasItems_UnknownItemId_IsFalse()
+        [Description("kHasItems with an unregistered item ID is unanswered.")]
+        public void HasItems_UnknownItemId_IsUnanswered()
         {
-            Assert.That(m_inventory.Evaluate(ConditionType.kHasItems, new[] { "missing", "1" }), Is.False);
+            Assert.That(m_inventory.Evaluate(ConditionType.kHasItems, new[] { "missing", "1" }), Is.Null);
         }
 
-        /*------------------------------------------------------------------------------------------------------------------------------------
-        | --- HasItems_InvalidRequiredQuantity_IsFalse: kHasItems is false when the required quantity is zero, negative, or not a number --- |
-        ------------------------------------------------------------------------------------------------------------------------------------*/
+        /*----------------------------------------------------------------------------------------------------------------------------------------------
+        | --- HasItems_InvalidRequiredQuantity_IsUnanswered: kHasItems is unanswered when the required quantity is zero, negative, or not a number --- |
+        ----------------------------------------------------------------------------------------------------------------------------------------------*/
         [TestCase("0")]
         [TestCase("-1")]
         [TestCase("abc")]
         [TestCase("")]
-        [Description("kHasItems is false when the required quantity is zero, negative, or not a number.")]
-        public void HasItems_InvalidRequiredQuantity_IsFalse(string quantity)
+        [Description("kHasItems is unanswered when the required quantity is zero, negative, or not a number.")]
+        public void HasItems_InvalidRequiredQuantity_IsUnanswered(string quantity)
         {
             m_inventory.TryAddToAvailableSlot(m_potion, 5);
 
-            Assert.That(m_inventory.Evaluate(ConditionType.kHasItems, new[] { m_potion.ID, quantity }), Is.False);
+            Assert.That(m_inventory.Evaluate(ConditionType.kHasItems, new[] { m_potion.ID, quantity }), Is.Null);
         }
 
-        /*--------------------------------------------------------------------------------------------------------------------------------------------
-        | --- HasItems_MissingQuantityParameter_IsFalse_NotAnException: kHasItems without a quantity parameter returns false instead of throwing --- |
-        --------------------------------------------------------------------------------------------------------------------------------------------*/
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------
+        | --- HasItems_MissingQuantityParameter_IsUnanswered_NotAnException: kHasItems without a quantity parameter is unanswered instead of throwing --- |
+        -------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("kHasItems without a quantity parameter returns false instead of throwing.")]
-        public void HasItems_MissingQuantityParameter_IsFalse_NotAnException()
+        [Description("kHasItems without a quantity parameter is unanswered instead of throwing.")]
+        public void HasItems_MissingQuantityParameter_IsUnanswered_NotAnException()
         {
             m_inventory.TryAddToAvailableSlot(m_potion, 5);
-            bool? result = null;
+            bool? result = true;
 
             Assert.DoesNotThrow(() => result = m_inventory.Evaluate(ConditionType.kHasItems, new[] { m_potion.ID }),
                                 "kHasItems threw when the quantity parameter was missing");
 
-            Assert.That(result, Is.False);
+            Assert.That(result, Is.Null);
         }
 
 
@@ -937,10 +978,10 @@ namespace PolyQuest.Tests
         | --- RestoreState_UnknownItemId_LogsAWarningNamingIt: Restoring an unknown item ID logs a warning that names the missing ID --- |
         --------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("Restoring an unknown item ID logs a warning that names the missing ID.")]
+        [Description("Restoring an unknown item ID logs a warning that names the slot and the missing ID.")]
         public void RestoreState_UnknownItemId_LogsAWarningNamingIt()
         {
-            LogAssert.Expect(LogType.Warning, new Regex("gone"));
+            LogAssert.Expect(LogType.Warning, new Regex(@"slot 0\b.*gone"));
 
             m_inventory.RestoreState(new JObject { ["0"] = Entry("gone", 3) });
         }
@@ -949,21 +990,25 @@ namespace PolyQuest.Tests
         | --- RestoreState_MalformedEntry_DoesNotThrow_AndLoadsTheRest: A malformed entry is skipped without throwing; valid entries still load and listeners are notified --- |
         ----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         [Test]
-        [Description("A malformed entry is skipped without throwing; valid entries still load and listeners are notified.")]
+        [Description("A malformed entry is skipped without throwing and its slot stays empty; valid entries still load and listeners are notified.")]
         public void RestoreState_MalformedEntry_DoesNotThrow_AndLoadsTheRest()
         {
             m_inventory.TryAddToAvailableSlot(m_sword);
             ResetEventCounts();
             JObject state = new JObject
             {
-                ["0"] = new JObject { ["quantity"] = 1 },          // malformed: no "item"
-                ["1"] = Entry(m_potion.ID, 2)                      // valid
+                ["0"] = new JObject { ["quantity"] = 1 },                                  // malformed: no "item"
+                ["1"] = Entry(m_potion.ID, 2),                                             // valid
+                ["2"] = new JValue(m_sword.ID),                                            // malformed: not an object
+                ["3"] = new JObject { ["item"] = m_potion.ID, ["quantity"] = "lots" },     // malformed: quantity isn't a number
             };
 
             Assert.DoesNotThrow(() => m_inventory.RestoreState(state), "a malformed entry aborted the restore");
 
             Assert.That(m_inventory.GetItemAtSlot(1), Is.SameAs(m_potion));
             Assert.That(m_inventory.GetQuantityAtSlot(1), Is.EqualTo(2));
+            Assert.That(m_inventory.GetEmptySlotCount(), Is.EqualTo(kSlots - 1), "a malformed entry occupied a slot");
+            AssertDerivedStateIsConsistent();
             Assert.That(m_changedCount, Is.GreaterThan(0), "listeners were never told the inventory changed");
         }
 

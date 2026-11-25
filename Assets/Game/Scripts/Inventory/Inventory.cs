@@ -4,6 +4,7 @@
 ----------------------------*/
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 //---------------------------------
@@ -106,6 +107,10 @@ namespace PolyQuest.Inventories
         ------------------------------------------------------------------------*/
         public bool TryAddToAvailableSlot(InventoryItem item, int quantity = 1)
         {
+            // Adding nothing adds nothing: no slot is taken and no event is raised
+            if (quantity <= 0)
+                return false;
+
             if (item.IsStackable && OnBeforeAddItem != null && OnBeforeAddItem(item, quantity))
             {
                 if (!SuppressItemAddedNotif)
@@ -115,6 +120,9 @@ namespace PolyQuest.Inventories
 
                 return true;
             }
+
+            if (!item.IsStackable)
+                return TryAddNonStackable(-1, item, quantity);
 
             int slotIndex = FindSlotForItem(item);
             if (slotIndex < 0)
@@ -153,21 +161,23 @@ namespace PolyQuest.Inventories
         -----------------------------------------------------------------*/
         public bool TryAddItemToSlot(int slot, InventoryItem item, int quantity)
         {
-            // If target slot has a different item, try to find available slot
-            if (m_inventorySlots[slot].m_item != null && m_inventorySlots[slot].m_item != item)
+            // Adding nothing adds nothing: no slot is taken and no event is raised
+            if (quantity <= 0)
+                return false;
+
+            // A different item is there, or a copy of a non-stackable that can't share its slot: use the first available slot
+            InventoryItem current = m_inventorySlots[slot].m_item;
+            if (current != null && (current != item || !item.IsStackable))
             {
                 return TryAddToAvailableSlot(item, quantity);
             }
 
-            // If target slot already has the same stackable item, stack it there
-            if (m_inventorySlots[slot].m_item == item && item.IsStackable)
+            if (!item.IsStackable)
             {
-                AddItemToSlotInternal(slot, item, quantity);
-                return true;
+                return TryAddNonStackable(slot, item, quantity);
             }
 
-            // For stackable items being placed in an empty slot, allow the placement
-            // This enables drag-and-drop rearrangement
+            // The same stackable item stacks there; in an empty slot it starts a new stack (drag-and-drop rearranging)
             AddItemToSlotInternal(slot, item, quantity);
             return true;
         }
@@ -221,83 +231,127 @@ namespace PolyQuest.Inventories
             return state;
         }
 
-        /*-------------------------------------------------------------------
-        | --- RestoreState: Restore the inventory state from saved data --- |
-        -------------------------------------------------------------------*/
+        /*---------------------------------------------------------------------------------------------
+        | --- RestoreState: Restores the saved slots; a slot that can't be restored is left empty --- |
+        ---------------------------------------------------------------------------------------------*/
         public void RestoreState(JToken state)
         {
-            if (state is JObject stateObject)
+            // The whole save is the wrong shape: ignore it, keep what's there, and raise nothing
+            if (state is not JObject stateObject)
+                return;
+
+            m_inventorySlots = new InventorySlot[m_inventorySize];
+            m_itemSlotMapping.Clear();
+            InitializeEmptySlots();
+
+            for (int i = 0; i < m_inventorySize; ++i)
             {
-                m_inventorySlots = new InventorySlot[m_inventorySize];
-                m_itemSlotMapping.Clear();
-                InitializeEmptySlots();
+                JToken entry = stateObject[i.ToString()];
+                if (entry == null)
+                    continue;
 
-                IDictionary<string, JToken> stateDict = stateObject;
-
-                for (int i = 0; i < m_inventorySize; ++i)
+                // One bad slot is skipped and stays empty; the other slots load
+                if (!TryReadEntry(entry, out string itemID, out int quantity))
                 {
-                    if (stateDict.ContainsKey(i.ToString()) && stateDict[i.ToString()] is JObject itemState)
-                    {
-                        IDictionary<string, JToken> itemStateDict = itemState;
-                        var item = InventoryItem.FindByID(itemStateDict["item"].ToObject<string>());
-                        int quantity = itemStateDict["quantity"].ToObject<int>();
-
-                        m_inventorySlots[i].m_item = item;
-                        m_inventorySlots[i].m_quantity = quantity;
-
-                        // Rebuild the derived state to match the restored slots
-                        if (item != null)
-                        {
-                            m_emptySlots.Remove(i);
-                            AddItemToMapping(item, i);
-                        }
-                    }
+                    WarnSkippedSlot(i, entry.ToString(Formatting.None), "the entry can't be read");
+                    continue;
                 }
 
-                OnInventoryChanged?.Invoke();
+                InventoryItem item = InventoryItem.FindByID(itemID);
+                if (item == null)
+                {
+                    WarnSkippedSlot(i, itemID, "no item has that ID");
+                    continue;
+                }
+
+                PlaceInSlot(i, item, quantity);
             }
+
+            OnInventoryChanged?.Invoke();
         }
 
-        /*---------------------------------------------------------------------
-        | --- Evaluate: Check if the inventory meets a specific condition --- |
-        ---------------------------------------------------------------------*/
+        /*-------------------------------------------------------------------------------------------------
+        | --- TryReadEntry: Reads a saved slot; false unless it has an item ID and a quantity above 0 --- |
+        -------------------------------------------------------------------------------------------------*/
+        private static bool TryReadEntry(JToken entry, out string itemID, out int quantity)
+        {
+            itemID = null;
+            quantity = 0;
+            if (entry is not JObject entryObject)
+                return false;
+
+            JToken itemToken = entryObject["item"];
+            JToken quantityToken = entryObject["quantity"];
+            if (itemToken == null || itemToken.Type != JTokenType.String || quantityToken == null || quantityToken.Type != JTokenType.Integer)
+                return false;
+
+            itemID = itemToken.Value<string>();
+            quantity = quantityToken.Value<int>();
+            return !string.IsNullOrWhiteSpace(itemID) && quantity > 0;
+        }
+
+        /*------------------------------------------------------------------------------------------------
+        | --- WarnSkippedSlot: Editor warning naming a saved slot and the item ID that wasn't loaded --- |
+        ------------------------------------------------------------------------------------------------*/
+        [System.Diagnostics.Conditional("UNITY_EDITOR")]
+        private void WarnSkippedSlot(int slot, string itemID, string reason)
+        {
+            Debug.LogWarning($"Inventory on '{name}': skipped saved slot {slot} with item ID '{itemID}' because {reason}. The other slots loaded.", this);
+        }
+
+        /*--------------------------------------------------------------------------------------------------------
+        | --- Evaluate: Check if the inventory meets a condition; unknown items or quantities are unanswered --- |
+        --------------------------------------------------------------------------------------------------------*/
         public bool? Evaluate(ConditionType predicate, string[] parameters)
         {
-            if (parameters == null || parameters.Length == 0)
+            if (parameters == null || parameters.Length == 0 || string.IsNullOrWhiteSpace(parameters[0]))
                 return null;
 
             switch (predicate)
             {
                 // single item
                 case ConditionType.kHasItem:
-                    return ContainsItem(InventoryItem.FindByID(parameters[0]));
+                    {
+                        // An ID no item has can't be answered; the condition then fails closed
+                        InventoryItem item = InventoryItem.FindByID(parameters[0]);
+                        if (item == null)
+                            return null;
+
+                        return ContainsItem(item);
+                    }
 
                 // stackable items only
                 case ConditionType.kHasItems:
-                    InventoryItem item = InventoryItem.FindByID(parameters[0]);
-                    if (item == null || !item.IsStackable)
-                        return false;
-
-                    if (!int.TryParse(parameters[1], out int requiredQuantity) || requiredQuantity <= 0)
-                        return false;
-
-                    // If the item is not in the mapping, inventory has none.
-                    if (!m_itemSlotMapping.TryGetValue(item, out var slots) || slots == null || slots.Count == 0)
-                        return false;
-
-                    int totalQuantity = 0;
-                    foreach (int slotIndex in slots)
                     {
-                        // Defensive: ensure slot index is valid.
-                        if (slotIndex < 0 || slotIndex >= m_inventorySlots.Length)
-                            continue;
+                        InventoryItem item = InventoryItem.FindByID(parameters[0]);
+                        if (item == null)
+                            return null;
 
-                        totalQuantity += m_inventorySlots[slotIndex].m_quantity;
-                        if (totalQuantity >= requiredQuantity)
-                            return true;
+                        // A missing, unreadable, zero or negative quantity can't be answered either
+                        if (parameters.Length < 2 || !int.TryParse(parameters[1], out int requiredQuantity) || requiredQuantity <= 0)
+                            return null;
+
+                        if (!item.IsStackable)
+                            return false;
+
+                        // If the item is not in the mapping, inventory has none.
+                        if (!m_itemSlotMapping.TryGetValue(item, out var slots) || slots == null || slots.Count == 0)
+                            return false;
+
+                        int totalQuantity = 0;
+                        foreach (int slotIndex in slots)
+                        {
+                            // Defensive: ensure slot index is valid.
+                            if (slotIndex < 0 || slotIndex >= m_inventorySlots.Length)
+                                continue;
+
+                            totalQuantity += m_inventorySlots[slotIndex].m_quantity;
+                            if (totalQuantity >= requiredQuantity)
+                                return true;
+                        }
+
+                        return false;
                     }
-
-                    return false;
 
                 default:
                     break;
@@ -311,6 +365,39 @@ namespace PolyQuest.Inventories
         -----------------------------------------------------------------------*/
         private void AddItemToSlotInternal(int slot, InventoryItem item, int quantity)
         {
+            PlaceInSlot(slot, item, quantity);
+            NotifyAdded(item, quantity);
+        }
+
+        /*------------------------------------------------------------------------------------------------------
+        | --- TryAddNonStackable: Each copy takes its own slot; without room for every copy, none is added --- |
+        ------------------------------------------------------------------------------------------------------*/
+        private bool TryAddNonStackable(int preferredSlot, InventoryItem item, int quantity)
+        {
+            if (m_emptySlots.Count < quantity)
+                return false;
+
+            int remaining = quantity;
+            if (preferredSlot >= 0 && m_inventorySlots[preferredSlot].m_item == null)
+            {
+                PlaceInSlot(preferredSlot, item, 1);
+                --remaining;
+            }
+
+            for (; remaining > 0; --remaining)
+            {
+                PlaceInSlot(FindFirstAvailableSlot(), item, 1);
+            }
+
+            NotifyAdded(item, quantity);
+            return true;
+        }
+
+        /*------------------------------------------------------------------------------
+        | --- PlaceInSlot: Puts items in a slot and updates the lookups, no events --- |
+        ------------------------------------------------------------------------------*/
+        private void PlaceInSlot(int slot, InventoryItem item, int quantity)
+        {
             bool wasEmpty = m_inventorySlots[slot].m_item == null;
 
             m_inventorySlots[slot].m_item = item;
@@ -321,7 +408,13 @@ namespace PolyQuest.Inventories
                 m_emptySlots.Remove(slot);
                 AddItemToMapping(item, slot);
             }
+        }
 
+        /*-----------------------------------------------------------------------------------------
+        | --- NotifyAdded: Raises OnItemAdded (unless suppressed) and OnInventoryChanged once --- |
+        -----------------------------------------------------------------------------------------*/
+        private void NotifyAdded(InventoryItem item, int quantity)
+        {
             if (!SuppressItemAddedNotif)
             {
                 OnItemAdded?.Invoke(item, quantity);
