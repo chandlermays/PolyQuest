@@ -10,7 +10,7 @@ I'm the sole developer and designer — systems, gameplay, the Technical Design 
 
 ## Highlights
 
-- **A test suite of nearly 500 tests** (377 Edit Mode, 110 Play Mode) covering every core system — written to expose real, player-reachable bugs, then used to drive a full fix pass.
+- **A test suite of 733 tests** (455 Edit Mode, 278 Play Mode) covering every core system — written to expose real, player-reachable bugs, then used to drive a full fix pass.
 - **Data-driven design** with ScriptableObjects for dialogue, quests, items, abilities, progression and combat balance.
 - **Robust saving** — atomic writes, `.bak` backups with fallback on load, a separate autosave slot, and isolated per-component restores so one bad entry can't break a save.
 - **Branching dialogue** with player choices, conditions, dialogue history, and a close-up dialogue camera.
